@@ -1,0 +1,15 @@
+Package: ADNIMERGE2
+Type: Package
+Title: ADNIMERGE2 
+Version: 0.1.0
+Date: 2024-09-25
+Author: ATRI Biostatistics <atri-biostat-l@usc.edu>
+Maintainer: ATRI Biostatistics <atri-biostat-l@usc.edu>
+LazyData: TRUE
+VignetteBuilder: knitr
+Encoding: UTF-8
+Repository: ARAN
+BugReports: https://github.com/atrihub/ADNIMERGE2/issues
+License: Copyright 2024
+Description: ADNI Study Package
+RoxygenNote: 7.2.3
