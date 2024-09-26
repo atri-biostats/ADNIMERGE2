@@ -1,5 +1,5 @@
-# ADNIMERGE2
 
-This is ADNIMERG2 R package that all the clinical and biomarker data from the Alzheimer's Disease Neuroimaging Initiative (ADNI) study.
+# ADNIMERGE2 <a href="https://adni.loni.usc.edu/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
-[ADNIMERGE2 GIT repository](https://github.com/atrihub/ADNIMERGE2)
+This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study. All datasets are included
+as shared on <https://adni.loni.usc.edu/>.
