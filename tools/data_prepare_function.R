@@ -112,7 +112,8 @@ convert_rda_file <- function(input_dir,
   for (i in seq_len(length(names(all_csv_data)))) {
     cur_file <- names(all_csv_data)[i]
     message("Converting ", cur_file, ".csv to ", cur_file, ".rda format")
-    save(list = c(cur_file), file = str_c(output_dir, cur_file, ".rda"))
+    save(list = c(cur_file), file = str_c(output_dir, cur_file, ".rda"), 
+         compress = "bzip2", version = 2)
     rm(list = c(cur_file))
   }
 
