@@ -1,13 +1,13 @@
 Package: ADNIMERGE2
 Type: Package
 Title: ADNI Study Data Package
-Description: ADNIMERGE2 is data package containg all clinical and biomarker assessments of ADNI study.
+Description: This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study. All datasets are included as shared on \href{https://adni.loni.usc.edu/}{https://adni.loni.usc.edu/}
 Version: 0.1.0
 Authors@R: person("ATRI Biostatistics", email = "biostat_request@atrihub.io",
   role = c("aut", "cre"))
 BugReports: https://github.com/atrihub/ADNIMERGE2/issues
 URL: https://adni.loni.usc.edu
-License: `use_gpl_license()`
+License: https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf
 Encoding: UTF-8
 LazyData: true
 Imports: 

@@ -85,7 +85,7 @@ data_dict_column_names <- function(data_dict,
                                    field_labelVar = NULL,
                                    field_notesVar = NULL) {
   require(tidyverse)
-  
+
   if (is.null(field_nameVar)) field_nameVar <- "field_name"
   if (is.null(field_classVar)) field_classVar <- "field_class"
   if (is.null(field_labelVar)) field_labelVar <- "field_label"
@@ -94,14 +94,14 @@ data_dict_column_names <- function(data_dict,
   column_list_dd <- tibble::tibble(
     specified_name_list = c(field_nameVar, field_classVar, field_labelVar, field_notesVar),
     renamed_list = c("nameVar", "classVar", "labelVar", "notesVar")
-  ) 
-  
+  )
+
   return(data_dict %>%
-           mutate(across(any_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
-           rename_with(
-             ~ str_c(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
-             any_of(column_list_dd$specified_name_list)
-           ))
+    mutate(across(any_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
+    rename_with(
+      ~ str_c(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
+      any_of(column_list_dd$specified_name_list)
+    ))
 }
 
 ## Function that will generate roxygen files
@@ -136,13 +136,13 @@ generate_variable_format_list <- function(data_dict,
     field_notesVar = field_notesVar
   ) %>%
     filter(nameVar %in% var_name)
-  
+
   label_value <- ifelse(is.na(temp_dd$labelVar), " ", temp_dd$labelVar)
-  
+
   return(str_c("#' \\item{\\strong{", temp_dd$nameVar, "} ",
-               "\\emph{ ", temp_dd$classVar, "}}",
-               "{", label_value, " ", temp_dd$notesVar, "}",
-               collapse = ""
+    "\\emph{ ", temp_dd$classVar, "}}",
+    "{", label_value, " ", temp_dd$notesVar, "}",
+    collapse = ""
   ))
 }
 
@@ -184,7 +184,7 @@ summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
   )
   summary_dataset <- tibble(
     field_values = levels(var_values),
-    field_values_order = seq_len(length(levels(var_values))), 
+    field_values_order = seq_len(length(levels(var_values))),
     field_name = var_name,
     field_class = var_class_type,
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
@@ -255,7 +255,7 @@ summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
 
   summary_dataset <- tibble(
     field_values = var_values,
-    field_values_order = seq_len(length(var_values)), 
+    field_values_order = seq_len(length(var_values)),
     field_name = var_name,
     field_class = var_class_type,
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
@@ -279,7 +279,7 @@ summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
   return(summary_dataset)
 }
 ## Summarize Numeric Variable -----
-#' @title Summarize Numeric Variable 
+#' @title Summarize Numeric Variable
 #' @description This function is used to summarize a numeric variable from a data.frame that could be used to generate a data dictionary file.
 #' @param dd Data frame
 #' @param var_name Variable name
@@ -317,7 +317,7 @@ summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
 
   summary_dataset <- tibble::tibble(
     field_values = as.character(c(min_value, max_value)),
-    summary_type = c("Min", "Max"), 
+    summary_type = c("Min", "Max"),
     field_name = var_name, field_class = var_class_type,
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
     field_notes = var_notes
@@ -563,7 +563,7 @@ summarize_dataset <- function(dd,
 #' \dontrun{
 #' # Generate a data dictionary of a dataset
 #' temp_data_dict <- summarize_dataset(dd = ADNI4::DM, dataset_name = "DM", wider_format = TRUE) %>%
-#'                   mutate(dataset_name = "DM", dataset_source_type = "derived")
+#'   mutate(dataset_name = "DM", dataset_source_type = "derived")
 #' generate_single_dataset_roxygen(data_dict = temp_data_dict)
 #' }
 #' @rdname generate_single_dataset_roxygen
@@ -585,15 +585,16 @@ generate_single_dataset_roxygen <- function(dd = NULL,
                                             output_file_name = NULL) {
   library(tidyverse)
 
-  rlang::arg_match(dataset_source_type, 
-                   values = c("raw", "derived", "external"), 
-                   multiple = TRUE)
+  rlang::arg_match(dataset_source_type,
+    values = c("raw", "derived", "external"),
+    multiple = TRUE
+  )
   dataset_source_type <- str_to_upper(dataset_source_type)
   if (is.null(dataset_label)) dataset_label <- dataset_name
   data_source_label <- ifelse(dataset_source_type %in% "RAW", " ", str_c("[", dataset_source_type, "]"))
 
   if (is.null(data_dict) && is.null(dd)) stop("A dataframe of anctual dataset or prepared data dictionary should be provide")
-  
+
   # Prepared a data dictionary if there is no pre-specified data dictionary daset
   ## i.e. based on the actual values dataset
   if (!is.null(dd)) {
@@ -637,11 +638,11 @@ generate_single_dataset_roxygen <- function(dd = NULL,
   data_doc <- str_c(
     str_c("#' @title ", data_source_label, " ", str_remove_all(dataset_label, "\\[|\\]"), "\n"),
     "#'\n",
-    #str_c("#' @description ", short_description, "\n"),
-    #"#' \n",
+    # str_c("#' @description ", short_description, "\n"),
+    # "#' \n",
     str_c("#' @docType data \n"),
     "#'\n",
-    str_c("#' @usage data(",dataset_name,") \n"),
+    str_c("#' @usage data(", dataset_name, ") \n"),
     "#'\n",
     str_c("#' @keywords ", dataset_source_type, " datasets \n"),
     "#'\n",
@@ -663,9 +664,9 @@ generate_single_dataset_roxygen <- function(dd = NULL,
   )
 
   if (!is.null(short_description)) {
-    data_doc <-  str_c(data_doc, str_c("#' @description ", short_description, "\n"), collapse = "")
+    data_doc <- str_c(data_doc, str_c("#' @description ", short_description, "\n"), collapse = "")
   }
-  
+
   if (!is.null(add_source)) {
     data_doc <- str_c(data_doc, str_c("#' @source ", add_source, "\n"), collapse = "")
   }
@@ -745,12 +746,12 @@ generate_roxygen_document <- function(dataset_name_list,
   require(tidyverse)
   rlang::arg_match0(arg = roxygen_source_type, values = c("actual_dataset", "data_dictionary"))
 
-  if (is.null(field_nameVar)) field_nameVar <- "field_name" 
+  if (is.null(field_nameVar)) field_nameVar <- "field_name"
   if (is.null(field_classVar)) field_classVar <- "field_class"
   if (is.null(field_labelVar)) field_labelVar <- "field_label"
   if (is.null(field_notesVar)) field_notesVar <- "field_notes"
-  
-  
+
+
   # CASE I: when actual datasets are only provided
   if (roxygen_source_type %in% "actual_dataset") {
     if (is.null(dd)) stop("Check for the actual dataset")
@@ -770,7 +771,8 @@ generate_roxygen_document <- function(dataset_name_list,
     )
 
     ## Add default values for the variable names that are not presented in the data_dict
-    common_col_names <- c("dataset_label",
+    common_col_names <- c(
+      "dataset_label",
       "short_description", "add_source", "add_seealso",
       "add_authors", "add_reference", "add_rdname_prefix"
     )
@@ -797,8 +799,10 @@ generate_roxygen_document <- function(dataset_name_list,
       temp_dd <- NULL
       temp_data_dict <- data_dict %>%
         filter(dd_name %in% dataset_name)
-      temp_dataset_source_type <- return_null_missing(dd_df = temp_data_dict, 
-                                                      var_name = "dataset_source_type")
+      temp_dataset_source_type <- return_null_missing(
+        dd_df = temp_data_dict,
+        var_name = "dataset_source_type"
+      )
     }
 
     temp_single_dd <- generate_single_dataset_roxygen(
@@ -836,4 +840,3 @@ generate_roxygen_document <- function(dataset_name_list,
     )
   }
 }
-

@@ -11,9 +11,9 @@ get_unzip_file <- function(input_dir,
                            file_name,
                            output_dir = ".") {
   require(stringr)
- 
+
   if (output_dir %in% ".") output_dir <- input_dir
-  
+
   if (!output_dir %in% ".") {
     if (dir.exists(output_dir) == FALSE) stop(str_c(output_dir, " is not existed"))
   }
@@ -85,8 +85,8 @@ rename_file <- function(input_dir,
 #' @return `TRUE` if the .rdata file format is created and stored in the specified `output_dir`
 #' @rdname convert_rda_file
 convert_rda_file <- function(input_dir,
-                               output_dir = ".",
-                               file_extension = ".csv") {
+                             output_dir = ".",
+                             file_extension = ".csv") {
   require(tidyverse)
 
   all_files <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
@@ -112,8 +112,10 @@ convert_rda_file <- function(input_dir,
   for (i in seq_len(length(names(all_csv_data)))) {
     cur_file <- names(all_csv_data)[i]
     message("Converting ", cur_file, ".csv to ", cur_file, ".rda format")
-    save(list = c(cur_file), file = str_c(output_dir, cur_file, ".rda"), 
-         compress = "bzip2", version = 2)
+    save(
+      list = c(cur_file), file = str_c(output_dir, cur_file, ".rda"),
+      compress = "bzip2", version = 2
+    )
     rm(list = as.character(cur_file), envir = .GlobalEnv)
   }
 
