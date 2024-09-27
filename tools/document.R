@@ -11,6 +11,7 @@ all_rda_files <- list.files(path = file.path("..", "data"),
 
 lapply(all_rda_files, load, .GlobalEnv)
 combined_datasets <- mget(str_remove_all(string = all_rda_files, pattern = ".rda|../data/"))
+rm(list = as.character(str_remove_all(string = all_rda_files, pattern = ".rda|../data/")))
 
 prefix_patterns <- c(str_c("adni", 1:4, "_"), "adni_")
 sufix_patterns <- c("_pooled", "_harmonized")
@@ -18,7 +19,7 @@ string_removed_pattern <- str_c(c(prefix_patterns, sufix_patterns), collapse = "
 loni_data_link <- str_c("\\href{https://adni.loni.usc.edu/data-samples/adni-data/}", 
                         "{https://adni.loni.usc.edu/data-samples/adni-data/}")
 common_description <- str_c("data from the electronic case report form (eCRF).", 
-                            " More information is avaiable at ", loni_data_link)
+                            " More information is available at ", loni_data_link)
 
 
 temp_data_dict <- lapply(names(combined_datasets), function(tbl_name){

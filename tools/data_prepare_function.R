@@ -108,13 +108,13 @@ convert_rda_file <- function(input_dir,
   }
 
   # Load all data.frame in global environment
-  list2env(all_csv_data, globalenv())
+  list2env(all_csv_data, .GlobalEnv)
   for (i in seq_len(length(names(all_csv_data)))) {
     cur_file <- names(all_csv_data)[i]
     message("Converting ", cur_file, ".csv to ", cur_file, ".rda format")
     save(list = c(cur_file), file = str_c(output_dir, cur_file, ".rda"), 
          compress = "bzip2", version = 2)
-    rm(list = c(cur_file))
+    rm(list = as.character(cur_file), envir = .GlobalEnv)
   }
 
   return(TRUE)
