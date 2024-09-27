@@ -8,5 +8,3 @@ document()
 check(error_on = 'error')
 pkg_dir <- devtools::build(vignettes = FALSE)
 
-# To install the package locally
-install.packages(pkg_dir, repos = NULL, type = "source")
