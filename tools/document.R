@@ -86,7 +86,8 @@ temp_data_dict <- temp_data_dict %>%
                                  !is.na(field_label) ~ field_label)) %>%
   select(dd_name, num_rows, num_cols, field_name, field_class, field_label, field_values, field_notes,
          dataset_label, add_authors, short_description, dataset_source_type, add_seealso, add_source) 
-  
+
+if (dir.exists(file.path("..", "R")) == FALSE) dir.create(file.path("..", "R"))  
 
 data_document_filepath <- file.path("..", "R", "data.R")
 if (file.exists(data_document_filepath) == TRUE) readr::write_lines(x = "", data_document_filepath)
