@@ -2,23 +2,19 @@
 # Unzip zipped files from a source
 #' @title Function to unzip zipped files
 #' @description This function is used to unzip the downloaded  zip files
-#' @param package_name Package Name
 #' @param input_dir The directory where the zip file is located.
 #' @param file_name Zip file name
 #' @param output_dir The directory where the unzipped file is to be stored. If it is NULL, it will stored in the same input directory. Default: NULL
 #' @return `TRUE` if the file is properly unzipped
 #' @rdname get_unzip_file
-get_unzip_file <- function(package_name,
-                           input_dir,
+get_unzip_file <- function(input_dir,
                            file_name,
-                           output_dir = NULL) {
+                           output_dir = ".") {
   require(stringr)
-  if (is.null(output_dir)) {
-    # rawdata directory
-    output_dir <- str_c("./", package_name, "/rawdata/")
-    if (dir.exists(output_dir) == FALSE) dir.create(output_dir)
-  }
-  if (!is.null(output_dir)) {
+ 
+  if (output_dir %in% ".") output_dir <- input_dir
+  
+  if (!output_dir %in% ".") {
     if (dir.exists(output_dir) == FALSE) stop(str_c(output_dir, " is not existed"))
   }
 
@@ -87,12 +83,11 @@ rename_file <- function(input_dir,
 #' @param output_dir The directory where .rdata file is to be stored.
 #' @param file_extension File extension, Default: ".csv"
 #' @return `TRUE` if the .rdata file format is created and stored in the specified `output_dir`
-#' @rdname convert_rdata_file
-convert_rdata_file <- function(input_dir,
+#' @rdname convert_rda_file
+convert_rda_file <- function(input_dir,
                                output_dir = ".",
                                file_extension = ".csv") {
-  require(stringr)
-  require(readr)
+  require(tidyverse)
 
   all_files <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
   if (is.null(all_files)) {
@@ -116,8 +111,8 @@ convert_rdata_file <- function(input_dir,
   list2env(all_csv_data, globalenv())
   for (i in seq_len(length(names(all_csv_data)))) {
     cur_file <- names(all_csv_data)[i]
-    message("Converting ", cur_file, ".csv to ", cur_file, ".rdata format")
-    save(list = c(cur_file), file = str_c(output_dir, cur_file, ".rdata"))
+    message("Converting ", cur_file, ".csv to ", cur_file, ".rda format")
+    save(list = c(cur_file), file = str_c(output_dir, cur_file, ".rda"))
     rm(list = c(cur_file))
   }
 
