@@ -1,0 +1,19 @@
+Package: ADNIMERGE2
+Type: Package
+Title: ADNI Study Data Package
+Description: ADNIMERGE2 is data package containg all clinical and biomarker assessments of ADNI study.
+Version: 0.1.0
+Authors@R: person("ATRI Biostatistics", email = "biostat_request@atrihub.io",
+  role = c("aut", "cre"))
+BugReports: https://github.com/atrihub/ADNIMERGE2/issues
+URL: https://adni.loni.usc.edu
+License: `use_gpl_license()`
+Encoding: UTF-8
+LazyData: true
+Imports: 
+  tidyverse, 
+  stringr, 
+  rlang
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.2.3
