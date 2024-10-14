@@ -55,7 +55,9 @@ check_list_names <- function(listed_dd, listed_names = NULL) {
   }
 
   if (length(missing_names) > 0) stop(str_c("Check for listed names of ", toString(missing_names)))
-}
+
+  return(TRUE)
+  }
 # Function prepare a data dictionary dataset
 #' @title Function to prepare a data dictionary dataset
 #' @description This function is used to prepare the data data dictionary for generating variable specific format list in roxygen document.
@@ -184,7 +186,7 @@ summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
   )
   summary_dataset <- tibble(
     field_values = levels(var_values),
-    field_values_order = seq_len(length(levels(var_values))),
+    field_values_order = seq_along(levels(var_values)),
     field_name = var_name,
     field_class = var_class_type,
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
@@ -255,7 +257,7 @@ summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
 
   summary_dataset <- tibble(
     field_values = var_values,
-    field_values_order = seq_len(length(var_values)),
+    field_values_order = seq_along(var_values),
     field_name = var_name,
     field_class = var_class_type,
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
@@ -341,15 +343,15 @@ summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
   return(summary_dataset)
 }
 
-## Summarize Date Variable -----
-#' @title Summarize Date Variable
-#' @description This function is used to summarize a date variable from a data.frame that could be used to generate a data dictionary file.
+## Summarize Date/Time Variable -----
+#' @title Summarize Date/Time Variable
+#' @description This function is used to summarize a date/time variable from a data.frame that could be used to generate a data dictionary file.
 #' @param dd Data frame
 #' @param var_name Variable name
 #' @return A data.frame that contains the following variables:
 #' \itemize{
 #'   \item{field_name}{Variable name}
-#'   \item{field_class}{Variable class type: 'Date', 'POSIXct'. or 'POSIXt'}
+#'   \item{field_class}{Variable class type: 'Date', 'POSIXct', 'POSIXt', 'hms' or 'difftime'}
 #'   \item{field_label}{Variable labels}
 #'   \item{field_notes}{Text notes that could be used to generate the roxygen document for the dataset}
 #' }
@@ -375,10 +377,12 @@ summarize_date_variable <- function(dd, var_name) {
   var_class_type <- class(var_values)
   rlang::arg_match(
     arg = var_class_type,
-    values = c("Date", "POSIXct", "POSIXt"),
+    values = c("Date", "POSIXct", "POSIXt", "hms", "difftime"),
     multiple = TRUE
   )
-  if ("Date" %in% var_class_type) var_notes <- str_c("Date: YYY-MM-DD") else var_notes <- str_c("POSIXct: YYY-MM-DD")
+  if ("Date" %in% var_class_type) var_notes <- str_c("Date: YYY-MM-DD")
+  if (any(c("POSIXct", "POSIXt") %in% var_class_type)) var_notes <- str_c("POSIXct: YYY-MM-DD")
+  if (any(c("hms", "difftime") %in% var_class_type)) var_notes <- str_c("hms: HH-MM-SS")
 
   summary_dataset <- tibble::tibble(
     field_name = var_name,
@@ -474,15 +478,15 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
   var_class_type <- class(dd %>% pull())
   specified_class_type <- c(
     "factor", "character", "numeric", "double", "integer",
-    "Date", "POSIXct", "POSIXt", "logical"
+    "Date", "POSIXct", "POSIXt", "hms", "difftime", "logical"
   )
   rlang::arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
 
   if (any(var_class_type %in% specified_class_type[1])) summary_dd <- summarize_factor_variable(dd = dd, var_name = var_name, wider_format = wider_format)
   if (any(var_class_type %in% specified_class_type[2])) summary_dd <- summarize_character_variable(dd = dd, var_name = var_name, wider_format = wider_format)
   if (any(var_class_type %in% specified_class_type[3:5])) summary_dd <- summarize_numeric_variable(dd = dd, var_name = var_name, wider_format = wider_format)
-  if (any(var_class_type %in% specified_class_type[6:8])) summary_dd <- summarize_date_variable(dd = dd, var_name = var_name)
-  if (any(var_class_type %in% specified_class_type[9])) summary_dd <- summarize_logical_variable(dd = dd, var_name = var_name)
+  if (any(var_class_type %in% specified_class_type[6:10])) summary_dd <- summarize_date_variable(dd = dd, var_name = var_name)
+  if (any(var_class_type %in% specified_class_type[11])) summary_dd <- summarize_logical_variable(dd = dd, var_name = var_name)
 
   summary_dd <- summary_dd %>%
     {
@@ -521,16 +525,22 @@ summarize_dataset <- function(dd,
                               dataset_name = NULL,
                               wider_format = FALSE) {
   require(tidyverse)
+  if (is.null(dataset_name)) tbl_name <- "TEMP_TBL" else tbl_name <- dataset_name
   data_dict_dd <- lapply(colnames(dd), function(x) {
     summarize_variable(dd = dd, var_name = x, wider_format = wider_format)
   }) %>%
     bind_rows() %>%
     mutate(
-      dd_name = dataset_name,
+      dd_name = tbl_name,
       num_rows = nrow(dd),
       num_cols = ncol(dd)
     ) %>%
-    relocate(dd_name, num_rows, num_cols)
+    relocate(dd_name, num_rows, num_cols) %>% 
+    {if (is.null(dataset_name)){
+      select(., -dd_name)
+    } else{
+      (.)
+    }}
 
   if (wider_format == TRUE && nrow(data_dict_dd) != length(colnames(dd))) stop("Check for the number of rows in data_dict_dd")
 
@@ -840,3 +850,4 @@ generate_roxygen_document <- function(dataset_name_list,
     )
   }
 }
+
