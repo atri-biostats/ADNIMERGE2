@@ -12,7 +12,7 @@ To build and install the package:
      - Data preparation: 
          + [`source("../data-raw/data_prep.R", chidr =TRUE)`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep.R) is used to extract `*.csv` files from `data-raw/*.zip` files and to store all `data-raw/*.csv` files in `data/*.rda` using [`use_data`](https://usethis.r-lib.org/reference/use_data.html)
        
-        + [`source("../data-raw/data_prep_recode.R", chidr =TRUE)`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R) is used to replace recoded values of a dataset using data dictionary file.
-     - Generate documentations: [`source('document.R')`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools/document.R) is used to generate documentations based on the `ADNIMERGE::DATADIC` and actual dataset value
+        + [`source("../data-raw/data_prep_recode.R", chidr =TRUE)`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R) is used to replace recoded values of a dataset using data dictionary file `ADNIMERGE2::DATADIC`.
+     - Generate documentations: [`source('document.R')`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools/document.R) is used to generate documentations based on the `ADNIMERGE2::DATADIC` and actual dataset value
     
   * To install the package locally `install.packages(ADNIMERGE2, repos = NULL, type = "source")`
