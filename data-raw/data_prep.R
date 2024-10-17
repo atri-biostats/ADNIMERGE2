@@ -68,7 +68,7 @@ if (length(list_csv_files) > 0) {
 
 if (EXISTED_CSVFILE) {
   csv_removed_strings <- str_c("_", format(data_downloaded_date, "%d%b%Y"))
-  apply_use_data(
+  using_use_data(
     input_dir = "./data-raw/",
     file_extension = ".csv"
   )

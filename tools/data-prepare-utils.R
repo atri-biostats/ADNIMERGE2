@@ -10,7 +10,7 @@
 #' @return A file path if the script is not compiled (i.e. `run_script == FALSE`) otherwise `TRUE` value
 #' @examples
 #' \dontrun{
-#' using_use_data(
+#' use_data_modified(
 #'   dataset_name = "ADAS",
 #'   dataset = ADNIMERGE2::adas_pooled,
 #'   edit_type = "create",
@@ -177,7 +177,14 @@ rename_file <- function(input_dir,
 #' @param input_dir The directory where the .csv file is located.
 #' @param file_extension File extension, Default: ".csv"
 #' @return `TRUE` if the .rda dataset is created and stored in `data` directory
-#' @rdname apply_use_data
+#' @rdname using_use_data
+#' @seealso
+#'  \code{\link[ADNIMERGE2]{use_data_modified}}
+#' @examples
+#' \dontrun{
+#'  using_use_data(input_dir = "./data-raw/",
+#'                 file_extension = ".csv")
+#' } 
 using_use_data <- function(input_dir,
                            file_extension = ".csv") {
   require(stringr)
