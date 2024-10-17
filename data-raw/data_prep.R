@@ -67,7 +67,16 @@ if (length(list_csv_files) > 0) {
 }
 
 if (EXISTED_CSVFILE) {
+  # Removing date stamp from file name
   csv_removed_strings <- str_c("_", format(data_downloaded_date, "%d%b%Y"))
+  rename_file(
+    input_dir = list_csv_files,
+    output_dir = ".",
+    file_extension = ".csv",
+    removed_strings = csv_removed_strings,
+    file_action = "file_rename"
+  )
+  # Store datasets in "./data" folder
   using_use_data(
     input_dir = "./data-raw/",
     file_extension = ".csv"
