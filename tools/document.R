@@ -44,8 +44,6 @@ common_description <- str_c(
 )
 ## Authors ----
 authors <- "\\href{adni-data@googlegroups.com}{adni-data@googlegroups.com}"
-## Related sources ----
-seealso <- "\\code{\\link{ADNIMERGE2::DATADIC}}"
 
 # Prepare data dictionary ----
 ## Generate data dictionary from actual dataset ----
@@ -109,7 +107,6 @@ temp_data_dict <- temp_data_dict %>%
     add_authors = authors,
     short_description = str_c(CRFNAME, common_description, sep = " "),
     dataset_source_type = "raw",
-    add_seealso = seealso,
     add_source = loni_data_link
   ) %>%
   # Add field code and labels from DATADIC dataset
@@ -133,7 +130,7 @@ temp_data_dict <- temp_data_dict %>%
   ) %>%
   select(
     dd_name, num_rows, num_cols, field_name, field_class, field_label, field_values, field_notes,
-    dataset_label, add_authors, short_description, dataset_source_type, add_seealso, add_source
+    dataset_label, add_authors, short_description, dataset_source_type, add_source
   )
 
 # Generate documentations ------

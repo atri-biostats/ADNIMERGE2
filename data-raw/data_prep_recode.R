@@ -109,12 +109,13 @@ if (EXISTED_DATADTIC) {
           )
         }
         # Using usethis::use_data()
-        use_data_modified(
+        data_update_status <- use_data_modified(
           dataset_name = cur_tblname_short,
           dataset = dd,
           edit_type = "create",
           run_script = TRUE
         )
+        if (data_update_status != TRUE) stop("The ", tb, " has not been updated!")
       }
 
       message(" >> ", cur_tblname_short, " dataset has been removed from .GlobalEnv")

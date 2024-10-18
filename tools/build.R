@@ -15,13 +15,16 @@ callr::rscript(
   script = "./data-raw/data_prep.R", 
   wd = '.'
 )
+
 RECODE_VALUE <- TRUE
+
 if (RECODE_VALUE) {
   callr::rscript(
     script = "./data-raw/data_prep_recode.R", 
     wd = '.'
   )
 }
+
 ## Generate documentations ----
 callr::rscript(
   script = "./tools/document.R", 
@@ -30,6 +33,6 @@ callr::rscript(
 
 ## Finalized package building ----
 devtools::load_all("./")
-document()
-check(error_on = "error")
+devtools::document()
+devtools::check(error_on = "error", vignettes = FALSE)
 pkg_dir <- devtools::build(vignettes = FALSE)

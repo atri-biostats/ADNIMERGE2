@@ -22,14 +22,14 @@
 #' @rdname use_data_modified
 #' @export
 #' @importFrom rlang arg_match0
-#' @importFrom usethis use_data_raw
+#' @importFrom usethis use_data_raw use_data
 #' @importFrom readr read_lines write_lines
 use_data_modified <- function(dataset_name,
-                           dataset,
-                           edit_type = "create",
-                           run_script = TRUE,
-                           add_text = NULL, 
-                           include_pipe = FALSE) {
+                              dataset,
+                              edit_type = "create",
+                              run_script = TRUE,
+                              add_text = NULL,
+                              include_pipe = FALSE) {
   require(usethis)
   require(readr)
   require(rlang)
@@ -38,12 +38,12 @@ use_data_modified <- function(dataset_name,
   if (!is.logical(run_script)) stop("run_script must be a boolean value")
 
   added_script <- paste0(dataset_name, " <- ", dataset_name)
-  
+
   # Create data-preparation script in 'data-raw/dataset_name.R'
   raw_dataset_path <- file.path(".", "data-raw", paste0(dataset_name, ".R"))
 
   if (edit_type %in% "create") {
-   # if (file.exists(raw_dataset_path)) file.remove(raw_dataset_path)
+    if (file.exists(raw_dataset_path)) file.remove(raw_dataset_path)
     usethis::use_data_raw(name = dataset_name, open = FALSE)
     prefix_lines <- NULL
     suffix_lines <- NULL
@@ -73,9 +73,11 @@ use_data_modified <- function(dataset_name,
   }
   added_script <- added_script[!is.na(added_script)]
 
-  if (include_pipe){
-    added_script[seq_along(added_script) == length(added_script)] <- paste0(added_script[seq_along(added_script) == length(added_script)], 
-                                                                       " %>%")
+  if (include_pipe) {
+    added_script[seq_along(added_script) == length(added_script)] <- paste0(
+      added_script[seq_along(added_script) == length(added_script)],
+      " %>%"
+    )
   }
 
   temp_script <- c(prefix_lines, added_script, suffix_lines)
@@ -101,27 +103,32 @@ use_data_modified <- function(dataset_name,
 #' @description This function is used to extracted raw datasets from zip files
 #' @param input_dir The directory where the zip file is located.
 #' @param file_name Zip file name
-#' @param output_dir The directory where the unzipped file is to be stored. If it is NULL, it will stored in the same input directory. Default: NULL
+#' @param output_dir The directory where the unzipped file is to be stored, Default: NULL.
+#'                   Stored the file in the same input directory if it is NULL.
+#' @param overwrite Indicator to overwrite file, Default: TRUE
 #' @return `TRUE` if the file is properly unzipped
 #' @rdname get_unzip_file
 #' @export
 get_unzip_file <- function(input_dir,
                            file_name,
-                           output_dir = ".") {
+                           output_dir = ".",
+                           overwrite = TRUE) {
+  require(utils)
+
   if (output_dir %in% ".") output_dir <- input_dir
 
   if (!output_dir %in% ".") {
     if (dir.exists(output_dir) == FALSE) stop(output_dir, " is not existed")
   }
 
-  output_dir <- paste0(output_dir, str_remove(file_name, ".zip"))
+  output_dir <- paste0(output_dir, gsub(pattern = ".zip", replacement = "", x = file_name))
   if (dir.exists(output_dir) == FALSE) dir.create(output_dir)
 
   file_path <- paste0(input_dir, file_name)
   if (file.exists(file_path) == FALSE) stop(file_name, " zip File is not found in ", input_dir)
-  unzip(
+  utils::unzip(
     zipfile = file_path, exdir = output_dir,
-    files = NULL, list = FALSE, overwrite = FALSE,
+    files = NULL, list = FALSE, overwrite = overwrite,
     setTimes = FALSE, unzip = "internal"
   )
 
@@ -182,9 +189,11 @@ rename_file <- function(input_dir,
 #'  \code{\link[ADNIMERGE2]{use_data_modified}}
 #' @examples
 #' \dontrun{
-#'  using_use_data(input_dir = "./data-raw/",
-#'                 file_extension = ".csv")
-#' } 
+#' using_use_data(
+#'   input_dir = "./data-raw/",
+#'   file_extension = ".csv"
+#' )
+#' }
 using_use_data <- function(input_dir,
                            file_extension = ".csv") {
   require(stringr)
@@ -211,7 +220,7 @@ using_use_data <- function(input_dir,
       dataset = get(dd_name),
       run_script = TRUE,
       add_text = NULL,
-      edit_type = "create", 
+      edit_type = "create",
       include_pipe = FALSE
     )
     rm(list = as.character(dd_name), envir = .GlobalEnv)
@@ -241,10 +250,10 @@ adjust_code_lables <- function(dd,
   )
 
   dd <- dd %>%
-    mutate(across(any_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
+    mutate(across(all_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
     rename_with(
       ~ str_c(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
-      any_of(column_list_dd$specified_name_list)
+      all_of(column_list_dd$specified_name_list)
     )
 
   if (nrow(dd) > 1) {

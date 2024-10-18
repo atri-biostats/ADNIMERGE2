@@ -31,25 +31,29 @@ if (EXISTED_ZIPFILE) {
 
   lapply(list_zip_files, function(zip_file) {
     ### Unzipped file ----
-    get_unzip_file(
+    unzipped_file_status <- get_unzip_file(
       input_dir = "./data-raw/",
       file_name = str_remove_all(string = zip_file, pattern = "./data-raw/"),
-      output_dir = "."
+      output_dir = ".",
+      overwrite = TRUE
     )
+    if (unzipped_file_status != TRUE) stop("Check the ", zip_file, " file")
     ### Renamed csv files ----
     rawdata_csv_path <- str_c(str_remove_all(string = zip_file, pattern = ".zip"), "/")
-    rename_file(
+    rename_file_status <- rename_file(
       input_dir = rawdata_csv_path,
       output_dir = ".",
       file_extension = ".csv",
       removed_strings = removed_zip_strings,
       file_action = "file_rename"
     )
+    if (rename_file_status != TRUE) stop("Check renaming files in ", zip_file, " file")
     ### Create .rda dataset ----
-   using_use_data(
+    data_create_status <- using_use_data(
       input_dir = rawdata_csv_path,
       file_extension = ".csv"
     )
+    if (data_create_status != TRUE) stop("The .rda files are not created!")
   })
 }
 
@@ -69,18 +73,20 @@ if (length(list_csv_files) > 0) {
 if (EXISTED_CSVFILE) {
   # Removing date stamp from file name
   csv_removed_strings <- str_c("_", format(data_downloaded_date, "%d%b%Y"))
-  rename_file(
+  rename_file_status <- rename_file(
     input_dir = list_csv_files,
     output_dir = ".",
     file_extension = ".csv",
     removed_strings = csv_removed_strings,
     file_action = "file_rename"
   )
+  if (rename_file_status != TRUE) stop("Check renaming files in ", list_csv_files, " file")
   # Store datasets in "./data" folder
-  using_use_data(
+  data_create_status <- using_use_data(
     input_dir = "./data-raw/",
     file_extension = ".csv"
   )
+  if (data_create_status != TRUE) stop("The .rda files are not created!")
 }
 
 # Adding common columns and replacing `-4` as missing value ----
@@ -134,13 +140,13 @@ if (UPDATE_MISSING_VALUE) {
     message("Making -4 values as missing value for ", tb)
     dd <- make_missing_value(dd = dd, col_name = names(dd), value = "-4", missing_char = NA)
 
-    use_data_modified(
+    data_update_status <- use_data_modified(
       dataset_name = tb,
       dataset = dd,
       edit_type = "create",
       run_script = TRUE
     )
-
+    if (data_update_status != TRUE) stop("The ", tb, " has not been updated!")
     ## Remove objects from the .GlobalEnv
     rm(list = c("tb", "dd"))
   }
