@@ -7,7 +7,7 @@ Authors@R: person("ATRI Biostatistics", email = "biostat_request@atrihub.io",
   role = c("aut", "cre"))
 BugReports: https://github.com/atrihub/ADNIMERGE2/issues
 URL: https://adni.loni.usc.edu
-License: https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf
+License: https://ida.loni.usc.edu/collaboration/access/appLicense.jsp
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -17,3 +17,7 @@ Imports:
 Depends: 
     R (>= 2.10)
 RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

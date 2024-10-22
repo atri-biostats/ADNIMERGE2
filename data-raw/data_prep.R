@@ -1,64 +1,163 @@
-# Script setup ----
+# Data preparation script setup ----
+source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "R", "utils.R"))
+# Libraries ----
 library(tidyverse)
-source(file.path("..", "tools", "data_prepare_function.R"))
-data_download_date <- as.Date("2024-09-26")
-if (dir.exists("../data") == TRUE) unlink(x = "../data/", recursive = TRUE)
-dir.create("../data")
 
-# Downloaded Zip file ----
-all_zip_files <- list.files(
-  path = "../data-raw", pattern = ".zip", full.names = TRUE,
+# Data downloaded date ----
+data_downloaded_date <- as.Date("2024-10-04")
+DATA_DOWNLOADED_DATE <- as.Date(data_downloaded_date)
+usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
+
+# Extract raw datasets from zip file ----
+list_zip_files <- list.files(
+  path = "./data-raw", pattern = ".zip", full.names = TRUE,
   all.files = TRUE, recursive = TRUE
 )
-if (length(all_zip_files) > 0) {
-  zip_files_prefix <- str_remove_all(all_zip_files, pattern = "Tables.zip|.zip|../data-raw/")
+if (length(list_zip_files) > 0) {
+  EXISTED_ZIPFILE <- TRUE
+} else {
+  EXISTED_ZIPFILE <- FALSE
+  warning("No existed zip file existed in data-raw directory")
+}
+
+if (EXISTED_ZIPFILE) {
+  zip_files_prefix <- str_remove_all(list_zip_files, pattern = "Tables.zip|.zip|./data-raw/")
 
   removed_zip_strings <- str_c(c(
     zip_files_prefix,
-    str_c("_", format(data_download_date, "%d%b%Y")), "v_"
+    str_c("_", format(data_downloaded_date, "%d%b%Y")), "v_"
   ), collapse = "|")
 
-  lapply(all_zip_files, function(zip_files) {
+  lapply(list_zip_files, function(zip_file) {
     ### Unzipped file ----
-    get_unzip_file(
-      input_dir = "../data-raw",
-      file_name = zip_files,
-      output_dir = "."
+    unzipped_file_status <- get_unzip_file(
+      input_dir = "./data-raw/",
+      file_name = str_remove_all(string = zip_file, pattern = "./data-raw/"),
+      output_dir = ".",
+      overwrite = TRUE
     )
+    if (unzipped_file_status != TRUE) stop("Check the ", zip_file, " file")
     ### Renamed csv files ----
-    rawdata_csv_path <- str_c(str_remove_all(string = zip_files, pattern = ".zip"), "/")
-    rename_file(
+    rawdata_csv_path <- str_c(str_remove_all(string = zip_file, pattern = ".zip"), "/")
+    rename_file_status <- rename_file(
       input_dir = rawdata_csv_path,
       output_dir = ".",
       file_extension = ".csv",
       removed_strings = removed_zip_strings,
       file_action = "file_rename"
     )
-    ### Convert csv files to rda file format ----
-    convert_rda_file(
+    if (rename_file_status != TRUE) stop("Check renaming files in ", zip_file, " file")
+    ### Create .rda dataset ----
+    data_create_status <- using_use_data(
       input_dir = rawdata_csv_path,
-      file_extension = ".csv",
-      output_dir = "../data/"
+      file_extension = ".csv"
     )
+    if (data_create_status != TRUE) stop("The .rda files are not created!")
   })
-} else {
-  warning("No downloaded zip file existed in data-raw directory")
 }
 
-# Downloaded csv file ----
-downlaoded_csv_files <- list.files(
-  path = "../data-raw", pattern = ".csv",
+# Convert raw .csv dataset into .rda file format ----
+list_csv_files <- list.files(
+  path = "./data-raw", pattern = ".csv",
   all.files = TRUE, full.names = FALSE, recursive = FALSE
 )
 
-if (length(downlaoded_csv_files) > 0) {
-  csv_removed_strings <- str_c("_", format(data_download_date, "%d%b%Y"))
-  ## Convert DATADIC.csv to rda file format ----
-  convert_rda_file(
-    input_dir = "../data-raw/",
-    file_extension = ".csv",
-    output_dir = "../data/"
-  )
+if (length(list_csv_files) > 0) {
+  EXISTED_CSVFILE <- TRUE
 } else {
-  warning("No downloaded csv file existed in data-raw directory")
+  EXISTED_CSVFILE <- FALSE
+  warning("No existed csv file existed in data-raw directory")
 }
+
+if (EXISTED_CSVFILE) {
+  # Removing date stamp from file name
+  csv_removed_strings <- str_c("_", format(data_downloaded_date, "%d%b%Y"))
+  rename_file_status <- rename_file(
+    input_dir = list_csv_files,
+    output_dir = ".",
+    file_extension = ".csv",
+    removed_strings = csv_removed_strings,
+    file_action = "file_rename"
+  )
+  if (rename_file_status != TRUE) stop("Check renaming files in ", list_csv_files, " file")
+  # Store datasets in "./data" folder
+  data_create_status <- using_use_data(
+    input_dir = "./data-raw/",
+    file_extension = ".csv"
+  )
+  if (data_create_status != TRUE) stop("The .rda files are not created!")
+}
+
+# Adding common columns and replacing `-4` as missing value ----
+dataset_list_files <- list.files(
+  path = "./data", pattern = ".rda", full.names = TRUE,
+  all.files = TRUE, recursive = TRUE
+)
+data_dict_file <- file.path(".", "data", "DATADIC.rda")
+dataset_list_files <- dataset_list_files[!dataset_list_files == data_dict_file]
+
+if (length(dataset_list_files) > 0) {
+  UPDATE_MISSING_VALUE <- TRUE
+} else {
+  UPDATE_MISSING_VALUE <- FALSE
+  warning("No existed datasets in data directory")
+}
+
+if (UPDATE_MISSING_VALUE) {
+  file_path_patterns <- c("./data/|.rda")
+  prefix_patterns <- c(str_c("adni", 1:4, "_"), "adni_")
+  sufix_patterns <- c("_pooled", "_harmonized")
+  string_removed_pattern <- str_c(c(file_path_patterns, prefix_patterns, sufix_patterns),
+    collapse = "|"
+  )
+
+  tblname_list_dd <- tibble(full_tblname = dataset_list_files) %>%
+    mutate(
+      short_tblname = str_remove_all(string = full_tblname, pattern = file_path_patterns),
+      tblname = str_to_upper(str_remove_all(string = full_tblname, pattern = string_removed_pattern))
+    )
+
+  for (tb in tblname_list_dd$short_tblname) {
+    ## Load all the datasets to .GlobalEnv
+    lapply(
+      tblname_list_dd %>% filter(short_tblname == tb) %>% pull(full_tblname),
+      load, .GlobalEnv
+    )
+    assign("dd", get(tb))
+
+    if ("RID" %in% names(dd)) check_RID_col <- TRUE else check_RID_col <- FALSE
+    ## Adding common columns -----
+    if (check_RID_col) {
+      message("Adding ORGCOL and CORPOL variables in ", tb)
+      dd <- dd %>%
+        create_col_protocol(dd = ., phaseVar = c("Phase", "PHASE")) %>%
+        create_orig_protocol(dd = .)
+    } else {
+      message("ORGCOL and CURPOL are not addedd in ", tb)
+    }
+    # Replacing `-4` as missing value -----
+    message("Making -4 values as missing value for ", tb)
+    dd <- make_missing_value(dd = dd, col_name = names(dd), value = "-4", missing_char = NA)
+
+    data_update_status <- use_data_modified(
+      dataset_name = tb,
+      dataset = dd,
+      edit_type = "create",
+      run_script = TRUE
+    )
+    if (data_update_status != TRUE) stop("The ", tb, " has not been updated!")
+    ## Remove objects from the .GlobalEnv
+    rm(list = c("tb", "dd"))
+  }
+
+  rm(list = c(
+    "tblname_list_dd", "file_path_patterns", "prefix_patterns",
+    "sufix_patterns", "string_removed_pattern", "check_RID_col",
+    "DATA_DOWNLOADED_DATE"
+  ))
+}
+rm(list = c(
+  "dataset_list_files", "data_dict_file",
+  "data_downloaded_date", "list_zip_files"
+))
