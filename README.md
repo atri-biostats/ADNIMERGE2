@@ -12,4 +12,4 @@ To generate the package:
      -  Data preparation: [`source("../data-raw/data_prep.R", chidr =TRUE)`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep.R) is used to extract files from `data-raw/*.zip` files and/or converts all `data-raw/*.csv` files to `data/*.rda` files
      - Generate documentations: [`source('document.R')`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools/document.R) is used to generate documentations based on the `ADNIMERGE::DATADIC` and actual dataset value
     
-  * To install the package locally `install.packages(ADNIMERGE2, repos = NULL, type = "source")`
+  * To install the package locally `install.packages("path/to/ADNIMERGE2.tar.gz", repos = NULL, type = "source")`
