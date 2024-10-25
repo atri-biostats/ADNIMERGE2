@@ -130,6 +130,13 @@ generate_variable_format_list <- function(data_dict,
                                           field_notesVar = NULL) {
   require(tidyverse)
   require(assertr)
+  
+  # function for escaping braces
+  escape <- function(x){
+    y <- gsub("{", "\\{", x, fixed = TRUE)
+    gsub("}", "\\}", y, fixed = TRUE)
+  }
+  
   temp_dd <- data_dict_column_names(
     data_dict = data_dict,
     field_nameVar = field_nameVar,
@@ -141,9 +148,9 @@ generate_variable_format_list <- function(data_dict,
 
   label_value <- ifelse(is.na(temp_dd$labelVar), " ", temp_dd$labelVar)
 
-  return(str_c("#' \\item{\\strong{", temp_dd$nameVar, "} ",
-    "\\emph{ ", temp_dd$classVar, "}}",
-    "{", label_value, " ", temp_dd$notesVar, "}",
+  return(str_c("#' \\item ", temp_dd$nameVar, ": ",
+    " *", temp_dd$classVar, "* ",
+    escape(label_value), " ", escape(temp_dd$notesVar),
     collapse = ""
   ))
 }
@@ -657,7 +664,8 @@ generate_single_dataset_roxygen <- function(dd = NULL,
     str_c("#' @keywords ", dataset_source_type, " datasets \n"),
     "#'\n",
     format_description,
-    "#' \\describe{\n",
+    "#' @details\n",
+    "#' \\itemize{\n",
     str_c(
       unlist(lapply(temp_summarized_dd$nameVar, function(x) {
         generate_variable_format_list(
@@ -668,8 +676,8 @@ generate_single_dataset_roxygen <- function(dd = NULL,
       })),
       collapse = "\n"
     ),
-    "\n",
-    "#'} \n",
+    "#' \n",
+    "#' } \n",
     collapse = ""
   )
 

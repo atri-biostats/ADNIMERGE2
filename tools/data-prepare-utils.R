@@ -7,6 +7,7 @@
 #' @param run_script Indicator for running script, Default: TRUE
 #' @param add_text Additional text that will appended in the script, Default: NULL
 #' @param include_pipe Whether to include a pipe after the first line of the script, Default: FALSE
+#' @param clean If TRUE, remove script file
 #' @return A file path if the script is not compiled (i.e. `run_script == FALSE`) otherwise `TRUE` value
 #' @examples
 #' \dontrun{
@@ -17,8 +18,7 @@
 #'   run_script = TRUE
 #' )
 #' }
-#' @seealso
-#'  \code{\link[usethis]{use_data}}
+#' @seealso [usethis::use_data()]
 #' @rdname use_data_modified
 #' @export
 #' @importFrom rlang arg_match0
@@ -29,7 +29,8 @@ use_data_modified <- function(dataset_name,
                               edit_type = "create",
                               run_script = TRUE,
                               add_text = NULL,
-                              include_pipe = FALSE) {
+                              include_pipe = FALSE,
+  clean = TRUE) {
   require(usethis)
   require(readr)
   require(rlang)
@@ -90,6 +91,7 @@ use_data_modified <- function(dataset_name,
     new_env$dataset <- dataset
     assign(dataset_name, dataset, envir = new_env)
     sys.source(file = raw_dataset_path, envir = new_env, chdir = TRUE)
+    if(clean) file.remove(raw_dataset_path)
     return(TRUE)
   }
 
@@ -269,7 +271,7 @@ adjust_code_lables <- function(dd,
 
     if (unique_rows > 1) {
       temp_dd <- dd %>%
-        mutate(phase_code_var = str_c("\n #' \\code{\\link{", phase_var, "}}: ", code_var, "\n "))
+        mutate(phase_code_var = str_c("\n #' *", phase_var, "* : ", code_var, "\n "))
       temp_code <- str_c(str_c(temp_dd$phase_code_var, collapse = ""), "#' ")
       temp_text <- temp_dd %>%
         filter(row_number() %in% n()) %>%

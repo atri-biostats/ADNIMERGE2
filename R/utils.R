@@ -16,9 +16,6 @@
 #' @importFrom rlang arg_match0
 #' @importFrom stringr str_c str_detect str_remove_all str_extract
 get_siterid <- function(IDVar, type = "RID") {
-  require(stringr)
-  require(rlang)
-
   rlang::arg_match0(arg = type, values = c("RID", "SITEID"))
   # To check the ID variable contains at least 10 characters
   num_char <- nchar(IDVar)
@@ -65,7 +62,6 @@ adni_phase <- function() {
 #' @rdname original_study_protocol
 #' @export
 original_study_protocol <- function(RID) {
-  require(tidyverse)
   origprot <- case_when(
     RID >= 1 & RID < 2000 ~ "ADNI1",
     RID > 2000 & RID < 3000 ~ "ADNIGO",
@@ -87,10 +83,9 @@ original_study_protocol <- function(RID) {
 #' }
 #' @keywords ADNI study protocol
 #' @rdname adni_phase_order_num
+#' @importFrom dplyr case_when
 #' @export
 adni_phase_order_num <- function(phase) {
-  require(tidyverse)
-
   rlang::arg_match(
     arg = phase, values = adni_phase(),
     multiple = TRUE
@@ -111,15 +106,15 @@ adni_phase_order_num <- function(phase) {
 #' @param cur_study_phase Current ADNI study phase
 #' @param orig_study_phase ADNI study phase which a participant enrolled as new participant for the first time in ADNI study
 #' @return A character vector with the same size as `cur_study_phase` with study track.
-#' @examples
-#' \dontrun{
-#'
-#' }
 #' @keywords ADNI study track
+#' @importFrom tibble tibble
+#' @importFrom magrittr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr across
+#' @importFrom assertr verify
 #' @rdname adni_study_track
 adni_study_track <- function(cur_study_phase, orig_study_phase) {
-  require(tidyverse)
-  require(assertr)
+  cur_protocol <- orig_protocol <- NULL
 
   if (any(is.na(cur_study_phase) | is.na(orig_study_phase))) stop("Either cur_study_phase or orig_study_phase must not be empty")
 
@@ -148,8 +143,9 @@ adni_study_track <- function(cur_study_phase, orig_study_phase) {
 #' @param dd Data frame
 #' @return A data frame the same as `dd` with appended columns of "ORIGPROT"
 #' @rdname create_orig_protocol
+#' @importFrom dplyr relocate
 create_orig_protocol <- function(dd) {
-  require(tidyverse)
+  RID <- ORIGPROT <- NULL
   check_colnames(dd = dd, col_names = "RID")
   dd <- dd %>%
     mutate(ORIGPROT = factor(original_study_protocol(RID = RID),
@@ -166,8 +162,11 @@ create_orig_protocol <- function(dd) {
 #' @param phaseVar Phase column
 #' @return A data frame the same as `dd` with appended columns of "COLPROT"
 #' @rdname create_col_protocol
+#' @importFrom tidyselect all_of
+#' @importFrom dplyr rename_with
+#' @importFrom dplyr relocate
 create_col_protocol <- function(dd, phaseVar = NULL) {
-  require(tidyverse)
+  COLPROT <- NULL
   if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE")
   existed_column <- extract_cols(dd, col_name = phaseVar)
   if (length(existed_column) > 1) stop("Check number of column names of Phase/PHASE")
@@ -205,7 +204,6 @@ create_col_protocol <- function(dd, phaseVar = NULL) {
 split_strings <- function(input_string,
                           first_split_paramter = "; |;",
                           second_split_paramter = "=| = ") {
-  library(tidyverse)
   # Splitting the input_string with first_split_paramter
   split_pairs <- unlist(strsplit(x = input_string, split = first_split_paramter))
   if (length(split_pairs) > 0) {
@@ -254,12 +252,15 @@ create_string_split <- function(data) {
 #'                            nested_value = TRUE)
 #' }
 #' @rdname get_factor_levels_datadict
+#' @importFrom stringr str_to_lower
+#' @importFrom tidyr nest
+#' @importFrom purrr map
+#' @importFrom tidyr unnest
 #' @export
 get_factor_levels_datadict <- function(data_dict,
                                        tbl_name = NULL,
                                        nested_value = FALSE) {
-  require(tidyverse)
-
+  TBLNAME <- TYPE <- CODE <- FLDNAME <- code_list <- data <- NULL
   if (is.null(tbl_name)) tbl_name <- unique(data_dict$TBLNAME)
   check_colnames(dd = data_dict, col_names = c("PHASE", "TYPE", "TBLNAME", "FLDNAME", "CODE"))
 
@@ -357,10 +358,10 @@ get_factor_levels_datadict <- function(data_dict,
 #'                    dd_fldnames = colnames(ADNIMERGE2::adas_pooled))
 #' }
 #' @rdname get_factor_fldname
+#' @importFrom dplyr select
 #' @export
 get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
-  
-  require(tidyverse)
+  TBLNAME <- FLDNAME <- class_type <- NULL
   colNames <- c("TBLNAME", "FLDNAME", "class_type")
   if (!all(colNames %in% colnames(data_dict))) {
     stop("At least one of the variable ", toString(data_dict), " is not found data_dict")
@@ -392,8 +393,8 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
 #' @param fld_name Field/column name
 #' @return List value
 #'  \itemize{
-#'    \item{old_values }{Coded values}
-#'    \item{new_values }{New values that will replace the old values, 'old_values'}
+#'    \item `old_values` Coded values
+#'    \item `new_values` New values that will replace the old values, `old_values`
 #'  }
 #' @examples
 #' \dontrun{
@@ -405,12 +406,9 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
 #'                       fld_name = "COCOMND")
 #' }
 #' @rdname single_collect_values
-#' @seealso
-#'     \code{collect_values}
-
+#' @seealso [collect_values()]
 single_collect_values <- function(data_dict, tbl_name, fld_name) {
-  
-  require(tidyverse)
+  FLDNAME <- PHASE <- TBLNAME <- code_list <- NULL
   colNames <- c("PHASE", "TBLNAME", "FLDNAME", "code_list")
   
   if (!all(colNames %in% names(data_dict))) stop("At least one of ", toString(colNames), " is not found in data_dict")
@@ -604,15 +602,16 @@ detect_negative_value <- function(input_value) {
 #'                                                    new_values = new_values)
 #' }
 #' @rdname phase_specific_value_replacement
-#' @seealso
-#'     \code{multiple_phase_value_replacement}
+#' @seealso [multiple_phase_value_replacement()]
+#' @importFrom rlang sym
+#' @importFrom dplyr pull bind_rows arrange rename
 phase_specific_value_replacement <- function(dd,
                                              fld_name,
                                              phase = NULL,
                                              phaseVar = "PHASE",
                                              old_values,
                                              new_values) {
-  require(tidyverse)
+  phase_var <- NULL
   if (is.null(phase)) {
     rlang::arg_match(
       arg = phase,
@@ -653,8 +652,8 @@ phase_specific_value_replacement <- function(dd,
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values A list value associated with each ADNI study phase and should be in this format: [phase_list]$values
 #'    \itemize{
-#'     \item{old_values }{Value that will be replaced}
-#'     \item{new_values }{New values that will replace the old values, 'old_values'}
+#'     \item `old_values` Value that will be replaced
+#'     \item `new_values` New values that will replace the old values, `old_values`
 #'  }
 #' @return A data frame with replaced values
 #' @examples
@@ -704,8 +703,8 @@ multiple_phase_value_replacement <- function(dd,
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values A nested list values of each columns associated with corresponding ADNI study phase and should be in this format: [column_name][[phase_list]]$values
 #'    \itemize{
-#'     \item{old_values}{ Value that will be replaced}
-#'     \item{new_values}{ New values that will replace the old values, 'old_values'}
+#'     \item `old_values` Value that will be replaced
+#'     \item `new_values` New values that will replace the old values, `old_values`
 #'  }
 #' @return A data frame with replaced values
 #' @examples
@@ -756,11 +755,13 @@ data_value_replacement <- function(dd,
 #' @param missing_char Missing value value, Default: NA
 #' @return A data frame with replaced value.
 #' @rdname make_missing_value
+#' @importFrom dplyr filter
+#' @importFrom dplyr if_all
+#' @importFrom tibble as_tibble
 #' @export
 make_missing_value <- function(dd, col_name = NULL, value = "-4", missing_char = NA) {
  
-  require(tidyverse)
-   column_list <- extract_cols_value(dd = dd, value = value, col_name = col_name)
+  column_list <- extract_cols_value(dd = dd, value = value, col_name = col_name)
 
   dd <- dd %>%
     {
@@ -790,7 +791,6 @@ make_missing_value <- function(dd, col_name = NULL, value = "-4", missing_char =
 #' }
 #' @rdname extract_cols_value
 extract_cols_value <- function(dd, value, col_name = NULL) {
-  require(tidyverse)
   dd <- tibble(dd)
   list_columns <- lapply(colnames(dd), function(col_names) {
     temp_data <- dd %>%

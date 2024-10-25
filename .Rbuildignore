@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^README\.Rmd$
+^README\.html$
+^README_cache$
+^tools$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
