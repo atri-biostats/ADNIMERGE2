@@ -30,7 +30,7 @@ use_data_modified <- function(dataset_name,
                               run_script = TRUE,
                               add_text = NULL,
                               include_pipe = FALSE,
-  clean = TRUE) {
+                              clean = TRUE) {
   require(usethis)
   require(readr)
   require(rlang)
