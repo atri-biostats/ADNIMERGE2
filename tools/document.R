@@ -68,7 +68,9 @@ temp_field_codetext <- DATADIC %>%
   mutate(TBLNAME = str_to_lower(TBLNAME)) %>%
   filter(TBLNAME %in% unique_tblname) %>%
   distinct(PHASE, TBLNAME, FLDNAME, TEXT, CODE) %>%
-  mutate(TEXT = str_remove_all(string = TEXT, pattern = "\n")) %>%
+  mutate(across(c(TEXT, CODE), 
+                ~str_remove_all(string = .x, 
+                                pattern = "\n|\\<br\\>|\\<br /\\>|\\<!--|--\\>$"))) %>%
   group_by(TBLNAME, FLDNAME) %>%
   mutate(num_records = n()) %>%
   nest() %>%
