@@ -68,6 +68,7 @@ temp_field_codetext <- DATADIC %>%
   mutate(TBLNAME = str_to_lower(TBLNAME)) %>%
   filter(TBLNAME %in% unique_tblname) %>%
   distinct(PHASE, TBLNAME, FLDNAME, TEXT, CODE) %>%
+  filter(!str_detect(CODE, "crfname|\\<display")) %>%
   mutate(across(c(TEXT, CODE), 
                 ~str_remove_all(string = .x, 
                                 pattern = "\n|\\<br\\>|\\<br /\\>|\\<!--|--\\>$"))) %>%
