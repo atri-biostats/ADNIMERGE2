@@ -18,13 +18,13 @@ lapply(list_rda_files, load, .GlobalEnv)
 ## Exclude DATADIC dataset from the list
 data_dictionary_path <- file.path(".", "data", "DATADIC.rda")
 data_downloaded_date_path <- file.path(".", "data", "DATA_DOWNLOADED_DATE.rda")
-list_rda_files <- list_rda_files[!list_rda_files %in% c(data_dictionary_path, data_downloaded_date_path)]
+list_rda_files <- list_rda_files[!list_rda_files %in% c(data_downloaded_date_path)]
 combined_datasets <- mget(str_remove_all(
   string = list_rda_files,
   pattern = ".rda|./data/"
 ))
 rm(list = as.character(str_remove_all(
-  string = list_rda_files,
+  string = list_rda_files[!list_rda_files %in% data_dictionary_path],
   pattern = ".rda|./data/"
 )))
 prefix_patterns <- c(str_c("adni", 1:4, "_"), "adni_")
@@ -147,3 +147,21 @@ generate_roxygen_document(
   output_file_name = data_document_filepath
 )
 message("Completed generating documentations for raw datasets")
+
+# Add documentation for DATA_DOWNLOADED_DATE file
+cat("#' ADNI4 data download date",
+    "#'",
+    paste0("#' The date when data in this package were downloaded from ",
+           loni_data_link, "."),
+    "#'",
+    "#' @docType data",
+    "#' @keywords datasets",
+    "#' @name DATA_DOWNLOADED_DATE",
+    "#' @usage data(DATA_DOWNLOADED_DATE)",
+    "#' @format A `Date` class object.",
+    "#' @examples",
+    "#' \\dontrun{",
+    "#' ADNIMERGE2::DATA_DOWNLOADED_DATE",
+    "#' }",
+    "NULL\n\n",
+    file = file.path(".", "R", "data.R"), sep = "\n", append = TRUE)

@@ -1,42 +1,3 @@
-# ID Preparation/Extraction -----
-## Gets SITEID/RID -----
-#' @title Gets RID
-#' @description This function is used to extract the RID from the original PTID format of SITEID_S_RID.
-#' @param IDVar Participant ID variable with the format SITEID_S_RID; XXX_S_XXX.
-#' @param type Whether to get RID or SIETID
-#' @return A vector with the same size as IDVar with specified ID type format.
-#' @examples
-#' \dontrun{
-#' rid <- get_siterid(IDVar = c("001_S_1234", "111_S_99999"), type = "RID")
-#' siteid <- get_siterid(IDVar = c("001_S_1234", "111_S_99999"), type = "SITEID")
-#' }
-#' @keywords Get IDs
-#' @rdname get_siterid
-#' @export
-#' @importFrom rlang arg_match0
-#' @importFrom stringr str_c str_detect str_remove_all str_extract
-get_siterid <- function(IDVar, type = "RID") {
-  rlang::arg_match0(arg = type, values = c("RID", "SITEID"))
-  # To check the ID variable contains at least 10 characters
-  num_char <- nchar(IDVar)
-  ps_nchar <- nchar("XXX_S_X")
-  if (all(num_char >= ps_nchar) == FALSE) stop(stringr::str_c(toString(IDVar[num_char < 7]), " contain(s) less than ", ps_nchar, " characters"))
-  # To check if the pattern is similar to XXX_S_XXXX
-  ps_pattern <- "[0-9]{3}_S_[0-9]{4}"
-  pattern_status <- stringr::str_detect(string = IDVar, pattern = ps_pattern)
-  if (all(pattern_status) == FALSE) stop(stringr::str_c(IDVar[pattern_status == FALSE], " does not match XXX_S_XXXX patterns"))
-
-  if (type %in% "RID") {
-    id <- stringr::str_remove_all(string = IDVar, pattern = "[0-9]{3}_S_")
-  }
-  if (type %in% "SITEID") {
-    id <- stringr::str_extract(string = IDVar, pattern = "[0-9]{3}_S")
-    id <- stringr::str_remove_all(string = id, "_S")
-  }
-
-  return(id)
-}
-
 # ADNI Study Phase ----
 ## List of ADNI study phase ----
 #' @title List ADNI Study Phase
@@ -80,6 +41,7 @@ original_study_protocol <- function(RID) {
 #' @examples
 #' \dontrun{
 #' phase_order_num <- adni_phase_order_num(phase = c("ADNI1", "ADNI3", "ADNI4", "ADNIGO"))
+#' phase_order_num
 #' }
 #' @keywords ADNI study protocol
 #' @rdname adni_phase_order_num
@@ -144,40 +106,48 @@ adni_study_track <- function(cur_study_phase, orig_study_phase) {
 #' @return A data frame the same as `dd` with appended columns of "ORIGPROT"
 #' @rdname create_orig_protocol
 #' @importFrom dplyr relocate
+#' @importFrom assertr num_row_NAs
+#' @importFrom assertr within_bounds
+#' @importFrom assertr assert_rows
 create_orig_protocol <- function(dd) {
   RID <- ORIGPROT <- NULL
   check_colnames(dd = dd, col_names = "RID")
   dd <- dd %>%
     mutate(ORIGPROT = factor(original_study_protocol(RID = RID),
-                             levels = adni_phase()
+      levels = adni_phase()
     )) %>%
-    relocate(ORIGPROT)
+    relocate(ORIGPROT) %>% 
+    assert_rows(num_row_NAs, within_bounds(0,0.05), ORIGPROT)
   return(dd)
 }
 
-## Create COLPROT variable ----
-#' @title Creating COLPROT Column
+## Create CURPROT variable ----
+#' @title Creating CURPROT Column
 #' @description This function is used to create ORIGPROT in the dataset based RID value.
 #' @param dd Data frame
 #' @param phaseVar Phase column
-#' @return A data frame the same as `dd` with appended columns of "COLPROT"
+#' @return A data frame the same as `dd` with appended columns of "CURPROT"
 #' @rdname create_col_protocol
 #' @importFrom tidyselect all_of
 #' @importFrom dplyr rename_with
 #' @importFrom dplyr relocate
+#' @importFrom assertr num_row_NAs
+#' @importFrom assertr within_bounds
+#' @importFrom assertr assert_rows
 create_col_protocol <- function(dd, phaseVar = NULL) {
-  COLPROT <- NULL
-  if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE")
+  CURPROT <- NULL
+  if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE", "ProtocolID")
   existed_column <- extract_cols(dd, col_name = phaseVar)
   if (length(existed_column) > 1) stop("Check number of column names of Phase/PHASE")
-  
+
   dd <- dd %>%
     {
       if (!is.na(existed_column)) {
         mutate(., across(all_of(existed_column), as.character)) %>%
-          rename_with(., ~ paste0("COLPROT"), .cols = all_of(existed_column)) %>%
-          mutate(., COLPROT = factor(COLPROT, levels = adni_phase())) %>%
-          relocate(., COLPROT)
+          rename_with(., ~ paste0("CURPROT"), .cols = all_of(existed_column)) %>%
+          mutate(., CURPROT = factor(CURPROT, levels = adni_phase())) %>%
+          relocate(., CURPROT) %>% 
+          assert_rows(., num_row_NAs, within_bounds(0,0.05), CURPROT)
       } else {
         (.)
       }
@@ -247,12 +217,14 @@ create_string_split <- function(data) {
 #' @return A data.frame that appended with prefix (actual value in the dataset), suffix (coded values) and class_type ("factor").
 #' @examples
 #' \dontrun{
-#' get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                            tbl_name = NULL, 
-#'                            nested_value = TRUE)
+#' get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = NULL,
+#'   nested_value = TRUE
+#' )
 #' }
 #' @rdname get_factor_levels_datadict
-#' @importFrom stringr str_to_lower
+#' @importFrom stringr str_detect
 #' @importFrom tidyr nest
 #' @importFrom purrr map
 #' @importFrom tidyr unnest
@@ -265,14 +237,14 @@ get_factor_levels_datadict <- function(data_dict,
   check_colnames(dd = data_dict, col_names = c("PHASE", "TYPE", "TBLNAME", "FLDNAME", "CODE"))
 
   ## Column types that might needed to be removed
-  exc_type <- str_to_lower(c(
+  exc_type <- tolower(c(
     "bigint", "bit", "char", "C", "character", "d", "date",
     "datetime", "datetime2", "decimal", "f", "float",
     "floating value", "i", "integer", "mediumint", "notes",
     "s", "string", "Text", "Time", "varchar"
   ))
   ## Coded range values
-  exc_range_number <- str_c(
+  exc_range_number <- paste0(
     c(
       "\\b\\d+\\.\\.\\d+\\b",
       "\\b\\d+\\.\\.\\..\\d+\\b",
@@ -287,7 +259,7 @@ get_factor_levels_datadict <- function(data_dict,
     "MRIFind", "MRIQSM", "TCV", "ADSP_PHC_ADNI_T1_1.0_MetaData",
     "MAYOADIRL_MRI_MCH", "MAYOADIRL_MRI_TBMSYN", "MRI_INFARCTS",
     "TRANSFER", "UCD_ADNI1_WMH", "UCD_ADNI2_WMH", "UCD_WMH",
-    "UPENNPLASMA", "UWOVENT"
+    "UPENNPLASMA", "UWOVENT", "MAYOADIRL_MRI_FMRI_NFQ", "NEUROPATH"
   )
   ## Field name list
   exc_fldname <- c(
@@ -302,15 +274,17 @@ get_factor_levels_datadict <- function(data_dict,
     # Excluding missing value
     mutate(
       CODE = case_when(
-        CODE == -4 ~ NA_character_,
-        str_detect(CODE, "crfname") == TRUE ~ NA_character_,
-        CODE %in% c(
-          "in(0,1)", "Pass/Fail", "complete/partial",
-          "Pass/Fail/Partial"
-        ) ~ NA_character_,
+        CODE == -4 | str_detect(
+          string = CODE,
+          pattern = 'crfname|\\"indexes\\"|\\<display\\>'
+        ) == TRUE |
+          CODE %in% c(
+            "in(0,1)", "Pass/Fail", "complete/partial",
+            "Pass/Fail/Partial"
+          ) ~ NA_character_,
         TRUE ~ CODE
       ),
-      TYPE = str_to_lower(TYPE)
+      TYPE = tolower(TYPE)
     ) %>%
     filter(!is.na(CODE)) %>%
     # Excluding pre-specified type, dataset name and field name
@@ -345,17 +319,23 @@ get_factor_levels_datadict <- function(data_dict,
 #' @return A character vector
 #' @examples
 #' \dontrun{
-#' data_dict_dd <- get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                                            tbl_name = NULL, 
-#'                                            nested_value = TRUE)
+#' data_dict_dd <- get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = NULL,
+#'   nested_value = TRUE
+#' )
 #' # List of available factor columns in data dictionary DATADIC for adas_pooled dataset
-#' get_factor_fldname(data_dict = data_dict_dd, 
-#'                    tbl_name = "ADAS", 
-#'                    dd_fldnames = NULL)=
+#' get_factor_fldname(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ADAS",
+#'   dd_fldnames = NULL
+#' )
 #' # List of factor columns that available in adas_pooled and data dictionary DATADIC
-#' get_factor_fldname(data_dict = data_dict_dd, 
-#'                    tbl_name = "ADAS", 
-#'                    dd_fldnames = colnames(ADNIMERGE2::adas_pooled))
+#' get_factor_fldname(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ADAS",
+#'   dd_fldnames = colnames(ADNIMERGE2::adas_pooled)
+#' )
 #' }
 #' @rdname get_factor_fldname
 #' @importFrom dplyr select
@@ -363,19 +343,18 @@ get_factor_levels_datadict <- function(data_dict,
 get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
   TBLNAME <- FLDNAME <- class_type <- NULL
   colNames <- c("TBLNAME", "FLDNAME", "class_type")
-  if (!all(colNames %in% colnames(data_dict))) {
-    stop("At least one of the variable ", toString(data_dict), " is not found data_dict")
-  }
-
+  check_colnames(dd = data_dict, col_names = colNames)
   temp_dd <- data_dict %>%
     as_tibble() %>%
     filter(TBLNAME %in% tbl_name &
       class_type == "factor") %>%
-    {if (!is.null(dd_fldnames)){
-      filter(., FLDNAME %in% c(dd_fldnames)) 
-    } else {
-      (.)
-    }} %>%
+    {
+      if (!is.null(dd_fldnames)) {
+        filter(., FLDNAME %in% c(dd_fldnames))
+      } else {
+        (.)
+      }
+    } %>%
     select(FLDNAME)
 
   unique_fldname <- unique(temp_dd$FLDNAME)
@@ -398,40 +377,44 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
 #'  }
 #' @examples
 #' \dontrun{
-#' data_dict_dd <- get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                                            tbl_name = "ADAS", 
-#'                                            nested_value = TRUE)
-#' single_collect_values(data_dict = data_dict_dd, 
-#'                       tbl_name = "ADAS", 
-#'                       fld_name = "COCOMND")
+#' data_dict_dd <- get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = "ADAS",
+#'   nested_value = TRUE
+#' )
+#' single_collect_values(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ADAS",
+#'   fld_name = "COCOMND"
+#' )
 #' }
 #' @rdname single_collect_values
 #' @seealso [collect_values()]
 single_collect_values <- function(data_dict, tbl_name, fld_name) {
   FLDNAME <- PHASE <- TBLNAME <- code_list <- NULL
   colNames <- c("PHASE", "TBLNAME", "FLDNAME", "code_list")
-  
-  if (!all(colNames %in% names(data_dict))) stop("At least one of ", toString(colNames), " is not found in data_dict")
+  check_colnames(dd = data_dict, col_names = colNames)
+
   rlang::arg_match(
     arg = fld_name, values = unique(data_dict$FLDNAME),
     multiple = TRUE
   )
-  
+
   rlang::arg_match(
     arg = tbl_name, values = unique(data_dict$TBLNAME),
     multiple = TRUE
   )
-  
+
   df <- data_dict %>%
     filter(TBLNAME %in% tbl_name & FLDNAME %in% fld_name) %>%
     select(PHASE, TBLNAME, FLDNAME, code_list) %>%
     unnest(cols = code_list)
-  
+
   if (nrow(df) > 0) {
     phase_list <- unique(df$PHASE)
     phase_value_list <- lapply(phase_list, function(x) {
-      old_values <- df[df$PHASE == x, ]$prefix
-      new_values <- df[df$PHASE == x, ]$suffix
+        old_values <- df[df$PHASE %in% x, ]$prefix
+        new_values <- df[df$PHASE %in% x, ]$suffix 
       return(
         list(
           "old_values" = old_values,
@@ -439,7 +422,7 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
         )
       )
     })
-    
+
     names(phase_value_list) <- phase_list
   } else {
     phase_value_list <- list(
@@ -448,7 +431,7 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
     )
     names(phase_value_list) <- NA
   }
-  
+
   return(phase_value_list)
 }
 
@@ -464,15 +447,21 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
 #'     \code{single_collect_values}
 #' @examples
 #' \dontrun{
-#' data_dict_dd <- get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                                            tbl_name = "ADAS", 
-#'                                            nested_value = TRUE)
-#' tbl_unique_fldname <- get_factor_fldname(data_dict = data_dict_dd, 
-#'                                          tbl_name = "ADAS", 
-#'                                          dd_fldnames = colnames(ADNIMERGE2::adas_pooled))
-#' collect_values(data_dict = data_dict_dd, 
-#'                tbl_name = "ADAS",
-#'                all_fld_name = tbl_unique_fldname)
+#' data_dict_dd <- get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = "ADAS",
+#'   nested_value = TRUE
+#' )
+#' tbl_unique_fldname <- get_factor_fldname(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ADAS",
+#'   dd_fldnames = colnames(ADNIMERGE2::adas_pooled)
+#' )
+#' collect_values(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ADAS",
+#'   all_fld_name = tbl_unique_fldname
+#' )
 #' }
 #' @export
 collect_values <- function(data_dict, tbl_name, all_fld_name) {
@@ -483,12 +472,12 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
       fld_name = fld_name
     )
   })
-  
+
   names(temp_values) <- all_fld_name
   return(temp_values)
 }
 
-# Value Replacement ----- 
+# Value Replacement -----
 ## Replace Multiple Values ----
 #' @title Replace/Substitute Multiple Values
 #' @description This function is used to replace string values.
@@ -496,15 +485,19 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
 #' @param old_values Old values
 #' @param new_values New values
 #' @return A character vector similar to `input_string` with replaced values
-#' @examples 
+#' @examples
 #' \dontrun{
 #' input_string <- c("-2", "1", "1", "-1")
 #' old_values <- c("null", "1", "-1", "-2")
-#' new_values <- c("pending enrollment", "randomized - assigned a scan category", 
-#'                "screen failed", "screen failed after randomization")
-#' replaced_values <- replace_multiple_values(input_string = input_string, 
-#'                                            old_values = old_values, 
-#'                                            new_values = new_values)
+#' new_values <- c(
+#'   "pending enrollment", "randomized - assigned a scan category",
+#'   "screen failed", "screen failed after randomization"
+#' )
+#' replaced_values <- replace_multiple_values(
+#'   input_string = input_string,
+#'   old_values = old_values,
+#'   new_values = new_values
+#' )
 #' replaced_values
 #' }
 #' @rdname replace_multiple_values
@@ -556,7 +549,7 @@ replace_multiple_values <- function(input_string,
 #' @description This function is used to detect if there is any negative value in the string.
 #' @param input_value Input string
 #' @return `TRUE` if there is a negative value otherwise FALSE
-#' @examples 
+#' @examples
 #' \dontrun{
 #' input_string <- c("-2", "1", "1", "-1")
 #' detect_negative_value(input_value = input_string)
@@ -586,20 +579,26 @@ detect_negative_value <- function(input_value) {
 #' @return A data frame with replaced values for the provided variable.
 #' @examples
 #' \dontrun{
-#' data_dict_dd <- get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                                            tbl_name = "ARM", # NULL 
-#'                                            nested_value = TRUE)
-#' input_values <- collect_values(data_dict = data_dict_dd, 
-#'                                tbl_name = "ARM", 
-#'                                all_fld_name = "ENROLLED")
+#' data_dict_dd <- get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = "ARM", # NULL
+#'   nested_value = TRUE
+#' )
+#' input_values <- collect_values(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ARM",
+#'   all_fld_name = "ENROLLED"
+#' )
 #' new_values <- input_values$ENROLLED$ADNI1$new_values
-#' old_values <- input_values$ENROLLED$ADNI1$old_values 
-#' result_dataset <- phase_specific_value_replacement(dd = ADNIMERGE2::adni_arm_pooled, 
-#'                                                    phaseVar = "COLPROT", 
-#'                                                    fld_name = "ENROLLED", 
-#'                                                    phase = "ADNI1", 
-#'                                                    old_values = old_values, 
-#'                                                    new_values = new_values)
+#' old_values <- input_values$ENROLLED$ADNI1$old_values
+#' result_dataset <- phase_specific_value_replacement(
+#'   dd = ADNIMERGE2::adni_arm_pooled,
+#'   phaseVar = "CURPROT",
+#'   fld_name = "ENROLLED",
+#'   phase = "ADNI1",
+#'   old_values = old_values,
+#'   new_values = new_values
+#' )
 #' }
 #' @rdname phase_specific_value_replacement
 #' @seealso [multiple_phase_value_replacement()]
@@ -619,16 +618,16 @@ phase_specific_value_replacement <- function(dd,
       multiple = TRUE
     )
   }
-  
+
   rlang::arg_match(arg = phaseVar, values = names(dd))
-  
+
   dd <- dd %>%
     rename("phase_var" = !!sym(phaseVar)) %>%
     mutate(across(!!sym(fld_name), ~ as.character(.x)))
-  
+
   phase_dd <- dd %>%
     filter(phase_var %in% phase)
-  
+
   phase_dd[, fld_name] <- replace_multiple_values(
     input_string = phase_dd %>% pull(fld_name),
     old_values = old_values,
@@ -639,8 +638,8 @@ phase_specific_value_replacement <- function(dd,
     bind_rows(dd %>% filter(!phase_var %in% phase)) %>%
     mutate(phase_var = factor(phase_var, levels = adni_phase())) %>%
     arrange(phase_var) %>%
-    rename_with(~ str_c(phaseVar), phase_var)
-  
+    rename_with(~ paste0(phaseVar), phase_var)
+
   return(output_data)
 }
 
@@ -658,17 +657,23 @@ phase_specific_value_replacement <- function(dd,
 #' @return A data frame with replaced values
 #' @examples
 #' \dontrun{
-#' data_dict_dd <- get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                                            tbl_name = NULL, 
-#'                                            nested_value = TRUE)
-#' input_values <- collect_values(data_dict = data_dict_dd, 
-#'                                tbl_name = "ARM", 
-#'                                all_fld_name = "ENROLLED")
+#' data_dict_dd <- get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = NULL,
+#'   nested_value = TRUE
+#' )
+#' input_values <- collect_values(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ARM",
+#'   all_fld_name = "ENROLLED"
+#' )
 #' input_values <- input_values$ENROLLED
-#' result_dataset <- multiple_phase_value_replacement(dd = ADNIMERGE2::adni_arm_pooled, 
-#'                                                    phaseVar = "COLPROT", 
-#'                                                    fld_name = "ENROLLED", 
-#'                                                    input_values = input_values)
+#' result_dataset <- multiple_phase_value_replacement(
+#'   dd = ADNIMERGE2::adni_arm_pooled,
+#'   phaseVar = "CURPROT",
+#'   fld_name = "ENROLLED",
+#'   input_values = input_values
+#' )
 #' }
 #' @rdname multiple_phase_value_replacement
 #' @seealso
@@ -680,19 +685,28 @@ multiple_phase_value_replacement <- function(dd,
   # Input values should be in list format
   if (!is.list(input_values)) stop("input_values should be a list object")
   
-  if (!any(names(input_values) %in% adni_phase())) stop("the list name should be ADNI phas")
+  phase_name_list <- names(input_values)
+  # Adjust for non-phase specific replacements
+  phase_name_list_no_na <- phase_name_list[!is.na(phase_name_list)]
+  if (all(is.na(phase_name_list))) {
+    warning("No ADNI phase specific list name used")
+  } else{
+    if (length(phase_name_list_no_na) != length(phase_name_list))  stop("the list name should not contains `NA` and actual ADNI phase")
+    if (!any(phase_name_list_no_na %in% adni_phase())) stop("the list name should be ADNI phase") 
+  } 
   
-  for (phase_list in names(input_values)) {
+  for (phase_list in phase_name_list) {
+    if (is.na(phase_list)) adjust_phase_list <- 1 else adjust_phase_list <- phase_list
     dd <- phase_specific_value_replacement(
       dd = dd,
       fld_name = fld_name,
       phaseVar = phaseVar,
       phase = phase_list,
-      new_values = input_values[[phase_list]]$new_values,
-      old_values = input_values[[phase_list]]$old_values
+      new_values = input_values[[adjust_phase_list]]$new_values,
+      old_values = input_values[[adjust_phase_list]]$old_values
     )
   }
-  
+
   return(dd)
 }
 
@@ -709,18 +723,26 @@ multiple_phase_value_replacement <- function(dd,
 #' @return A data frame with replaced values
 #' @examples
 #' \dontrun{
-#' data_dict_dd <- get_factor_levels_datadict(data_dict = ADNIMERGE2::DATADIC, 
-#'                                            tbl_name = NULL, 
-#'                                            nested_value = TRUE)
-#' all_fld_name <- get_factor_fldname(data_dict = data_dict_dd, 
-#'                                    tbl_name = "ARM", 
-#'                                    dd_fldnames = colnames(ADNIMERGE2::adni_arm_pooled))
-#' input_values <- collect_values(data_dict = data_dict_dd, 
-#'                                tbl_name = "ARM", 
-#'                                all_fld_name = all_fld_name)
-#' result_dataset <- data_value_replacement(dd = ADNIMERGE2::adni_arm_pooled, 
-#'                                                    phaseVar = "COLPROT", 
-#'                                                    input_values = input_values)
+#' data_dict_dd <- get_factor_levels_datadict(
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   tbl_name = NULL,
+#'   nested_value = TRUE
+#' )
+#' all_fld_name <- get_factor_fldname(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ARM",
+#'   dd_fldnames = colnames(ADNIMERGE2::adni_arm_pooled)
+#' )
+#' input_values <- collect_values(
+#'   data_dict = data_dict_dd,
+#'   tbl_name = "ARM",
+#'   all_fld_name = all_fld_name
+#' )
+#' result_dataset <- data_value_replacement(
+#'   dd = ADNIMERGE2::adni_arm_pooled,
+#'   phaseVar = "CURPROT",
+#'   input_values = input_values
+#' )
 #' }
 #' @rdname data_value_replacement
 #' @export
@@ -729,12 +751,12 @@ data_value_replacement <- function(dd,
                                    input_values) {
   # Input values should be in list format
   if (!is.list(input_values)) stop("input_values should be a list object")
-  
+
   if (!any(names(input_values) %in% names(dd))) stop("Check the list name")
-  
+
   for (fld_name in names(input_values)) {
     curt_input_values <- input_values[[fld_name]]
-    
+
     dd <- multiple_phase_value_replacement(
       dd = dd,
       fld_name = fld_name,
@@ -742,7 +764,7 @@ data_value_replacement <- function(dd,
       input_values = curt_input_values
     )
   }
-  
+
   return(dd)
 }
 
@@ -760,7 +782,6 @@ data_value_replacement <- function(dd,
 #' @importFrom tibble as_tibble
 #' @export
 make_missing_value <- function(dd, col_name = NULL, value = "-4", missing_char = NA) {
- 
   column_list <- extract_cols_value(dd = dd, value = value, col_name = col_name)
 
   dd <- dd %>%

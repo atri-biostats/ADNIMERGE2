@@ -41,7 +41,12 @@ if (EXISTED_DATADTIC) {
     get_factor_levels_datadict(data_dict = ., nested_value = TRUE) %>%
     filter(TBLNAME %in% c(tblname_list_dd$tblname)) %>%
     filter(class_type == "factor")
-
+  
+  unique_adni_phase_list <- unique(dataset_data_dict$PHASE)[!is.na(unique(dataset_data_dict$PHASE))]
+  if (length(unique_adni_phase_list) > 0 & any(!unique_adni_phase_list %in% adni_phase())) {
+    stop("Additional ADNI phase coded value is presented in the DATADIC file")
+  }
+  
   if (nrow(dataset_data_dict) > 0) {
     UPDATE <- TRUE
   } else {
@@ -88,7 +93,7 @@ if (EXISTED_DATADTIC) {
           all_fld_name = tbl_unique_fldname
         )
 
-        cur_phase_var <- extract_cols(dd, col_name = c("COLPROT", "PHASE", "Phase"))
+        cur_phase_var <- extract_cols(dd, col_name = c("CURPROT", "PHASE", "Phase"))
 
         if (!is.na(cur_phase_var)) {
           message(message_note_prefix, "Start replacing values of dataset: ", cur_tblname_short)
@@ -107,6 +112,7 @@ if (EXISTED_DATADTIC) {
             message_note_prefix,
             "No existed PHASE/Phase column in the ", cur_tblname_short, " dataset"
           )
+          message("The ", cur_tblname_short, " has not been updated!")
         }
         # Using usethis::use_data()
         data_update_status <- use_data_modified(
@@ -115,18 +121,15 @@ if (EXISTED_DATADTIC) {
           edit_type = "create",
           run_script = TRUE
         )
-        if (data_update_status != TRUE) stop("The ", tb, " has not been updated!")
+        if (data_update_status != TRUE) stop("The ", cur_tblname_short, " has not been updated!")
       }
 
       message(" >> ", cur_tblname_short, " dataset has been removed from .GlobalEnv")
 
-      rm(
-        list = c(
-          "dd", "coded_values", "cur_tblname_dd", "cur_tblname_short",
-          "cur_tblname_full", "cur_tbname"
-        ),
-        envir = .GlobalEnv
-      )
+      rm(list = c(
+        "dd", "coded_values", "cur_tblname_dd", "cur_tblname_short",
+        "cur_tblname_full", "cur_tbname"
+        ))
     }
 
     rm(list = c(

@@ -3,9 +3,10 @@ source(file.path(".", "tools", "data-prepare-utils.R"))
 source(file.path(".", "R", "utils.R"))
 # Libraries ----
 library(tidyverse)
+library(assertr)
 
 # Data downloaded date ----
-data_downloaded_date <- as.Date("2024-10-04")
+data_downloaded_date <- as.Date("2024-10-30")
 DATA_DOWNLOADED_DATE <- as.Date(data_downloaded_date)
 usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
 
@@ -74,7 +75,7 @@ if (EXISTED_CSVFILE) {
   # Removing date stamp from file name
   csv_removed_strings <- str_c("_", format(data_downloaded_date, "%d%b%Y"))
   rename_file_status <- rename_file(
-    input_dir = list_csv_files,
+    input_dir = "./data-raw/",
     output_dir = ".",
     file_extension = ".csv",
     removed_strings = csv_removed_strings,
@@ -129,12 +130,12 @@ if (UPDATE_MISSING_VALUE) {
     if ("RID" %in% names(dd)) check_RID_col <- TRUE else check_RID_col <- FALSE
     ## Adding common columns -----
     if (check_RID_col) {
-      message("Adding ORGCOL and CORPOL variables in ", tb)
+      message("Adding ORIGPROT and CURPROT variables in ", tb)
       dd <- dd %>%
         create_col_protocol(dd = ., phaseVar = c("Phase", "PHASE")) %>%
         create_orig_protocol(dd = .)
     } else {
-      message("ORGCOL and CURPOL are not addedd in ", tb)
+      message("ORIGPROT and CURPOL are not addedd in ", tb)
     }
     # Replacing `-4` as missing value -----
     message("Making -4 values as missing value for ", tb)
