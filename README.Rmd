@@ -1,0 +1,20 @@
+---
+output: github_document
+always_allow_html: true
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- R package versioning: first two digits are for code; last digit is data release number  -->
+
+```{r, include = FALSE}
+pkgFilename <- paste0('ADNIMERGE2_', packageVersion('ADNIMERGE2'), '.tar.gz')
+```
+
+# ADNIMERGE2 <a href="https://adni.loni.usc.edu/"><img src="man/figures/logo.png" align="right" height="138" /></a>
+
+This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study. All datasets are included
+as shared on <https://adni.loni.usc.edu/>.
+
+## Installation 
+
+To install the package locally, run ``r paste0("install.packages(\"path/to/", pkgFilename, "\", repos = NULL, type = \"source\")")``

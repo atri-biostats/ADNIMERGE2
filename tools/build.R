@@ -36,3 +36,6 @@ devtools::load_all("./")
 devtools::document()
 devtools::check(error_on = "error", vignettes = FALSE)
 pkg_dir <- devtools::build(vignettes = FALSE)
+
+# Build README.md ----
+build_readme()
