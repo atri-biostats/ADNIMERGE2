@@ -327,7 +327,7 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
   )
 
   data_dict <- data_dict %>%
-    mutate(across(c(PHASE, FLDNAME, TBLNAME, FLDNAME), ~ tolower(.x)))
+    mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ tolower(.x)))
   tblname <- tolower(tblname)
   fldname <- tolower(fldname)
 
@@ -367,7 +367,7 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
   result_data_dict <- data_dict %>%
     filter(!TBLNAME %in% tblname) %>%
     bind_rows(tblname_data_dict) %>%
-    mutate(across(c(PHASE, FLDNAME, TBLNAME, FLDNAME), ~ toupper(.x)))
+    mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ toupper(.x)))
 
   return(result_data_dict)
 }
