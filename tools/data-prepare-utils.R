@@ -327,13 +327,13 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
   )
 
   data_dict <- data_dict %>%
-    mutate(across(PHASE, FLDNAME, TBLNAME, FLDNAME), ~ tolower(.x))
+    mutate(across(c(PHASE, FLDNAME, TBLNAME, FLDNAME), ~ tolower(.x)))
   tblname <- tolower(tblname)
   fldname <- tolower(fldname)
 
   rlang::arg_match(
     arg = tblname,
-    values = unique(data_dict$FLDNAME),
+    values = unique(data_dict$TBLNAME),
     multiple = TRUE
   )
 
@@ -367,7 +367,7 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
   result_data_dict <- data_dict %>%
     filter(!TBLNAME %in% tblname) %>%
     bind_rows(tblname_data_dict) %>%
-    mutate(across(PHASE, FLDNAME, TBLNAME, FLDNAME), ~ toupper(.x))
+    mutate(across(c(PHASE, FLDNAME, TBLNAME, FLDNAME), ~ toupper(.x)))
 
   return(result_data_dict)
 }
