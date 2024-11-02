@@ -1,4 +1,4 @@
-# Building A4LEARN from csv files <a href="https://www.a4studydata.org/"><img src="../man/figures/logo.png" align="right" height="138" /></a>
+# Building ADNIMERGE2 from csv files <a href="https://adni.loni.usc.edu/"><img src="../man/figures/logo.png" align="right" height="138" /></a>
 
 To generate the package from source csv files:
 
