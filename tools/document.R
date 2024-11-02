@@ -36,7 +36,7 @@ combined_datasets <- mget(str_remove_all(
   pattern = "\\.rda|\\./data/"
 ))
 rm(list = as.character(str_remove_all(
-  string = list_rda_files[!list_rda_files %in% data_data_dict_file_path],
+  string = list_rda_files[!list_rda_files %in% data_dict_file_path],
   pattern = "\\.rda|.\\/data/"
 )))
 prefix_patterns <- "^adni\\_"
