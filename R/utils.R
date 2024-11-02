@@ -840,6 +840,7 @@ extract_cols_value <- function(dd, value, col_name = NULL) {
 #' @param dd Data frame
 #' @param col_names Column names
 #' @param strict A boolean value to apply strict checking. 
+#' @param stop_message A boolean value to return a stop message if the criteria does not met.
 #' @return "TRUE" if the provided column names are existed in the dataset based on the `strict` argument. Otherwise return a stop message
 #' @examples
 #' \dontrun{
