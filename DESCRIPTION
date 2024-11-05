@@ -2,7 +2,7 @@ Package: ADNIMERGE2
 Type: Package
 Title: ADNI Study Data Package
 Description: This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study.
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("ATRI Biostatistics", email = "biostat_request@atrihub.io",
   role = c("aut", "cre"))
 BugReports: https://github.com/atrihub/ADNIMERGE2/issues

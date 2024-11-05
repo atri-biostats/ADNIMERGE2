@@ -91,7 +91,7 @@ use_data_modified <- function(dataset_name,
     new_env$dataset <- dataset
     assign(dataset_name, dataset, envir = new_env)
     sys.source(file = raw_dataset_path, envir = new_env, chdir = TRUE)
-    if(clean) file.remove(raw_dataset_path)
+    if (clean) file.remove(raw_dataset_path)
     return(TRUE)
   }
 
@@ -285,4 +285,89 @@ adjust_code_lables <- function(dd,
   }
 
   return(output_data)
+}
+
+#' @title Add description text for common columns in DATADIC
+#' @description This fucntion is used to add description text for common columns in the DATADIC.
+#' @param tblname Dataset name (TBNAME)
+#' @param data_dict Data dictionary dataset
+#' @param fldname Common column names (usually "ORIGPROT" or "CORPORT")
+#' @param description Description text
+#' @return A data frame the same as `data_dict`  with appended rows.
+#' @examples
+#' \dontrun{
+#' common_cols_description_datadic(
+#'   tblname = "ADAS_ADNIGO123",
+#'   data_dict = ADNIMERGE2::DATADIC,
+#'   fldname = "CORPORT",
+#'   description =
+#'     "Study protocol of data collection"
+#' )
+#' }
+#' @rdname common_cols_description_datadic
+#' @export
+#' @importFrom rlang arg_match
+#' @importFrom dplyr mutate
+#' @importFrom dplyr across
+#' @importFrom dplyr filter
+#' @importFrom dplyr bind_rows
+#' @importFrom assertr verify
+#' @importFrom rlang arg_match
+#' @importFrom rlang arg_match
+
+common_cols_description_datadic <- function(data_dict, tblname, fldname, description) {
+  
+  PHASE <- TBLNAME <- CRFNAME <- FLDNAME <- NULL
+
+  check_colnames(
+    dd = data_dict,
+    col_names = c("PHASE", "TBLNAME", "CRFNAME", "FLDNAME"),
+    strict = TRUE,
+    stop_message = TRUE
+  )
+
+  data_dict <- data_dict %>%
+    mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ tolower(.x)))
+  tblname <- tolower(tblname)
+  fldname <- tolower(fldname)
+
+  rlang::arg_match(
+    arg = tblname,
+    values = unique(data_dict$TBLNAME),
+    multiple = TRUE
+  )
+
+  if (!is.vector(fldname)) stop("fldname must be a vector character")
+  if (!is.vector(description)) stop("description must be a vector character")
+  if (length(description) != length(fldname)) stop("The length of description and FLDNAME must be the same")
+  description <- as.list(description)
+  names(description) <- fldname
+
+  temp_data_dict <- data_dict %>%
+    filter(TBLNAME %in% tblname) %>%
+    verify(nrow(.) > 0)
+
+  tblname_data_dict <- lapply(fldname, function(cur_fldname) {
+    fldname_data_dict <- temp_data_dict %>%
+      filter(FLDNAME %in% cur_fldname) %>%
+      distinct(PHASE, TBLNAME, CRFNAME) %>%
+      mutate(
+        FLDNAME = cur_fldname,
+        TEXT = description[[cur_fldname]]
+      ) %>%
+      bind_rows(
+        temp_data_dict %>%
+          filter(!FLDNAME %in% cur_fldname)
+      )
+
+    return(fldname_data_dict)
+  }) %>%
+    bind_rows()
+
+  result_data_dict <- data_dict %>%
+    filter(!TBLNAME %in% tblname) %>%
+    bind_rows(tblname_data_dict) %>%
+    mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ toupper(.x)))
+
+  return(result_data_dict)
 }

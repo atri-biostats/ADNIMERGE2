@@ -6,41 +6,66 @@ library(tidyverse)
 
 dataset_list_files <- list.files(
   path = "./data", pattern = ".rda", full.names = TRUE,
-  all.files = TRUE, recursive = TRUE
+  all.files = TRUE, recursive = FALSE
 )
 
-data_dict_file <- file.path(".", "data", "DATADIC.rda")
-# If the DATADIC file is existed
-if (data_dict_file %in% dataset_list_files == TRUE) {
-  EXISTED_DATADTIC <- TRUE
+data_dict_file_path <- file.path(".", "data", "DATADIC.rda")
+updated_data_dict_file_path <- file.path(".", "data-raw", "updated_datadic", "UPDATED_DATADIC.rda")
+
+USE_UPDATED_DATADIC <- TRUE
+
+if (USE_UPDATED_DATADIC) {
+  # To use the updated DATADIC that was generated in "./data-raw/data_prep.R"
+  if (file.exists(updated_data_dict_file_path)) {
+    EXISTED_DATADTIC <- TRUE
+  } else {
+    EXISTED_DATADTIC <- FALSE
+    warning("No existed updated DATADTIC dataset in `./data-raw/updated_datadic/` directory")
+  }
 } else {
-  EXISTED_DATADTIC <- FALSE
-  warning("No existed DATADTIC dataset in ./data directory")
+  # To use the actual DATADIC that was downloaded directly from the data sharing platform
+  # If the DATADIC file is existed
+  if (data_dict_file_path %in% dataset_list_files == TRUE) {
+    EXISTED_DATADTIC <- TRUE
+  } else {
+    EXISTED_DATADTIC <- FALSE
+    warning("No existed DATADTIC dataset in ./data directory")
+  }
 }
+
 # Re-coding values ----
 if (EXISTED_DATADTIC) {
   file_path_patterns <- c("./data/|.rda")
-  prefix_patterns <- c(str_c("adni", 1:4, "_"), "adni_")
-  sufix_patterns <- c("_pooled", "_harmonized")
-  string_removed_pattern <- str_c(c(file_path_patterns, prefix_patterns, sufix_patterns),
-    collapse = "|"
-  )
+  prefix_patterns <- "^adni\\_"
+  string_removed_pattern <- str_c(c(file_path_patterns, prefix_patterns), collapse = "|")
 
-  # Load the data dictionary DATDIC in .GlobalEnv
-  lapply(data_dict_file, load, .GlobalEnv)
+  if (USE_UPDATED_DATADIC) {
+    # Load the data dictionary DATDIC in .GlobalEnv
+    lapply(updated_data_dict_file_path, load, .GlobalEnv)
+    DATADIC <- UPDATED_DATADIC
+    rm(list = "UPDATED_DATADIC")
+  } else {
+    ## To use `DATADIC` data dictionary that was downloaded directly from the data sharing platform
+    lapply(data_dict_file_path, load, .GlobalEnv)
+  }
 
-  dataset_list_files <- dataset_list_files[!dataset_list_files == data_dict_file]
+  dataset_list_files <- dataset_list_files[!dataset_list_files == data_dict_file_path]
   tblname_list_dd <- tibble(full_tblname = dataset_list_files) %>%
     mutate(
       short_tblname = str_remove_all(string = full_tblname, pattern = file_path_patterns),
       tblname = str_to_upper(str_remove_all(string = full_tblname, pattern = string_removed_pattern))
     )
 
-  ## Prepare the data dictionary dataset -----
   dataset_data_dict <- DATADIC %>%
     get_factor_levels_datadict(data_dict = ., nested_value = TRUE) %>%
     filter(TBLNAME %in% c(tblname_list_dd$tblname)) %>%
-    filter(class_type == "factor")
+    filter(class_type == "factor") %>%
+    mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]"))
+
+  unique_adni_phase_list <- unique(dataset_data_dict$PHASE)[!is.na(unique(dataset_data_dict$PHASE))]
+  if (length(unique_adni_phase_list) > 0 & any(!unique_adni_phase_list %in% adni_phase())) {
+    stop("Additional ADNI phase coded value is presented in the DATADIC file")
+  }
 
   if (nrow(dataset_data_dict) > 0) {
     UPDATE <- TRUE
@@ -107,6 +132,7 @@ if (EXISTED_DATADTIC) {
             message_note_prefix,
             "No existed PHASE/Phase column in the ", cur_tblname_short, " dataset"
           )
+          message("The ", cur_tblname_short, " has not been updated!")
         }
         # Using usethis::use_data()
         data_update_status <- use_data_modified(
@@ -115,23 +141,22 @@ if (EXISTED_DATADTIC) {
           edit_type = "create",
           run_script = TRUE
         )
-        if (data_update_status != TRUE) stop("The ", tb, " has not been updated!")
+        if (data_update_status != TRUE) stop("The ", cur_tblname_short, " has not been updated!")
       }
 
       message(" >> ", cur_tblname_short, " dataset has been removed from .GlobalEnv")
 
-      rm(
-        list = c(
-          "dd", "coded_values", "cur_tblname_dd", "cur_tblname_short",
-          "cur_tblname_full", "cur_tbname"
-        ),
-        envir = .GlobalEnv
-      )
+      rm(list = c(
+        "dd", "coded_values", "cur_tblname_dd", "cur_tblname_short",
+        "cur_tblname_full", "cur_tbname"
+      ))
     }
 
     rm(list = c(
-      "DATADIC", "dataset_data_dict", "existed_tblname_list",
+      "UPDATED_DATADIC", "DATADIC", "dataset_data_dict", "existed_tblname_list",
       "tblname_list_dd", "num_existed_tb"
     ))
   }
+  rm(list = c(dataset_list_files))
 }
+
