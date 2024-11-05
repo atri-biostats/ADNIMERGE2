@@ -39,3 +39,10 @@ pkg_dir <- devtools::build(vignettes = FALSE)
 
 # Build README.md ----
 build_readme()
+
+# Build website ----
+# run once:
+# usethis::use_pkgdown()
+# pkgdown::build_site()
+# publish online:
+# pkgdown::deploy_to_branch()
