@@ -57,7 +57,7 @@ check_list_names <- function(listed_dd, listed_names = NULL) {
   if (length(missing_names) > 0) stop(str_c("Check for listed names of ", toString(missing_names)))
 
   return(TRUE)
-  }
+}
 # Function prepare a data dictionary dataset
 #' @title Function to prepare a data dictionary dataset
 #' @description This function is used to prepare the data data dictionary for generating variable specific format list in roxygen document.
@@ -130,13 +130,13 @@ generate_variable_format_list <- function(data_dict,
                                           field_notesVar = NULL) {
   require(tidyverse)
   require(assertr)
-  
+
   # function for escaping braces
-  escape <- function(x){
+  escape <- function(x) {
     y <- gsub("{", "\\{", x, fixed = TRUE)
     gsub("}", "\\}", y, fixed = TRUE)
   }
-  
+
   temp_dd <- data_dict_column_names(
     data_dict = data_dict,
     field_nameVar = field_nameVar,
@@ -461,7 +461,7 @@ summarize_logical_variable <- function(dd, var_name) {
 #' @description This function is used to summarize a single variable from a data.frame that could be used to generate a data dictionary file.
 #' @param dd Data frame
 #' @param var_name Variable name
-#' @param wider_format Indicator whether to generate the minimum and maximum values in a wide or long format, Default: FALSE
+#' @param wider_format A boolean value to generate the minimum and maximum values in a wide or long format, Default: FALSE
 #' @return A data.frame that contains the at least the following variables:
 #' \itemize{
 #'   \item{field_name}{Variable name}
@@ -488,9 +488,9 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
     "Date", "POSIXct", "POSIXt", "hms", "difftime", "logical"
   )
   rlang::arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
-
+  if (!is.logical(suppress_warnings)) stop("`suppress_warnings` must be a boolean value")
   if (any(var_class_type %in% specified_class_type[1])) summary_dd <- summarize_factor_variable(dd = dd, var_name = var_name, wider_format = wider_format)
-  if (any(var_class_type %in% specified_class_type[2])) summary_dd <- summarize_character_variable(dd = dd, var_name = var_name, wider_format = wider_format)
+  if (any(var_class_type %in% specified_class_type[2])) summary_dd <- summarize_character_variable(dd = dd, var_name = var_name, wider_format = wider_format) 
   if (any(var_class_type %in% specified_class_type[3:5])) summary_dd <- summarize_numeric_variable(dd = dd, var_name = var_name, wider_format = wider_format)
   if (any(var_class_type %in% specified_class_type[6:10])) summary_dd <- summarize_date_variable(dd = dd, var_name = var_name)
   if (any(var_class_type %in% specified_class_type[11])) summary_dd <- summarize_logical_variable(dd = dd, var_name = var_name)
@@ -528,9 +528,7 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
 #' @rdname summarize_variable
 #' @seealso \code{\link{summarize_variable}}
 #' @export
-summarize_dataset <- function(dd,
-                              dataset_name = NULL,
-                              wider_format = FALSE) {
+summarize_dataset <- function(dd, dataset_name = NULL, wider_format = FALSE) {
   require(tidyverse)
   if (is.null(dataset_name)) tbl_name <- "TEMP_TBL" else tbl_name <- dataset_name
   data_dict_dd <- lapply(colnames(dd), function(x) {
@@ -542,12 +540,14 @@ summarize_dataset <- function(dd,
       num_rows = nrow(dd),
       num_cols = ncol(dd)
     ) %>%
-    relocate(dd_name, num_rows, num_cols) %>% 
-    {if (is.null(dataset_name)){
-      select(., -dd_name)
-    } else{
-      (.)
-    }}
+    relocate(dd_name, num_rows, num_cols) %>%
+    {
+      if (is.null(dataset_name)) {
+        select(., -dd_name)
+      } else {
+        (.)
+      }
+    }
 
   if (wider_format == TRUE && nrow(data_dict_dd) != length(colnames(dd))) stop("Check for the number of rows in data_dict_dd")
 
@@ -648,7 +648,7 @@ generate_single_dataset_roxygen <- function(dd = NULL,
   # if (!is.na(num_rows) | !is.na(num_colums)) {
   format_description <- str_c(
     "#' @format A data frame with ", unique(temp_summarized_dd$num_rows),
-    " rows and ", unique(temp_summarized_dd$num_cols), " variables: \n"
+    " observations and ", unique(temp_summarized_dd$num_cols), " variables: \n"
   )
   # }
 
@@ -735,6 +735,7 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 #' @param data_dict Prepared data dictionary dataset. Default: NULL
 #' @param ... Other parameters from generate_single_dataset_document and cat() function
 #' @param output_file_name Output file name. Should other than `NULL` if the interest is to store the result in local environment.
+#' @param existed_append A boolen value that indicate whether to overwrite on an existed `output_file_name` files. Only applicable if a file path is provided to `output_file_name`.
 #' @return
 #'  \itemize{
 #'   \item{A data.frame of two columns: data_doc and dataset_name if output_file_name is `NULL`}
@@ -760,7 +761,8 @@ generate_roxygen_document <- function(dataset_name_list,
                                       field_classVar = NULL,
                                       field_labelVar = NULL,
                                       field_notesVar = NULL,
-                                      output_file_name = NULL) {
+                                      output_file_name = NULL,
+                                      existed_append = FALSE) {
   require(tidyverse)
   rlang::arg_match0(arg = roxygen_source_type, values = c("actual_dataset", "data_dictionary"))
 
@@ -852,10 +854,11 @@ generate_roxygen_document <- function(dataset_name_list,
     return(output_result)
   }
   if (!is.null(output_file_name)) {
-    if (file.exists(output_file_name) == TRUE) readr::write_lines(x = "", output_file_name)
+    if (file.exists(output_file_name) == TRUE) {
+      if (existed_append == FALSE) readr::write_lines(x = "", output_file_name)
+    }
     cat(str_c(output_result$data_doc, collapse = "\n"),
       file = output_file_name, append = TRUE
     )
   }
 }
-

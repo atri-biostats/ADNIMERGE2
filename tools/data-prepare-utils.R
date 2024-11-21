@@ -34,22 +34,22 @@ use_data_modified <- function(dataset_name,
   require(usethis)
   require(readr)
   require(rlang)
-
+  
   rlang::arg_match0(edit_type, values = c("create", "modify"))
   if (!is.logical(run_script)) stop("run_script must be a boolean value")
-
+  
   added_script <- paste0(dataset_name, " <- ", dataset_name)
-
+  
   # Create data-preparation script in 'data-raw/dataset_name.R'
   raw_dataset_path <- file.path(".", "data-raw", paste0(dataset_name, ".R"))
-
+  
   if (edit_type %in% "create") {
     if (file.exists(raw_dataset_path)) file.remove(raw_dataset_path)
     usethis::use_data_raw(name = dataset_name, open = FALSE)
     prefix_lines <- NULL
     suffix_lines <- NULL
   }
-
+  
   if (edit_type %in% "modify") {
     existed_script <- readr::read_lines(file = raw_dataset_path)
     last_lines <- existed_script[str_detect(existed_script, "usethis::use") == TRUE]
@@ -60,31 +60,31 @@ use_data_modified <- function(dataset_name,
     suffix_lines <- existed_script[seq_along(existed_script) %in% last_two_row_index]
     added_script <- NA
   }
-
+  
   temp_script <- readr::read_lines(file = raw_dataset_path)
-
+  
   if (is.null(prefix_lines) & is.null(suffix_lines)) {
     prefix_lines <- temp_script[1]
     suffix_lines <- temp_script[c(2:3)]
   }
-
+  
   if (!is.null(add_text)) {
     if (any(is.na(add_text))) stop("added text must not contains missing value")
     added_script <- c(added_script, add_text)
   }
   added_script <- added_script[!is.na(added_script)]
-
+  
   if (include_pipe) {
     added_script[seq_along(added_script) == length(added_script)] <- paste0(
       added_script[seq_along(added_script) == length(added_script)],
       " %>%"
     )
   }
-
+  
   temp_script <- c(prefix_lines, added_script, suffix_lines)
   ## Write the 'dataset_name.R' script in data-raw directory to use quoted objects
   readr::write_lines(x = temp_script, file = raw_dataset_path, sep = "\n", append = FALSE)
-
+  
   if (run_script == TRUE) {
     new_env <- new.env()
     new_env[[dataset_name]] <- dataset_name
@@ -94,7 +94,7 @@ use_data_modified <- function(dataset_name,
     if (clean) file.remove(raw_dataset_path)
     return(TRUE)
   }
-
+  
   if (run_script == FALSE) {
     return(raw_dataset_path)
   }
@@ -116,16 +116,16 @@ get_unzip_file <- function(input_dir,
                            output_dir = ".",
                            overwrite = TRUE) {
   require(utils)
-
+  
   if (output_dir %in% ".") output_dir <- input_dir
-
+  
   if (!output_dir %in% ".") {
     if (dir.exists(output_dir) == FALSE) stop(output_dir, " is not existed")
   }
-
+  
   output_dir <- paste0(output_dir, gsub(pattern = ".zip", replacement = "", x = file_name))
   if (dir.exists(output_dir) == FALSE) dir.create(output_dir)
-
+  
   file_path <- paste0(input_dir, file_name)
   if (file.exists(file_path) == FALSE) stop(file_name, " zip File is not found in ", input_dir)
   utils::unzip(
@@ -133,7 +133,7 @@ get_unzip_file <- function(input_dir,
     files = NULL, list = FALSE, overwrite = overwrite,
     setTimes = FALSE, unzip = "internal"
   )
-
+  
   return(TRUE)
 }
 
@@ -157,26 +157,26 @@ rename_file <- function(input_dir,
   # csv files
   old_files_name <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
   new_files_name <- stringr::str_remove_all(old_files_name, pattern = removed_strings)
-
+  
   if (output_dir %in% ".") output_dir <- input_dir
   if (!output_dir %in% ".") {
     if (dir.exists(output_dir) == FALSE) stop(output_dir, " directory is not existed")
   }
-
+  
   if (file_action %in% "file_copy") {
     file.copy(
       from = paste0(input_dir, old_files_name),
       to = paste0(output_dir, new_files_name)
     )
   }
-
+  
   if (file_action %in% "file_rename") {
     file.rename(
       from = paste0(input_dir, old_files_name),
       to = paste0(output_dir, new_files_name)
     )
   }
-
+  
   return(TRUE)
 }
 
@@ -199,19 +199,19 @@ rename_file <- function(input_dir,
 using_use_data <- function(input_dir,
                            file_extension = ".csv") {
   require(stringr)
-
+  
   all_files <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
   if (is.null(all_files)) {
     return("no file is found")
   }
   if (!file_extension %in% ".csv") stop("Check for file extensions")
-
+  
   all_csv_data <- lapply(all_files, function(x) {
     message("Importing ", x, " dataset")
     read_csv(file = str_c(input_dir, "/", x), col_names = TRUE)
   })
   names(all_csv_data) <- str_remove_all(all_files, pattern = file_extension)
-
+  
   # Load all the dataset in .GlobalEnv
   list2env(all_csv_data, .GlobalEnv)
   for (dd_name in names(all_csv_data)) {
@@ -227,7 +227,7 @@ using_use_data <- function(input_dir,
     )
     rm(list = as.character(dd_name), envir = .GlobalEnv)
   }
-
+  
   return(TRUE)
 }
 
@@ -245,19 +245,19 @@ adjust_code_lables <- function(dd,
                                codeVar = "CODE",
                                textVar = "TEXT") {
   require(tidyverse)
-
+  
   column_list_dd <- tibble::tibble(
     specified_name_list = c(phaseVar, codeVar, textVar),
     renamed_list = c("phase_var", "code_var", "text_var")
   )
-
+  
   dd <- dd %>%
     mutate(across(all_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
     rename_with(
       ~ str_c(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
       all_of(column_list_dd$specified_name_list)
     )
-
+  
   if (nrow(dd) > 1) {
     unique_rows <- dd %>%
       distinct(code_var) %>%
@@ -268,7 +268,7 @@ adjust_code_lables <- function(dd,
       temp_text <- temp_dd$text_var
       output_data <- tibble::tibble(field_value = temp_code, field_label = temp_text)
     }
-
+    
     if (unique_rows > 1) {
       temp_dd <- dd %>%
         mutate(phase_code_var = str_c("\n #' *", phase_var, "* : ", code_var, "\n "))
@@ -279,11 +279,11 @@ adjust_code_lables <- function(dd,
       output_data <- tibble::tibble(field_value = temp_code, field_label = temp_text)
     }
   }
-
+  
   if (nrow(dd) == 1) {
     output_data <- tibble::tibble(field_value = dd$code_var, field_label = dd$text_var)
   }
-
+  
   return(output_data)
 }
 
@@ -300,8 +300,7 @@ adjust_code_lables <- function(dd,
 #'   tblname = "ADAS_ADNIGO123",
 #'   data_dict = ADNIMERGE2::DATADIC,
 #'   fldname = "CORPORT",
-#'   description =
-#'     "Study protocol of data collection"
+#'   description = "Study protocol of data collection"
 #' )
 #' }
 #' @rdname common_cols_description_datadic
@@ -312,62 +311,62 @@ adjust_code_lables <- function(dd,
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_rows
 #' @importFrom assertr verify
-#' @importFrom rlang arg_match
-#' @importFrom rlang arg_match
 
 common_cols_description_datadic <- function(data_dict, tblname, fldname, description) {
-  
   PHASE <- TBLNAME <- CRFNAME <- FLDNAME <- NULL
-
+  
   check_colnames(
     dd = data_dict,
     col_names = c("PHASE", "TBLNAME", "CRFNAME", "FLDNAME"),
     strict = TRUE,
     stop_message = TRUE
   )
-
+  
   data_dict <- data_dict %>%
     mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ tolower(.x)))
   tblname <- tolower(tblname)
   fldname <- tolower(fldname)
-
+  
   rlang::arg_match(
     arg = tblname,
     values = unique(data_dict$TBLNAME),
     multiple = TRUE
   )
-
+  
   if (!is.vector(fldname)) stop("fldname must be a vector character")
   if (!is.vector(description)) stop("description must be a vector character")
   if (length(description) != length(fldname)) stop("The length of description and FLDNAME must be the same")
   description <- as.list(description)
   names(description) <- fldname
-
+  
   temp_data_dict <- data_dict %>%
     filter(TBLNAME %in% tblname) %>%
     verify(nrow(.) > 0)
-
-  tblname_data_dict <- lapply(fldname, function(cur_fldname) {
-    fldname_data_dict <- temp_data_dict %>%
-      filter(FLDNAME %in% cur_fldname) %>%
-      distinct(PHASE, TBLNAME, CRFNAME) %>%
-      mutate(
-        FLDNAME = cur_fldname,
-        TEXT = description[[cur_fldname]]
-      ) %>%
-      bind_rows(
-        temp_data_dict %>%
-          filter(!FLDNAME %in% cur_fldname)
-      )
-
-    return(fldname_data_dict)
-  }) %>%
+  
+  tblname_data_dict <- lapply(
+    fldname,
+    function(cur_fldname) {
+      fldname_data_dict <- temp_data_dict %>%
+        filter(!FLDNAME %in% cur_fldname) %>%
+        distinct(PHASE, TBLNAME, CRFNAME) %>%
+        mutate(
+          FLDNAME = cur_fldname,
+          TEXT = description[[cur_fldname]]
+        ) %>%
+        bind_rows(
+          temp_data_dict %>%
+            filter(!FLDNAME %in% cur_fldname)
+        )
+      
+      return(fldname_data_dict)
+    }
+  ) %>%
     bind_rows()
-
+  
   result_data_dict <- data_dict %>%
     filter(!TBLNAME %in% tblname) %>%
     bind_rows(tblname_data_dict) %>%
     mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ toupper(.x)))
-
+  
   return(result_data_dict)
 }
