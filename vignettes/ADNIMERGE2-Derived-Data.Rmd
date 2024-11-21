@@ -1,0 +1,377 @@
+---
+title: "ADNIMERGE2-Derived-Data"
+output: 
+   rmarkdown::html_vignette:
+     toc: true
+vignette: >
+  %\VignetteIndexEntry{ADNIMERGE2-Derived-Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+
+datatable <- function(...) {
+  DT::datatable(...,
+    options = list(paging = FALSE, searchable = TRUE, bInfo = FALSE)
+  )
+}
+```
+
+```{r setup-libraries, echo=FALSE}
+# Libraries ----
+library(tidyverse)
+library(assertr)
+library(labelled)
+library(DT)
+```
+
+
+# Introduction
+
+This article describes creating a Study Data Tabulation Model (SDTM) from a raw eCRF data. SDTM will be used to create Analysis Data Model (ADaM).
+
+## Demographic Characteristics (DM)
+
+`DM` contains one records per participants when they are enrolled in the ADNI study for the first time (i.e. as newly enrollee). The `DM` dataset will contains the following characteristics:
+
+```{r dm-data-dic, echo=FALSE}
+dm_data_dic <- bind_rows(
+  c(FLDNAME = "STUDYID", LABEL = "Study Identifier"),
+  c(FLDNAME = "DOMAIN", LABEL = "Domain Abbreviation"),
+  c(FLDNAME = "USUBJID", LABEL = "Unique Subject Identifier"),
+  c(FLDNAME = "SUBJID", LABEL = "Subject Identifier for the Study"),
+  c(FLDNAME = "ORIGPROT", LABEL = "Original study protocol", DESCRIPTION = "First time participation in ADNI study phase"),
+  c(FLDNAME = "SESTDTC", LABEL = "Screening Start Date/Time", DESCRIPTION = "First screening start date/time"),
+  c(FLDNAME = "RFSTDTC", LABEL = "Subject Enrolled Date/Time"),
+  # c(FLDNAME = "RFENDTC", LABEL = "Subject Reference End Date/Time"),
+  # c(FLDNAME = "RFICDTC", LABEL = "Date/Time of Informed Consent"),
+  c(
+    FLDNAME = "RFPENDTC", LABEL = "Date/Time of End of Participation",
+    DESCRIPTION = "Last known date/time when subject ended participation or follow-up in ADNI study"
+  ),
+  c(FLDNAME = "DTHDTC", LABEL = "Date/Time of Death"),
+  c(FLDNAME = "DTHFL", LABEL = "Subject Death Flag"),
+  c(FLDNAME = "SITEID", LABEL = "Study Site Identifier"),
+  c(
+    FLDNAME = "BRTHDTC", LABEL = "Date/Time of Birth",
+    DESCRIPTION = "Self-reported birth date in `YYYY-MM` format"
+  ),
+  c(
+    FLDNAME = "AGE", LABEL = "Age",
+    DESCRIPTION = "Age at first screening visits (in years)"
+  ),
+  c(FLDNAME = "AGEU", LABEL = "Age Units"),
+  c(FLDNAME = "SEX", LABEL = "Sex at Birth"),
+  c(FLDNAME = "RACE", LABEL = "Race"),
+  c(FLDNAME = "ETHNIC", LABEL = "Ethnicity"),
+  c(
+    FLDNAME = "EDU", LABEL = "Education",
+    DESCRIPTION = "Self-reported education at first screening visit (in years)"
+  ),
+  c(FLDNAME = "EDUU", LABEL = "Education Units"),
+  c(
+    FLDNAME = "MARRY", LABEL = "Marital Status",
+    DESCRIPTION = "Self-reported marriage status at first screening visit"
+  ),
+  c(FLDNAME = "DX.BL", LABEL = "Baseline Diagnostic Status"),
+  c(
+    FLDNAME = "COUNTRY", LABEL = "Country",
+    DESCRIPTION = "Country of the investigational site in which the subject is participated for the first time"
+  ),
+  c(FLDNAME = "DMDTC", LABEL = "Date/Time of Collection")
+  # c(FLDNAME = "AMYSTATUSSUV", LABEL = "Baseline Amyloid Status using SUVr Cut-Point")
+  ## It will be included if the data is available for all, currently only for ADNI4
+) %>%
+  tibble::as_tibble() %>%
+  relocate(c(FLDNAME, LABEL, DESCRIPTION)) %>%
+  mutate(
+    DESCRIPTION = replace_na(DESCRIPTION, " "),
+    DERIVED = TRUE,
+    TBLNAME = "DM",
+    CRFNAME = "[ Derived ] Demographic Characteristics"
+  )
+```
+
+```{r dm-data-dic-print, eval=TRUE, echo=FALSE}
+dm_data_dic %>%
+  select(FLDNAME, LABEL, DESCRIPTION) %>%
+  datatable()
+```
+
+```{r libraries-print, ref.label="setup-libraries", echo=TRUE, eval=FALSE}
+```
+
+```{r study-library, purl=FALSE}
+library(ADNIMERGE2)
+```
+
+```{r include-origprot-colprot, echo=TRUE}
+# Add participant type (New or Rollovers) in each study phase
+REGISTRY <- REGISTRY %>%
+  mutate(
+    COLPROT = as.character(COLPROT),
+    ORIGPROT = as.character(ORIGPROT)
+  ) %>%
+  mutate(participant_type = adni_study_track(
+    cur_study_phase = COLPROT,
+    orig_study_phase = ORIGPROT
+  ))
+
+ROSTER <- ROSTER %>%
+  mutate(
+    COLPROT = as.character(COLPROT),
+    ORIGPROT = as.character(ORIGPROT)
+  ) %>%
+  mutate(participant_type = adni_study_track(
+    cur_study_phase = COLPROT,
+    orig_study_phase = ORIGPROT
+  ))
+```
+
+```{r generate-dm}
+# Generate Demographic Domains
+# Unique participant id
+roster_rid <- unique(ROSTER$RID)
+registry_rid <- unique(REGISTRY$RID)
+petdomeg_rid <- unique(PTDEMOG$RID)
+unique_rid <- unique(c(roster_rid, registry_rid, petdomeg_rid))
+
+# Join columns
+dm_join_by <- c("RID", "ORIGPROT")
+
+DM <- tibble(RID = unique_rid) %>%
+  # Add ORIGPOL
+  mutate(ORIGPROT = original_study_protocol(RID = RID)) %>%
+  # Add the first records when they enrolled as "New Participant" in ADNI
+  left_join(
+    PTDEMOG %>%
+      filter(ORIGPROT == COLPROT) %>%
+      group_by(RID) %>%
+      filter(any(!is.na(VISDATE)) & VISDATE == min(VISDATE, na.rm = TRUE) |
+        all(is.na(VISDATE)) & row_number()) %>%
+      ungroup() %>%
+      assert(is_uniq, RID) %>%
+      assert_rows(num_row_NAs, within_bounds(0, 0.01), ORIGPROT) %>%
+      nest(OTHER_DEMOG = -c(
+        RID, ORIGPROT, PTGENDER, PTRACCAT, PTETHCAT, PTEDUCAT, PTMARRY,
+        PTDOB, SITEID, VISDATE
+      )) %>%
+      select(
+        RID, ORIGPROT, PTGENDER, PTRACCAT, PTETHCAT, PTEDUCAT, PTMARRY,
+        PTDOB, SITEID, VISDATE, OTHER_DEMOG
+      ),
+    by = dm_join_by
+  ) %>%
+  assert(is_uniq, RID) %>%
+  # Add the first baseline visit date (i.e. enrollment date)
+  left_join(
+    adni_enrollment(
+      dd = REGISTRY,
+      phase = "Overall",
+      both = FALSE
+    ) %>%
+      select(RID, ORIGPROT, ENROLLDATE = EXAMDATE) %>%
+      assert(is_uniq, RID),
+    by = dm_join_by
+  ) %>%
+  assert(is_uniq, RID) %>%
+  # Add the first screening visit date
+  left_join(
+    extract_adni_screen_date(
+      dd = REGISTRY,
+      phase = "Overall",
+      both = FALSE,
+      multiple_screen_visit = FALSE
+    ) %>%
+      select(RID, ORIGPROT, SCREENDATE) %>%
+      assert(is_uniq, RID),
+    by = dm_join_by
+  ) %>%
+  assert(is_uniq, RID) %>%
+  mutate(
+    STUDYID = "ADNI",
+    DOMAIN = "DM",
+    USUBJID = paste0("ADNI-", RID),
+    SUBJID = RID,
+    SESTDTC = SCREENDATE,
+    RFSTDTC = ENROLLDATE,
+    SEX = PTGENDER,
+    RACE = PTRACCAT,
+    ETHNIC = PTETHCAT,
+    BRTHDTC = PTDOB,
+    AGE = round(as.numeric(VISDATE - my(PTDOB)) / 365.25, 1),
+    AGEU = "Years",
+    EDU = PTEDUCAT,
+    EDUU = "Years",
+    MARRY = PTMARRY,
+    DMDTC = as.Date(VISDATE),
+    COUNTRY = NA_character_
+  )
+```
+
+```{r death-events}
+# Add death flag
+# Based on reported studysum; ADNI3 and ADNI4 phases
+death_studysum <- STUDYSUM %>%
+  filter(SDPRIMARY == "Death") %>%
+  select(RID, ORIGPROT, COLPROT) %>%
+  assert(is_uniq, RID)
+# Based on reported adverse events; ADNI3 and ADNI4 phases
+death_adverse_event <- ADVERSE %>%
+  filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
+  select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT) %>%
+  assert(is_uniq, RID)
+death_event_dataset <- death_studysum %>%
+  full_join(death_adverse_event,
+    by = c("RID", "ORIGPROT", "COLPROT")
+  ) %>%
+  assert(is_uniq, RID)
+
+DM <- DM %>%
+  left_join(
+    death_event_dataset %>%
+      mutate(DTHFL = "Yes") %>%
+      select(RID, ORIGPROT, DTHFL, DTHDTC = AEHDTHDT),
+    by = dm_join_by
+  ) %>%
+  assert(is_uniq, RID)
+```
+
+```{r early-disc-status}
+# Last known never enrolled or early discontinuations
+# ADNIGO and ADNI2
+nerolled_early_discon_adnigo2 <- REGISTRY %>%
+  filter(COLPROT %in% c("ADNIGO", "ADNI2")) %>%
+  filter(str_detect(PTSTATUS, "Discontinued")) %>%
+  group_by(RID, COLPROT) %>%
+  filter(c(all(is.na(EXAMDATE)) & row_number() == 1) |
+    c(EXAMDATE == min(EXAMDATE, na.rm = TRUE))) %>%
+  ungroup() %>%
+  group_by(RID) %>%
+  slice_head(n = 1) %>%
+  ungroup() %>%
+  assert(is_uniq, RID) %>%
+  select(RID, ORIGPROT, COLPROT, PTSTATUS, EXAMDATE, VISCODE)
+
+# ADNI3 and ADNI4:
+nerolled_early_discon_adni34 <- STUDYSUM %>%
+  # Early discontinuations or never enrolled
+  filter(SDSTATUS %in% c(
+    "Enrolled - Early discontinuation of study visits",
+    "Never enrolled"
+  )) %>%
+  select(
+    RID, ORIGPROT, COLPROT, SDSTATUS, SDDATE, INCLUSION,
+    EXCLUSION, INCROLL, VERSION, INCNEWPT, EXCCRIT, MRIFIND,
+    NVRDISC, NVROT, AENUM
+  ) %>%
+  distinct() %>%
+  nest(OTHER_STUDYSUM = c(
+    INCLUSION, EXCLUSION, INCROLL, VERSION, INCNEWPT,
+    EXCCRIT, MRIFIND, NVRDISC, NVROT, AENUM
+  )) %>%
+  assert(is_uniq, RID)
+
+# Overall never enrolled/ discontinued
+nerolled_early_discon_adni <- nerolled_early_discon_adni34 %>%
+  select(RID, ORIGPROT, COLPROT, STATUS = SDSTATUS, DATE = SDDATE) %>%
+  bind_rows(nerolled_early_discon_adnigo2 %>%
+    select(RID, ORIGPROT, COLPROT, STATUS = PTSTATUS, DATE = EXAMDATE))
+
+DM <- DM %>%
+  left_join(
+    nerolled_early_discon_adni %>%
+      mutate(COLPROT = factor(COLPROT, levels = adni_phase())) %>%
+      group_by(RID) %>%
+      arrange(COLPROT) %>%
+      filter(row_number() == n()) %>%
+      ungroup() %>%
+      # Last discontinuations date
+      select(RID, ORIGPROT, STATUS, RFPENDTC = DATE),
+    by = dm_join_by
+  ) %>%
+  assert(is_uniq, RID)
+```
+
+```{r baseline-dxsum}
+# Baseline diagnostics summary
+# Currently, per protocol in ADNI4: to pull forward the screening diagnostics
+#            summary for those who enrolled in ADNI4 but they did not have yet
+#            reported baseline diagnostic summary in DXSUM
+adni4_baseline_dxsum <- adni_enrollment(
+  dd = ADNIMERGE2::REGISTRY,
+  phase = "ADNI4",
+  both = FALSE
+) %>%
+  select(RID, ORIGPROT, COLPROT) %>%
+  left_join(
+    extract_blscreen_dxsum(
+      dd = ADNIMERGE2::DXSUM,
+      phase = "ADNI4",
+      visit_type = "baseline"
+    ) %>%
+      select(RID, ORIGPROT, COLPROT, BL.DIAGNOSIS,
+        "BL.DIAGNOSIS_EXAMDATE" = EXAMDATE
+      ),
+    by = c("RID", "ORIGPROT", "COLPROT")
+  ) %>%
+  left_join(
+    extract_blscreen_dxsum(
+      dd = ADNIMERGE2::DXSUM,
+      phase = "ADNI4",
+      visit_type = "screen"
+    ) %>%
+      select(RID, ORIGPROT, COLPROT, SC.DIAGNOSIS,
+        "SC.DIAGNOSIS_EXAMDATE" = EXAMDATE
+      ),
+    by = c("RID", "ORIGPROT", "COLPROT")
+  ) %>%
+  assert(is_uniq, RID) %>%
+  mutate(BL.DIAGNOSIS = case_when(
+    ORIGPROT == COLPROT & is.na(BL.DIAGNOSIS) &
+      !is.na(SC.DIAGNOSIS) ~ SC.DIAGNOSIS,
+    TRUE ~ BL.DIAGNOSIS
+  ))
+
+DM <- DM %>%
+  mutate(RFPENDTC = NA_Date_) %>%
+  left_join(
+    extract_blscreen_dxsum(
+      dd = ADNIMERGE2::DXSUM,
+      phase = "Overall",
+      visit_type = "baseline"
+    ) %>%
+      select(RID, ORIGPROT, BL.DIAGNOSIS) %>%
+      assert(is_uniq, RID),
+    by = dm_join_by
+  ) %>%
+  left_join(
+    adni4_baseline_dxsum %>%
+      filter(ORIGPROT == COLPROT) %>%
+      select(RID, ORIGPROT, "ADJUST.BL.DIAGNOSIS" = BL.DIAGNOSIS),
+    by = dm_join_by
+  ) %>%
+  mutate(BL.DIAGNOSIS = case_when(
+    is.na(BL.DIAGNOSIS) & ORIGPROT == "ADNI4" ~ ADJUST.BL.DIAGNOSIS,
+    TRUE ~ BL.DIAGNOSIS
+  )) %>%
+  mutate(DX.BL = case_when(
+    BL.DIAGNOSIS == "1" ~ "CN",
+    BL.DIAGNOSIS == "2" ~ "MCI",
+    BL.DIAGNOSIS == "3" | BL.DIAGNOSIS == "Dementia" ~ "DEM",
+    TRUE ~ BL.DIAGNOSIS
+  )) %>%
+  assert(is_uniq, RID) %>%
+  select(all_of(dm_data_dic$FLDNAME)) %>%
+  set_variable_labels(.labels = setNames(
+    as.list(dm_data_dic$LABEL),
+    dm_data_dic$FLDNAME
+  ))
+```

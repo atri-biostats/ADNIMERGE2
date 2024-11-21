@@ -6,37 +6,61 @@ source(file.path(".", "tools", "data-dictionary-utils.R"))
 # Libraries ----
 library(tidyverse)
 library(assertr)
+if (length(commandArgs(trailingOnly = TRUE)) > 0) {
+  args <- commandArgs(trailingOnly = TRUE)
+  DERIVED_DATASET_LIST <- str_remove_all(
+    string = args,
+    pattern = '[\\(\\)]|\\"|^c'
+  ) %>%
+    str_split(string = ., pattern = ",") %>%
+    unlist() %>%
+    str_trim(string = ., side = "both")
+  if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
+} else {
+  DERIVED_DATASET_LIST <- NULL
+}
 
 # Load .rda dataset to .GlobalEnv from data directory ----
-list_rda_files <- list.files(
+rda_file_list <- list.files(
   path = file.path(".", "data"),
   pattern = ".rda", all.files = TRUE,
   full.names = TRUE, recursive = FALSE
 )
 
+# Derived dataset list
+derived_data_file_path <- file.path(".", "data", str_c(DERIVED_DATASET_LIST, ".rda"))
 ## Exclude DATADIC dataset from the list
 data_downloaded_date_path <- file.path(".", "data", "DATA_DOWNLOADED_DATE.rda")
 data_dict_file_path <- file.path(".", "data", "DATADIC.rda")
-
 # Updated DATADIC file
 updated_data_dict_file_path <- file.path(".", "data-raw", "updated_datadic", "UPDATED_DATADIC.rda")
 
 USE_UPDATED_DATADIC <- TRUE
 
 if (USE_UPDATED_DATADIC) {
-  lapply(list_rda_files[!list_rda_files %in% c(data_dict_file_path)], load, .GlobalEnv)
+  lapply(rda_file_list[!rda_file_list %in% c(data_dict_file_path)], load, .GlobalEnv)
 
-  if (file.exists(updated_data_dict_file_path)) load(updated_data_dict_file_path)
+  if (file.exists(updated_data_dict_file_path)) load(updated_data_dict_file_path, .GlobalEnv)
   DATADIC <- UPDATED_DATADIC
 }
 
-list_rda_files <- list_rda_files[!list_rda_files %in% c(data_downloaded_date_path)]
-combined_datasets <- mget(str_remove_all(
-  string = list_rda_files,
+raw_rda_file_list <- rda_file_list[!rda_file_list %in% c(
+  data_downloaded_date_path,
+  derived_data_file_path
+)]
+drived_rda_files_list <- rda_file_list[rda_file_list %in% derived_data_file_path]
+combined_raw_datasets <- mget(str_remove_all(
+  string = raw_rda_file_list,
   pattern = "\\.rda|\\./data/"
 ))
+if (length(drived_rda_files_list) > 0) {
+  combined_derived_datasets <- mget(str_remove_all(
+    string = drived_rda_files_list,
+    pattern = "\\.rda|\\./data/"
+  ))
+}
 rm(list = as.character(str_remove_all(
-  string = list_rda_files[!list_rda_files %in% data_dict_file_path],
+  string = rda_file_list[!rda_file_list %in% data_dict_file_path],
   pattern = "\\.rda|.\\/data/"
 )))
 prefix_patterns <- "^adni\\_"
@@ -56,11 +80,11 @@ common_description <- str_c(
 ## Authors ----
 authors <- "\\href{adni-data@googlegroups.com}{adni-data@googlegroups.com}"
 
-# Prepare data dictionary ----
-## Generate data dictionary from actual dataset ----
-temp_data_dict <- lapply(names(combined_datasets), function(tbl_name) {
+# Prepare data dictionary for raw dataset ----
+## Generate data dictionary from actual raw dataset ----
+temp_data_dict <- lapply(names(combined_raw_datasets), function(tbl_name) {
   summarize_dataset(
-    dd = combined_datasets %>% pluck(., tbl_name),
+    dd = combined_raw_datasets %>% pluck(., tbl_name),
     dataset_name = tbl_name,
     wider_format = TRUE
   )
@@ -79,7 +103,8 @@ temp_field_codetext <- DATADIC %>%
   mutate(TBLNAME = str_to_lower(TBLNAME)) %>%
   filter(TBLNAME %in% unique_tblname) %>%
   distinct(PHASE, TBLNAME, FLDNAME, TEXT, CODE) %>%
-  filter(!str_detect(CODE, "crfname|\\<display")) %>%
+  mutate(removed_records = str_detect(CODE, "crfname|\\<display")) %>%
+  filter(removed_records == FALSE | is.na(removed_records)) %>%
   mutate(across(
     c(TEXT, CODE),
     ~ str_remove_all(
@@ -132,7 +157,11 @@ temp_data_dict <- temp_data_dict %>%
       is.na(prefix_char) ~ CRFNAME
     ),
     add_authors = authors,
-    short_description = str_c(CRFNAME, common_description, sep = " "),
+    short_description = case_when(
+      tblname %in% "DATADIC" ~ str_c("Data dictionary dataset. More information is available at ", loni_data_link),
+      tblname %in% "VISITS" ~ str_c("More information is available at ", loni_data_link),
+      TRUE ~ str_c(CRFNAME, common_description, sep = " ")
+    ),
     dataset_source_type = "raw",
     add_source = loni_data_link
   ) %>%
@@ -169,14 +198,12 @@ if (file.exists(data_document_file_path) == TRUE) {
 } else {
   file.create(data_document_file_path, showWarnings = TRUE)
 }
-
 generate_roxygen_document(
   dataset_name_list = unique(temp_data_dict$dd_name),
   dd = NULL, data_dict = temp_data_dict,
   roxygen_source_type = "data_dictionary",
   output_file_name = data_document_file_path
 )
-message("Completed generating documentations for raw datasets")
 
 # Add documentation for DATA_DOWNLOADED_DATE dataset
 cat("#' ADNI data download date",
@@ -198,3 +225,81 @@ cat("#' ADNI data download date",
   "NULL\n\n",
   file = data_document_file_path, sep = "\n", append = TRUE
 )
+message("Completed generating documentations for raw datasets")
+
+# Prepare data dictionary for derived dataset ----
+if (exists("combined_derived_datasets")) {
+  ## Generate data dictionary from actual raw dataset ----
+  common_description_derived_data <- paste0(
+    "data derived from raw datasets. ",
+    "More information is available at `browseVignettes('ADNIMERGE2')`"
+  )
+  derived_datadic_file_path <- file.path(
+    ".", "data-raw",
+    "derived-datadic", "DERIVED_DATADIC.rda"
+  )
+  load(derived_datadic_file_path, .GlobalEnv)
+
+  temp_data_dict_derived <- lapply(
+    names(combined_derived_datasets),
+    function(tbl_name) {
+      summarize_dataset(
+        dd = combined_derived_datasets %>% pluck(., tbl_name),
+        dataset_name = tbl_name,
+        wider_format = TRUE
+      )
+    }
+  ) %>%
+    bind_rows() %>%
+    mutate(tblname = str_remove_all(
+      string = dd_name,
+      pattern = string_removed_pattern
+    )) %>%
+    # Add descriptions and tblname
+    left_join(
+      DERIVED_DATADIC %>%
+        select(TBLNAME, FLDNAME, DESCRIPTION, CRFNAME),
+      by = c("dd_name" = "TBLNAME", "field_name" = "FLDNAME")
+    ) %>%
+    assert_rows(col_concat, is_uniq, dd_name, field_name) %>%
+    mutate(
+      add_authors = authors,
+      short_description = str_c(
+        str_to_sentence(
+          string = str_remove_all(
+            string = CRFNAME,
+            pattern = "\\[ Derived \\]"
+          )
+        ),
+        common_description_derived_data,
+        sep = " "
+      ),
+      dataset_source_type = "derived",
+      add_source = "browseVignettes('ADNIMERGE2')",
+      field_notes = str_to_sentence(case_when(
+        DESCRIPTION == " " ~ field_notes,
+        TRUE ~ str_c(DESCRIPTION, "; ", field_notes)
+      ))
+    ) %>%
+    select(
+      dd_name, num_rows, num_cols, field_name, field_class, field_label,
+      field_values, field_notes, add_authors, short_description,
+      dataset_source_type, add_source
+    )
+
+  # derived_data_document_file_path <- file.path(".", "R", "derived-data.R")
+  # if (file.exists(derived_data_document_file_path) == TRUE) {
+  #   readr::write_lines(x = "", derived_data_document_file_path)
+  # } else {
+  #   file.create(derived_data_document_file_path, showWarnings = TRUE)
+  # }
+
+  generate_roxygen_document(
+    dataset_name_list = unique(temp_data_dict_derived$dd_name),
+    dd = NULL, data_dict = temp_data_dict_derived,
+    roxygen_source_type = "data_dictionary",
+    output_file_name = data_document_file_path,
+    existed_append = TRUE
+  )
+  message("Completed generating documentations for derived datasets")
+}
