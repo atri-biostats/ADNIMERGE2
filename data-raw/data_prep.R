@@ -145,7 +145,7 @@ if (UPDATE_MISSING_VALUE) {
     if (check_RID_col) {
       message("Adding ORIGPROT and COLPROT variables in ", tb)
       dd <- dd %>%
-        create_col_protocol(dd = ., phaseVar = c("Phase", "PHASE")) %>%
+        create_col_protocol(dd = ., phaseVar = c("Phase", "PHASE", "ProtocolID")) %>%
         create_orig_protocol(dd = .)
     } else {
       message("ORIGPROT and COLPROT are not addedd in ", tb)

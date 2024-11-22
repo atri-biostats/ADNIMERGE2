@@ -6,6 +6,8 @@ source(file.path(".", "tools", "data-dictionary-utils.R"))
 # Libraries ----
 library(tidyverse)
 library(assertr)
+
+# Input arg parameters ---
 if (length(commandArgs(trailingOnly = TRUE)) > 0) {
   args <- commandArgs(trailingOnly = TRUE)
   DERIVED_DATASET_LIST <- str_remove_all(
@@ -258,7 +260,7 @@ if (exists("combined_derived_datasets")) {
     # Add descriptions and tblname
     left_join(
       DERIVED_DATADIC %>%
-        select(TBLNAME, FLDNAME, DESCRIPTION, CRFNAME),
+        select(TBLNAME, FLDNAME, TEXT, CRFNAME),
       by = c("dd_name" = "TBLNAME", "field_name" = "FLDNAME")
     ) %>%
     assert_rows(col_concat, is_uniq, dd_name, field_name) %>%
@@ -277,8 +279,8 @@ if (exists("combined_derived_datasets")) {
       dataset_source_type = "derived",
       add_source = "browseVignettes('ADNIMERGE2')",
       field_notes = str_to_sentence(case_when(
-        DESCRIPTION == " " ~ field_notes,
-        TRUE ~ str_c(DESCRIPTION, "; ", field_notes)
+        TEXT == " " ~ field_notes,
+        TRUE ~ str_c(TEXT, "; ", field_notes)
       ))
     ) %>%
     select(

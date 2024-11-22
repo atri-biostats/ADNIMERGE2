@@ -35,7 +35,7 @@ if (UPDATE_DERIVED_DATASET) {
   vignette_file_path <- file.path(".", "vignettes", "ADNIMERGE2-Derived-Data.Rmd")
   knitr::purl(input = vignette_file_path, output = temporary_file)
   source(file = temporary_file)
-  DERIVED_DATASET_LIST <- c("DM")
+  DERIVED_DATASET_LIST <- c("DM", "AE", "QS")
   
   # To apply use_data() function: use_data_modified()
   source(file = file.path(".", "tools" , "data-prepare-utils.R"))
@@ -64,7 +64,7 @@ if (UPDATE_DERIVED_DATASET) {
   
   DERIVED_DATADIC <- mget(derived_data_dic) %>%
     bind_rows()
-  
+
   derived_datadic_dir_path <- file.path(".", "data-raw", "derived-datadic")
   unlink(derived_datadic_dir_path, recursive = TRUE)
   dir.create(derived_datadic_dir_path)

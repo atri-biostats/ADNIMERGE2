@@ -499,3 +499,29 @@ extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline
 
   return(output_dd)
 }
+
+#' @title Detect Closest Baseline Score
+#' @description
+#'  This function is used to flag the closest assessment record score to the
+#'  baseline visit date (i.e enrollment date) within a certain window period.
+#' @param cur_record_date Date of current assessment record collected
+#' @param enroll_date Enrollment Date (i.e. Baseline Visit Date)
+#' @param time_interval Minimum window period (in days) from baseline visit date, Default: 30
+#' @return
+#'  A character vector with the same length as the input values `cur_record_date`.
+#'  The returned vector will contains `Yes` flag for the closest record 
+#'  within the specified window period. Otherwise, missing value.
+#' @rdname dectect_baseline_score
+#' @export
+dectect_baseline_score <- function(cur_record_date, enroll_date, time_interval = 30) {
+  time_diff <- as.numeric(as.Date(cur_record_date) - as.Date(enroll_date))
+  abs_time_diff <- abs(time_diff)
+  flags <- abs_time_diff < 30
+  # Adjustment for the nearest timeline
+  if (length(flags[flags == TRUE]) > 1) {
+    list_closet_timeline <- min(abs_time_diff[flags == TRUE])
+    flags <- abs_time_diff == list_closet_timeline
+  }
+  flags <- ifelse(flags == TRUE, "Yes", NA_character_)
+  return(flags)
+}

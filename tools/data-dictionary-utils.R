@@ -173,7 +173,7 @@ generate_variable_format_list <- function(data_dict,
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_factor_variable(dd = ADNI4::DM, var_name = "AMYSTATUSCL", wider_format = FALSE)
+#' summarize_factor_variable(dd = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
 #' }
 #' @rdname summarize_factor_variable
 summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
@@ -233,7 +233,7 @@ summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_character_variable(dd = ADNI4::DM, var_name = "TRACK", wider_format = FALSE)
+#' summarize_character_variable(dd = ADNIMERGE2::DM, var_name = "SEX", wider_format = FALSE)
 #' }
 #' @rdname summarize_character_variable
 summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
@@ -304,7 +304,7 @@ summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_numeric_variable(dd = ADNI4::DM, var_name = "AGE", wider_format = FALSE)
+#' summarize_numeric_variable(dd = ADNIMERGE2::DM, var_name = "AGE", wider_format = FALSE)
 #' }
 #' @rdname summarize_numeric_variable
 summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
@@ -365,7 +365,7 @@ summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
 #' @examples
 #' \dontrun{
 #' summarize_date_variable(
-#'   dd = ADNI4::DM %>%
+#'   dd = ADNIMERGE2::DM %>%
 #'     mutate(RFSTDTC = as.Date(RFSTDTC)),
 #'   var_name = "RFSTDTC"
 #' )
@@ -418,12 +418,11 @@ summarize_date_variable <- function(dd, var_name) {
 #' @examples
 #' \dontrun{
 #' summarize_logical_variable(
-#'   dd = ADNI4::DM %>%
-#'     mutate(ENROLLFLAG = case_when(
-#'       ENROLLFLAG %in% "Yes" ~ TRUE,
-#'       ENROLLFLAG %in% "No" ~ FALSE
+#'   dd = ADNIMERGE2::DM %>%
+#'     mutate(DTHFL = case_when(
+#'       DTHFL %in% "Yes" ~ TRUE
 #'     )),
-#'   var_name = "ENROLLFLAG"
+#'   var_name = "DTHFL"
 #' )
 #' }
 #' @rdname summarize_logical_variable
@@ -471,7 +470,7 @@ summarize_logical_variable <- function(dd, var_name) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_variable(dd = ADNI4::DM, var_name = "TRACK", wider_format = FALSE)
+#' summarize_variable(dd = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
 #' }
 #' @rdname summarize_variable
 #' @seealso \code{\link{summarize_dataset}}
@@ -488,7 +487,6 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
     "Date", "POSIXct", "POSIXt", "hms", "difftime", "logical"
   )
   rlang::arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
-  if (!is.logical(suppress_warnings)) stop("`suppress_warnings` must be a boolean value")
   if (any(var_class_type %in% specified_class_type[1])) summary_dd <- summarize_factor_variable(dd = dd, var_name = var_name, wider_format = wider_format)
   if (any(var_class_type %in% specified_class_type[2])) summary_dd <- summarize_character_variable(dd = dd, var_name = var_name, wider_format = wider_format) 
   if (any(var_class_type %in% specified_class_type[3:5])) summary_dd <- summarize_numeric_variable(dd = dd, var_name = var_name, wider_format = wider_format)
@@ -523,7 +521,7 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_variable(dd = ADNI4::DM, var_name = "TRACK", wider_format = FALSE)
+#' summarize_variable(dd = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
 #' }
 #' @rdname summarize_variable
 #' @seealso \code{\link{summarize_variable}}
@@ -746,8 +744,8 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 #' \dontrun{
 #' # Data preparation to generate the roxygen document directly from datasets
 #' temp_listed_dd <- list()
-#' temp_listed_dd[[1]] <- list(dd = ADNI4::DM, dataset_source_type = "derived")
-#' temp_listed_dd[[2]] <- list(dd = ADNI4::TK, dataset_source_type = "derived")
+#' temp_listed_dd[[1]] <- list(dd = ADNIMERGE2::DM, dataset_source_type = "derived")
+#' temp_listed_dd[[2]] <- list(dd = ADNIMERGE2::AE, dataset_source_type = "derived")
 #' names(temp_listed_dd) <- c("DM", "TK")
 #' generate_roxygen_document(dd = temp_listed_dd, roxygen_source_type = "actual_dataset")
 #' }

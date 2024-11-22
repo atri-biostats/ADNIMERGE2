@@ -32,12 +32,17 @@ library(labelled)
 library(DT)
 ```
 
-
 # Introduction
+\label{sec:introduction}
 
-This article describes creating a Study Data Tabulation Model (SDTM) from a raw eCRF data. SDTM will be used to create Analysis Data Model (ADaM).
+This article describes creating a Study Data Tabulation Model (SDTM) from a raw eCRF data. SDTM will be used to create Analysis Data Model (ADaM). The selected SDTM domains are: 
 
-## Demographic Characteristics (DM)
+* Demographic (DM)
+* Adverse Event (AE)
+* Questionnaires (QS)
+
+## Demographic (DM)
+\label{sec:dm}
 
 `DM` contains one records per participants when they are enrolled in the ADNI study for the first time (i.e. as newly enrollee). The `DM` dataset will contains the following characteristics:
 
@@ -47,25 +52,31 @@ dm_data_dic <- bind_rows(
   c(FLDNAME = "DOMAIN", LABEL = "Domain Abbreviation"),
   c(FLDNAME = "USUBJID", LABEL = "Unique Subject Identifier"),
   c(FLDNAME = "SUBJID", LABEL = "Subject Identifier for the Study"),
-  c(FLDNAME = "ORIGPROT", LABEL = "Original study protocol", DESCRIPTION = "First time participation in ADNI study phase"),
-  c(FLDNAME = "SESTDTC", LABEL = "Screening Start Date/Time", DESCRIPTION = "First screening start date/time"),
+  c(
+    FLDNAME = "ORIGPROT", LABEL = "Original study protocol",
+    TEXT = "First time participation in ADNI study phase"
+  ),
+  c(
+    FLDNAME = "SESTDTC", LABEL = "Screening Start Date/Time",
+    TEXT = "First screening start date/time"
+  ),
   c(FLDNAME = "RFSTDTC", LABEL = "Subject Enrolled Date/Time"),
   # c(FLDNAME = "RFENDTC", LABEL = "Subject Reference End Date/Time"),
   # c(FLDNAME = "RFICDTC", LABEL = "Date/Time of Informed Consent"),
   c(
     FLDNAME = "RFPENDTC", LABEL = "Date/Time of End of Participation",
-    DESCRIPTION = "Last known date/time when subject ended participation or follow-up in ADNI study"
+    TEXT = "Last known date/time when subject ended participation or follow-up in ADNI study"
   ),
   c(FLDNAME = "DTHDTC", LABEL = "Date/Time of Death"),
   c(FLDNAME = "DTHFL", LABEL = "Subject Death Flag"),
   c(FLDNAME = "SITEID", LABEL = "Study Site Identifier"),
   c(
     FLDNAME = "BRTHDTC", LABEL = "Date/Time of Birth",
-    DESCRIPTION = "Self-reported birth date in `YYYY-MM` format"
+    TEXT = "Self-reported birth date in `YYYY-MM` format"
   ),
   c(
     FLDNAME = "AGE", LABEL = "Age",
-    DESCRIPTION = "Age at first screening visits (in years)"
+    TEXT = "Age at first screening visits (in years)"
   ),
   c(FLDNAME = "AGEU", LABEL = "Age Units"),
   c(FLDNAME = "SEX", LABEL = "Sex at Birth"),
@@ -73,26 +84,26 @@ dm_data_dic <- bind_rows(
   c(FLDNAME = "ETHNIC", LABEL = "Ethnicity"),
   c(
     FLDNAME = "EDU", LABEL = "Education",
-    DESCRIPTION = "Self-reported education at first screening visit (in years)"
+    TEXT = "Self-reported education at first screening visit (in years)"
   ),
   c(FLDNAME = "EDUU", LABEL = "Education Units"),
   c(
     FLDNAME = "MARRY", LABEL = "Marital Status",
-    DESCRIPTION = "Self-reported marriage status at first screening visit"
+    TEXT = "Self-reported marriage status at first screening visit"
   ),
   c(FLDNAME = "DX.BL", LABEL = "Baseline Diagnostic Status"),
   c(
     FLDNAME = "COUNTRY", LABEL = "Country",
-    DESCRIPTION = "Country of the investigational site in which the subject is participated for the first time"
+    TEXT = "Country of the investigational site in which the subject is participated for the first time"
   ),
   c(FLDNAME = "DMDTC", LABEL = "Date/Time of Collection")
   # c(FLDNAME = "AMYSTATUSSUV", LABEL = "Baseline Amyloid Status using SUVr Cut-Point")
   ## It will be included if the data is available for all, currently only for ADNI4
 ) %>%
   tibble::as_tibble() %>%
-  relocate(c(FLDNAME, LABEL, DESCRIPTION)) %>%
+  relocate(c(FLDNAME, LABEL, TEXT)) %>%
   mutate(
-    DESCRIPTION = replace_na(DESCRIPTION, " "),
+    TEXT = replace_na(TEXT, " "),
     DERIVED = TRUE,
     TBLNAME = "DM",
     CRFNAME = "[ Derived ] Demographic Characteristics"
@@ -101,7 +112,7 @@ dm_data_dic <- bind_rows(
 
 ```{r dm-data-dic-print, eval=TRUE, echo=FALSE}
 dm_data_dic %>%
-  select(FLDNAME, LABEL, DESCRIPTION) %>%
+  select(FLDNAME, LABEL, TEXT) %>%
   datatable()
 ```
 
@@ -110,6 +121,28 @@ dm_data_dic %>%
 
 ```{r study-library, purl=FALSE}
 library(ADNIMERGE2)
+```
+
+```{r phase-visit-code}
+# Add EPOCH stage for each phase specific visit code
+EPOCH_LIST <- VISITS %>%
+  filter(!VISCODE %in% c("reg", "nv")) %>%
+  # Add ADNI4 phase visit code
+  bind_rows(tibble(
+    Phase = "ADNI4",
+    VISCODE = c("4_sc", "4_bl", "4_init", "4_m12", "4_m24", "4_m36", "4_m48")
+  ) %>%
+    mutate(
+      ID = row_number(),
+      VISORDER = row_number()
+    )) %>%
+  mutate(EPOCH = case_when(
+    VISCODE %in% c("sc", "4_sc", "scmri", "f", "v01", "v02") ~ "Screening",
+    VISCODE %in% c("bl", "4_bl", "init", "4_init", "v03", "v06") ~ "Baseline",
+    TRUE ~ "Follow-up"
+  )) %>%
+  mutate(PHASE_EPOCH = paste0(Phase, " - ", EPOCH)) %>%
+  select(Phase, VISCODE, PHASE_EPOCH, EPOCH)
 ```
 
 ```{r include-origprot-colprot, echo=TRUE}
@@ -198,7 +231,7 @@ DM <- tibble(RID = unique_rid) %>%
   mutate(
     STUDYID = "ADNI",
     DOMAIN = "DM",
-    USUBJID = paste0("ADNI-", RID),
+    USUBJID = paste0(STUDYID, "-", RID), # paste0(STUDYID,"-", SITEID, "-", RID)
     SUBJID = RID,
     SESTDTC = SCREENDATE,
     RFSTDTC = ENROLLDATE,
@@ -221,15 +254,27 @@ DM <- tibble(RID = unique_rid) %>%
 # Based on reported studysum; ADNI3 and ADNI4 phases
 death_studysum <- STUDYSUM %>%
   filter(SDPRIMARY == "Death") %>%
-  select(RID, ORIGPROT, COLPROT) %>%
+  select(RID, ORIGPROT, COLPROT, SDPRIMARY) %>%
   assert(is_uniq, RID)
-# Based on reported adverse events; ADNI3 and ADNI4 phases
-death_adverse_event <- ADVERSE %>%
+# Based on reported adverse events: ADNI3 and ADNI4 phases
+death_adverse_even_adni34 <- ADVERSE %>%
   filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
-  select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT) %>%
+  select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
   assert(is_uniq, RID)
+# Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
+death_adverse_even_adni12go <- RECADV %>%
+  filter(AEHDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
+  select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = AEHDEATH) %>%
+  distinct() %>%
+  group_by(RID, ORIGPROT, COLPROT) %>%
+  filter(VISCODE == min(VISCODE)) %>%
+  ungroup() %>%
+  assert(is_uniq, RID)
+
 death_event_dataset <- death_studysum %>%
-  full_join(death_adverse_event,
+  full_join(
+    death_adverse_even_adni34 %>%
+      bind_rows(death_adverse_even_adni12go),
     by = c("RID", "ORIGPROT", "COLPROT")
   ) %>%
   assert(is_uniq, RID)
@@ -373,5 +418,422 @@ DM <- DM %>%
   set_variable_labels(.labels = setNames(
     as.list(dm_data_dic$LABEL),
     dm_data_dic$FLDNAME
+  ))
+```
+
+
+
+## Adverse Event (AE)
+\label{sec:ae}
+
+`AE` contains one records per adverse event per participants. The `AE` dataset will contains the following characteristics:
+
+```{r ae-data-dic, echo=FALSE}
+ae_data_dic <- bind_rows(
+  c(FLDNAME = "STUDYID", LABEL = "Study Identifier"),
+  c(FLDNAME = "DOMAIN", LABEL = "Domain Abbreviation"),
+  c(FLDNAME = "USUBJID", LABEL = "Unique Subject Identifier"),
+  c(FLDNAME = "SITEID", LABEL = "Study Site Identifier"),
+  c(FLDNAME = "AESEQ", LABEL = "Sequence Number"),
+  c(FLDNAME = "AESPID", LABEL = "Sponser-Defined Identifier"),
+  c(FLDNAME = "AETERM", LABEL = "Reported Term for the Adverse Event"),
+  c(FLDNAME = "AELLT", LABEL = "Lowest Level Term", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AELLTCD", LABEL = "Lowest Level Term Code", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AEDECOD", LABEL = "Dictionary-Derived Term", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AEPTCD", LABEL = "Preferred Term Code", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AEHLT", LABEL = "High Level Term", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AEHLTCD", LABEL = "High Level Term Code", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AEHGT", LABEL = "High Level Group Term", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AEHGTCD", LABEL = "High Level Group Term Code", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AESOC", LABEL = "Primary Sytem Organ Class", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AESOCCD", LABEL = "Primary Sytem Organ Class Code", TEXT = "Based on MeDRA Coding"),
+  c(FLDNAME = "AESEV", LABEL = "Severity/Intensity"),
+  c(FLDNAME = "AESER", LABEL = "Serious Event"),
+  c(FLDNAME = "AEOUT", LABEL = "Outcome of Adverse Event"),
+  c(FLDNAME = "AESCONG", LABEL = "Congential Anomaly or Birth Defect"),
+  c(FLDNAME = "AESDISAB", LABEL = "Persist or Signif Disability/Incapacity"),
+  c(FLDNAME = "AESDTH", LABEL = "Results in Death"),
+  c(FLDNAME = "AESHOSP", LABEL = "Requires or Prologns Hospitalization"),
+  c(FLDNAME = "AESLIFE", LABEL = "Is Life Threating"),
+  c(FLDNAME = "AESMIE", LABEL = "Other Medically Important Srious Event"),
+  c(FLDNAME = "AECONTRT", LABEL = "Concomitant or Additional Trtmnt Given"),
+  c(FLDNAME = "AERELAD", LABEL = "Related to Early Stage or Progression of AD"),
+  c(FLDNAME = "AERELCM", LABEL = "Related to Concomitant Therapy"),
+  c(FLDNAME = "AERELFLRBTBN", LABEL = "Related to Florbetaben Tracer"),
+  c(FLDNAME = "AERELFLRBPR", LABEL = "Related to Florbetapir Tracer"),
+  c(FLDNAME = "AEHIMG", LABEL = "Related to PET/MRI Imaging Procedure"),
+  c(FLDNAME = "AERELTAU", LABEL = "Related to Flotaucipir Tracer "),
+  c(FLDNAME = "AERELNAV", LABEL = "Related to NAV-4694 Tracer"),
+  c(FLDNAME = "AERELMK", LABEL = "Related to MK-6240 Tracer"),
+  c(FLDNAME = "AERELPI", LABEL = "Related to PI-2620 Tracer"),
+  c(FLDNAME = "AEHLUMB", LABEL = "Related to Lumbar Puncture"),
+  c(FLDNAME = "AERELCOVID", LABEL = "Related to COVID-19 Illness"),
+  c(FLDNAME = "AERELPAN", LABEL = "Related to COVID-19 Pandemic Disruption"),
+  c(FLDNAME = "AERELATESP", LABEL = "Related to Other Study Procedure(s)"),
+  c(FLDNAME = "EPOCH", LABEL = "Epoch"),
+  c(FLDNAME = "AESTDTC", LABEL = "Start Date/Time of Adverse Event"),
+  c(FLDNAME = "AEENDTC", LABEL = "End Date/Time of Adverse Event")
+) %>%
+  tibble::as_tibble() %>%
+  relocate(c(FLDNAME, LABEL)) %>%
+  mutate(
+    TEXT = " ",
+    DERIVED = TRUE,
+    TBLNAME = "AE",
+    CRFNAME = "[ Derived ] Adverse Events"
+  )
+```
+
+```{r ae-data-dic-print, eval=TRUE, echo=FALSE}
+ae_data_dic %>%
+  select(FLDNAME, LABEL) %>%
+  datatable()
+```
+
+```{r generate-ae-adni34}
+# Adverse Event for ADNI3 and ADNI4
+## aehevnt
+# AEHCHRON0 = AEHCHRON; paste0("AECHANGE", 1:10)
+AE_ADNI34 <- ADVERSE %>%
+  select(ID, RID, ORIGPROT, COLPROT, VISCODE, SITEID, AENUMBER, AEOUTCOME,
+    AEHONSDT, AEHCSDT, AEHDTHDT, AERELAD, AERELCM, AERELFLRBTBN, AERELFLRBPR,
+    AEHIMG, AERELTAU, AERELNAV, AERELMK, AERELPI, AEHLUMB, AERELCOVID, AERELPAN,
+    AERELATESP, AESERIOUS, AESERDATE, SAELIFE, SAEHOSPIT, SAEPROLONG, SAEDEATH,
+    SAECONGEN, SAEDISAB, SAEOTHER, AEHCMEDS,
+    AESEV0 = AEHSEVR, all_of(paste0("AESEV", 1:10))
+  ) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.1), c(AENUMBER)) %>%
+  assert_rows(col_concat, is_uniq, ID, RID, ORIGPROT, COLPROT, AENUMBER) %>%
+  # Filter highest severity levels per RID, AENUMBER, COLPROT
+  pivot_longer(
+    cols = paste0("AESEV", 0:10),
+    names_to = "SEVERITY_COL",
+    values_to = "AESEV"
+  ) %>%
+  mutate(AESEV_NUM = case_when(
+    AESEV == "Mild" ~ 1,
+    AESEV == "Moderate" ~ 2,
+    AESEV == "Severe" ~ 3
+  )) %>%
+  group_by(RID, ORIGPROT, COLPROT, AENUMBER) %>%
+  filter(c(c(all(is.na(AESEV)) & row_number() == 1) |
+    c(any(!is.na(AESEV)) & AESEV_NUM == max(AESEV_NUM, na.rm = TRUE)))) %>%
+  ungroup() %>%
+  group_by(RID, ORIGPROT, COLPROT, SITEID, AENUMBER) %>%
+  filter(c(any(n() > 1) & row_number() == n()) |
+    c(all(n() == 1) & row_number() == 1)) %>%
+  ungroup() %>%
+  verify(nrow(.) == nrow(ADVERSE)) %>%
+  assert_rows(col_concat, is_uniq, ID, RID, ORIGPROT, COLPROT, AENUMBER, SITEID) %>%
+  rename(
+    "AESER" = AESERIOUS, "AEOUT" = AEOUTCOME, # "AEPATT" =
+    "AESCONG" = SAECONGEN, "AESDISAB" = SAEDISAB, "AESDTH" = SAEDEATH,
+    "AESLIFE" = SAELIFE, "AESMIE" = SAEOTHER, "AECONTRT" = AEHCMEDS,
+    "AESTDTC" = AEHONSDT, "AEENDTC" = AEHCSDT
+  ) %>%
+  # Adverse events that require required or prolongs hospitalization
+  mutate(AESHOSP = case_when(
+    SAEHOSPIT == "Yes" | SAEPROLONG == "Yes" ~ "Yes",
+    SAEHOSPIT == "No" & SAEPROLONG == "No" ~ "No",
+    SAEHOSPIT == "No" & is.na(SAEPROLONG) ~ "No",
+    is.na(SAEHOSPIT) & SAEPROLONG == "No" ~ "No"
+  )) %>%
+  select(-c(SAEHOSPIT, SAEPROLONG, AESEV_NUM, SEVERITY_COL))
+```
+
+
+
+```{r generate-ae-adni12go}
+# Required checking for missing AENUMBER
+AE_ADNI12GO <- tibble(RID = NA_real_) %>%
+  na.omit()
+```
+
+```{r generate-ae}
+AE <- AE_ADNI34 %>%
+  bind_rows(AE_ADNI12GO) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.1), RID) %>%
+  mutate(
+    AESTDTC = as.Date(AESTDTC),
+    AEENDTC = as.Date(AEENDTC)
+  ) %>%
+  group_by(RID) %>%
+  arrange(AESTDTC) %>%
+  mutate(AESEQ = row_number()) %>%
+  ungroup() %>%
+  # Add EPOCH
+  left_join(
+    EPOCH_LIST %>%
+      select(Phase, VISCODE, EPOCH),
+    by = c("COLPROT" = "Phase", "VISCODE" = "VISCODE")
+  ) %>%
+  mutate(
+    STUDYID = "ADNI",
+    DOMAIN = "AE",
+    USUBJID = paste0(STUDYID, "-", RID),
+    AESPID = COLPROT,
+    AETERM = NA_character_,
+    AELLT = NA_character_,
+    AELLTCD = NA_character_,
+    AEDECOD = NA_character_,
+    AEPTCD = NA_character_,
+    AEHLT = NA_character_,
+    AEHLTCD = NA_character_,
+    AEHGT = NA_character_,
+    AEHGTCD = NA_character_,
+    AESOC = NA_character_,
+    AESOCCD = NA_character_
+  ) %>%
+  select(all_of(ae_data_dic$FLDNAME)) %>%
+  set_variable_labels(
+    .labels = setNames(
+      as.list(ae_data_dic$LABEL),
+      ae_data_dic$FLDNAME
+    )
+  )
+```
+
+## Questionnaires (QS)
+
+`QS` contains one record per questionnaire per question (i.e. total score) per time point per visit per participants. The `DM` dataset will contains the following characteristics:
+
+```{r qs-data-dic, echo=FALSE}
+qs_data_dic <- bind_rows(
+  c(FLDNAME = "STUDYID", LABEL = "Study Identifier", TEXT = ""),
+  c(FLDNAME = "DOMAIN", LABEL = "Domain Abbrevation"),
+  c(FLDNAME = "USUBJID", LABEL = "Unique Subject Identifier"),
+  c(FLDNAME = "SITEID", LABEL = "Study Site Identifier"),
+  c(FLDNAME = "QSSEQ", LABEL = "Sequence Number"),
+  c(FLDNAME = "QSGRPID", LABEL = "Group ID"),
+  c(FLDNAME = "QSTESTCD", LABEL = "Question Short Name"),
+  c(FLDNAME = "QSTEST", LABEL = "Question Name"),
+  c(FLDNAME = "QSCAT", LABEL = "Category of Question"),
+  # c(FLDNAME = "QSSCAT", LABEL = "Subcategory of Question"),
+  c(FLDNAME = "QSSTRESN", LABEL = "Numeric Finding in Standard Units"),
+  # c(FLDNAME = "QSSTAT", LABEL = "Completion Status"),
+  # c(FLDNAME = "QSREASND", LABEL = "Reason Not Performed"),
+  c(FLDNAME = "QSBLFL", LABEL = "Baseline Flag"),
+  # c(FLDNAME = "QSDRVFL", LABEL = "Derived Flag"),
+  # c(FLDNAME = "VISITNUM", LABEL = "Visit Numbers"),
+  c(FLDNAME = "VISCODE", LABEL = "Visit Code"),
+  c(FLDNAME = "VISCODE2", LABEL = "Visit Code 2"),
+  c(FLDNAME = "EPOCH", LABEL = "Epoch"),
+  c(FLDNAME = "QSDTC", LABEL = "Date/Time of Finding"),
+  c(FLDNAME = "QSDY", LABEL = "Study Day of Finding")
+) %>%
+  tibble::as_tibble() %>%
+  relocate(c(FLDNAME, LABEL, TEXT)) %>%
+  mutate(TEXT = replace_na(TEXT, " ")) %>%
+  mutate(
+    DERIVED = TRUE,
+    TBLNAME = "QS",
+    CRFNAME = "[ Derived ] Questionnaires"
+  )
+```
+
+```{r qs-data-dic-print, eval=TRUE, echo=FALSE}
+qs_data_dic %>%
+  select(FLDNAME, LABEL) %>%
+  datatable()
+```
+
+```{r qs-input}
+# Common columns
+qs_com_cols <- c(
+  "RID", "ORIGPROT", "COLPROT", "VISCODE", "VISCODE2", "VISDATE", "SITEID"
+)
+
+# ADAS Cognitive Behavior Score
+ADAS_SCORE_DD <- ADASSCORES %>%
+  # VISDATE is not available
+  rename("VISDATE" = EXAMDATE) %>%
+  select(all_of(qs_com_cols), TOTAL11, TOTALMOD) %>%
+  # Reasons not conducted ???
+  bind_rows(ADAS_ADNIGO23 %>%
+    # Required to confirm these scores are the same
+    select(all_of(qs_com_cols),
+      "TOTAL11" = TOTSCORE, "TOTALMOD" = TOTAL13
+    )) %>%
+  pivot_longer(
+    cols = c(TOTAL11, TOTALMOD),
+    names_to = "QSTESTCD",
+    values_to = "QSSTRESN"
+  ) %>%
+  mutate(
+    QSTEST = "ADAS-Cognitive Behavior",
+    QSCAT = "ADAS"
+  )
+
+# Area Deprivation Index Score
+ADI_SCORE_DD <- ADI %>%
+  # VISDATE is not available
+  rename("VISDATE" = ADIDATE) %>%
+  select(any_of(qs_com_cols), ADISTATE, ADINATIONAL) %>%
+  mutate(ADINATIONAL = as.numeric(str_remove_all(ADINATIONAL, "\\%"))) %>%
+  pivot_longer(
+    cols = c(ADISTATE, ADINATIONAL),
+    names_to = "QSTESTCD",
+    values_to = "QSSTRESN"
+  ) %>%
+  mutate(
+    QSTEST = "Area Deprivation Index",
+    QSCAT = "ADI"
+  )
+
+# Clinical Dementia Rating Score
+CDR_SCORE_DD <- CDR %>%
+  select(all_of(qs_com_cols), CDGLOBAL, CDRSB) %>%
+  pivot_longer(
+    cols = c(CDGLOBAL, CDRSB),
+    names_to = "QSTESTCD",
+    values_to = "QSSTRESN"
+  ) %>%
+  mutate(
+    QSTEST = "Clinical Dementia Rating",
+    QSCAT = "CDR"
+  )
+
+# Everyday Cognition Score
+ECOG_SCORE_DD <- ECOGPT %>%
+  select(all_of(qs_com_cols), "ECOGPTTOTAL" = EcogPtTotal) %>%
+  bind_rows(ECOGSP %>%
+    select(all_of(qs_com_cols), "ECOGSPTOTAL" = EcogSPTotal)) %>%
+  # ECOG12-item score is not available yet
+  pivot_longer(
+    cols = c(ECOGPTTOTAL, ECOGSPTOTAL),
+    names_to = "QSTESTCD",
+    values_to = "QSSTRESN"
+  ) %>%
+  mutate(
+    QSTEST = "Everyday Cognition",
+    QSCAT = "ECOG"
+  )
+
+# Financial Capacity Instrument Short form
+FCI_SCORE_DD <- FCI %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = FCISCORE) %>%
+  mutate(
+    QSTESTCD = "FCISCORE",
+    QSTEST = "Financial Capacity Instrument Short Form",
+    QSCAT = "FCI"
+  )
+
+# Functional Assessments Questionnaires
+FAQ_SCORE_DD <- FAQ %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = FAQTOTAL) %>%
+  mutate(
+    QSTESTCD = "FAQTOTAL",
+    QSTEST = "Functional Assessments Questionnaires",
+    QSCAT = "FAQ"
+  )
+
+# Geriatric Depression Scale
+GDS_SCORE_DD <- GDSCALE %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = GDTOTAL) %>%
+  mutate(
+    QSTESTCD = "GDTOTAL",
+    QSTEST = "Geriatric Depression Scale",
+    QSCAT = "GDS"
+  )
+
+# Mini Mental State Exam Score
+MMSE_SCORE_DD <- MMSE %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = MMSCORE) %>%
+  mutate(
+    QSTESTCD = "MMSCORE",
+    QSTEST = "Mini Mental State Exam",
+    QSCAT = "MMSE"
+  )
+
+# Montreal Cognitive Assessments
+MOCA_SCORE_DD <- MOCA %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = MOCA) %>%
+  mutate(
+    QSTESTCD = "MOCA",
+    QSTEST = "Montreal Cognitive Assessments",
+    QSCAT = "MOCA"
+  )
+
+# Neuropsychiatric Inventory
+NPI_SCORE_DD <- NPI %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = NPITOTAL) %>%
+  mutate(
+    QSTESTCD = "NPITOTAL",
+    QSTEST = "Neuropsychiatric Inventory",
+    QSCAT = "NPI"
+  )
+
+# Neuropsychiatric Inventory Q
+NPIQ_SCORE_DD <- NPIQ %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = NPISCORE) %>%
+  mutate(
+    QSTESTCD = "NPIQTOTAL",
+    QSTEST = "Neuropsychiatric Inventory Q",
+    QSCAT = "NPIQ"
+  )
+
+# Logical Memory - Immediate Recall
+NEUROBAT_SCORE_DD <- NEUROBAT %>%
+  select(all_of(qs_com_cols), "QSSTRESN" = LIMMTOTAL) %>%
+  mutate(
+    QSTESTCD = "LIMMTOTAL",
+    QSTEST = "Neuropsychological Battery",
+    QSCAT = "NUROBAT"
+  )
+```
+
+```{r generate-qs}
+QS <- bind_rows(
+  ADAS_SCORE_DD,
+  ADI_SCORE_DD,
+  CDR_SCORE_DD,
+  ECOG_SCORE_DD,
+  FCI_SCORE_DD,
+  FAQ_SCORE_DD,
+  GDS_SCORE_DD,
+  MMSE_SCORE_DD,
+  MOCA_SCORE_DD,
+  NPI_SCORE_DD,
+  NPIQ_SCORE_DD,
+  NEUROBAT_SCORE_DD
+) %>%
+  # Add enrollment date
+  left_join(
+    adni_enrollment(
+      dd = REGISTRY,
+      phase = "Overall"
+    ),
+    by = c("RID", "ORIGPROT", "COLPROT")
+  ) %>%
+  # Add baseline flag
+  rowwise() %>%
+  mutate(QSBLFL = dectect_baseline_score(
+    cur_record_date = VISDATE,
+    enroll_date = EXAMDATE
+  )) %>%
+  ungroup() %>%
+  mutate(COLPROT = factor(COLPROT, levels = adni_phase())) %>%
+  group_by(RID) %>%
+  arrange(QSTESTCD, COLPROT, VISCODE) %>%
+  mutate(QSSEQ = row_number()) %>%
+  ungroup() %>%
+  # Add EPOCH
+  left_join(
+    EPOCH_LIST %>%
+      select(Phase, VISCODE, EPOCH),
+    by = c("COLPROT" = "Phase", "VISCODE" = "VISCODE")
+  ) %>%
+  mutate(
+    STUDYID = "ADNI",
+    DOMAIN = "QS",
+    USUBJID = paste0(STUDYID, "-", RID),
+    QSGRPID = COLPROT,
+    QSDTC = VISDATE,
+    QSDY = as.numeric(as.Date(VISDATE) - as.Date(EXAMDATE))
+  ) %>%
+  select(all_of(qs_data_dic$FLDNAME)) %>%
+  set_variable_labels(.labels = setNames(
+    as.list(qs_data_dic$LABEL),
+    qs_data_dic$FLDNAME
   ))
 ```
