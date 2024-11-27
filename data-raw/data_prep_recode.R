@@ -80,7 +80,10 @@ if (EXISTED_DATADTIC) {
   # Apply re-coding algorithm ----
   if (UPDATE) {
     existed_tblname_list <- tblname_list_dd %>%
-      filter(tblname %in% dataset_data_dict$TBLNAME)
+      filter(tblname %in% dataset_data_dict$TBLNAME) %>%
+      # Need to confirm variable values representations: "-1" as missing value
+      # Variables in the following TBLNAME will not be re-coded
+      filter(!tblname %in% c("ADAS_ADNI1", "ADSXLIST"))
     
     num_existed_tb <- nrow(existed_tblname_list)
     

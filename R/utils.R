@@ -87,25 +87,25 @@ adni_phase_order_num <- function(phase) {
 #' @export
 adni_study_track <- function(cur_study_phase, orig_study_phase) {
   cur_protocol <- orig_protocol <- NULL
-  
+
   if (any(is.na(cur_study_phase) | is.na(orig_study_phase))) stop("Either cur_study_phase or orig_study_phase must not be empty")
-  
+
   temp_dd <- tibble(
     cur_protocol = cur_study_phase,
     orig_protocol = orig_study_phase
   ) %>%
     mutate(across(c(cur_protocol, orig_protocol),
-                  ~ adni_phase_order_num(phase = .x),
-                  .names = "{col}_num"
+      ~ adni_phase_order_num(phase = .x),
+      .names = "{col}_num"
     )) %>%
     mutate(study_track = case_when(
       cur_protocol_num > orig_protocol_num ~ "Rollover",
       cur_protocol_num == orig_protocol_num ~ "New"
     )) %>%
     verify(nrow(.) == length(cur_study_phase))
-  
+
   if (any(is.na(temp_dd$study_track))) stop("Check study protocol phase")
-  
+
   return(temp_dd$study_track)
 }
 
@@ -125,7 +125,7 @@ create_orig_protocol <- function(dd) {
   dd <- dd %>%
     # Replaced if there is an existed ORGIPROT
     mutate(ORIGPROT = factor(original_study_protocol(RID = RID),
-                             levels = adni_phase()
+      levels = adni_phase()
     )) %>%
     relocate(ORIGPROT) %>%
     assert_rows(num_row_NAs, within_bounds(0, 0.05), ORIGPROT)
@@ -150,7 +150,7 @@ create_col_protocol <- function(dd, phaseVar = NULL) {
   if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE", "ProtocolID", "COLPROT")
   existed_column <- extract_cols(dd, col_name = phaseVar)
   if (length(existed_column) > 1) stop("Check number of column names of Phase/PHASE")
-  
+
   dd <- dd %>%
     {
       if (!is.na(existed_column)) {
@@ -196,7 +196,7 @@ split_strings <- function(input_string,
     prefix <- sapply(splitted_strings, function(x) {
       x[[1]]
     })
-    
+
     suffix <- sapply(splitted_strings, function(x) {
       x[[2]]
     })
@@ -251,7 +251,7 @@ get_factor_levels_datadict <- function(data_dict,
     col_names = c("PHASE", "TYPE", "TBLNAME", "FLDNAME", "CODE"),
     strict = TRUE
   )
-  
+
   ## Column types that might needed to be removed
   exc_type <- tolower(c(
     "bigint", "bit", "char", "C", "character", "d", "date",
@@ -284,7 +284,7 @@ get_factor_levels_datadict <- function(data_dict,
     "ADCID", "NACCMOD", "NACCWRI1", "NACCWRI2", "NACCWRI3",
     "NACCYOD", "NPFORMVER", "QCRating", "IMAGETYPE"
   )
-  
+
   temp_dd <- data_dict %>%
     as_tibble() %>%
     filter(TBLNAME %in% tbl_name) %>%
@@ -306,8 +306,8 @@ get_factor_levels_datadict <- function(data_dict,
     filter(!is.na(CODE)) %>%
     # Excluding pre-specified type, dataset name and field name
     filter(!c(TYPE %in% exc_type |
-                TBLNAME %in% exc_tblname |
-                FLDNAME %in% exc_fldname)) %>%
+      TBLNAME %in% exc_tblname |
+      FLDNAME %in% exc_fldname)) %>%
     # Excluding coded range values
     filter(!str_detect(CODE, exc_range_number)) %>%
     nest(data = CODE) %>%
@@ -322,7 +322,7 @@ get_factor_levels_datadict <- function(data_dict,
     mutate(
       class_type = "factor"
     )
-  
+
   return(temp_dd)
 }
 
@@ -364,7 +364,7 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
   temp_dd <- data_dict %>%
     as_tibble() %>%
     filter(TBLNAME %in% tbl_name &
-             class_type == "factor") %>%
+      class_type == "factor") %>%
     {
       if (!is.null(dd_fldnames)) {
         filter(., FLDNAME %in% c(dd_fldnames))
@@ -373,9 +373,9 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
       }
     } %>%
     select(FLDNAME)
-  
+
   unique_fldname <- unique(temp_dd$FLDNAME)
-  
+
   return(unique_fldname)
 }
 
@@ -411,22 +411,22 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
   FLDNAME <- PHASE <- TBLNAME <- code_list <- NULL
   colNames <- c("PHASE", "TBLNAME", "FLDNAME", "code_list")
   check_colnames(dd = data_dict, col_names = colNames, strict = FALSE)
-  
+
   rlang::arg_match(
     arg = fld_name, values = unique(data_dict$FLDNAME),
     multiple = TRUE
   )
-  
+
   rlang::arg_match(
     arg = tbl_name, values = unique(data_dict$TBLNAME),
     multiple = TRUE
   )
-  
+
   df <- data_dict %>%
     filter(TBLNAME %in% tbl_name & FLDNAME %in% fld_name) %>%
     select(PHASE, TBLNAME, FLDNAME, code_list) %>%
     unnest(cols = code_list)
-  
+
   if (nrow(df) > 0) {
     phase_list <- unique(df$PHASE)
     phase_value_list <- lapply(phase_list, function(x) {
@@ -439,7 +439,7 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
         )
       )
     })
-    
+
     names(phase_value_list) <- phase_list
   } else {
     phase_value_list <- list(
@@ -448,7 +448,7 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
     )
     names(phase_value_list) <- NA
   }
-  
+
   return(phase_value_list)
 }
 
@@ -489,7 +489,7 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
       fld_name = fld_name
     )
   })
-  
+
   names(temp_values) <- all_fld_name
   return(temp_values)
 }
@@ -524,18 +524,18 @@ replace_multiple_values <- function(input_string,
                                     new_values) {
   # To ensure the same length of new_values and old_values
   if (length(old_values) != length(new_values)) stop("The length of new_values and old_values must be the same.")
-  
+
   # To make sure exact replacement
   unique_place_holder <- paste0("PLACE_HOLDERS_", seq_along(old_values))
   output_string <- input_string
-  
+
   # Checking for negative values
   negative_value <- detect_numeric_value(
     input_value = old_values,
     num_type = "negative",
     stop_message = FALSE
   )
-  
+
   if (negative_value == TRUE) {
     adjusted_old_values <- gsub(pattern = "-", x = old_values, replacement = "negative")
     output_string <- gsub("-", x = output_string, replacement = "negative")
@@ -552,7 +552,7 @@ replace_multiple_values <- function(input_string,
       replacement = unique_place_holder[i], fixed = FALSE
     )
   }
-  
+
   # Replace values with actual new values
   unique_place_holder <- paste0("\\b", unique_place_holder, "\\b")
   for (i in seq_along(old_values)) {
@@ -561,7 +561,7 @@ replace_multiple_values <- function(input_string,
       replacement = new_values[i], fixed = FALSE
     )
   }
-  
+
   return(output_string)
 }
 
@@ -570,7 +570,7 @@ replace_multiple_values <- function(input_string,
 #' @description This function is used to detect any numeric values in a string.
 #' @param input_value Input string
 #' @param num_type Numeric value type: `any`, `positive` or `negative`, Default: 'any'
-#' @param stop_message Whether to return a stop message when there is the specified numeric value type `num_type`, Default: `FALSE`
+#' @param stop_message A boolean value to return a stop message when there is the specified numeric value type `num_type`, Default: `FALSE`
 #' @return `TRUE` if there is a negative value otherwise `FALSE`
 #' @examples
 #' \dontrun{
@@ -580,16 +580,17 @@ replace_multiple_values <- function(input_string,
 #' detect_numeric_value(input_value = input_string2, num_type = "any")
 #' detect_numeric_value(input_value = input_string1, num_type = "negative")
 #' detect_numeric_value(
-#' input_value = input_string1, 
-#' num_type = "positive", 
-#' stop_message = TRUE)
+#'   input_value = input_string1,
+#'   num_type = "positive",
+#'   stop_message = TRUE
+#' )
 #' }
 #' @rdname detect_numeric_value
 #' @export
-detect_numeric_value <- function(input_value,num_type = "any",stop_message = FALSE) {
+detect_numeric_value <- function(input_value, num_type = "any", stop_message = FALSE) {
   rlang::arg_match0(arg = num_type, values = c("any", "positive", "negative"))
   if (!is.logical(stop_message)) stop("`stop_message` must be a boolean value")
-  
+
   input_value <- suppressWarnings(as.numeric(input_value))
   if (all(is.na(input_value))) {
     result <- FALSE
@@ -609,9 +610,9 @@ detect_numeric_value <- function(input_value,num_type = "any",stop_message = FAL
       message_prefix <- "Positive"
     }
   }
-  
+
   if (stop_message == TRUE & result == TRUE) stop(message_prefix, " value is found in the provided string!")
-  
+
   return(result)
 }
 
@@ -666,28 +667,40 @@ phase_specific_value_replacement <- function(dd,
       multiple = TRUE
     )
   }
-  
+
   rlang::arg_match(arg = phaseVar, values = names(dd))
-  
+
   dd <- dd %>%
     rename("phase_var" = !!sym(phaseVar)) %>%
     mutate(across(!!sym(fld_name), ~ as.character(.x)))
-  
+
   phase_dd <- dd %>%
     filter(phase_var %in% phase)
-  
+
   phase_dd[, fld_name] <- replace_multiple_values(
     input_string = phase_dd %>% pull(fld_name),
     old_values = old_values,
     new_values = new_values
   )
+
+  # Checking if all phase-specific possible values are replaced
+  check_value_match(
+    values = unique(phase_dd %>% pull(fld_name)),
+    check_list = new_values,
+    stop_message = TRUE,
+    excluded.na = TRUE, 
+    add_stop_message = paste0(" in ", fld_name, " for study phase ", phase), 
+    value_split = TRUE, 
+    split_pattern = "\\||;"
+  )
+
   # Bind with previous dataset
   output_data <- phase_dd %>%
     bind_rows(dd %>% filter(!phase_var %in% phase)) %>%
     mutate(phase_var = factor(phase_var, levels = adni_phase())) %>%
     arrange(phase_var) %>%
     rename_with(~ paste0(phaseVar), phase_var)
-  
+
   return(output_data)
 }
 
@@ -731,7 +744,7 @@ multiple_phase_value_replacement <- function(dd,
                                              input_values) {
   # Input values should be in list format
   if (!is.list(input_values)) stop("input_values should be a list object")
-  
+
   phase_name_list <- names(input_values)
   # Adjust for non-phase specific replacements
   phase_name_list_no_na <- phase_name_list[!is.na(phase_name_list)]
@@ -741,7 +754,7 @@ multiple_phase_value_replacement <- function(dd,
     if (length(phase_name_list_no_na) != length(phase_name_list)) stop("the list name should not contains `NA` and actual ADNI phase")
     if (!any(phase_name_list_no_na %in% adni_phase())) stop("the list name should be ADNI phase")
   }
-  
+
   for (phase_list in phase_name_list) {
     if (is.na(phase_list)) adjust_phase_list <- 1 else adjust_phase_list <- phase_list
     dd <- phase_specific_value_replacement(
@@ -753,7 +766,7 @@ multiple_phase_value_replacement <- function(dd,
       old_values = input_values[[adjust_phase_list]]$old_values
     )
   }
-  
+
   return(dd)
 }
 
@@ -798,12 +811,12 @@ data_value_replacement <- function(dd,
                                    input_values) {
   # Input values should be in list format
   if (!is.list(input_values)) stop("input_values should be a list object")
-  
+
   if (!any(names(input_values) %in% names(dd))) stop("Check the list name")
-  
+
   for (fld_name in names(input_values)) {
     curt_input_values <- input_values[[fld_name]]
-    
+
     dd <- multiple_phase_value_replacement(
       dd = dd,
       fld_name = fld_name,
@@ -811,7 +824,7 @@ data_value_replacement <- function(dd,
       input_values = curt_input_values
     )
   }
-  
+
   return(dd)
 }
 
@@ -830,7 +843,7 @@ data_value_replacement <- function(dd,
 #' @export
 make_missing_value <- function(dd, col_name = NULL, value = "-4", missing_char = NA) {
   column_list <- extract_cols_value(dd = dd, value = value, col_name = col_name)
-  
+
   dd <- dd %>%
     {
       if (all(is.na(column_list))) {
@@ -842,7 +855,7 @@ make_missing_value <- function(dd, col_name = NULL, value = "-4", missing_char =
         )))
       }
     }
-  
+
   return(dd)
 }
 
@@ -867,7 +880,7 @@ extract_cols_value <- function(dd, value, col_name = NULL) {
     if (nrow(temp_data) > 0) result <- col_names else result <- NA
     return(result)
   })
-  
+
   list_columns <- unlist(list_columns)
   list_columns <- list_columns[!is.na(list_columns)]
   if (!is.null(col_name)) list_columns <- list_columns[list_columns %in% col_name]
@@ -893,12 +906,12 @@ extract_cols_value <- function(dd, value, col_name = NULL) {
 check_colnames <- function(dd, col_names, strict = FALSE, stop_message = TRUE) {
   if (strict == TRUE) status <- !all(col_names %in% colnames(dd))
   if (strict == FALSE) status <- !any(col_names %in% colnames(dd))
-  
+
   if (status) {
     col_not_existed <- col_names[!col_names %in% colnames(dd)]
     add_notes <- ifelse(length(col_not_existed) == 1,
-                        " column is not found in the dataset",
-                        " columns are not found in the dataset"
+      " column is not found in the dataset",
+      " columns are not found in the dataset"
     )
     if (stop_message) {
       stop(paste0(toString(col_not_existed), add_notes))
@@ -926,4 +939,52 @@ extract_cols <- function(dd, col_name) {
   list_columns <- colnames(dd)[colnames(dd) %in% col_name]
   if (length(list_columns) == 0) list_columns <- NA
   return(list_columns)
+}
+
+## Value Matching Functions ----
+#' @title Checking Variable Values Matching
+#' @description This function is used to check if the variable values are the same as the input values.
+#' @param values Existed variable values
+#' @param check_list Vector of input values
+#' @param excluded.na A boolean to skip `NA` from the existed variable values `values`, Default: `TRUE`
+#' @param stop_message A boolean value to return a stop message if one of the existed values does not match with the check list, Default: `FALSE`
+#' @param add_stop_message Additional text message that will be added in the stop message.
+#' @param value_split A boolen value whether to split the values with specified split pattern `split_pattern`
+#' @param split_pattern Split string pattern. Only applicable if `value_split = TRUE`
+#' @return A boolean value:
+#'   * `TRUE` if all the existed variable values are matched with the input values
+#'   * `FALSE` otherwise and with a stop message if `stop_message = TRUE`
+#' @examples
+#' \dontrun{
+#' check_value_match(
+#'   values = c("-2", "2"),
+#'   check_list = c("-2"),
+#'   stop_message = FALSE
+#' )
+#' check_value_match(
+#'   values = c("-2", "2", NA),
+#'   check_list = c("-2", "2"),
+#'   excluded.na = TRUE,
+#'   stop_message = FALSE
+#' )
+#' }
+#' @rdname check_value_match
+check_value_match <- function(values, check_list, excluded.na = TRUE, stop_message = FALSE, 
+                              add_stop_message = NULL, value_split = FALSE, split_pattern = "\\||:|;") {
+  if (!is.logical(excluded.na)) stop("`excluded.na` must be a boolean value")
+  if (!is.logical(stop_message)) stop("`stop_message` must be a boolean value")
+  values <- as.character(values)
+  check_list <- as.character(check_list)
+  if (excluded.na == TRUE) {
+    values <- values[!is.na(values)]
+    check_list <- check_list[!is.na(check_list)]
+  }
+  if (value_split) values <- unlist(strsplit(x = values, split = split_pattern))
+  if (any(!values %in% c(check_list))) result <- FALSE else result <- TRUE
+  if (result == FALSE & stop_message == TRUE) {
+    non_existed_values <- values[!values %in% check_list]
+    if (length(non_existed_values) < 1) stop("The length of non existed values should be more than 1.")
+    stop("`", toString(non_existed_values), "` value(s) are not found ", add_stop_message)
+  }
+  return(result)
 }

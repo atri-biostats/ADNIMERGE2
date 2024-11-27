@@ -172,7 +172,7 @@ if (UPDATE_MISSING_VALUE) {
   ))
 }
 
-# Removed date stamped file extension from "*.rda" dataset name -----
+# Remove date stamped file extension from "*.rda" dataset name -----
 ## Some of the imaging datasets are named with a date stamped extension
 dataset_list_files <- list.files(
   path = "./data", pattern = ".rda", full.names = TRUE,
@@ -354,33 +354,41 @@ if (CHECK_COMMON_COL) {
 ### Some of the dataset might have an additional file extension or are study phase specific
 ### E.g. "_V1$", "_V2$", "^ADNI2_", "_ADNI1$", "_ADNIG023$"
 ### Currently to update the DATADIC file manually (required confirmation!)
-if (exists("DATADIC") == FALSE) load(data_dict_file_path)
-temp_DATADIC <- DATADIC %>%
-  mutate(TBLNAME = case_when(
-    TBLNAME %in% "ADAS" & PHASE %in% "ADNI1" ~ "ADAS_ADNI1",
-    TBLNAME %in% "ADAS" & PHASE %in% c("ADNI1", "ADNIGO", "ADNI2", "ADNI3") ~ "ADAS_ADNIGO23",
-    TBLNAME %in% "ECG" & PHASE %in% "ADNI2" ~ "ADNI2_ECG",
-    TBLNAME %in% "OTELGTAU" & PHASE %in% "ADNI2" ~ "ADNI2_OTELGTAU",
-    TBLNAME %in% "PICSLASHS" ~ "PICSL_ASHS",
-    TBLNAME %in% "UCD_WMH" ~ "UCD_WMH_V1",
-    TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI2" ~ "TAUMETA2",
-    TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI3" ~ "TAUMETA3",
-    TBLNAME %in% "TAUQC" & PHASE %in% "ADNI3" ~ "TAUQC3",
-    TBLNAME %in% "TBM" ~ "TBM22",
-    TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2"
-  )) %>%
-  filter(!is.na(TBLNAME))
+if (exists("DATADIC") == FALSE) {
+  load(data_dict_file_path)
+  CREATE_UPDATED_DATADIC <- TRUE
+} else {
+  message("`DATADIC` is not found and UPDATED_DATADIC will not be created.")
+  CREATE_UPDATED_DATADIC <- FALSE
+}
 
-UPDATED_DATADIC <- DATADIC %>%
-  bind_rows(
-    temp_DATADIC,
-    temp_DATADIC %>%
-      filter(TBLNAME %in% "UCD_WMH_V1") %>%
-      mutate(TBLNAME = "UCD_WMH_V2")
-  )
+if (CREATE_UPDATED_DATADIC) {
+  temp_DATADIC <- DATADIC %>%
+    mutate(TBLNAME = case_when(
+      TBLNAME %in% "ADAS" & PHASE %in% "ADNI1" ~ "ADAS_ADNI1",
+      TBLNAME %in% "ADAS" & PHASE %in% c("ADNI1", "ADNIGO", "ADNI2", "ADNI3") ~ "ADAS_ADNIGO23",
+      TBLNAME %in% "ECG" & PHASE %in% "ADNI2" ~ "ADNI2_ECG",
+      TBLNAME %in% "OTELGTAU" & PHASE %in% "ADNI2" ~ "ADNI2_OTELGTAU",
+      TBLNAME %in% "PICSLASHS" ~ "PICSL_ASHS",
+      TBLNAME %in% "UCD_WMH" ~ "UCD_WMH_V1",
+      TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI2" ~ "TAUMETA2",
+      TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI3" ~ "TAUMETA3",
+      TBLNAME %in% "TAUQC" & PHASE %in% "ADNI3" ~ "TAUQC3",
+      TBLNAME %in% "TBM" ~ "TBM22",
+      TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2"
+    )) %>%
+    filter(!is.na(TBLNAME))
 
+  UPDATED_DATADIC <- DATADIC %>%
+    bind_rows(
+      temp_DATADIC,
+      temp_DATADIC %>%
+        filter(TBLNAME %in% "UCD_WMH_V1") %>%
+        mutate(TBLNAME = "UCD_WMH_V2")
+    )
+}
 ## Add a description for common columns: "ORIGPROT" or "COLPROT" ----
-if (CHECK_COMMON_COL) {
+if (CHECK_COMMON_COL == TRUE & CREATE_UPDATED_DATADIC == TRUE) {
   dataset_list_dd <- tibble(file_list_path = dataset_list_files) %>%
     mutate(short_tblname = str_remove_all(
       string = file_list_path,
@@ -463,17 +471,20 @@ if (CHECK_COMMON_COL) {
     )
   }
 }
+
 ## Stored the UPDATED DATADIC ----
-## Temporary stored in the "data-raw/instance_datadic" folders
-updated_datadic_folder <- "./data-raw/updated_datadic"
-if (dir.exists(updated_datadic_folder) == TRUE) unlink(updated_datadic_folder, recursive = TRUE)
-dir.create(updated_datadic_folder)
-write.csv(
-  x = UPDATED_DATADIC,
-  file = paste0(updated_datadic_folder, "/UPDATED_DATADIC.csv"),
-  row.names = FALSE
-)
-save(
-  list = "UPDATED_DATADIC",
-  file = paste0(updated_datadic_folder, "/UPDATED_DATADIC.rda")
-)
+## Temporary stored in the "data-raw/updated_datadic" directory
+if (CREATE_UPDATED_DATADIC) {
+  updated_datadic_folder <- "./data-raw/updated_datadic"
+  if (dir.exists(updated_datadic_folder) == TRUE) unlink(updated_datadic_folder, recursive = TRUE)
+  dir.create(updated_datadic_folder)
+  write.csv(
+    x = UPDATED_DATADIC,
+    file = paste0(updated_datadic_folder, "/UPDATED_DATADIC.csv"),
+    row.names = FALSE
+  )
+  save(
+    list = "UPDATED_DATADIC",
+    file = paste0(updated_datadic_folder, "/UPDATED_DATADIC.rda")
+  )
+}
