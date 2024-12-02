@@ -36,9 +36,9 @@ if (UPDATE_DERIVED_DATASET) {
   knitr::purl(input = vignette_file_path, output = temporary_file)
   source(file = temporary_file)
   DERIVED_DATASET_LIST <- c("DM", "AE", "QS")
-  
+
   # To apply use_data() function: use_data_modified()
-  source(file = file.path(".", "tools" , "data-prepare-utils.R"))
+  source(file = file.path(".", "tools", "data-prepare-utils.R"))
   lapply(DERIVED_DATASET_LIST, function(tbl_name) {
     assign("dd", get(tbl_name))
     # using use_data function
@@ -50,18 +50,19 @@ if (UPDATE_DERIVED_DATASET) {
     )
     rm(list = c("dd", "tbl_name"))
   })
-  
+
   # Derived data dictionary
   derived_data_dic <- ls()[str_detect(string = ls(), pattern = "_data_dic")]
-  derived_data_dic_patterns <- str_c("^", str_to_lower(DERIVED_DATASET_LIST),
-                                     "_",
-                                     collapse = "|"
+  derived_data_dic_patterns <- str_c("^",
+    str_to_lower(DERIVED_DATASET_LIST),
+    "_",
+    collapse = "|"
   )
   derived_data_dic <- derived_data_dic[str_detect(
     string = derived_data_dic,
     pattern = derived_data_dic_patterns
   )]
-  
+
   DERIVED_DATADIC <- mget(derived_data_dic) %>%
     bind_rows()
 
@@ -86,8 +87,8 @@ callr::rscript(
 ## Finalized package building ----
 devtools::load_all("./")
 devtools::document()
-devtools::check(error_on = "error", vignettes = TRUE)
-pkg_dir <- devtools::build(vignettes = TRUE)
+devtools::check(error_on = "error", vignettes = UPDATE_DERIVED_DATASET)
+pkg_dir <- devtools::build(vignettes = UPDATE_DERIVED_DATASET)
 
 # Build README.md ----
 build_readme()

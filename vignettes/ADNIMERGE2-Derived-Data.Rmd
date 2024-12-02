@@ -35,7 +35,7 @@ library(DT)
 # Introduction
 \label{sec:introduction}
 
-This article describes creating a Study Data Tabulation Model (SDTM) from a raw eCRF data. SDTM will be used to create Analysis Data Model (ADaM). The selected SDTM domains are: 
+This article describes creating a Study Data Tabulation Model (SDTM) from a raw eCRF data. SDTM will be used to create Analysis Data Model (ADaM). The selected SDTM domains are:
 
 * Demographic (DM)
 * Adverse Event (AE)
@@ -126,11 +126,16 @@ library(ADNIMERGE2)
 ```{r phase-visit-code}
 # Add EPOCH stage for each phase specific visit code
 EPOCH_LIST <- VISITS %>%
-  filter(!VISCODE %in% c("reg", "nv")) %>%
+  filter(!VISCODE %in% "reg") %>%
   # Add ADNI4 phase visit code
   bind_rows(tibble(
     Phase = "ADNI4",
-    VISCODE = c("4_sc", "4_bl", "4_init", "4_m12", "4_m24", "4_m36", "4_m48")
+    VISCODE = c("4_sc", "4_bl", "4_init", "4_m12", "4_m24", "4_m36", "4_m48"),
+    VISNAME = c(
+      "Screening - New Pt", "Baseline - New Pt", "ADNI4 Initial Visit - Continuing Pt",
+      "ADNI4 Month 12 Visit", "ADNI4 Month 24 Visit", "ADNI4 Month 36 Visit",
+      "ADNI4 Month 48 Visit"
+    )
   ) %>%
     mutate(
       ID = row_number(),
@@ -139,10 +144,36 @@ EPOCH_LIST <- VISITS %>%
   mutate(EPOCH = case_when(
     VISCODE %in% c("sc", "4_sc", "scmri", "f", "v01", "v02") ~ "Screening",
     VISCODE %in% c("bl", "4_bl", "init", "4_init", "v03", "v06") ~ "Baseline",
+    VISCODE %in% c("reg", "nv", "f") ~ NA_character_,
     TRUE ~ "Follow-up"
   )) %>%
   mutate(PHASE_EPOCH = paste0(Phase, " - ", EPOCH)) %>%
-  select(Phase, VISCODE, PHASE_EPOCH, EPOCH)
+  select(Phase, VISCODE, PHASE_EPOCH, EPOCH, VISORDER, VISNAME) %>%
+  group_by(Phase) %>%
+  arrange(VISORDER) %>%
+  mutate(PHASE_VISITNUM = row_number() - 2) %>%
+  ungroup() %>%
+  mutate(PHASE_VISITNUM = case_when(
+    VISCODE %in% c("nv", "uns1", "tau") ~ 999,
+    Phase %in% "ADNI1" & VISCODE %in% c("f", "sc") ~ -1,
+    Phase %in% "ADNI1" & VISCODE %in% c("bl") ~ 1,
+    Phase %in% "ADNI1" & str_detect(VISCODE, "m") == TRUE ~ PHASE_VISITNUM + 1,
+    Phase %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") ~ PHASE_VISITNUM - 1,
+    Phase %in% "ADNI2" & VISCODE %in% c("v01", "v02") ~ PHASE_VISITNUM - 1,
+    Phase %in% "ADNI2" & VISCODE %in% c("v03", "v06") ~ 1,
+    Phase %in% "ADNI2" & VISCODE %in% c("v04", "v07") ~ 2,
+    Phase %in% "ADNI2" & VISCODE %in% c("v05") ~ 3,
+    Phase %in% "ADNI2" & !VISCODE %in% str_c("v0", 1:7) ~ PHASE_VISITNUM - 2,
+    Phase %in% c("ADNI3", "ADNI4") & VISCODE %in% c("sc", "4_sc") ~ -1,
+    Phase %in% c("ADNI3", "ADNI4") & VISCODE %in% c("bl", "4_bl") ~ 1,
+    TRUE ~ PHASE_VISITNUM
+  )) %>%
+  mutate(PTYPE = case_when(
+    Phase %in% c("ADNI1", "ADNIGO") ~ "Both",
+    str_detect(VISNAME, "Continuing Pt") == TRUE ~ "Rollover",
+    str_detect(VISNAME, "New Pt|Screening") == TRUE ~ "New",
+    TRUE ~ "Both"
+  ))
 ```
 
 ```{r include-origprot-colprot, echo=TRUE}
@@ -422,6 +453,109 @@ DM <- DM %>%
 ```
 
 
+```{r visitnum}
+# Generate VISITNUM and VISITDY
+PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
+  # Add ORIGPOL
+  mutate(ORIGPROT = original_study_protocol(RID = RID)) %>%
+  # Last known study phases
+  left_join(
+    ROSTER %>%
+      # Add study phase order number
+      mutate(PHASE_NUM = adni_phase_order_num(COLPROT)) %>%
+      assert_rows(num_row_NAs, within_bounds(0, 0.2), PHASE_NUM) %>%
+      group_by(RID) %>%
+      filter(PHASE_NUM == max(PHASE_NUM)) %>%
+      ungroup() %>%
+      assert(is_uniq, RID) %>%
+      select(RID, LASTPROT = COLPROT, LAST_PHASE_NUM = PHASE_NUM),
+    by = "RID"
+  ) %>%
+  assert(is_uniq, RID) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.2), LASTPROT) %>%
+  mutate(FIRST_PHASE_NUM = adni_phase_order_num(ORIGPROT)) %>%
+  # Expand from the `FIRST` and `LAST` known ADNI phase
+  expand_grid(PHASE_NUM_INTERVAL = adni_phase_order_num(adni_phase())) %>%
+  # Possible participation study period
+  filter(PHASE_NUM_INTERVAL <= LAST_PHASE_NUM &
+    PHASE_NUM_INTERVAL >= FIRST_PHASE_NUM) %>%
+  group_by(RID) %>%
+  mutate(MAX_PHASE = n()) %>%
+  ungroup() %>%
+  filter(MAX_PHASE <= LAST_PHASE_NUM) %>%
+  # Reconverts PHASE_NUM_INTERVAL to ADNI phases
+  ## Probably create a function
+  mutate(COLPROT = case_when(
+    PHASE_NUM_INTERVAL == 1 ~ "ADNI1",
+    PHASE_NUM_INTERVAL == 2 ~ "ADNIGO",
+    PHASE_NUM_INTERVAL == 3 ~ "ADNI2",
+    PHASE_NUM_INTERVAL == 4 ~ "ADNI3",
+    PHASE_NUM_INTERVAL == 5 ~ "ADNI4"
+  )) %>%
+  # Add participant type
+  mutate(PTYPE = adni_study_track(
+    cur_study_phase = COLPROT,
+    orig_study_phase = ORIGPROT
+  )) %>%
+  # Add phase-specific visit code and order
+  left_join(
+    EPOCH_LIST %>%
+      filter(PTYPE %in% c("New", "Both")) %>%
+      mutate(PTYPE = "New") %>%
+      select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTYPE) %>%
+      bind_rows(
+        EPOCH_LIST %>%
+          filter(PTYPE %in% c("Rollover", "Both")) %>%
+          mutate(PTYPE = "Rollover") %>%
+          select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTYPE)
+      ),
+    by = c("COLPROT" = "Phase", "PTYPE" = "PTYPE")
+  ) %>%
+  assert_rows(col_concat, is_uniq, RID, COLPROT, VISCODE) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.01), PHASE_VISITNUM)
+
+# Overall VISITNUM (Planned Visits)
+ADNI_VISIT_RECORD <- PHASE_VISIT_RECORD %>%
+  filter(!c(PHASE_VISITNUM %in% 999 | VISCODE %in% "f")) %>%
+  mutate(COLPROT = factor(COLPROT, levels = adni_phase())) %>%
+  arrange(RID, COLPROT) %>%
+  # Required confirmation
+  # Adjusting for rollover screening visits in ADNIGO
+  mutate(PHASE_VISITNUM = case_when(
+    PTYPE %in% "Rollover" &
+      COLPROT %in% "ADNIGO" ~ PHASE_VISITNUM + 2,
+    TRUE ~ PHASE_VISITNUM
+  )) %>%
+  group_by(RID, COLPROT) %>%
+  mutate(NUM_RECORDS_PHASE = n()) %>%
+  nest(data = everything() & !c(RID, COLPROT, NUM_RECORDS_PHASE)) %>%
+  ungroup() %>%
+  group_by(RID) %>%
+  mutate(CUM_NUM_RECORDS_PHASE = cumsum(NUM_RECORDS_PHASE)) %>%
+  mutate(LAG_NUM_RECORDS_PHASE = lag(CUM_NUM_RECORDS_PHASE)) %>%
+  ungroup() %>%
+  # Adjusting screening for rollovers
+  mutate(data = map2(
+    .x = data,
+    .y = LAG_NUM_RECORDS_PHASE,
+    ~ mutate(.x,
+      VISITNUM = case_when(
+        is.na(.y) ~ PHASE_VISITNUM,
+        !is.na(.y) ~ PHASE_VISITNUM + .y
+      )
+    )
+  )) %>%
+  unnest(cols = data)
+
+ADNI_VISIT_RECORD <- bind_rows(
+  ADNI_VISIT_RECORD,
+  PHASE_VISIT_RECORD %>%
+    filter(c(PHASE_VISITNUM %in% 999 | VISCODE %in% "f")) %>%
+    mutate(VISITNUM = PHASE_VISITNUM)
+) %>%
+  select(RID, ORIGPROT, COLPROT, LASTPROT, PTYPE, VISCODE, VISNAME, VISITNUM)
+```
+
 
 ## Adverse Event (AE)
 \label{sec:ae}
@@ -526,7 +660,7 @@ AE_ADNI34 <- ADVERSE %>%
   verify(nrow(.) == nrow(ADVERSE)) %>%
   assert_rows(col_concat, is_uniq, ID, RID, ORIGPROT, COLPROT, AENUMBER, SITEID) %>%
   rename(
-    "AESER" = AESERIOUS, "AEOUT" = AEOUTCOME, # "AEPATT" =
+    "AESER" = AESERIOUS, "AEOUT" = AEOUTCOME,
     "AESCONG" = SAECONGEN, "AESDISAB" = SAEDISAB, "AESDTH" = SAEDEATH,
     "AESLIFE" = SAELIFE, "AESMIE" = SAEOTHER, "AECONTRT" = AEHCMEDS,
     "AESTDTC" = AEHONSDT, "AEENDTC" = AEHCSDT
@@ -544,7 +678,7 @@ AE_ADNI34 <- ADVERSE %>%
 
 
 ```{r generate-ae-adni12go}
-# Required checking for missing AENUMBER
+# Required checking for missing AENUMBER in RECADV
 AE_ADNI12GO <- tibble(RID = NA_real_) %>%
   na.omit()
 ```
@@ -604,7 +738,8 @@ qs_data_dic <- bind_rows(
   c(FLDNAME = "USUBJID", LABEL = "Unique Subject Identifier"),
   c(FLDNAME = "SITEID", LABEL = "Study Site Identifier"),
   c(FLDNAME = "QSSEQ", LABEL = "Sequence Number"),
-  c(FLDNAME = "QSGRPID", LABEL = "Group ID"),
+  c(FLDNAME = "COLPROT", LABEL = "Study Protocol of Data Collection"),
+  # c(FLDNAME = "QSGRPID", LABEL = "Group ID"),
   c(FLDNAME = "QSTESTCD", LABEL = "Question Short Name"),
   c(FLDNAME = "QSTEST", LABEL = "Question Name"),
   c(FLDNAME = "QSCAT", LABEL = "Category of Question"),
@@ -614,7 +749,8 @@ qs_data_dic <- bind_rows(
   # c(FLDNAME = "QSREASND", LABEL = "Reason Not Performed"),
   c(FLDNAME = "QSBLFL", LABEL = "Baseline Flag"),
   # c(FLDNAME = "QSDRVFL", LABEL = "Derived Flag"),
-  # c(FLDNAME = "VISITNUM", LABEL = "Visit Numbers"),
+  c(FLDNAME = "VISITNUM", LABEL = "Visit Numbers"),
+  c(FLDNAME = "VISITDY", LABEL = "(Planned*) Study Day of Visit"),
   c(FLDNAME = "VISCODE", LABEL = "Visit Code"),
   c(FLDNAME = "VISCODE2", LABEL = "Visit Code 2"),
   c(FLDNAME = "EPOCH", LABEL = "Epoch"),
@@ -695,15 +831,11 @@ CDR_SCORE_DD <- CDR %>%
 
 # Everyday Cognition Score
 ECOG_SCORE_DD <- ECOGPT %>%
-  select(all_of(qs_com_cols), "ECOGPTTOTAL" = EcogPtTotal) %>%
+  mutate(QSTESTCD = "ECOGPTTOTAL") %>%
+  select(all_of(qs_com_cols), QSTESTCD, "QSSTRESN" = EcogPtTotal) %>%
   bind_rows(ECOGSP %>%
-    select(all_of(qs_com_cols), "ECOGSPTOTAL" = EcogSPTotal)) %>%
-  # ECOG12-item score is not available yet
-  pivot_longer(
-    cols = c(ECOGPTTOTAL, ECOGSPTOTAL),
-    names_to = "QSTESTCD",
-    values_to = "QSSTRESN"
-  ) %>%
+    mutate(QSTESTCD = "ECOGSPTOTAL") %>%
+    select(all_of(qs_com_cols), QSTESTCD, "QSSTRESN" = EcogSPTotal)) %>%
   mutate(
     QSTEST = "Everyday Cognition",
     QSCAT = "ECOG"
@@ -797,6 +929,7 @@ QS <- bind_rows(
   NPIQ_SCORE_DD,
   NEUROBAT_SCORE_DD
 ) %>%
+  assert_rows(col_concat, is_uniq, RID, ORIGPROT, COLPROT, VISCODE, QSTESTCD) %>%
   # Add enrollment date
   left_join(
     adni_enrollment(
@@ -812,9 +945,20 @@ QS <- bind_rows(
     enroll_date = EXAMDATE
   )) %>%
   ungroup() %>%
-  mutate(COLPROT = factor(COLPROT, levels = adni_phase())) %>%
+  # Add VISTNUM
+  left_join(
+    ADNI_VISIT_RECORD %>%
+      select(RID, ORIGPROT, COLPROT, VISCODE, VISNAME, VISITNUM),
+    by = c("RID", "ORIGPROT", "COLPROT", "VISCODE")
+  ) %>%
+  assert_rows(col_concat, is_uniq, RID, ORIGPROT, COLPROT, VISCODE, QSTESTCD) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.01), VISITNUM) %>%
+  # Add VISITDY since baseline visit
+  # VISITDY must not be populated for unplanned visits
+  mutate(VISITDY = as.numeric(as.Date(VISDATE) - as.Date(EXAMDATE)), 
+         COLPROT = factor(COLPROT, levels = adni_phase())) %>%
   group_by(RID) %>%
-  arrange(QSTESTCD, COLPROT, VISCODE) %>%
+  arrange(QSTESTCD, COLPROT, VISITNUM) %>%
   mutate(QSSEQ = row_number()) %>%
   ungroup() %>%
   # Add EPOCH
@@ -827,7 +971,7 @@ QS <- bind_rows(
     STUDYID = "ADNI",
     DOMAIN = "QS",
     USUBJID = paste0(STUDYID, "-", RID),
-    QSGRPID = COLPROT,
+    # QSGRPID = COLPROT,
     QSDTC = VISDATE,
     QSDY = as.numeric(as.Date(VISDATE) - as.Date(EXAMDATE))
   ) %>%

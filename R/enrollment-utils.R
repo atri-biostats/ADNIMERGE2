@@ -4,13 +4,17 @@
 #'  This function is used to extract baseline visit of participants when they enrolled first time in ADNI study or enrolled as either newly or rollover in specific ADNI study phases.
 #' @param dd Data frame similar as REGISTRY eCRF
 #' @param phase Either `Overall` or phase-specific enrollment, Default: 'Overall'
-#' @param both A boolean to include both overall and phase-specific enrollment list, Default: FALSE
+#' @param both A boolean value to include both overall and phase-specific enrollment list, Default: FALSE
 #' @return
-#'  * If `both == TRUE`: a list of data frames that includes both overall (`overall_enroll`) and phase-specific enrollment (`phase_enroll`)
-#'  * Otherwise a data frame that contains `RID`, ""corresponding to the provided input arguments:
-#'      + Overall enrollment if `phase == "Overall"`
-#'      + Phase specific enrollment if `phase != "Overall"`
-#'  * The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `EXAMDATE` variables.
+#'  \itemize{
+#'    \item If `both = TRUE`: a list of data frames that includes both overall (`overall_enroll`) and phase-specific enrollment (`phase_enroll`)
+#'    \item Otherwise a data frame that corresponding to the provided input arguments:
+#'         \itemize{
+#'            \item Overall enrollment if `phase = "Overall"`
+#'            \item Phase specific enrollment if `phase != "Overall"`
+#'  }
+#'  \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `EXAMDATE` variables.
+#'  }
 #' @examples
 #' \dontrun{
 #' # Overall enrollment: when participants enrolled as newly enrollee in ADNI study for the first time.
@@ -38,7 +42,7 @@
 #'   both = TRUE
 #' )
 #' }
-#' @seealso [extract_adni_screen_date()]
+#' @seealso \code{\link{extract_adni_screen_date}()}
 #' @rdname adni_enrollment
 #' @export
 #' @importFrom rlang arg_match
@@ -166,15 +170,21 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
 #'  This function is used to extract screening date of participants when they screened for first time in ADNI study.
 #' @param dd Data frame similar as REGISTRY eCRF
 #' @param phase Either `Overall` or phase-specific screening date, Default: 'Overall'
-#' @param both A boolean to include both overall and phase-specific enrollment list, Default: FALSE
-#' @param multiple_screen_visit A boolean to include multiple screen visits in ADNIGO and ADNI2 phases, Default: FALSE
+#' @param both A boolean value to include both overall and phase-specific enrollment list, Default: FALSE
+#' @param multiple_screen_visit A boolean value to include multiple screen visits in ADNIGO and ADNI2 phases, Default: FALSE
 #' @return
-#'  * If `both == TRUE`: a list of data frames that includes both overall (`overall_screen`) and phase-specific enrollment (`phase_screen`)
-#'  * Otherwise a data frame corresponding to the provided input arguments:
-#'     + Overall screen if `phase == "Overall"` and will contains one records per participant regardless `multiple_screen_visit` value.
-#'      + Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit == TRUE`.
-#'  * The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables.
-#'      + The data frame will contains `VISCODE` for `multiple_screen_visit == TRUE`.
+#'  \itemize{
+#'    \item If `both = TRUE`: a list of data frames that includes both overall (`overall_screen`) and phase-specific enrollment (`phase_screen`)
+#'    \item  Otherwise a data frame corresponding to the provided input arguments:
+#'         \itemize{
+#'            \item Overall screen if `phase = "Overall"` and will contains one records per participant regardless the value of `multiple_screen_visit`
+#'            \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = TRUE`.
+#'  }
+#'  \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables.
+#'        \itemize{
+#'             \item The data frame will contains `VISCODE` for `multiple_screen_visit = TRUE`
+#'  }
+#'  }
 #' @examples
 #' \dontrun{
 #' # Overall screening: when participants screened for the first time in ADNI study.
@@ -213,7 +223,7 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
 #'   multiple_screen_visit = FALSE
 #' )
 #' }
-#' @seealso [adni_enrollment()]
+#' @seealso \code{\link{adni_enrollment}()}
 #' @rdname extract_adni_screen_date
 #' @export
 #' @importFrom rlang arg_match
@@ -343,7 +353,8 @@ extract_adni_screen_date <- function(dd, phase = "Overall", both = FALSE, multip
 #' @param dd Data frame similar as DXSUM eCRF
 #' @param phase Either `Overall` or phase-specific enrollment, Default: 'Overall'
 #' @param visit_type Either `baseline` or `screen` diagnostic status, Default: 'baseline'
-#' @return A data frame that contains `RID`, `RID`, `ORIGPROT`, `COLPROT`, `EXAMDATE` and either `BL.DIAGNOSIS` for baseline visit or `BL.DIAGNOSIS` for screen visit.
+#' @return 
+#'  A data frame that contains `RID`, `RID`, `ORIGPROT`, `COLPROT`, `EXAMDATE` and either `BL.DIAGNOSIS` for baseline visit or `SC.DIAGNOSIS` for screen visit.
 #' @examples
 #' \dontrun{
 #' # Baseline diagnostics status:
@@ -509,7 +520,7 @@ extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline
 #' @param time_interval Minimum window period (in days) from baseline visit date, Default: 30
 #' @return
 #'  A character vector with the same length as the input values `cur_record_date`.
-#'  The returned vector will contains `Yes` flag for the closest record 
+#'  The returned vector will contains `Yes` flag for the closest record
 #'  within the specified window period. Otherwise, missing value.
 #' @rdname dectect_baseline_score
 #' @export
