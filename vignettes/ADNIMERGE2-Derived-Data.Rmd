@@ -24,14 +24,6 @@ datatable <- function(...) {
 }
 ```
 
-```{r setup-libraries, echo=FALSE}
-# Libraries ----
-library(tidyverse)
-library(assertr)
-library(labelled)
-library(DT)
-```
-
 # Introduction
 \label{sec:introduction}
 
@@ -40,6 +32,20 @@ This article describes creating a Study Data Tabulation Model (SDTM) from a raw 
 * Demographic (DM)
 * Adverse Event (AE)
 * Questionnaires (QS)
+
+## Load required R packages {.unlisted}
+
+```{r setup-libraries}
+library(tidyverse)
+library(assertr)
+library(labelled)
+library(DT)
+```
+
+```{r study-library, purl=FALSE}
+# ADNI study R package
+library(ADNIMERGE2)
+```
 
 ## Demographic (DM)
 \label{sec:dm}
@@ -116,13 +122,6 @@ dm_data_dic %>%
   datatable()
 ```
 
-```{r libraries-print, ref.label="setup-libraries", echo=TRUE, eval=FALSE}
-```
-
-```{r study-library, purl=FALSE}
-library(ADNIMERGE2)
-```
-
 ```{r phase-visit-code}
 # Add EPOCH stage for each phase specific visit code
 EPOCH_LIST <- VISITS %>%
@@ -183,20 +182,14 @@ REGISTRY <- REGISTRY %>%
     COLPROT = as.character(COLPROT),
     ORIGPROT = as.character(ORIGPROT)
   ) %>%
-  mutate(PTTYPE = adni_study_track(
-    cur_study_phase = COLPROT,
-    orig_study_phase = ORIGPROT
-  ))
+  mutate(PTTYPE = adni_study_track(cur_study_phase = COLPROT, orig_study_phase = ORIGPROT))
 
 ROSTER <- ROSTER %>%
   mutate(
     COLPROT = as.character(COLPROT),
     ORIGPROT = as.character(ORIGPROT)
   ) %>%
-  mutate(PTTYPE = adni_study_track(
-    cur_study_phase = COLPROT,
-    orig_study_phase = ORIGPROT
-  ))
+  mutate(PTTYPE = adni_study_track(cur_study_phase = COLPROT, orig_study_phase = ORIGPROT))
 ```
 
 ```{r generate-dm}
@@ -224,23 +217,19 @@ DM <- tibble(RID = unique_rid) %>%
       assert(is_uniq, RID) %>%
       assert_rows(num_row_NAs, within_bounds(0, 0.01), ORIGPROT) %>%
       nest(OTHER_DEMOG = -c(
-        RID, ORIGPROT, PTGENDER, PTRACCAT, PTETHCAT, PTEDUCAT, PTMARRY,
-        PTDOB, SITEID, VISDATE
+        RID, ORIGPROT, PTGENDER, PTRACCAT, PTETHCAT, PTEDUCAT,
+        PTMARRY, PTDOB, SITEID, VISDATE
       )) %>%
       select(
-        RID, ORIGPROT, PTGENDER, PTRACCAT, PTETHCAT, PTEDUCAT, PTMARRY,
-        PTDOB, SITEID, VISDATE, OTHER_DEMOG
+        RID, ORIGPROT, PTGENDER, PTRACCAT, PTETHCAT, PTEDUCAT,
+        PTMARRY, PTDOB, SITEID, VISDATE, OTHER_DEMOG
       ),
     by = dm_join_by
   ) %>%
   assert(is_uniq, RID) %>%
   # Add the first baseline visit date (i.e. enrollment date)
   left_join(
-    adni_enrollment(
-      dd = REGISTRY,
-      phase = "Overall",
-      both = FALSE
-    ) %>%
+    adni_enrollment(dd = REGISTRY, phase = "Overall", both = FALSE) %>%
       select(RID, ORIGPROT, ENROLLDATE = EXAMDATE) %>%
       assert(is_uniq, RID),
     by = dm_join_by
@@ -249,10 +238,8 @@ DM <- tibble(RID = unique_rid) %>%
   # Add the first screening visit date
   left_join(
     extract_adni_screen_date(
-      dd = REGISTRY,
-      phase = "Overall",
-      both = FALSE,
-      multiple_screen_visit = FALSE
+      dd = REGISTRY, phase = "Overall",
+      both = FALSE, multiple_screen_visit = FALSE
     ) %>%
       select(RID, ORIGPROT, SCREENDATE) %>%
       assert(is_uniq, RID),
@@ -344,14 +331,13 @@ nerolled_early_discon_adni34 <- STUDYSUM %>%
     "Never enrolled"
   )) %>%
   select(
-    RID, ORIGPROT, COLPROT, SDSTATUS, SDDATE, INCLUSION,
-    EXCLUSION, INCROLL, VERSION, INCNEWPT, EXCCRIT, MRIFIND,
-    NVRDISC, NVROT, AENUM
+    RID, ORIGPROT, COLPROT, SDSTATUS, SDDATE, INCLUSION, EXCLUSION, INCROLL,
+    VERSION, INCNEWPT, EXCCRIT, MRIFIND, NVRDISC, NVROT, AENUM
   ) %>%
   distinct() %>%
   nest(OTHER_STUDYSUM = c(
-    INCLUSION, EXCLUSION, INCROLL, VERSION, INCNEWPT,
-    EXCCRIT, MRIFIND, NVRDISC, NVROT, AENUM
+    INCLUSION, EXCLUSION, INCROLL, VERSION, INCNEWPT, EXCCRIT, MRIFIND,
+    NVRDISC, NVROT, AENUM
   )) %>%
   assert(is_uniq, RID)
 
@@ -381,29 +367,17 @@ DM <- DM %>%
 # Currently, per protocol in ADNI4: to pull forward the screening diagnostics
 #            summary for those who enrolled in ADNI4 but they did not have yet
 #            reported baseline diagnostic summary in DXSUM
-adni4_baseline_dxsum <- adni_enrollment(
-  dd = ADNIMERGE2::REGISTRY,
-  phase = "ADNI4",
-  both = FALSE
-) %>%
+adni4_baseline_dxsum <- adni_enrollment(dd = REGISTRY, phase = "ADNI4", both = FALSE) %>%
   select(RID, ORIGPROT, COLPROT) %>%
   left_join(
-    extract_blscreen_dxsum(
-      dd = ADNIMERGE2::DXSUM,
-      phase = "ADNI4",
-      visit_type = "baseline"
-    ) %>%
+    extract_blscreen_dxsum(dd = DXSUM, phase = "ADNI4", visit_type = "baseline") %>%
       select(RID, ORIGPROT, COLPROT, BL.DIAGNOSIS,
         "BL.DIAGNOSIS_EXAMDATE" = EXAMDATE
       ),
     by = c("RID", "ORIGPROT", "COLPROT")
   ) %>%
   left_join(
-    extract_blscreen_dxsum(
-      dd = ADNIMERGE2::DXSUM,
-      phase = "ADNI4",
-      visit_type = "screen"
-    ) %>%
+    extract_blscreen_dxsum(dd = DXSUM, phase = "ADNI4", visit_type = "screen") %>%
       select(RID, ORIGPROT, COLPROT, SC.DIAGNOSIS,
         "SC.DIAGNOSIS_EXAMDATE" = EXAMDATE
       ),
@@ -411,19 +385,14 @@ adni4_baseline_dxsum <- adni_enrollment(
   ) %>%
   assert(is_uniq, RID) %>%
   mutate(BL.DIAGNOSIS = case_when(
-    ORIGPROT == COLPROT & is.na(BL.DIAGNOSIS) &
-      !is.na(SC.DIAGNOSIS) ~ SC.DIAGNOSIS,
+    ORIGPROT == COLPROT & is.na(BL.DIAGNOSIS) & !is.na(SC.DIAGNOSIS) ~ SC.DIAGNOSIS,
     TRUE ~ BL.DIAGNOSIS
   ))
 
 DM <- DM %>%
   mutate(RFPENDTC = NA_Date_) %>%
   left_join(
-    extract_blscreen_dxsum(
-      dd = ADNIMERGE2::DXSUM,
-      phase = "Overall",
-      visit_type = "baseline"
-    ) %>%
+    extract_blscreen_dxsum(dd = DXSUM, phase = "Overall", visit_type = "baseline") %>%
       select(RID, ORIGPROT, BL.DIAGNOSIS) %>%
       assert(is_uniq, RID),
     by = dm_join_by
@@ -438,6 +407,7 @@ DM <- DM %>%
     is.na(BL.DIAGNOSIS) & ORIGPROT == "ADNI4" ~ ADJUST.BL.DIAGNOSIS,
     TRUE ~ BL.DIAGNOSIS
   )) %>%
+  # Required confirmation for DX coded values in ADNI1GO2
   mutate(DX.BL = case_when(
     BL.DIAGNOSIS == "1" ~ "CN",
     BL.DIAGNOSIS == "2" ~ "MCI",
@@ -477,8 +447,7 @@ PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
   # Expand from the `FIRST` and `LAST` known ADNI phase
   expand_grid(PHASE_NUM_INTERVAL = adni_phase_order_num(adni_phase())) %>%
   # Possible participation study period
-  filter(PHASE_NUM_INTERVAL <= LAST_PHASE_NUM &
-    PHASE_NUM_INTERVAL >= FIRST_PHASE_NUM) %>%
+  filter(PHASE_NUM_INTERVAL <= LAST_PHASE_NUM & PHASE_NUM_INTERVAL >= FIRST_PHASE_NUM) %>%
   group_by(RID) %>%
   mutate(MAX_PHASE = n()) %>%
   ungroup() %>%
@@ -493,10 +462,7 @@ PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
     PHASE_NUM_INTERVAL == 5 ~ "ADNI4"
   )) %>%
   # Add participant type
-  mutate(PTTYPE = adni_study_track(
-    cur_study_phase = COLPROT,
-    orig_study_phase = ORIGPROT
-  )) %>%
+  mutate(PTTYPE = adni_study_track(cur_study_phase = COLPROT, orig_study_phase = ORIGPROT)) %>%
   # Add phase-specific visit code and order
   left_join(
     EPOCH_LIST %>%
@@ -509,6 +475,7 @@ PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
           mutate(PTTYPE = "Rollover") %>%
           select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTTYPE)
       ),
+    relationship = "many-to-many",
     by = c("COLPROT" = "Phase", "PTTYPE" = "PTTYPE")
   ) %>%
   assert_rows(col_concat, is_uniq, RID, COLPROT, VISCODE) %>%
@@ -519,11 +486,10 @@ ADNI_VISIT_RECORD <- PHASE_VISIT_RECORD %>%
   filter(!c(PHASE_VISITNUM %in% 999 | VISCODE %in% "f")) %>%
   mutate(COLPROT = factor(COLPROT, levels = adni_phase())) %>%
   arrange(RID, COLPROT) %>%
-  # Required confirmation
+  # Required confirmation for screening visits of rollovers in ADNIGO
   # Adjusting for rollover screening visits in ADNIGO
   mutate(PHASE_VISITNUM = case_when(
-    PTTYPE %in% "Rollover" &
-      COLPROT %in% "ADNIGO" ~ PHASE_VISITNUM + 2,
+    PTTYPE %in% "Rollover" & COLPROT %in% "ADNIGO" ~ PHASE_VISITNUM + 2,
     TRUE ~ PHASE_VISITNUM
   )) %>%
   group_by(RID, COLPROT) %>%
@@ -629,21 +595,17 @@ ae_data_dic %>%
 ## aehevnt
 # AEHCHRON0 = AEHCHRON; paste0("AECHANGE", 1:10)
 AE_ADNI34 <- ADVERSE %>%
-  select(ID, RID, ORIGPROT, COLPROT, VISCODE, SITEID, AENUMBER, AEOUTCOME,
-    AEHONSDT, AEHCSDT, AEHDTHDT, AERELAD, AERELCM, AERELFLRBTBN, AERELFLRBPR,
-    AEHIMG, AERELTAU, AERELNAV, AERELMK, AERELPI, AEHLUMB, AERELCOVID, AERELPAN,
-    AERELATESP, AESERIOUS, AESERDATE, SAELIFE, SAEHOSPIT, SAEPROLONG, SAEDEATH,
-    SAECONGEN, SAEDISAB, SAEOTHER, AEHCMEDS,
-    AESEV0 = AEHSEVR, all_of(paste0("AESEV", 1:10))
+  select(ID, RID, ORIGPROT, COLPROT, VISCODE, SITEID, AENUMBER, AEOUTCOME, AEHONSDT, AEHCSDT,
+    AEHDTHDT, AERELAD, AERELCM, AERELFLRBTBN, AERELFLRBPR, AEHIMG, AERELTAU, AERELNAV, AERELMK,
+    AERELPI, AEHLUMB, AERELCOVID, AERELPAN, AERELATESP, AESERIOUS, AESERDATE, SAELIFE, SAEHOSPIT,
+    SAEPROLONG, SAEDEATH, SAECONGEN, SAEDISAB, SAEOTHER, AEHCMEDS,
+    AESEV0 = AEHSEVR,
+    all_of(paste0("AESEV", 1:10))
   ) %>%
   assert_rows(num_row_NAs, within_bounds(0, 0.1), c(AENUMBER)) %>%
   assert_rows(col_concat, is_uniq, ID, RID, ORIGPROT, COLPROT, AENUMBER) %>%
   # Filter highest severity levels per RID, AENUMBER, COLPROT
-  pivot_longer(
-    cols = paste0("AESEV", 0:10),
-    names_to = "SEVERITY_COL",
-    values_to = "AESEV"
-  ) %>%
+  pivot_longer(cols = all_of(paste0("AESEV", 0:10)), names_to = "SEVERITY_COL", values_to = "AESEV") %>%
   mutate(AESEV_NUM = case_when(
     AESEV == "Mild" ~ 1,
     AESEV == "Moderate" ~ 2,
@@ -654,8 +616,7 @@ AE_ADNI34 <- ADVERSE %>%
     c(any(!is.na(AESEV)) & AESEV_NUM == max(AESEV_NUM, na.rm = TRUE)))) %>%
   ungroup() %>%
   group_by(RID, ORIGPROT, COLPROT, SITEID, AENUMBER) %>%
-  filter(c(any(n() > 1) & row_number() == n()) |
-    c(all(n() == 1) & row_number() == 1)) %>%
+  filter(c(any(n() > 1) & row_number() == n()) | c(all(n() == 1) & row_number() == 1)) %>%
   ungroup() %>%
   verify(nrow(.) == nrow(ADVERSE)) %>%
   assert_rows(col_concat, is_uniq, ID, RID, ORIGPROT, COLPROT, AENUMBER, SITEID) %>%
@@ -790,11 +751,7 @@ ADAS_SCORE_DD <- ADASSCORES %>%
     select(all_of(qs_com_cols),
       "TOTAL11" = TOTSCORE, "TOTALMOD" = TOTAL13
     )) %>%
-  pivot_longer(
-    cols = c(TOTAL11, TOTALMOD),
-    names_to = "QSTESTCD",
-    values_to = "QSSTRESN"
-  ) %>%
+  pivot_longer(cols = c(TOTAL11, TOTALMOD), names_to = "QSTESTCD", values_to = "QSSTRESN") %>%
   mutate(
     QSTEST = "ADAS-Cognitive Behavior",
     QSCAT = "ADAS"
@@ -819,11 +776,7 @@ ADI_SCORE_DD <- ADI %>%
 # Clinical Dementia Rating Score
 CDR_SCORE_DD <- CDR %>%
   select(all_of(qs_com_cols), CDGLOBAL, CDRSB) %>%
-  pivot_longer(
-    cols = c(CDGLOBAL, CDRSB),
-    names_to = "QSTESTCD",
-    values_to = "QSSTRESN"
-  ) %>%
+  pivot_longer(cols = c(CDGLOBAL, CDRSB), names_to = "QSTESTCD", values_to = "QSSTRESN") %>%
   mutate(
     QSTEST = "Clinical Dementia Rating",
     QSCAT = "CDR"
@@ -916,34 +869,18 @@ NEUROBAT_SCORE_DD <- NEUROBAT %>%
 
 ```{r generate-qs}
 QS <- bind_rows(
-  ADAS_SCORE_DD,
-  ADI_SCORE_DD,
-  CDR_SCORE_DD,
-  ECOG_SCORE_DD,
-  FCI_SCORE_DD,
-  FAQ_SCORE_DD,
-  GDS_SCORE_DD,
-  MMSE_SCORE_DD,
-  MOCA_SCORE_DD,
-  NPI_SCORE_DD,
-  NPIQ_SCORE_DD,
-  NEUROBAT_SCORE_DD
+  ADAS_SCORE_DD, ADI_SCORE_DD, CDR_SCORE_DD, ECOG_SCORE_DD, FCI_SCORE_DD, FAQ_SCORE_DD,
+  GDS_SCORE_DD, MMSE_SCORE_DD, MOCA_SCORE_DD, NPI_SCORE_DD, NPIQ_SCORE_DD, NEUROBAT_SCORE_DD
 ) %>%
   assert_rows(col_concat, is_uniq, RID, ORIGPROT, COLPROT, VISCODE, QSTESTCD) %>%
   # Add enrollment date
   left_join(
-    adni_enrollment(
-      dd = REGISTRY,
-      phase = "Overall"
-    ),
+    adni_enrollment(dd = REGISTRY, phase = "Overall", both = FALSE),
     by = c("RID", "ORIGPROT", "COLPROT")
   ) %>%
   # Add baseline flag
   rowwise() %>%
-  mutate(QSBLFL = dectect_baseline_score(
-    cur_record_date = VISDATE,
-    enroll_date = EXAMDATE
-  )) %>%
+  mutate(QSBLFL = dectect_baseline_score(cur_record_date = VISDATE, enroll_date = EXAMDATE)) %>%
   ungroup() %>%
   # Add VISTNUM
   left_join(
@@ -955,8 +892,10 @@ QS <- bind_rows(
   assert_rows(num_row_NAs, within_bounds(0, 0.01), VISITNUM) %>%
   # Add VISITDY since baseline visit
   # VISITDY must not be populated for unplanned visits
-  mutate(VISITDY = as.numeric(as.Date(VISDATE) - as.Date(EXAMDATE)), 
-         COLPROT = factor(COLPROT, levels = adni_phase())) %>%
+  mutate(
+    VISITDY = as.numeric(as.Date(VISDATE) - as.Date(EXAMDATE)),
+    COLPROT = factor(COLPROT, levels = adni_phase())
+  ) %>%
   group_by(RID) %>%
   arrange(QSTESTCD, COLPROT, VISITNUM) %>%
   mutate(QSSEQ = row_number()) %>%

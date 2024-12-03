@@ -690,16 +690,16 @@ phase_specific_value_replacement <- function(dd,
     new_values = new_values
   )
 
-  # Checking if all phase-specific possible values are replaced
-  # check_value_match(
-  #   values = unique(phase_dd %>% pull(fld_name)),
-  #   check_list = new_values,
-  #   stop_message = TRUE,
-  #   excluded.na = TRUE, 
-  #   add_stop_message = paste0(" in ", fld_name, " for study phase ", phase), 
-  #   value_split = TRUE, 
-  #   split_pattern = "\\||;"
-  # )
+  # Checking for all phase-specific possible values are replaced correctly
+  check_value_match(
+    values = unique(phase_dd %>% pull(fld_name)),
+    check_list = new_values,
+    stop_message = TRUE,
+    excluded.na = TRUE,
+    add_stop_message = paste0(" in ", fld_name, " for study phase ", phase),
+    value_split = TRUE,
+    split_pattern = "\\||;"
+  )
 
   # Bind with previous dataset
   output_data <- phase_dd %>%
