@@ -168,7 +168,7 @@ EPOCH_LIST <- VISITS %>%
     Phase %in% c("ADNI3", "ADNI4") & VISCODE %in% c("bl", "4_bl") ~ 1,
     TRUE ~ PHASE_VISITNUM
   )) %>%
-  mutate(PTYPE = case_when(
+  mutate(PTTYPE = case_when(
     Phase %in% c("ADNI1", "ADNIGO") ~ "Both",
     str_detect(VISNAME, "Continuing Pt") == TRUE ~ "Rollover",
     str_detect(VISNAME, "New Pt|Screening") == TRUE ~ "New",
@@ -183,7 +183,7 @@ REGISTRY <- REGISTRY %>%
     COLPROT = as.character(COLPROT),
     ORIGPROT = as.character(ORIGPROT)
   ) %>%
-  mutate(participant_type = adni_study_track(
+  mutate(PTTYPE = adni_study_track(
     cur_study_phase = COLPROT,
     orig_study_phase = ORIGPROT
   ))
@@ -193,7 +193,7 @@ ROSTER <- ROSTER %>%
     COLPROT = as.character(COLPROT),
     ORIGPROT = as.character(ORIGPROT)
   ) %>%
-  mutate(participant_type = adni_study_track(
+  mutate(PTTYPE = adni_study_track(
     cur_study_phase = COLPROT,
     orig_study_phase = ORIGPROT
   ))
@@ -493,23 +493,23 @@ PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
     PHASE_NUM_INTERVAL == 5 ~ "ADNI4"
   )) %>%
   # Add participant type
-  mutate(PTYPE = adni_study_track(
+  mutate(PTTYPE = adni_study_track(
     cur_study_phase = COLPROT,
     orig_study_phase = ORIGPROT
   )) %>%
   # Add phase-specific visit code and order
   left_join(
     EPOCH_LIST %>%
-      filter(PTYPE %in% c("New", "Both")) %>%
-      mutate(PTYPE = "New") %>%
-      select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTYPE) %>%
+      filter(PTTYPE %in% c("New", "Both")) %>%
+      mutate(PTTYPE = "New") %>%
+      select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTTYPE) %>%
       bind_rows(
         EPOCH_LIST %>%
-          filter(PTYPE %in% c("Rollover", "Both")) %>%
-          mutate(PTYPE = "Rollover") %>%
-          select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTYPE)
+          filter(PTTYPE %in% c("Rollover", "Both")) %>%
+          mutate(PTTYPE = "Rollover") %>%
+          select(Phase, VISCODE, PHASE_VISITNUM, VISNAME, PTTYPE)
       ),
-    by = c("COLPROT" = "Phase", "PTYPE" = "PTYPE")
+    by = c("COLPROT" = "Phase", "PTTYPE" = "PTTYPE")
   ) %>%
   assert_rows(col_concat, is_uniq, RID, COLPROT, VISCODE) %>%
   assert_rows(num_row_NAs, within_bounds(0, 0.01), PHASE_VISITNUM)
@@ -522,7 +522,7 @@ ADNI_VISIT_RECORD <- PHASE_VISIT_RECORD %>%
   # Required confirmation
   # Adjusting for rollover screening visits in ADNIGO
   mutate(PHASE_VISITNUM = case_when(
-    PTYPE %in% "Rollover" &
+    PTTYPE %in% "Rollover" &
       COLPROT %in% "ADNIGO" ~ PHASE_VISITNUM + 2,
     TRUE ~ PHASE_VISITNUM
   )) %>%
@@ -553,7 +553,7 @@ ADNI_VISIT_RECORD <- bind_rows(
     filter(c(PHASE_VISITNUM %in% 999 | VISCODE %in% "f")) %>%
     mutate(VISITNUM = PHASE_VISITNUM)
 ) %>%
-  select(RID, ORIGPROT, COLPROT, LASTPROT, PTYPE, VISCODE, VISNAME, VISITNUM)
+  select(RID, ORIGPROT, COLPROT, LASTPROT, PTTYPE, VISCODE, VISNAME, VISITNUM)
 ```
 
 

@@ -57,7 +57,7 @@
 #' @importFrom assertr is_uniq
 #' @importFrom magrittr %>%
 adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
-  COLPROT <- ORIGPROT <- RID <- EXAMDATE <- participant_type <- NULL
+  COLPROT <- ORIGPROT <- RID <- EXAMDATE <- PTTYPE <- NULL
   overall_baseline_flag <- NULL
   rlang::arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
   col_name_list <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "VISTYPE", "EXAMDATE")
@@ -78,7 +78,7 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
   dd <- dd %>%
     mutate(across(c(COLPROT, ORIGPROT), as.character)) %>%
     # Adding participant types (i.e. study track)
-    mutate(participant_type = adni_study_track(
+    mutate(PTTYPE = adni_study_track(
       cur_study_phase = COLPROT,
       orig_study_phase = ORIGPROT
     )) %>%
@@ -86,31 +86,31 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
     mutate(
       adni4_baseline_flag = case_when(
         COLPROT %in% "ADNI4" & VISCODE %in% "4_init" &
-          participant_type %in% "Rollover" & VISTYPE != "Not done" ~ "Yes",
+          PTTYPE %in% "Rollover" & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% "ADNI4" & VISCODE %in% "4_bl" &
-          participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"
+          PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"
       ),
       adni3_baseline_flag = case_when(
         COLPROT %in% "ADNI3" & VISCODE %in% "init" &
-          participant_type %in% "Rollover" & VISTYPE != "Not done" ~ "Yes",
+          PTTYPE %in% "Rollover" & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% "ADNI3" & VISCODE %in% "bl" &
-          participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"
+          PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"
       ),
       adni2_baseline_flag = case_when(
         COLPROT %in% "ADNI2" & VISCODE %in% "v06" &
-          participant_type %in% "Rollover" & VISTYPE != "Not done" ~ "Yes",
+          PTTYPE %in% "Rollover" & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% "ADNI2" & VISCODE %in% "v03" &
-          participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"
+          PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"
       ),
       # The screening visits in ADNIGO may be considered as their baseline visit???
       adnigo_baseline_flag = case_when(
         COLPROT %in% "ADNIGO" & VISCODE %in% "bl" &
-          participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes",
+          PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% "ADNIGO" & VISCODE %in% "sc" &
-          participant_type %in% "Rollover" & VISTYPE != "Not done" ~ "Yes"
+          PTTYPE %in% "Rollover" & VISTYPE != "Not done" ~ "Yes"
       ),
       adni1_baseline_flag = case_when(COLPROT %in% "ADNI1" & VISCODE %in% "bl" &
-        participant_type %in% c("New", "Rollover") & RGCONDCT == "Yes" ~ "Yes")
+        PTTYPE %in% c("New", "Rollover") & RGCONDCT == "Yes" ~ "Yes")
     ) %>%
     mutate(overall_baseline_flag = case_when(
       ORIGPROT == COLPROT &
@@ -126,7 +126,7 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
     overall_enroll_registry <- dd %>%
       filter(overall_baseline_flag %in% "Yes") %>%
       verify(ORIGPROT == COLPROT) %>%
-      verify(participant_type == "New") %>%
+      verify(PTTYPE == "New") %>%
       assert(is_uniq, RID) %>%
       select(RID, ORIGPROT, COLPROT, EXAMDATE)
   }
@@ -243,7 +243,7 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
 
 ## Questions: For participants that failed screening in ADNI1, does the exam date implies their screening date/ disposition?
 extract_adni_screen_date <- function(dd, phase = "Overall", both = FALSE, multiple_screen_visit = FALSE) {
-  RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- participant_type <- NULL
+  RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- PTTYPE <- NULL
   overall_screen_flag <- adnigo_screen_flag <- adni2_screen_flag <- second_screen_visit <- NULL
   rlang::arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
   col_name_list <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "VISTYPE", "EXAMDATE")
@@ -261,17 +261,17 @@ extract_adni_screen_date <- function(dd, phase = "Overall", both = FALSE, multip
   dd <- dd %>%
     mutate(across(c(COLPROT, ORIGPROT), as.character)) %>%
     # Adding participant types (i.e. study track)
-    mutate(participant_type = adni_study_track(
+    mutate(PTTYPE = adni_study_track(
       cur_study_phase = COLPROT,
       orig_study_phase = ORIGPROT
     )) %>%
     # Identify the first screen visits
     mutate(
-      adni4_screen_flag = case_when(COLPROT %in% "ADNI4" & VISCODE %in% "4_sc" & participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"),
-      adni3_screen_flag = case_when(COLPROT %in% "ADNI3" & VISCODE %in% "sc" & participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"),
-      adni2_screen_flag = case_when(COLPROT %in% "ADNI2" & VISCODE %in% c("v01", "v02") & participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"),
-      adnigo_screen_flag = case_when(COLPROT %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") & participant_type %in% "New" & VISTYPE != "Not done" ~ "Yes"),
-      adni1_screen_flag = case_when(COLPROT %in% "ADNI1" & VISCODE %in% "sc" & participant_type %in% "New" ~ "Yes")
+      adni4_screen_flag = case_when(COLPROT %in% "ADNI4" & VISCODE %in% "4_sc" & PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"),
+      adni3_screen_flag = case_when(COLPROT %in% "ADNI3" & VISCODE %in% "sc" & PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"),
+      adni2_screen_flag = case_when(COLPROT %in% "ADNI2" & VISCODE %in% c("v01", "v02") & PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"),
+      adnigo_screen_flag = case_when(COLPROT %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") & PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"),
+      adni1_screen_flag = case_when(COLPROT %in% "ADNI1" & VISCODE %in% "sc" & PTTYPE %in% "New" ~ "Yes")
     ) %>%
     mutate(second_screen_visit = case_when(c(adni2_screen_flag %in% "Yes" & VISCODE %in% "v02") |
       c(adnigo_screen_flag %in% "Yes" & VISCODE %in% "scmri") ~ "Yes")) %>%
@@ -300,7 +300,7 @@ extract_adni_screen_date <- function(dd, phase = "Overall", both = FALSE, multip
     overall_screen_registry <- dd %>%
       filter(overall_screen_flag %in% "Yes") %>%
       verify(ORIGPROT == COLPROT) %>%
-      verify(participant_type == "New") %>%
+      verify(PTTYPE == "New") %>%
       # Only first screen date
       filter(is.na(second_screen_visit)) %>%
       assert(is_uniq, RID) %>%
@@ -353,7 +353,7 @@ extract_adni_screen_date <- function(dd, phase = "Overall", both = FALSE, multip
 #' @param dd Data frame similar as DXSUM eCRF
 #' @param phase Either `Overall` or phase-specific enrollment, Default: 'Overall'
 #' @param visit_type Either `baseline` or `screen` diagnostic status, Default: 'baseline'
-#' @return 
+#' @return
 #'  A data frame that contains `RID`, `RID`, `ORIGPROT`, `COLPROT`, `EXAMDATE` and either `BL.DIAGNOSIS` for baseline visit or `SC.DIAGNOSIS` for screen visit.
 #' @examples
 #' \dontrun{
@@ -399,7 +399,7 @@ extract_adni_screen_date <- function(dd, phase = "Overall", both = FALSE, multip
 
 extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline") {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- DIAGNOSIS <- NULL
-  overall_baseline_dx_flag <- overall_screen_dx_flag <- participant_type <- NULL
+  overall_baseline_dx_flag <- overall_screen_dx_flag <- PTTYPE <- NULL
   rlang::arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
   rlang::arg_match0(arg = visit_type, value = c("baseline", "screen"))
   col_name_list <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "EXAMDATE", "DIAGNOSIS")
@@ -410,7 +410,7 @@ extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline
   dd <- dd %>%
     mutate(across(c(COLPROT, ORIGPROT), as.character)) %>%
     # Add participant types (i.e. study track)
-    mutate(participant_type = adni_study_track(
+    mutate(PTTYPE = adni_study_track(
       cur_study_phase = COLPROT,
       orig_study_phase = ORIGPROT
     )) %>%
@@ -420,26 +420,26 @@ extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline
         mutate(.,
           adni4_baseline_dx_flag = case_when(
             COLPROT %in% "ADNI4" & VISCODE %in% "4_init" &
-              participant_type %in% "Rollover" ~ "Yes",
+              PTTYPE %in% "Rollover" ~ "Yes",
             COLPROT %in% "ADNI4" & VISCODE %in% "4_bl" &
-              participant_type %in% "New" ~ "Yes"
+              PTTYPE %in% "New" ~ "Yes"
           ),
           adni3_baseline_dx_flag = case_when(
             COLPROT %in% "ADNI3" & VISCODE %in% "init" &
-              participant_type %in% "Rollover" ~ "Yes",
+              PTTYPE %in% "Rollover" ~ "Yes",
             COLPROT %in% "ADNI3" & VISCODE %in% "bl" &
-              participant_type %in% "New" ~ "Yes"
+              PTTYPE %in% "New" ~ "Yes"
           ),
           adni2_baseline_dx_flag = case_when(
             COLPROT %in% "ADNI2" & VISCODE %in% "v06" &
-              participant_type %in% "Rollover" ~ "Yes",
+              PTTYPE %in% "Rollover" ~ "Yes",
             COLPROT %in% "ADNI2" & VISCODE %in% "v03" &
-              participant_type %in% "New" ~ "Yes"
+              PTTYPE %in% "New" ~ "Yes"
           ),
           adnigo_baseline_dx_flag = case_when(COLPROT %in% "ADNIGO" & VISCODE %in% "bl" &
-            participant_type %in% c("New", "Rollover") ~ "Yes"),
+            PTTYPE %in% c("New", "Rollover") ~ "Yes"),
           adni1_baseline_dx_flag = case_when(COLPROT %in% "ADNI1" & VISCODE %in% "bl" &
-            participant_type %in% c("New", "Rollover") ~ "Yes")
+            PTTYPE %in% c("New", "Rollover") ~ "Yes")
         ) %>%
           mutate(., overall_baseline_dx_flag = case_when(
             ORIGPROT == COLPROT &
@@ -451,11 +451,11 @@ extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline
           ))
       } else {
         mutate(.,
-          adni4_screen_dx_flag = case_when(COLPROT %in% "ADNI4" & VISCODE %in% "4_sc" & participant_type %in% "New" ~ "Yes"),
-          adni3_screen_dx_flag = case_when(COLPROT %in% "ADNI3" & VISCODE %in% "sc" & participant_type %in% "New" ~ "Yes"),
-          adni2_screen_dx_flag = case_when(COLPROT %in% "ADNI2" & VISCODE %in% c("v01", "v02") & participant_type %in% "New" ~ "Yes"),
-          adnigo_screen_dx_flag = case_when(COLPROT %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") & participant_type %in% "New" ~ "Yes"),
-          adni1_screen_dx_flag = case_when(COLPROT %in% "ADNI1" & VISCODE %in% c("sc", "f") & participant_type %in% "New" ~ "Yes")
+          adni4_screen_dx_flag = case_when(COLPROT %in% "ADNI4" & VISCODE %in% "4_sc" & PTTYPE %in% "New" ~ "Yes"),
+          adni3_screen_dx_flag = case_when(COLPROT %in% "ADNI3" & VISCODE %in% "sc" & PTTYPE %in% "New" ~ "Yes"),
+          adni2_screen_dx_flag = case_when(COLPROT %in% "ADNI2" & VISCODE %in% c("v01", "v02") & PTTYPE %in% "New" ~ "Yes"),
+          adnigo_screen_dx_flag = case_when(COLPROT %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") & PTTYPE %in% "New" ~ "Yes"),
+          adni1_screen_dx_flag = case_when(COLPROT %in% "ADNI1" & VISCODE %in% c("sc", "f") & PTTYPE %in% "New" ~ "Yes")
         ) %>%
           mutate(., overall_screen_dx_flag = case_when(ORIGPROT == COLPROT &
             c(!is.na(adni4_screen_dx_flag) |
@@ -475,7 +475,7 @@ extract_blscreen_dxsum <- function(dd, phase = "Overall", visit_type = "baseline
       }
     } %>%
     verify(ORIGPROT == COLPROT) %>%
-    verify(participant_type == "New") %>%
+    verify(PTTYPE == "New") %>%
     assert(is_uniq, RID) %>%
     select(RID, ORIGPROT, COLPROT, EXAMDATE, DIAGNOSIS) %>%
     rename_with(~ paste0(prefix, ".", .x), DIAGNOSIS)
