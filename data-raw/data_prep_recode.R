@@ -63,17 +63,13 @@ if (EXISTED_DATADTIC) {
     filter(TBLNAME %in% c(tblname_list_dd$tblname)) %>%
     filter(class_type == "factor") %>%
     mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]")) %>%
-    # Required to confirm variable values representations for the following datasets:
-    # Whether "-1" is a missing value
-    mutate(excluded_fld_name = case_when(c(TBLNAME %in% c(
-      "ADAS_ADNI1", "ADNI2_OTELGTAU", "ADSXLIST", "BLCHANGE", "BLSCHECK", "FAQ",
-      "FHQ", "MRIB1CALIB", "MRIMPPRO", "MRIMPRANK","MRIPROT", "MRIQUALITY", 
-      "MRISERIAL", "NEUROBAT", "NEUROEXM", "NPIQ", "PHYSICAL", "RECCMEDS", "VITALS"
-      )) |
-      c(TBLNAME %in% "PTDEMOG" & FLDNAME %in% c("PTLANGWR6")) |
-      c(TBLNAME %in% "RECADV" & FLDNAME %in% c("AEHONGNG")) |
-      c(TBLNAME %in% "RECBLLOG" & FLDNAME %in% c("BSXCHRON", "BSXCONTD")) |
-      c(TBLNAME %in% "RECFHQ" & FLDNAME %in% c("FHQSIBAD")) ~ "Yes")) %>%
+    # Required to confirm the coded values for the following tblnames/fldnames:
+    mutate(excluded_fld_name = case_when(
+      TBLNAME %in% "RECCMEDS" |
+        c(TBLNAME %in% "MRIPROT" & FLDNAME %in% c("PASS")) |
+        c(TBLNAME %in% "PTDEMOG" & FLDNAME %in% c("PTLANGWR6")) |
+        c(TBLNAME %in% "VITALS" & FLDNAME %in% c("VSHGTSC")) ~ "Yes"
+    )) %>%
     filter(is.na(excluded_fld_name))
 
   unique_adni_phase_list <- unique(dataset_data_dict$PHASE)[!is.na(unique(dataset_data_dict$PHASE))]
@@ -95,7 +91,7 @@ if (EXISTED_DATADTIC) {
       filter(tblname %in% dataset_data_dict$TBLNAME)
 
     num_existed_tb <- nrow(existed_tblname_list)
-    
+
     for (tb in seq_len(num_existed_tb)) {
       message_note_prefix <- str_c(tb, "/", num_existed_tb, ": ")
       cur_tblname_dd <- existed_tblname_list %>% filter(row_number() == tb)

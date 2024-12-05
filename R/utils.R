@@ -838,29 +838,51 @@ data_value_replacement <- function(dd,
 
 ## Re-coding specific value (-4) as missing value ----
 #' @title Make -4 as missing value
-#' @description This function is used to replace a value as missing value
+#' @description
+#'  This function is used to replace a value as missing value.
+#'  The value '-1' will be considered as missing value only in ADNI1 phase.
 #' @param dd Data frame
 #' @param col_name Variable name
 #' @param value Value that will be considered as missing, Default: '-4'
 #' @param missing_char Missing value value, Default: NA
+#' @param phase Phase-specific value replacement, Default: NULL for all ADNI phases
 #' @return A data frame with replaced value.
 #' @rdname make_missing_value
 #' @importFrom dplyr filter
 #' @importFrom dplyr if_all
 #' @importFrom tibble as_tibble
 #' @export
-make_missing_value <- function(dd, col_name = NULL, value = "-4", missing_char = NA) {
+make_missing_value <- function(dd, col_name = NULL, value = "-1", missing_char = NA, phase = NULL) {
+  if (is.null(phase)) {
+    overall_replacement <- TRUE
+    phase <- adni_phase()
+  } else {
+    overall_replacement <- FALSE
+  }
+  rlang::arg_match(arg = phase, values = adni_phase(), multiple = TRUE)
+  phase_var <- extract_cols(dd, col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID"))
+  if (length(phase_var) > 1) stop("`phase_var` must not be more than one length")
   column_list <- extract_cols_value(dd = dd, value = value, col_name = col_name)
+
+  # To make sure '-1' as missing value only in ADNI1 phases
+  if (all(value %in% "-1" & "ADNI1" %in% phase & length(phase) > 1)) stop("`-1` must be replaced for ADNI1 phase dataset only")
 
   dd <- dd %>%
     {
       if (all(is.na(column_list))) {
         (.)
-      } else {
+      } else if (overall_replacement == TRUE) {
         mutate(., across(all_of(column_list), ~ case_when(
-          .x == value ~ missing_char,
+          .x %in% value ~ missing_char,
           TRUE ~ .x
         )))
+      } else if (overall_replacement == FALSE & !is.na(phase_var)) {
+        mutate(., across(all_of(column_list), ~ case_when(
+          !!sym(phase_var) %in% c(phase) & .x %in% value ~ missing_char,
+          TRUE ~ .x
+        )))
+      } else {
+        (.)
       }
     }
 
@@ -889,7 +911,7 @@ extract_cols_value <- function(dd, value, col_name = NULL) {
     if (nrow(temp_data) > 0) result <- col_names else result <- NA
     return(result)
   })
-  
+
   list_columns <- unlist(list_columns)
   list_columns <- list_columns[!is.na(list_columns)]
   if (!is.null(col_name)) list_columns <- list_columns[list_columns %in% col_name]
@@ -904,9 +926,9 @@ extract_cols_value <- function(dd, value, col_name = NULL) {
 #' @param col_names Column names
 #' @param strict A boolean value to apply strict checking.
 #' @param stop_message A boolean value to return a stop message if the criteria does not met.
-#' @return 
+#' @return
 #' \itemize{
-#'    \item `TRUE` if the provided column names are existed in the dataset based on the `strict` argument. 
+#'    \item `TRUE` if the provided column names are existed in the dataset based on the `strict` argument.
 #'    \item Otherwise list of column names that are not existed in the dataset `dd` or a stop message if `stop_message = TRUE`
 #'  }
 #' @examples
@@ -963,7 +985,7 @@ extract_cols <- function(dd, col_name) {
 #' @param add_stop_message Additional text message that will be added in the stop message.
 #' @param value_split A boolen value whether to split the values with specified split pattern `split_pattern`
 #' @param split_pattern Split string pattern. Only applicable if `value_split = TRUE`
-#' @return 
+#' @return
 #' \itemize{
 #'    \item `TRUE` if all the existed variable values are matched with the input values
 #'    \item `FALSE` otherwise and with a stop message if `stop_message = TRUE`
@@ -983,7 +1005,7 @@ extract_cols <- function(dd, col_name) {
 #' )
 #' }
 #' @rdname check_value_match
-check_value_match <- function(values, check_list, excluded.na = TRUE, stop_message = FALSE, 
+check_value_match <- function(values, check_list, excluded.na = TRUE, stop_message = FALSE,
                               add_stop_message = NULL, value_split = FALSE, split_pattern = "\\||:|;") {
   if (!is.logical(excluded.na)) stop("`excluded.na` must be a boolean value")
   if (!is.logical(stop_message)) stop("`stop_message` must be a boolean value")

@@ -152,8 +152,11 @@ if (UPDATE_MISSING_VALUE) {
     }
     # Replacing `-4` as missing value -----
     message("Making -4 values as missing value for ", tb)
-    dd <- make_missing_value(dd = dd, col_name = names(dd), value = "-4", missing_char = NA)
-
+    dd <- make_missing_value(dd = dd, col_name = names(dd), value = "-4", missing_char = NA, phase = NULL)
+   
+    message("Making -1 values as missing value for ", tb, " in ADNI1 phase")
+    dd <- make_missing_value(dd = dd, col_name = names(dd), value = "-1", missing_char = NA, phase = "ADNI1")
+    
     data_update_status <- use_data_modified(
       dataset_name = tb,
       dataset = dd,
@@ -357,6 +360,16 @@ if (CHECK_COMMON_COL) {
 if (exists("DATADIC") == FALSE) {
   load(data_dict_file_path)
   CREATE_UPDATED_DATADIC <- TRUE
+  # Adjust for coded values of diagnostics summary in ADNI1GO2
+  temp_DATADIC_dxsum <- tibble(
+    PHASE = c("ADNI1", "ADNI2", "ADNIGO"),
+    DATADIC %>%
+      filter(TBLNAME %in% "DXSUM" & FLDNAME %in% "DIAGNOSIS") %>%
+      filter(PHASE %in% "ADNI3") %>%
+      select(-PHASE)
+  )
+  DATADIC <- DATADIC %>%
+    bind_rows(temp_DATADIC_dxsum)
 } else {
   message("`DATADIC` is not found and UPDATED_DATADIC will not be created.")
   CREATE_UPDATED_DATADIC <- FALSE

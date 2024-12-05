@@ -102,7 +102,7 @@ adni_enrollment <- function(dd, phase = "Overall", both = FALSE) {
         COLPROT %in% "ADNI2" & VISCODE %in% "v03" &
           PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes"
       ),
-      # The screening visits in ADNIGO may be considered as their baseline visit???
+      # The screening visits in ADNIGO may be considered as their baseline visit
       adnigo_baseline_flag = case_when(
         COLPROT %in% "ADNIGO" & VISCODE %in% "bl" &
           PTTYPE %in% "New" & VISTYPE != "Not done" ~ "Yes",
