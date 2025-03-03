@@ -1,6 +1,6 @@
 # NEUROBAT Scoring Function -----
 #' @title Scoring Function for NEUROBAT Sub-Item
-#' @description This function is used to create ORIGPROT in the dataset based participant RID.
+#' @description This function is used to compute the item-level subscores in the NEUROBAT eCRF.
 #' @param dd Data frame of NEUROBAT eCRF
 #' @return A data frame the same as `dd` with the following appended columns
 #'  \itemize{
