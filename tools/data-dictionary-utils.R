@@ -1,165 +1,8 @@
-# Help Functions ----
-#' @title Function to remove NA from a character vector
-#' @description This function is used to remove missing `NA` from a character vector
-#' @param x Character vector
-#' @return Character vector
-#' @rdname remove_na
-remove_na <- function(x) {
-  return(x[!is.na(x)])
-}
-
-#' @title Function to return NULL for any missing value existed
-#' @param dd_df Data frame
-#' @param var_name Variable name
-#' @param single_value_check Checking for single unique value, Default: TRUE
-#' @return Returned `NULL` if there is any missing value in the variable, Otherwise returned unique value of the variable.
-#' @rdname return_null_missing
-return_null_missing <- function(dd_df, var_name, single_value_check = TRUE) {
-  # If the variable is existed
-  if (var_name %in% colnames(dd_df)) {
-    var_value_list <- dd_df %>%
-      select(all_of(var_name)) %>%
-      pull()
-  } else {
-    var_value_list <- NA_character_
-  }
-
-  unique_value_list <- unique(var_value_list)
-
-  if (any(is.na(unique_value_list))) {
-    return(NULL)
-  }
-
-  if (any(is.na(unique_value_list)) == FALSE) {
-    # Checking for single unique value
-    if (single_value_check == TRUE & length(unique_value_list) > 1) stop(str_c("There are more than one unique values ", var_name, " variable"))
-    return(unique_value_list)
-  }
-}
-
-#' @title Function to check the name of listed objects
-#' @description This function is used to check whether list names are a valid non-missing names
-#' @param listed_dd Listed data frame
-#' @param listed_names The named of the objects that needed to be checked, Default NULL
-#' @return Returned a stopped message if there are missing/NULL/NA names in the listed data frame. Otherwise returned `NULL`.
-#' @rdname check_list_names
-check_list_names <- function(listed_dd, listed_names = NULL) {
-  # If there are any unnamed lists
-  if (any(is.null(names(listed_dd)) | is.na(names(listed_dd)))) stop("Check the list name in listed_dd")
-
-  # To check for any missed listed names
-  if (all(is.null(listed_names))) missing_names <- NULL
-
-  if (any(!is.null(listed_names))) {
-    missing_names <- listed_names[!listed_names %in% names(listed_dd)]
-  }
-
-  if (length(missing_names) > 0) stop(str_c("Check for listed names of ", toString(missing_names)))
-
-  return(TRUE)
-}
-# Function prepare a data dictionary dataset
-#' @title Function to prepare a data dictionary dataset
-#' @description This function is used to prepare the data data dictionary for generating variable specific format list in roxygen document.
-#' @param dd A data dictionary data.frame that contains variable name, variable class type, variable label,  and associated description about its value
-#' @param field_nameVar Column name that contains all dataset variable names, Default: NULL
-#' @param field_classVar Column name that contains all variable class type, Default: NULL
-#' @param field_labelVar Column name that contains all variable labels, Default: NULL
-#' @param field_notesVar Column name that contains all variable description notes, Default: NULL
-#' @return A data.frame the same as the provided data dictionary `data_dict` with following renamed columns:
-#' \itemize{
-#'   \item{field_nameVar}{ to \strong{nameVar}}
-#'   \item{field_classVar}{ to \strong{classVar}}
-#'   \item{field_labelVar}{ to \strong{labelVar}}
-#'   \item{field_notesVar}{ to \strong{notesVar}}
-#' }
-#' @examples
-#' \dontrun{
-#' # Generate a data dictionary of a dataset
-#' temp_data_dict <- summarize_dataset(dd = ADNI4::DM, dataset_name = "DM", wider_format = TRUE)
-#' # Renamed pre-specified columns (i.e. field_nameVar, field_classVar, field_labelVar, field_notesVar)
-#' data_dict_column_names(data_dict = temp_data_dict)
-#' }
-#' @rdname data_dict_column_names
-data_dict_column_names <- function(data_dict,
-                                   field_nameVar = NULL,
-                                   field_classVar = NULL,
-                                   field_labelVar = NULL,
-                                   field_notesVar = NULL) {
-  require(tidyverse)
-
-  if (is.null(field_nameVar)) field_nameVar <- "field_name"
-  if (is.null(field_classVar)) field_classVar <- "field_class"
-  if (is.null(field_labelVar)) field_labelVar <- "field_label"
-  if (is.null(field_notesVar)) field_notesVar <- "field_notes"
-  # Combined all specified name list and corresponding renamed list
-  column_list_dd <- tibble::tibble(
-    specified_name_list = c(field_nameVar, field_classVar, field_labelVar, field_notesVar),
-    renamed_list = c("nameVar", "classVar", "labelVar", "notesVar")
-  )
-
-  return(data_dict %>%
-    mutate(across(any_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
-    rename_with(
-      ~ str_c(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
-      any_of(column_list_dd$specified_name_list)
-    ))
-}
-
-## Function that will generate roxygen files
-#' @title Function to generate variable format list
-#' @description This function is used to generate the variable format list for roxygen document.
-#' @param data_dict A data frame that contains variable name, variable class type, variable label,  and associated description about its value
-#' @param var_name Current variable name
-#' @return A free text that will be used in the roxygen document
-#' [\strong{Variable Name}] [\emph{Variable Class Type}]
-#'   [Variable Label]  [variable description details]
-#' @examples
-#' \dontrun{
-#' # Generate a data dictionary of a dataset
-#' temp_data_dict <- summarize_dataset(dd = ADNI4::DM, dataset_name = "DM", wider_format = TRUE)
-#' # Generate a variable format list
-#' generate_variable_format_list(data_dict = temp_data_dict, var_name = "TRACK")
-#' }
-#' @rdname generate_variable_description
-generate_variable_format_list <- function(data_dict,
-                                          var_name,
-                                          field_nameVar = NULL,
-                                          field_classVar = NULL,
-                                          field_labelVar = NULL,
-                                          field_notesVar = NULL) {
-  require(tidyverse)
-  require(assertr)
-
-  # function for escaping braces
-  escape <- function(x) {
-    y <- gsub("{", "\\{", x, fixed = TRUE)
-    gsub("}", "\\}", y, fixed = TRUE)
-  }
-
-  temp_dd <- data_dict_column_names(
-    data_dict = data_dict,
-    field_nameVar = field_nameVar,
-    field_classVar = field_classVar,
-    field_labelVar = field_labelVar,
-    field_notesVar = field_notesVar
-  ) %>%
-    filter(nameVar %in% var_name)
-
-  label_value <- ifelse(is.na(temp_dd$labelVar), " ", temp_dd$labelVar)
-
-  return(str_c("#' \\item ", temp_dd$nameVar, ": ",
-    " *", temp_dd$classVar, "* ",
-    escape(label_value), " ", escape(temp_dd$notesVar),
-    collapse = ""
-  ))
-}
-
 # Summary Function ----
 ## Summarize Factor Variable ----
 #' @title Summarize Factor Variable
-#' @description This function is used to summarize a factor variable from a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @description This function is used to summarize a factor variable from a data.frame. The output result that can be used to create a data dictionary file.
+#' @param data Data frame
 #' @param var_name Variable name
 #' @param wider_format Indicator whether to generate the factor level values in a wider or long format, Default: FALSE
 #' @return A data.frame that contains the following variables:
@@ -173,14 +16,19 @@ generate_variable_format_list <- function(data_dict,
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_factor_variable(dd = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
+#' summarize_factor_variable(data = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
 #' }
 #' @rdname summarize_factor_variable
-summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
+#' @importFrom dplyr select pull group_by ungroup distinct
+#' @importFrom labelled get_variable_labels
+#' @importFrom rlang arg_match0
+#' @importFrom tibble tibble
+#' @importFrom assertr verify
+summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
-  var_values <- dd %>%
+  var_values <- data %>%
     select(all_of(var_name)) %>%
     pull()
   var_label <- labelled::get_variable_labels(var_values)
@@ -189,9 +37,9 @@ summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
   # Add description for roxygen document
   var_notes <- str_c(
     "Factor variable with levels: ",
-    str_c(levels(var_values), collapse = ", ")
+    paste0(levels(var_values), collapse = ", ")
   )
-  summary_dataset <- tibble(
+  summary_result <- tibble(
     field_values = levels(var_values),
     field_values_order = seq_along(levels(var_values)),
     field_name = var_name,
@@ -213,13 +61,13 @@ summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
       }
     }
 
-  return(summary_dataset)
+  return(summary_result)
 }
 
 ## Summarize Character Variable ----
 #' @title Summarize Character Variable
-#' @description This function is used to summarize a character variable from a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @description This function is used to summarize a character variable from a data.frame. The output result can be used to create a data dictionary file.
+#' @param data Data frame
 #' @param var_name  Variable name
 #' @param wider_format Indicator whether to generate the character values in a wider or long format if there are less than 10 unique values, Default: FALSE
 #' @return A data.frame that contains the following variables:
@@ -233,36 +81,40 @@ summarize_factor_variable <- function(dd, var_name, wider_format = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_character_variable(dd = ADNIMERGE2::DM, var_name = "SEX", wider_format = FALSE)
+#' summarize_character_variable(data = ADNIMERGE2::DM, var_name = "SEX", wider_format = FALSE)
 #' }
 #' @rdname summarize_character_variable
-summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
+#' @importFrom dplyr select pull group_by ungroup distinct mutate
+#' @importFrom labelled get_variable_labels
+#' @importFrom rlang arg_match0
+#' @importFrom tibble tibble
+#' @importFrom assertr verify
+summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
-  var_values <- dd %>%
+  var_values <- data %>%
     select(all_of(var_name)) %>%
     pull()
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = "character")
   # Warning message if number of item value is more than 10
-  var_values <- remove_na(unique(var_values))
-  var_notes <- str_c("Character variable with options: ", str_c(var_values, collapse = ", "))
+  var_values <- unique(var_values)[!is.na(unique(var_values))]
+  var_notes <- paste0("Character variable with options: ", str_c(var_values, collapse = ", "))
   if (length(var_values) > 10) {
-    warning(stringr::str_c("There are more than 10 values in ", var_name, " variable"))
+    warning(paste0("There are more than 10 values in ", var_name, " variable"))
     var_values <- NA_character_
-    var_notes <- str_c(" ")
+    var_notes <- paste0(" ")
   }
 
   if (length(var_values) == 0) {
-    warning(stringr::str_c("There are none values in ", var_name, " variable"))
+    warning(paste0("There are none values in ", var_name, " variable"))
     var_values <- NA_character_
-    var_notes <- str_c(" ")
+    var_notes <- paste0(" ")
   }
 
-
-  summary_dataset <- tibble(
+  summary_result <- tibble(
     field_values = var_values,
     field_values_order = seq_along(var_values),
     field_name = var_name,
@@ -285,12 +137,12 @@ summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
       }
     }
 
-  return(summary_dataset)
+  return(summary_result)
 }
 ## Summarize Numeric Variable -----
 #' @title Summarize Numeric Variable
-#' @description This function is used to summarize a numeric variable from a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @description This function is used to summarize a numeric variable from a data.frame. The output result can be used to create a data dictionary file.
+#' @param data Data frame
 #' @param var_name Variable name
 #' @param wider_format Indicator whether to generate the minimum and maximum values in a wide or long format, Default: FALSE
 #' @return A data.frame that contains the following variables:
@@ -304,14 +156,19 @@ summarize_character_variable <- function(dd, var_name, wider_format = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_numeric_variable(dd = ADNIMERGE2::DM, var_name = "AGE", wider_format = FALSE)
+#' summarize_numeric_variable(data = ADNIMERGE2::DM, var_name = "AGE", wider_format = FALSE)
 #' }
 #' @rdname summarize_numeric_variable
-summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
+#' @importFrom dplyr select pull group_by ungroup distinct mutate
+#' @importFrom labelled get_variable_labels
+#' @importFrom rlang arg_match0
+#' @importFrom tibble tibble
+#' @importFrom assertr verify
+summarize_numeric_variable <- function(data, var_name, wider_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
-  var_values <- dd %>%
+  var_values <- data %>%
     select(all_of(var_name)) %>%
     pull()
   var_label <- labelled::get_variable_labels(var_values)
@@ -322,9 +179,9 @@ summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
   min_value <- min(var_values, na.rm = TRUE)
   max_value <- max(var_values, na.rm = TRUE)
 
-  var_notes <- str_c("Range value: ", min_value, ", ..., ", max_value)
+  var_notes <- paste0("Range value: ", min_value, ", ..., ", max_value)
 
-  summary_dataset <- tibble::tibble(
+  summary_result <- tibble::tibble(
     field_values = as.character(c(min_value, max_value)),
     summary_type = c("Min", "Max"),
     field_name = var_name, field_class = var_class_type,
@@ -347,13 +204,13 @@ summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
       }
     }
 
-  return(summary_dataset)
+  return(summary_result)
 }
 
 ## Summarize Date/Time Variable -----
 #' @title Summarize Date/Time Variable
-#' @description This function is used to summarize a date/time variable from a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @description This function is used to summarize a date/time variable from a data.frame. The output result can be used to create a data dictionary file.
+#' @param data Data frame
 #' @param var_name Variable name
 #' @return A data.frame that contains the following variables:
 #' \itemize{
@@ -365,17 +222,23 @@ summarize_numeric_variable <- function(dd, var_name, wider_format = FALSE) {
 #' @examples
 #' \dontrun{
 #' summarize_date_variable(
-#'   dd = ADNIMERGE2::DM %>%
+#'   data = ADNIMERGE2::DM %>%
 #'     mutate(RFSTDTC = as.Date(RFSTDTC)),
 #'   var_name = "RFSTDTC"
 #' )
 #' }
 #' @rdname summarize_date_variable
-summarize_date_variable <- function(dd, var_name) {
+#' @importFrom dplyr select pull
+#' @importFrom labelled get_variable_labels
+#' @importFrom rlang arg_match
+#' @importFrom tibble tibble
+#' @importFrom assertr verify
+summarize_date_variable <- function(data, var_name) {
   require(tidyverse)
   require(labelled)
   require(assertr)
-  var_values <- dd %>%
+  require(tibble)
+  var_values <- data %>%
     select(all_of(var_name)) %>%
     pull()
 
@@ -387,11 +250,11 @@ summarize_date_variable <- function(dd, var_name) {
     values = c("Date", "POSIXct", "POSIXt", "hms", "difftime"),
     multiple = TRUE
   )
-  if ("Date" %in% var_class_type) var_notes <- str_c("Date: YYY-MM-DD")
-  if (any(c("POSIXct", "POSIXt") %in% var_class_type)) var_notes <- str_c("POSIXct: YYY-MM-DD")
-  if (any(c("hms", "difftime") %in% var_class_type)) var_notes <- str_c("hms: HH-MM-SS")
+  if ("Date" %in% var_class_type) var_notes <- paste0("Date: YYY-MM-DD")
+  if (any(c("POSIXct", "POSIXt") %in% var_class_type)) var_notes <- paste0("POSIXct: YYY-MM-DD")
+  if (any(c("hms", "difftime") %in% var_class_type)) var_notes <- paste0("hms: HH-MM-SS")
 
-  summary_dataset <- tibble::tibble(
+  summary_result <- tibble(
     field_name = var_name,
     field_class = var_class_type[1],
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
@@ -400,13 +263,13 @@ summarize_date_variable <- function(dd, var_name) {
     select(field_name, field_class, field_label, field_notes) %>%
     verify(nrow(.) == 1)
 
-  return(summary_dataset)
+  return(summary_result)
 }
 
 ## Summarize Logical Variable -----
 #' @title Summarize Logical Variable
-#' @description This function is used to summarize a logical variable from a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @description This function is used to summarize a logical variable from a data.frame. The output result can be used to create a data dictionary file.
+#' @param data Data frame
 #' @param var_name Variable name
 #' @return A data.frame that contains the following variables:
 #' \itemize{
@@ -418,7 +281,7 @@ summarize_date_variable <- function(dd, var_name) {
 #' @examples
 #' \dontrun{
 #' summarize_logical_variable(
-#'   dd = ADNIMERGE2::DM %>%
+#'   data = ADNIMERGE2::DM %>%
 #'     mutate(DTHFL = case_when(
 #'       DTHFL %in% "Yes" ~ TRUE
 #'     )),
@@ -426,18 +289,24 @@ summarize_date_variable <- function(dd, var_name) {
 #' )
 #' }
 #' @rdname summarize_logical_variable
-summarize_logical_variable <- function(dd, var_name) {
+#' @importFrom dplyr select pull
+#' @importFrom labelled get_variable_labels
+#' @importFrom rlang arg_match0
+#' @importFrom tibble tibble
+#' @importFrom assertr verify
+summarize_logical_variable <- function(data, var_name) {
   require(tidyverse)
   require(labelled)
   require(assertr)
-  var_values <- dd %>%
+  require(tibble)
+  var_values <- data %>%
     select(all_of(var_name)) %>%
     pull()
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = c("logical"))
-  var_notes <- str_c("Boolean value: TRUE, FALSE or NA")
-  summary_dataset <- tibble::tibble(
+  var_notes <- paste0("Boolean value: TRUE, FALSE or NA")
+  summary_result <- tibble(
     field_values = str_c("TRUE or FALSE"),
     field_values_order = NA_real_,
     field_name = var_name,
@@ -445,20 +314,16 @@ summarize_logical_variable <- function(dd, var_name) {
     field_label = ifelse(is.null(var_label), NA_character_, var_label),
     field_notes = var_notes
   ) %>%
-    select(
-      field_name, field_class, field_label, field_values_order, field_values,
-      field_notes
-    ) %>%
+    select(field_name, field_class, field_label, field_values_order, field_values, field_notes) %>%
     verify(nrow(.) == 1)
 
-
-  return(summary_dataset)
+  return(summary_result)
 }
 
 ## Summarize A Single Variable ----
 #' @title Summarize A Single Variable
-#' @description This function is used to summarize a single variable from a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @description This function is used to summarize a single variable from a data.frame. The output result can be used to create a data dictionary file.
+#' @param data Data frame
 #' @param var_name Variable name
 #' @param wider_format A boolean value to generate the minimum and maximum values in a wide or long format, Default: FALSE
 #' @return A data.frame that contains the at least the following variables:
@@ -470,30 +335,34 @@ summarize_logical_variable <- function(dd, var_name) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_variable(dd = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
+#' summarize_variable(data = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
 #' }
 #' @rdname summarize_variable
 #' @seealso \code{\link{summarize_dataset}}
+#' @importFrom rlang arg_match
+#' @importFrom assertr verify
+#' @importFrom dplyr select
+#' @importFrom tidyselect all_of
 #' @export
-summarize_variable <- function(dd, var_name, wider_format = FALSE) {
+summarize_variable <- function(data, var_name, wider_format = FALSE) {
   require(tidyverse)
   require(assertr)
-
-  dd <- dd %>% select(all_of(var_name))
+  require(rlang)
+  data <- data %>% select(all_of(var_name))
   # Variable class type
-  var_class_type <- class(dd %>% pull())
+  var_class_type <- class(data %>% pull())
   specified_class_type <- c(
     "factor", "character", "numeric", "double", "integer",
     "Date", "POSIXct", "POSIXt", "hms", "difftime", "logical"
   )
-  rlang::arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
-  if (any(var_class_type %in% specified_class_type[1])) summary_dd <- summarize_factor_variable(dd = dd, var_name = var_name, wider_format = wider_format)
-  if (any(var_class_type %in% specified_class_type[2])) summary_dd <- summarize_character_variable(dd = dd, var_name = var_name, wider_format = wider_format) 
-  if (any(var_class_type %in% specified_class_type[3:5])) summary_dd <- summarize_numeric_variable(dd = dd, var_name = var_name, wider_format = wider_format)
-  if (any(var_class_type %in% specified_class_type[6:10])) summary_dd <- summarize_date_variable(dd = dd, var_name = var_name)
-  if (any(var_class_type %in% specified_class_type[11])) summary_dd <- summarize_logical_variable(dd = dd, var_name = var_name)
+  arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
+  if (any(var_class_type %in% specified_class_type[1])) summary_result <- summarize_factor_variable(data = data, var_name = var_name, wider_format = wider_format)
+  if (any(var_class_type %in% specified_class_type[2])) summary_result <- summarize_character_variable(data = data, var_name = var_name, wider_format = wider_format)
+  if (any(var_class_type %in% specified_class_type[3:5])) summary_result <- summarize_numeric_variable(data = data, var_name = var_name, wider_format = wider_format)
+  if (any(var_class_type %in% specified_class_type[6:10])) summary_result <- summarize_date_variable(data = data, var_name = var_name)
+  if (any(var_class_type %in% specified_class_type[11])) summary_result <- summarize_logical_variable(data = data, var_name = var_name)
 
-  summary_dd <- summary_dd %>%
+  summary_result <- summary_result %>%
     {
       if (wider_format == TRUE) {
         verify(., nrow(.) == 1)
@@ -502,13 +371,13 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
       }
     }
 
-  return(summary_dd)
+  return(summary_result)
 }
 
 ## Summarize A Dataset ----
 #' @title Function to summarize all the variables of a dataset
 #' @description This function is used to summarize a data.frame that could be used to generate a data dictionary file.
-#' @param dd Data frame
+#' @param data Data frame
 #' @param dataset_name Dataset label, Default: NULL
 #' @param wider_format Indicator whether to generate result in a wide or long format, Default: FALSE
 #' @return A data.frame that contains the at least the following variables:
@@ -521,22 +390,23 @@ summarize_variable <- function(dd, var_name, wider_format = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' summarize_variable(dd = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
+#' summarize_variable(data = ADNIMERGE2::DM, var_name = "ORIGPROT", wider_format = FALSE)
 #' }
 #' @rdname summarize_variable
 #' @seealso \code{\link{summarize_variable}}
+#' @importFrom dplyr bind_rows mutate relocate select
 #' @export
-summarize_dataset <- function(dd, dataset_name = NULL, wider_format = FALSE) {
+summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
   require(tidyverse)
   if (is.null(dataset_name)) tbl_name <- "TEMP_TBL" else tbl_name <- dataset_name
-  data_dict_dd <- lapply(colnames(dd), function(x) {
-    summarize_variable(dd = dd, var_name = x, wider_format = wider_format)
+  data_dict_dd <- lapply(colnames(data), function(x) {
+    summarize_variable(data = data, var_name = x, wider_format = wider_format)
   }) %>%
     bind_rows() %>%
     mutate(
       dd_name = tbl_name,
-      num_rows = nrow(dd),
-      num_cols = ncol(dd)
+      num_rows = nrow(data),
+      num_cols = ncol(data)
     ) %>%
     relocate(dd_name, num_rows, num_cols) %>%
     {
@@ -547,7 +417,7 @@ summarize_dataset <- function(dd, dataset_name = NULL, wider_format = FALSE) {
       }
     }
 
-  if (wider_format == TRUE && nrow(data_dict_dd) != length(colnames(dd))) stop("Check for the number of rows in data_dict_dd")
+  if (wider_format == TRUE && nrow(data_dict_dd) != length(colnames(data))) stop("Check for the number of rows in data_dict_dd")
 
   return(data_dict_dd)
 }
@@ -556,7 +426,7 @@ summarize_dataset <- function(dd, dataset_name = NULL, wider_format = FALSE) {
 ## Generate roxygen document for a single dataset ----
 #' @title Function to generate roxygen document for a single dataset
 #' @description This function is used to generate roxygen document for a single dataset or based on pre specified data dictionary dataset.
-#' @param dd Data frame of actual values
+#' @param data Data frame of actual values
 #' @param data_dict Prepared data dictionary dataset, Default: NULL
 #' @param dataset_name Dataset name
 #' @param dataset_label Dataset label, Default: NULL
@@ -577,30 +447,27 @@ summarize_dataset <- function(dd, dataset_name = NULL, wider_format = FALSE) {
 #' @examples
 #' \dontrun{
 #' # Generate a data dictionary of a dataset
-#' temp_data_dict <- summarize_dataset(dd = ADNI4::DM, dataset_name = "DM", wider_format = TRUE) %>%
+#' temp_data_dict <- summarize_dataset(dd = ADNIMERGE2::DM, dataset_name = "DM", wider_format = TRUE) %>%
 #'   mutate(dataset_name = "DM", dataset_source_type = "derived")
 #' generate_single_dataset_roxygen(data_dict = temp_data_dict)
 #' }
-#' @rdname generate_single_dataset_roxygen
-generate_single_dataset_roxygen <- function(dd = NULL,
-                                            data_dict = NULL,
-                                            field_nameVar = NULL, #
-                                            field_classVar = NULL, #
-                                            field_labelVar = NULL, #
-                                            field_notesVar = NULL, #
-                                            dataset_name,
-                                            dataset_label = NULL,
-                                            dataset_source_type = "raw",
-                                            short_description = NULL,
-                                            add_source = NULL,
-                                            add_seealso = NULL,
-                                            add_authors = NULL,
-                                            add_reference = NULL,
-                                            add_rdname_prefix = NULL,
+#' @rdname generate_roxygen_single_dataset
+#' @importFrom rlang arg_match
+#' @importFrom stringr str_to_upper str_c str_remove_all
+#' @importFrom dplyr select distinct
+#' @importFrom tibble tibble
+#' @importFrom readr write_lines
+generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, data = NULL, data_dict = NULL,
+                                            dataset_source_type = "raw", short_description = NULL,
+                                            field_nameVar = NULL, field_classVar = NULL, field_labelVar = NULL, field_notesVar = NULL,
+                                            add_source = NULL, add_seealso = NULL, add_authors = NULL, add_reference = NULL, add_rdname_prefix = NULL,
                                             output_file_name = NULL) {
-  library(tidyverse)
+  require(tidyverse)
+  require(tibble)
+  require(rlang)
 
-  rlang::arg_match(dataset_source_type,
+  arg_match(
+    arg = dataset_source_type,
     values = c("raw", "derived", "external"),
     multiple = TRUE
   )
@@ -612,13 +479,14 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 
   # Prepared a data dictionary if there is no pre-specified data dictionary daset
   ## i.e. based on the actual values dataset
-  if (!is.null(dd)) {
+  if (!is.null(data)) {
     # Summarized a dataset
-    temp_summarized_dd <- summarize_dataset(dd = dd, dataset_name = dataset_name, wider_format = TRUE) %>%
-      select(
-        dd_name, field_name, field_class, field_label, field_notes,
-        num_rows, num_cols
-      ) %>%
+    temp_summarized_dd <- summarize_dataset(
+      data = data,
+      dataset_name = dataset_name,
+      wider_format = TRUE
+    ) %>%
+      select(dd_name, field_name, field_class, field_label, field_notes, num_rows, num_cols) %>%
       distinct()
 
     # Checking for a single dataset name
@@ -632,7 +500,7 @@ generate_single_dataset_roxygen <- function(dd = NULL,
   }
 
   # Generate the document based on pre-specified data dictionary dataset
-  if (is.null(dd)) {
+  if (is.null(data)) {
     if (any(!c("num_rows", "num_cols") %in% colnames(data_dict))) stop("num_rows and num_cols are noted included in the data_dict")
 
     temp_summarized_dd <- data_dict_column_names(
@@ -666,7 +534,7 @@ generate_single_dataset_roxygen <- function(dd = NULL,
     "#' \\itemize{\n",
     str_c(
       unlist(lapply(temp_summarized_dd$nameVar, function(x) {
-        generate_variable_format_list(
+        generate_variable_format(
           data_dict = temp_summarized_dd, var_name = x,
           field_nameVar = "nameVar", field_classVar = "classVar",
           field_labelVar = "labelVar", field_notesVar = "notesVar"
@@ -709,9 +577,10 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 
   data_doc <- str_c(data_doc, str_c('"', dataset_name, '"\n'), "\n", collapse = "")
 
+  if (is.na(data_doc)) stop("`data_doc` is missing and roxygen document is not prepared for ", dataset_name, " dataset")
   # To write in in A file
   if (is.null(output_file_name)) {
-    return(tibble::tibble(
+    return(tibble(
       data_doc = data_doc,
       dataset_name = dataset_name
     ))
@@ -729,9 +598,9 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 #' @description This function is used to generate roxygen document for multiple datasets.
 #' @param dataset_name_list Vector of datasets name
 #' @param roxygen_source_type Indicator to generate the roxygen document either directly from actual dataset (`actual_dataset`) or prepared data dictionary dataset (`data_dictionary`). Default: actual_dataset
-#' @param dd Listed objects of a single actual dataset or multiple actual datasets. Default: NULL
+#' @param data_list Listed objects of a single actual dataset or multiple actual datasets. Default: NULL
 #' @param data_dict Prepared data dictionary dataset. Default: NULL
-#' @param ... Other parameters from generate_single_dataset_document and cat() function
+#' @param ... Other parameters from \code{\link{generate_roxygen_single_dataset}} and \code{\link{cat}} function
 #' @param output_file_name Output file name. Should other than `NULL` if the interest is to store the result in local environment.
 #' @param existed_append A boolen value that indicate whether to overwrite on an existed `output_file_name` files. Only applicable if a file path is provided to `output_file_name`.
 #' @return
@@ -739,7 +608,7 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 #'   \item{A data.frame of two columns: data_doc and dataset_name if output_file_name is `NULL`}
 #'   \item{Otherwise stored the roxygen document in local directory with the specified file path: `output_file_name`}
 #'  }
-#' @seealso \code{\link{generate_single_dataset_roxygen}} \code{\link{cat}}
+#' @seealso \code{\link{generate_roxygen_single_dataset}} \code{\link{cat}}
 #' @examples
 #' \dontrun{
 #' # Data preparation to generate the roxygen document directly from datasets
@@ -747,22 +616,21 @@ generate_single_dataset_roxygen <- function(dd = NULL,
 #' temp_listed_dd[[1]] <- list(dd = ADNIMERGE2::DM, dataset_source_type = "derived")
 #' temp_listed_dd[[2]] <- list(dd = ADNIMERGE2::AE, dataset_source_type = "derived")
 #' names(temp_listed_dd) <- c("DM", "TK")
-#' generate_roxygen_document(dd = temp_listed_dd, roxygen_source_type = "actual_dataset")
+#' generate_roxygen_document(data_list = temp_listed_dd, roxygen_source_type = "actual_dataset")
 #' }
 #' @export
 #' @rdname generate_roxygen_document
-generate_roxygen_document <- function(dataset_name_list,
-                                      roxygen_source_type = "actual_dataset",
-                                      dd = NULL,
-                                      data_dict = NULL,
-                                      field_nameVar = NULL,
-                                      field_classVar = NULL,
-                                      field_labelVar = NULL,
-                                      field_notesVar = NULL,
-                                      output_file_name = NULL,
-                                      existed_append = FALSE) {
+#' @importFrom rlang arg_match0 arg_match
+#' @importFrom purrr pluck
+#' @importFrom stringr str_to_upper str_c str_remove_all
+#' @importFrom dplyr filter bind_rows select
+#' @importFrom readr write_lines
+generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "actual_dataset", data_list = NULL, data_dict = NULL,
+                                      field_nameVar = NULL, field_classVar = NULL, field_labelVar = NULL, field_notesVar = NULL,
+                                      output_file_name = NULL, existed_append = FALSE) {
   require(tidyverse)
-  rlang::arg_match0(arg = roxygen_source_type, values = c("actual_dataset", "data_dictionary"))
+  require(rlang)
+  arg_match0(arg = roxygen_source_type, values = c("actual_dataset", "data_dictionary"))
 
   if (is.null(field_nameVar)) field_nameVar <- "field_name"
   if (is.null(field_classVar)) field_classVar <- "field_class"
@@ -772,10 +640,10 @@ generate_roxygen_document <- function(dataset_name_list,
 
   # CASE I: when actual datasets are only provided
   if (roxygen_source_type %in% "actual_dataset") {
-    if (is.null(dd)) stop("Check for the actual dataset")
-    if (!is.list(dd)) stop("dd should be a list dataset with names")
+    if (is.null(data_list)) stop("Check for the actual dataset")
+    if (!is.list(data_list)) stop("dd should be a list dataset with names")
     # Checking for listed dataset names
-    check_list_names(dd, listed_names = dataset_name_list)
+    check_list_names(data_list = data_list, list_names = dataset_name_list)
   }
 
   if (roxygen_source_type %in% "data_dictionary") {
@@ -800,15 +668,14 @@ generate_roxygen_document <- function(dataset_name_list,
     }
   }
 
-
   output_result <- lapply(dataset_name_list, function(dataset_name) {
     if (roxygen_source_type %in% "actual_dataset") {
-      temp_dd <- dd %>%
+      temp_dd <- data_list %>%
         pluck(., dataset_name) %>%
         pluck(., "dd")
       field_nameVar <- field_classVar <- field_labelVar <- field_notesVar <- NULL
       temp_data_dict <- NULL
-      temp_dataset_source_type <- dd %>%
+      temp_dataset_source_type <- data_list %>%
         pluck(., dataset_name) %>%
         pluck(., "dataset_source_type")
     }
@@ -818,30 +685,29 @@ generate_roxygen_document <- function(dataset_name_list,
       temp_data_dict <- data_dict %>%
         filter(dd_name %in% dataset_name)
       temp_dataset_source_type <- return_null_missing(
-        dd_df = temp_data_dict,
+        data = temp_data_dict,
         var_name = "dataset_source_type"
       )
     }
 
-    temp_single_dd <- generate_single_dataset_roxygen(
+    temp_single_dd <- generate_roxygen_single_dataset(
       dataset_name = dataset_name,
-      dd = temp_dd,
+      data = temp_dd,
       data_dict = temp_data_dict,
       field_nameVar = field_nameVar,
       field_classVar = field_classVar,
       field_labelVar = field_labelVar,
       field_notesVar = field_notesVar,
-      dataset_label = return_null_missing(dd_df = temp_data_dict, var_name = "dataset_label"),
+      dataset_label = return_null_missing(data = temp_data_dict, var_name = "dataset_label"),
       dataset_source_type = temp_dataset_source_type,
-      short_description = return_null_missing(dd_df = temp_data_dict, var_name = "short_description"),
-      add_source = return_null_missing(dd_df = temp_data_dict, var_name = "add_source"),
-      add_seealso = return_null_missing(dd_df = temp_data_dict, var_name = "add_seealso"),
-      add_authors = return_null_missing(dd_df = temp_data_dict, var_name = "add_authors"),
-      add_reference = return_null_missing(dd_df = temp_data_dict, var_name = "add_reference"),
-      add_rdname_prefix = return_null_missing(dd_df = temp_data_dict, var_name = "add_rdname_prefix"),
+      short_description = return_null_missing(data = temp_data_dict, var_name = "short_description"),
+      add_source = return_null_missing(data = temp_data_dict, var_name = "add_source"),
+      add_seealso = return_null_missing(data = temp_data_dict, var_name = "add_seealso"),
+      add_authors = return_null_missing(data = temp_data_dict, var_name = "add_authors"),
+      add_reference = return_null_missing(data = temp_data_dict, var_name = "add_reference"),
+      add_rdname_prefix = return_null_missing(data = temp_data_dict, var_name = "add_rdname_prefix"),
       output_file_name = NULL
     )
-
     return(temp_single_dd)
   }) %>%
     bind_rows() %>%
@@ -855,8 +721,161 @@ generate_roxygen_document <- function(dataset_name_list,
     if (file.exists(output_file_name) == TRUE) {
       if (existed_append == FALSE) readr::write_lines(x = "", output_file_name)
     }
-    cat(str_c(output_result$data_doc, collapse = "\n"),
-      file = output_file_name, append = TRUE
-    )
+    output_scripts <- paste0(output_result$data_doc, collapse = "\n")
+    if (is.na(output_scripts)) stop(output_file_name, " has not been updated.")
+    cat(output_scripts, file = output_file_name, append = TRUE)
   }
+}
+
+# Additional Utils Functions ----
+## Return `NULL` for missing values -----
+#' @title Function to return `NULL` for missing value
+#' @description This function is used to return `NULL` if the provided column contains any missing values.
+#' @param data Data frame
+#' @param var_name Variable name
+#' @param single_value_check Checking for single unique value, Default: TRUE
+#' @return Returned `NULL` if there is any missing value in the variable, Otherwise returned unique value of the variable.
+#' @rdname return_null_missing
+#' @importFrom dplyr select pull
+return_null_missing <- function(data, var_name, single_value_check = TRUE) {
+  # If the variable is existed
+  if (var_name %in% colnames(data)) {
+    var_value_list <- data %>%
+      select(all_of(var_name)) %>%
+      pull()
+  } else {
+    var_value_list <- NA_character_
+  }
+
+  unique_value_list <- unique(var_value_list)
+
+  if (any(is.na(unique_value_list))) {
+    return(NULL)
+  }
+
+  if (any(is.na(unique_value_list)) == FALSE) {
+    if (single_value_check == TRUE & length(unique_value_list) > 1) {
+      stop(paste0("There are more than one unique values ", var_name, " variable."))
+    }
+    return(unique_value_list)
+  }
+}
+
+## Checks name of list objects -----
+#' @title Function to check the name of listed objects
+#' @description This function is used to check whether list names are a valid non-missing names
+#' @param data_list List data frame
+#' @param list_names A character vector of list object names that will be checked, Default NULL
+#' @return A stop message if there are missing/NULL/NA names in the list data.frame. Otherwise returns `TRUE`.
+#' @rdname check_list_names
+check_list_names <- function(data_list, list_names = NULL) {
+  # If there are any unnamed lists
+  if (any(is.null(names(data_list)) | is.na(names(data_list)))) stop("Check the unnamed lists of `listed_dd`")
+
+  # To check for any missed listed names
+  if (all(is.null(list_names))) missing_names <- NULL
+
+  if (any(!is.null(list_names))) {
+    missing_names <- list_names[!list_names %in% names(data_list)]
+  }
+
+  if (length(missing_names) > 0) {
+    stop(paste0("Check for listed names of ", toString(missing_names)))
+  }
+
+  return(TRUE)
+}
+
+## Prepare a data dictionary dataset ----
+#' @title Function to prepare a data dictionary dataset
+#' @description This function is used to prepare the data data dictionary for generating variable specific format list in roxygen document.
+#' @param data_dict A data dictionary data.frame that contains variable name, variable class type, variable label,  and associated description about its value
+#' @param field_nameVar Column name that contains all dataset variable names, Default: NULL
+#' @param field_classVar Column name that contains all variable class type, Default: NULL
+#' @param field_labelVar Column name that contains all variable labels, Default: NULL
+#' @param field_notesVar Column name that contains all variable description notes, Default: NULL
+#' @return A data.frame the same as the provided data dictionary `data_dict` with following renamed columns:
+#' \itemize{
+#'   \item{field_nameVar}{ to \strong{nameVar}}
+#'   \item{field_classVar}{ to \strong{classVar}}
+#'   \item{field_labelVar}{ to \strong{labelVar}}
+#'   \item{field_notesVar}{ to \strong{notesVar}}
+#' }
+#' @examples
+#' \dontrun{
+#' # Generate a data dictionary of a dataset
+#' temp_data_dict <- summarize_dataset(data = ADNIMERGE2::DM, dataset_name = "DM", wider_format = TRUE)
+#' # Renamed pre-specified columns (i.e. field_nameVar, field_classVar, field_labelVar, field_notesVar)
+#' data_dict_column_names(data_dict = temp_data_dict)
+#' }
+#' @rdname data_dict_column_names
+#' @importFrom tibble tibble
+#' @importFrom dplyr mutate rename_with across
+#' @importFrom tidyselect any_of
+data_dict_column_names <- function(data_dict, field_nameVar = NULL, field_classVar = NULL, field_labelVar = NULL, field_notesVar = NULL) {
+  require(tidyverse)
+  require(tibble)
+  if (is.null(field_nameVar)) field_nameVar <- "field_name"
+  if (is.null(field_classVar)) field_classVar <- "field_class"
+  if (is.null(field_labelVar)) field_labelVar <- "field_label"
+  if (is.null(field_notesVar)) field_notesVar <- "field_notes"
+  # Combined all specified name list and corresponding renamed list
+  column_list_dd <- tibble(
+    specified_name_list = c(field_nameVar, field_classVar, field_labelVar, field_notesVar),
+    renamed_list = c("nameVar", "classVar", "labelVar", "notesVar")
+  )
+
+  return(data_dict %>%
+    mutate(across(any_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
+    rename_with(
+      ~ paste0(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
+      any_of(column_list_dd$specified_name_list)
+    ))
+}
+## Adjust variable format in roxygen files -----
+#' @title Function to generate variable format list
+#' @description This function is used to generate the variable format list for roxygen document.
+#' @param data_dict A data frame that contains variable name, variable class type, variable label,  and associated description about its value
+#' @param var_name Current variable name
+#' @return A free text that will be used in the roxygen document
+#' [\strong{Variable Name}] [\emph{Variable Class Type}]
+#'   [Variable Label]  [variable description details]
+#' @examples
+#' \dontrun{
+#' # Generate a data dictionary of a dataset
+#' temp_data_dict <- summarize_dataset(data = ADNIMERGE2::DM, dataset_name = "DM", wider_format = TRUE)
+#' # Generate a variable format list
+#' generate_variable_format_list(data_dict = temp_data_dict, var_name = "TRACK")
+#' }
+#' @rdname generate_variable_format
+#' @importFrom dplyr filter
+generate_variable_format <- function(data_dict, var_name, field_nameVar = NULL, field_classVar = NULL,
+                                     field_labelVar = NULL, field_notesVar = NULL) {
+  require(tidyverse)
+
+  # function for escaping braces
+  escape <- function(x) {
+    y <- gsub("{", "\\{", x, fixed = TRUE)
+    gsub("}", "\\}", y, fixed = TRUE)
+  }
+
+  temp_dd <- data_dict_column_names(
+    data_dict = data_dict,
+    field_nameVar = field_nameVar,
+    field_classVar = field_classVar,
+    field_labelVar = field_labelVar,
+    field_notesVar = field_notesVar
+  ) %>%
+    filter(nameVar %in% var_name)
+
+  label_value <- ifelse(is.na(temp_dd$labelVar), " ", temp_dd$labelVar)
+  note_value <- ifelse(is.na(temp_dd$notesVar), " ", temp_dd$notesVar)
+  if (is.na(temp_dd$classVar)) stop("Variable class of `", var_name, "` must not be missing.")
+  if (is.na(temp_dd$nameVar)) stop("Variable name of `", var_name, "` must not be missing.")
+
+  return(paste0("#' \\item ", temp_dd$nameVar, ": ",
+    " *", temp_dd$classVar, "* ",
+    escape(label_value), " ", escape(note_value),
+    collapse = ""
+  ))
 }
