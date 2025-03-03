@@ -641,6 +641,7 @@ convert_collect_values <- function(coded_values, tbl_name = NULL) {
 #' @rdname convert_phase_specific
 #' @importFrom purrr pluck
 #' @importFrom dplyr mutate relocate bind_rows group_by ungroup
+#' @importFrom tidyselect everything
 #' @importFrom tidyr nest
 convert_phase_specific <- function(coded_values) {
   PHASE <- CODES <- NULL
@@ -820,7 +821,7 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with
 #' @importFrom tidyselect all_of
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_detect str_c str_extract str_remove_all
 phase_specific_value_replacement <- function(data, fld_name, phase = NULL, phaseVar = "PHASE", code, decode) {
   phase_var <- NULL
   if (is.null(phase)) {
@@ -831,7 +832,7 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL, phase
     )
   }
 
-  rlang::arg_match(arg = phaseVar, values = names(dd))
+  rlang::arg_match(arg = phaseVar, values = names(data))
 
   data <- data %>%
     rename_with(~ paste0("phase_var"), all_of(phaseVar)) %>%
@@ -862,25 +863,15 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL, phase
     }
     split_pattern <- split_pattern[!split_pattern %in% ""]
   }
-  # if (all(is.na(data_values))) {
-  #  concat_values <- FALSE
-  # } else {
-  #  concat_values <- str_detect(string = data_values, pattern = split_pattern)
-  #}
-
-  # if (!any(concat_values)) {
     check_value_match(
       values = data_values,
       check_list = decode,
       stop_message = TRUE,
       excluded.na = TRUE,
-      add_stop_message = paste0(" in ", fld_name, " for study phase ", phase),
+      add_stop_message = str_c(" in ", fld_name, " for study phase ", phase),
       value_split = TRUE,
       split_pattern = str_c(split_pattern, collapse = "|")
     )
-  # } else {
-  #  warning("Coded values are not checked since they are concatenated: ", fld_name, " variable, in ", phase, " phase")
-  # }
 
   # Bind with previous dataset
   output_data <- bind_rows(

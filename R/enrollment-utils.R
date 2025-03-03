@@ -286,7 +286,7 @@ extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- DIAGNOSIS <- NULL
   overall_baseline_dx_flag <- overall_screen_dx_flag <- PTTYPE <- NULL
   arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
-  arg_match0(arg = visit_type, value = c("baseline", "screen"))
+  arg_match0(arg = visit_type, values = c("baseline", "screen"))
   col_name_list <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "EXAMDATE", "DIAGNOSIS")
   check_colnames(
     data = data_dxsum,
