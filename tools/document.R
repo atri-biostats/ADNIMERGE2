@@ -205,6 +205,7 @@ temp_data_dict <- temp_data_dict %>%
       !is.na(field_label) ~ field_label
     )
   ) %>%
+  mutate(across(c(field_label, field_notes, field_value), ~ str_replace_all(.x, "\\%", "\\\\%"))) %>%
   mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with")) %>%
   mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")) %>%
   select(
@@ -248,7 +249,7 @@ temp_data_dict <- temp_data_dict %>%
     }
   } %>%
   mutate(field_notes = case_when(
-    CODED %in% "Yes" ~ str_c(field_notes, "\n#' \\emph{Decoded Value: }Yes"),
+    CODED %in% "Yes" ~ str_c(field_notes, "\n#' \\emph{Decoded Value: }\\strong{Yes}"),
     TRUE ~ field_notes
   ))
 
@@ -281,6 +282,7 @@ cat("#' ADNI data download date",
   "#' @keywords datasets",
   "#' @name DATA_DOWNLOADED_DATE",
   "#' @usage data(DATA_DOWNLOADED_DATE)",
+  "#' @family raw_dataset",
   "#' @format A `Date` class object.",
   "#' @examples",
   "#' \\dontrun{",
@@ -304,8 +306,8 @@ if (exists("derived_data_list")) {
     )
     output_link <- c()
     for (i in seq_len(length(vignette_link))) {
-      temp_vignette_link <- paste0("vignette(topic = '", vignette_link[i], "', package = 'ADNIMERGE2')")
-      output_link[i] <- paste0("For more details see the help vignette: \\code{", temp_vignette_link, "}")
+      temp_vignette_link <- paste0("\\code{vignette(topic = '", vignette_link[i], "', package = 'ADNIMERGE2')}")
+      output_link[i] <- paste0("For more details see the help vignette: \n#' ", temp_vignette_link)
     }
     return(output_link)
   }
@@ -357,6 +359,7 @@ if (exists("derived_data_list")) {
         TRUE ~ paste0(TEXT, "; ", field_notes)
       )
     ) %>%
+    mutate(across(c(field_label, field_notes, field_values), ~ str_replace_all(.x, "\\%", "\\\\%"))) %>%
     mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with character")) %>%
     mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")) %>%
     select(
@@ -388,10 +391,11 @@ if (exists("derived_data_list")) {
     "#' @keywords metadata specs derived",
     "#' @name METACORES",
     "#' @usage data(METACORES)",
-    "#' @format A R6-class wrapper object created using \\code{\\link[metacore]{metacore}} function from \\emph{metacore} R pacakge.",
+    "#' @family derived_dataset",
+    "#' @format A R6-class wrapper object created using [metacore::metacore()] function.",
     paste0(
-      "#' @source For more details about the metadata-specs see the help vignette: ",
-      "\\code{(vignette(topic = 'ADNIMERGE2-Analysis-Meta-Specs', package = 'ADNIMERGE2')}."
+      "#' @source For more details about the metadata-specs see the help vignette: \n",
+      "#' \\code{vignette(topic = 'ADNIMERGE2-Analysis-Meta-Specs', package = 'ADNIMERGE2')}."
     ),
     "#' @examples",
     "#' \\dontrun{",

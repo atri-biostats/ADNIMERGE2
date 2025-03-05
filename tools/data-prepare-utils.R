@@ -220,7 +220,9 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 
   csv_data_list <- lapply(file_list, function(x) {
     message("Importing ", x, " dataset")
-    readr::read_csv(file = file.path(input_dir, x), col_names = TRUE)
+    readr::read_csv(file = file.path(input_dir, x), 
+                    col_names = TRUE, 
+                    show_col_types = FALSE)
   })
   names(csv_data_list) <- str_remove_all(file_list, pattern = file_extension)
 
