@@ -9,7 +9,7 @@
 #' adni_study_phase <- adni_phase()
 #' adni_study_phase
 #' }
-#' @family ADNI study protocol/phase
+#' @family adni_fun_procotol
 #' @export
 adni_phase <- function() {
   return(c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4"))
@@ -27,7 +27,7 @@ adni_phase <- function() {
 #' origprot
 #' }
 #' @keywords ADNI study protocol
-#' @family ADNI study protocol/phase
+#' @family adni_fun_procotol
 #' @rdname original_study_protocol
 #' @importFrom dplyr case_when
 #' @export
@@ -53,7 +53,7 @@ original_study_protocol <- function(RID) {
 #' phase_order_num
 #' }
 #' @keywords ADNI study protocol
-#' @family ADNI study protocol/phase
+#' @family adni_fun_procotol
 #' @rdname adni_phase_order_num
 #' @importFrom dplyr case_when
 #' @export
@@ -83,7 +83,7 @@ adni_phase_order_num <- function(phase) {
 #' convert_adni_phase_order_num(phase_num = c(1, 3, 5))
 #' }
 #' @keywords ADNI study protocol
-#' @family ADNI study protocol/phase
+#' @family adni_fun_procotol
 #' @importFrom dplyr case_when
 #' @export
 convert_adni_phase_order_num <- function(phase_num) {
@@ -107,6 +107,7 @@ convert_adni_phase_order_num <- function(phase_num) {
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate across case_when
 #' @importFrom assertr verify
+#' @family adni_fun_procotol
 #' @rdname adni_study_track
 #' @export
 adni_study_track <- function(cur_study_phase, orig_study_phase) {
@@ -143,7 +144,7 @@ adni_study_track <- function(cur_study_phase, orig_study_phase) {
 #' example_data <- tibble(RID = c(1, 1000, 3500, 6645, 1000))
 #' create_orig_protocol(data = example_data)
 #' }
-#' @family ADNI study protocol/phase
+#' @family adni_fun_procotol
 #' @rdname create_orig_protocol
 #' @importFrom dplyr relocate mutate
 #' @export
@@ -166,7 +167,7 @@ create_orig_protocol <- function(data) {
 #' @param data Data frame
 #' @param phaseVar Phase column
 #' @return A data frame the same as `data` with appended columns of "COLPROT"
-#' @family ADNI study protocol/phase
+#' @family adni_fun_procotol
 #' @examples
 #' \dontrun{
 #' create_col_protocol(data = ADNIMERGE2::VISITS, phaseVar = "Phase")
@@ -212,6 +213,7 @@ create_col_protocol <- function(data, phaseVar = NULL) {
 #' split_strings(input_string = input_string)
 #' }
 #' @rdname split_strings
+#' @family utils_fun
 #' @seealso \code{\link{get_factor_levels_datadict}()}
 #' @export
 split_strings <- function(input_string, spliter1, spliter2) {
@@ -253,13 +255,14 @@ create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| 
 ## Gets factor levels from DATADIC dataset ----
 #' @title Gets Factor Levels from DATADIC Dataset
 #' @description
-#'  This function is used to generate the coded levels of FLDNAME using the DATADIC dataset \\href{https://adni.loni.usc.edu/data-samples/adni-data/}{https://adni.loni.usc.edu/data-samples/adni-data/}.
+#'  This function is used to generate the coded levels of FLDNAME using the DATADIC dataset 
+#'  \\href{https://adni.loni.usc.edu/data-samples/adni-data/}{https://adni.loni.usc.edu/data-samples/adni-data/}.
 #' @param data_dict Data dictionary dataset (DATADIC from the package or loni website)
 #' @param tbl_name Table name, Default: NULL that generate for all available TBLNAMEs in the `data_dict`
 #' @param spliter1 First split parameter/pattern, Default:";| ;| ; "
 #' @param spliter2 Second split parameter/pattern, Default: "=| =| = "
 #' @param nested_value Unnest the factor level variables in long format if 'TRUE' otherwise nested with `CODES` column
-#' @return A data.frame that appended with `prefix` (actual value in the dataset), `suffix` (coded values) and `class_type` ("factor") columns.
+#' @return A data.frame that appended with `prefix` (actual value in the dataset), `suffix` (coded values from DATADIC) and `class_type` ("factor") columns.
 #' @examples
 #' \dontrun{
 #' get_factor_levels_datadict(
@@ -270,6 +273,7 @@ create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| 
 #' }
 #' @rdname get_factor_levels_datadict
 #' @seealso \code{\link{split_strings}()}
+#' @family adni_fun_datadic
 #' @importFrom stringr str_detect
 #' @importFrom tidyr nest unnest
 #' @importFrom purrr map
@@ -314,6 +318,7 @@ get_factor_levels_datadict <- function(data_dict, tbl_name = NULL, nested_value 
 #' extract_codelist_datadict(data_dict = ADNIMERGE2::DATADIC)
 #' }
 #' @rdname extract_codelist_datadict
+#' @family adni_fun_datadic
 #' @importFrom dplyr mutate case_when filter
 #' @importFrom stringr str_detect
 #' @export
@@ -426,6 +431,7 @@ extract_codelist_datadict <- function(data_dict) {
 #' }
 #' @rdname get_factor_fldname
 #' @seealso \code{\link{get_factor_levels_datadict}()} \code{\link{DATADIC}()}
+#' @family adni_fun_datadic
 #' @importFrom dplyr select filter
 #' @importFrom tibble as_tibble
 #' @export
@@ -482,6 +488,7 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
 #' @rdname single_collect_values
 #' @family extract coded values
 #' @seealso \code{\link{get_factor_levels_datadict}()}
+#' @family adni_fun_datadic
 #' @importFrom rlang arg_match
 #' @importFrom dplyr filter select
 #' @importFrom tidyr unnest
@@ -542,7 +549,7 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
 #' @return
 #'    List value that contains `code` and `decode` from \code{\link{single_collect_values}} with corresponding column names.
 #' @rdname collect_values
-#' @family Extract Coded Values
+#' @family adni_fun_datadic
 #' @seealso \code{\link{get_factor_levels_datadict}()}
 #' @examples
 #' \dontrun{
@@ -608,6 +615,7 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
 #' convert_collect_values(coded_value = coded_value)
 #' }
 #' @rdname convert_collect_values
+#' @family adni_fun_datadic
 #' @importFrom purrr pluck
 #' @importFrom dplyr mutate relocate bind_rows
 convert_collect_values <- function(coded_values, tbl_name = NULL) {
@@ -639,6 +647,7 @@ convert_collect_values <- function(coded_values, tbl_name = NULL) {
 #'     \item{CODED_VALUE}{Nested dataset that contains code and decode values}
 #'  }
 #' @rdname convert_phase_specific
+#' @family adni_fun_datadic
 #' @importFrom purrr pluck
 #' @importFrom dplyr mutate relocate bind_rows group_by ungroup
 #' @importFrom tidyselect everything
@@ -689,7 +698,7 @@ convert_phase_specific <- function(coded_values) {
 #' replaced_values
 #' }
 #' @rdname replace_multiple_values
-#' @family replace values
+#' @family utils_fun
 #' @export
 replace_multiple_values <- function(input_string, code, decode) {
   # To ensure the same length of decode and code
@@ -753,6 +762,7 @@ replace_multiple_values <- function(input_string, code, decode) {
 #' }
 #' @rdname detect_numeric_value
 #' @importFrom rlang arg_match0
+#' @family utils_fun
 #' @export
 detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) {
   rlang::arg_match0(arg = num_type, values = c("any", "positive", "negative"))
@@ -817,7 +827,7 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 #' )
 #' }
 #' @rdname phase_specific_value_replacement
-#' @family replace values
+#' @family adni_fun_replace
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with
 #' @importFrom tidyselect all_of
@@ -919,7 +929,7 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL, phase
 #' )
 #' }
 #' @rdname multiple_phase_value_replacement
-#' @family replace values
+#' @family adni_fun_replace
 multiple_phase_value_replacement <- function(data, fld_name, phaseVar = "PHASE", input_values) {
   # Input values should be in list format
   if (!is.list(input_values)) stop("`input_values` must be a list object")
@@ -984,7 +994,7 @@ multiple_phase_value_replacement <- function(data, fld_name, phaseVar = "PHASE",
 #' )
 #' }
 #' @rdname data_value_replacement
-#' @family replace values
+#' @family adni_fun_replace
 #' @export
 data_value_replacement <- function(data, phaseVar = "PHASE", input_values) {
   # Input values should be in list format
@@ -1021,6 +1031,7 @@ data_value_replacement <- function(data, phaseVar = "PHASE", input_values) {
 #' convert_to_missing_value(data = ADNIMERGE2::ADAS_ADNIGO23)
 #' }
 #' @rdname convert_to_missing_value
+#' @family adni_fun_replace
 #' @importFrom dplyr across filter if_all case_when
 #' @importFrom tibble as_tibble
 #' @importFrom rlang arg_match sym
@@ -1076,6 +1087,7 @@ convert_to_missing_value <- function(data, col_name = NULL, value = "-4", missin
 #' extract_cols_value(data = ADNIMERGE2::ADAS_ADNIGO23, value = "Letter")
 #' }
 #' @rdname extract_cols_value
+#' @family utils_fun
 #' @importFrom dplyr mutate filter across if_all
 #' @importFrom tibble tibble
 #' @export
@@ -1114,6 +1126,7 @@ extract_cols_value <- function(data, value, col_name = NULL) {
 #' check_colnames(dd = ADNIMERGE2::ADAS_ADNIGO23, col_names = c("RID", "VISCODE"), strict = TRUE)
 #' }
 #' @rdname check_colnames
+#' @family utils_fun
 check_colnames <- function(data, col_names, strict = FALSE, stop_message = TRUE) {
   if (strict == TRUE) status <- !all(col_names %in% colnames(data))
   if (strict == FALSE) status <- !any(col_names %in% colnames(data))
@@ -1146,6 +1159,7 @@ check_colnames <- function(data, col_names, strict = FALSE, stop_message = TRUE)
 #' extract_cols(data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("RID", "VISCODE"))
 #' }
 #' @rdname extract_cols
+#' @family utils_fun
 #' @export
 extract_cols <- function(data, col_name) {
   list_columns <- colnames(data)[colnames(data) %in% col_name]
@@ -1183,6 +1197,7 @@ extract_cols <- function(data, col_name) {
 #' )
 #' }
 #' @rdname check_value_match
+#' @family utils_fun
 check_value_match <- function(values, check_list, excluded.na = TRUE, stop_message = FALSE,
                               add_stop_message = NULL, value_split = FALSE, split_pattern = "\\||:|;") {
   if (!is.logical(excluded.na)) stop("`excluded.na` must be a boolean value")
@@ -1201,96 +1216,6 @@ check_value_match <- function(values, check_list, excluded.na = TRUE, stop_messa
     stop("`", toString(non_existed_values), "` value(s) are not found ", add_stop_message)
   }
   return(result)
-}
-
-## Extract Death Flag ----
-#' @title Extract Death Flag
-#' @description This function is used to extract death records in the study based on the adverse events record (i.e. in `ADVERSE` for ADNI3-4 and `RECADV` in ADNI1-GO-2) and study sum record (i.e. in `STUDSUM` for ADNI3-4).
-#' @param adverse_dd Adverse events record data frame for ADNI3-4, similar to `ADVERSE`
-#' @param recadv_dd Adverse events record data frame for ADNI1-GO-2, similar to `RECADV`
-#' @param studysum_dd Final dispositions(study sum) data frame for ADNI3-4, similar ro `STUDYSUM`
-#' @return A data frame with the following columns:
-#' \itemize{
-#'    \item `RID` Participant ID
-#'    \item `ORIGPROT` Original study protocols
-#'    \item `COLPROT` Current study protocols which the event was recorded
-#'    \item `DTHDTC` Death date
-#'    \item `DTHFL` Death flag, `Yes`
-#'  }
-#' @examples
-#' \dontrun{
-#' extract_death_flag(
-#'   studysum_dd = ADNIMERGE2::STUDYSUM,
-#'   adverse_dd = ADNIMERGE2::ADVERSE,
-#'   recadv_dd = ADNIMERGE2::RECADV
-#' )
-#' }
-#' @rdname extract_death_flag
-#' @importFrom dplyr full_join distinct group_by ungroup filter select mutate
-#' @importFrom assertr assert
-#' @export
-extract_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
-  SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- AEHDTHDT <- NULL
-  VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- NULL
-
-  # Based on reported study disposition; for ADNI3 & ADNI4 phases
-  check_colnames(
-    data = studysum_dd,
-    col_names = c("RID", "ORIGPROT", "COLPROT", "SDPRIMARY", "SDPRIMARY"),
-    strict = TRUE,
-    stop_message = TRUE
-  )
-  death_studysum <- studysum_dd %>%
-    assert(is.character, SDPRIMARY) %>%
-    filter(SDPRIMARY == "Death") %>%
-    select(RID, ORIGPROT, COLPROT, SDPRIMARY) %>%
-    assert_uniq(RID)
-
-  # Based on reported adverse events: ADNI3 & ADNI4 phases
-  check_colnames(
-    data = adverse_dd,
-    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "SAEDEATH", "AEHDTHDT", "SAEDEATH"),
-    strict = TRUE,
-    stop_message = TRUE
-  )
-
-  death_adverse_even_adni34 <- adverse_dd %>%
-    assert(is.character, SAEDEATH) %>%
-    filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
-    select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
-    assert_uniq(RID)
-
-  # Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
-  check_colnames(
-    data = recadv_dd,
-    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "AEHDEATH", "AEHDEATH"),
-    strict = TRUE,
-    stop_message = TRUE
-  )
-
-  death_adverse_even_adni12go <- recadv_dd %>%
-    assert(is.character, AEHDEATH) %>%
-    filter(AEHDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
-    select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = AEHDEATH) %>%
-    distinct() %>%
-    group_by(RID, ORIGPROT, COLPROT) %>%
-    assert_non_missing(VISCODE) %>%
-    filter(VISCODE == min(VISCODE)) %>%
-    ungroup() %>%
-    assert_uniq(RID)
-
-  death_event_dataset <- full_join(
-    x = death_studysum,
-    y = death_adverse_even_adni34 %>%
-      bind_rows(death_adverse_even_adni12go) %>%
-       assert_uniq(RID),
-    by = c("RID", "ORIGPROT", "COLPROT")
-  ) %>%
-    assert_uniq(RID) %>%
-    mutate(DTHFL = "Yes", DTHDTC = AEHDTHDT) %>%
-    select(RID, ORIGPROT, COLPROT, DTHDTC, DTHFL)
-
-  return(death_event_dataset)
 }
 
 ## Duplicate Records Check Function ----
@@ -1312,6 +1237,7 @@ extract_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
 #' )
 #' }
 #' @rdname check_duplicate_records
+#' @family utils_fun
 #' @importFrom dplyr select mutate across n
 #' @importFrom stats na.omit
 #' @importFrom tidyr unite

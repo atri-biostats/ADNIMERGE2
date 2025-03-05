@@ -2,3 +2,38 @@ url: https://atrihub.github.io/ADNIMERGE2
 template:
   bootstrap: 5
 
+reference:
+- title: ADNI Specific Functions
+- subtitle: Enrollment
+  contents:
+  - has_keyword("adni_enroll_fun")
+  
+- subtitle: Study Protocol/Phase
+  contents:
+  - has_keyword("adni_fun_procotol")
+  
+- subtitle: Data Dictionary - DATADIC
+  contents:
+  - has_keyword("adni_fun_datadic")
+  
+- subtitle: Data Dictionary - DATADIC
+  contents:
+  - has_keyword("adni_fun_datadic")
+  - has_keyword("adni_fun_replace")
+  
+- subtitle: Scoring Functions
+  contents:
+  - has_keyword("adni_score_fun")
+  
+- title: Utility Functions
+   contents:
+   - has_keyword("utils_fun")
+   
+- title: ADNI Raw Dataset
+   contents:
+   - has_keyword("raw_dataset")
+   
+- title: ADNI Derived Dataset
+   contents:
+   - has_keyword("derived_dataset")
+   

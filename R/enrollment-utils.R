@@ -16,6 +16,7 @@
 #' }
 #' @seealso \code{\link{extract_adni_screen_date}()}
 #' @rdname adni_enrollment
+#' @family adni_fun_enroll
 #' @export
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
@@ -130,6 +131,7 @@ adni_enrollment <- function(data_registry) {
 #' }
 #' @seealso \code{\link{adni_enrollment}()}
 #' @rdname extract_adni_screen_date
+#' @family adni_fun_enroll
 #' @export
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
@@ -281,6 +283,7 @@ extract_adni_screen_date <- function(data_registry, phase = "Overall", both = FA
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify
 #' @importFrom magrittr %>%
+#' @family adni_fun_enroll
 #' @export
 extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "baseline") {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- DIAGNOSIS <- NULL
@@ -400,6 +403,97 @@ extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "
   return(output_dd)
 }
 
+## Extract Death Flag ----
+#' @title Extract Death Flag
+#' @description This function is used to extract death records in the study based on the adverse events record (i.e. in `ADVERSE` for ADNI3-4 and `RECADV` in ADNI1-GO-2) and study sum record (i.e. in `STUDSUM` for ADNI3-4).
+#' @param adverse_dd Adverse events record data frame for ADNI3-4, similar to `ADVERSE`
+#' @param recadv_dd Adverse events record data frame for ADNI1-GO-2, similar to `RECADV`
+#' @param studysum_dd Final dispositions(study sum) data frame for ADNI3-4, similar ro `STUDYSUM`
+#' @return A data frame with the following columns:
+#' \itemize{
+#'    \item `RID` Participant ID
+#'    \item `ORIGPROT` Original study protocols
+#'    \item `COLPROT` Current study protocols which the event was recorded
+#'    \item `DTHDTC` Death date
+#'    \item `DTHFL` Death flag, `Yes`
+#'  }
+#' @examples
+#' \dontrun{
+#' extract_death_flag(
+#'   studysum_dd = ADNIMERGE2::STUDYSUM,
+#'   adverse_dd = ADNIMERGE2::ADVERSE,
+#'   recadv_dd = ADNIMERGE2::RECADV
+#' )
+#' }
+#' @rdname extract_death_flag
+#' @family adni_fun_enroll
+#' @importFrom dplyr full_join distinct group_by ungroup filter select mutate
+#' @importFrom assertr assert
+#' @export
+extract_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
+  SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- AEHDTHDT <- NULL
+  VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- NULL
+  
+  # Based on reported study disposition; for ADNI3 & ADNI4 phases
+  check_colnames(
+    data = studysum_dd,
+    col_names = c("RID", "ORIGPROT", "COLPROT", "SDPRIMARY", "SDPRIMARY"),
+    strict = TRUE,
+    stop_message = TRUE
+  )
+  death_studysum <- studysum_dd %>%
+    assert(is.character, SDPRIMARY) %>%
+    filter(SDPRIMARY == "Death") %>%
+    select(RID, ORIGPROT, COLPROT, SDPRIMARY) %>%
+    assert_uniq(RID)
+  
+  # Based on reported adverse events: ADNI3 & ADNI4 phases
+  check_colnames(
+    data = adverse_dd,
+    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "SAEDEATH", "AEHDTHDT", "SAEDEATH"),
+    strict = TRUE,
+    stop_message = TRUE
+  )
+  
+  death_adverse_even_adni34 <- adverse_dd %>%
+    assert(is.character, SAEDEATH) %>%
+    filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
+    select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
+    assert_uniq(RID)
+  
+  # Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
+  check_colnames(
+    data = recadv_dd,
+    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "AEHDEATH", "AEHDEATH"),
+    strict = TRUE,
+    stop_message = TRUE
+  )
+  
+  death_adverse_even_adni12go <- recadv_dd %>%
+    assert(is.character, AEHDEATH) %>%
+    filter(AEHDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
+    select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = AEHDEATH) %>%
+    distinct() %>%
+    group_by(RID, ORIGPROT, COLPROT) %>%
+    assert_non_missing(VISCODE) %>%
+    filter(VISCODE == min(VISCODE)) %>%
+    ungroup() %>%
+    assert_uniq(RID)
+  
+  death_event_dataset <- full_join(
+    x = death_studysum,
+    y = death_adverse_even_adni34 %>%
+      bind_rows(death_adverse_even_adni12go) %>%
+      assert_uniq(RID),
+    by = c("RID", "ORIGPROT", "COLPROT")
+  ) %>%
+    assert_uniq(RID) %>%
+    mutate(DTHFL = "Yes", DTHDTC = AEHDTHDT) %>%
+    select(RID, ORIGPROT, COLPROT, DTHDTC, DTHFL)
+  
+  return(death_event_dataset)
+}
+
 #' @title Detect Closest Baseline Score
 #' @description
 #'  This function is used to flag the closest assessment record score to the
@@ -412,6 +506,7 @@ extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "
 #'  The returned vector will contains `Yes` flag for the closest record
 #'  within the specified window period. Otherwise, missing value.
 #' @rdname detect_baseline_score
+#' @family utils_fun
 detect_baseline_score <- function(cur_record_date, enroll_date, time_interval = 30) {
   time_diff <- as.numeric(as.Date(cur_record_date) - as.Date(enroll_date))
   abs_time_diff <- abs(time_diff)
