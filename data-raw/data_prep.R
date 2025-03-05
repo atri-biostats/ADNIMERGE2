@@ -412,7 +412,7 @@ if (CREATE_UPDATED_DATADIC) {
   temp_DATADIC <- DATADIC %>%
     mutate(TBLNAME = case_when(
       TBLNAME %in% "ADAS" & PHASE %in% "ADNI1" ~ "ADAS_ADNI1",
-      TBLNAME %in% "ADAS" & PHASE %in% c("ADNI1", "ADNIGO", "ADNI2", "ADNI3") ~ "ADAS_ADNIGO23",
+      TBLNAME %in% "ADAS" & PHASE %in% c("ADNIGO", "ADNI2", "ADNI3") ~ "ADAS_ADNIGO23",
       TBLNAME %in% "ECG" & PHASE %in% "ADNI2" ~ "ADNI2_ECG",
       TBLNAME %in% "OTELGTAU" & PHASE %in% "ADNI2" ~ "ADNI2_OTELGTAU",
       TBLNAME %in% "PICSLASHS" ~ "PICSL_ASHS",
@@ -421,7 +421,10 @@ if (CREATE_UPDATED_DATADIC) {
       TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI3" ~ "TAUMETA3",
       TBLNAME %in% "TAUQC" & PHASE %in% "ADNI3" ~ "TAUQC3",
       TBLNAME %in% "TBM" ~ "TBM22",
-      TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2"
+      TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2", 
+      TBLNAME %in% "PETMETA" & PHASE %in% "ADNI1" ~ "PETMETA_ADNI1", 
+      TBLNAME %in% "PETMETA" & PHASE %in% c("ADNIGO", "ADNI2") ~ "PETMETA_ADNIGO2", 
+      TBLNAME %in% "PETMETA" & PHASE %in% "ADNI3" ~ "PETMETA3"
     )) %>%
     filter(!is.na(TBLNAME))
 

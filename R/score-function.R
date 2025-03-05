@@ -18,7 +18,7 @@
 #' @importFrom dplyr relocate mutate
 #' @importFrom assertr assert within_bounds verify
 #' @importFrom tidyselect all_of last_col
-#' @references \href{https://www.sciencedirect.com/science/article/pii/088761779190001P}{Powell, J.B., Cripe, L.I. and Dodrill, C.B., 1991. Assessment of brain impairment with the Rey Auditory Verbal Learning Test: A comparison with other neuropsychological measures. Archives of Clinical Neuropsychology, 6(4), pp.241-249.}
+#' @references \href{https://doi.org/10.1016/0887-6177(91)90001-P}{Powell, J.B., Cripe, L.I. and Dodrill, C.B., 1991. Assessment of brain impairment with the Rey Auditory Verbal Learning Test: A comparison with other neuropsychological measures. Archives of Clinical Neuropsychology, 6(4), pp.241-249.}
 #' @export
 compute_neurobat_subscore <- function(dd) {
   AVTOT5 <- DIGITSCOR <- LDELTOTAL <- LIMMTOTAL <- RAVLTFORG <- RAVLTFORGOPERC <- NULL

@@ -579,7 +579,7 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
 ## Convert List Collected Coded Values ----
 #' @title Convert List Collected Coded Values
 #' @description This function is used to convert list coded values that obtained using collect_values function.
-#' @param collect_values Collect coded values
+#' @param coded_values Coded values that generated using [{collect_values}()]
 #' @param tbl_name Dataset name, Default: NULL
 #' @return A data frame that contains the following columns:
 #'  \itemize{

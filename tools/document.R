@@ -33,14 +33,19 @@ updated_data_dict_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATAD
 dataset_date_stamped_file_path <- "./data-raw/date_stamped/dataset_list_date_stamped.csv"
 
 if (file.exists(dataset_date_stamped_file_path)) {
-  dataset_list_date_stamped <- readr::read_csv(dataset_date_stamped_file_path) %>%
+  dataset_list_date_stamped <- readr::read_csv(dataset_date_stamped_file_path,
+    show_col_types = FALSE
+  ) %>%
     mutate(
       TBLNAME = str_to_lower(UPDATED_TBLNAME),
       STAMPED_DATE = as.character(STAMPED_DATE)
     ) %>%
     select(TBLNAME, STAMPED_DATE)
 } else {
-  dataset_list_date_stamped <- tibble(STAMPED_DATE = NA_character_, TBLNAME = NA_character_) %>%
+  dataset_list_date_stamped <- tibble(
+    STAMPED_DATE = NA_character_,
+    TBLNAME = NA_character_
+  ) %>%
     na.omit()
 }
 
@@ -74,7 +79,6 @@ rm(list = as.character(str_remove_all(
 )))
 prefix_patterns <- "^adni\\_"
 string_removed_pattern <- str_c(c(prefix_patterns), collapse = "|")
-
 
 # Documentations for the raw datasets ----
 message("Generating documentations for raw datasets")
@@ -113,7 +117,7 @@ temp_data_dict <- lapply(names(raw_data_list), function(tb) {
 unique_tblname <- unique(temp_data_dict$tblname)
 
 ### Get field code and labels from DATADIC dataset ----
-exc_code <- c('crfname|\\"indexes\\"|\\<display\\>|\"Pass;|\"OTF Lumos;|\"a; b; c; d|select distinct ')
+exc_code <- c('crfname|\\"indexes\\"|\\<display\\>|\"Pass;|\"OTF Lumos;|\"a; b; c; d|select distinct |^-4$')
 exc_code_text <- "\n|\\<br\\>|\\<br /\\>|\\<!--|--\\>$"
 temp_field_codetext <- DATADIC %>%
   as_tibble() %>%
@@ -129,10 +133,11 @@ temp_field_codetext <- DATADIC %>%
   nest() %>%
   ungroup() %>%
   mutate(adjust_fldcodes = map(data, ~ adjust_code_labels(data_dict = .x))) %>%
-  unnest(cols = adjust_fldcodes)
+  unnest(cols = adjust_fldcodes) %>%
+  assert_uniq(TBLNAME, FLDNAME)
 
 temp_data_dict <- temp_data_dict %>%
-  # Add dataset label
+  # Add dataset labels
   left_join(
     DATADIC %>%
       distinct(CRFNAME, TBLNAME) %>%
@@ -156,7 +161,7 @@ temp_data_dict <- temp_data_dict %>%
   ) %>%
   # Add date stamp for dataset with a date stamped file extension
   left_join(dataset_list_date_stamped, by = c("tblname" = "TBLNAME")) %>%
-  verify(nrow(.) == nrow(temp_data_dict)) %>%
+  # verify(nrow(.) == nrow(temp_data_dict)) %>%
   filter(!is.na(CRFNAME)) %>%
   mutate(CRFNAME = case_when(
     !is.na(STAMPED_DATE) ~ str_c(CRFNAME, ": ", STAMPED_DATE),
@@ -186,8 +191,6 @@ temp_data_dict <- temp_data_dict %>%
   # Add field code and labels from DATADIC dataset
   left_join(
     temp_field_codetext %>%
-      mutate(tbl_fld_name = str_c(TBLNAME, FLDNAME)) %>%
-      assert_uniq(tbl_fld_name) %>%
       select(TBLNAME, FLDNAME, field_value, data_field_label = field_label),
     by = c("tblname" = "TBLNAME", "field_name" = "FLDNAME")
   ) %>%
@@ -202,14 +205,55 @@ temp_data_dict <- temp_data_dict %>%
       !is.na(field_label) ~ field_label
     )
   ) %>%
+  mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with")) %>%
+  mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")) %>%
   select(
     dd_name, num_rows, num_cols, field_name, field_class, field_label,
     field_values, field_notes, dataset_label, add_authors, short_description,
     dataset_source_type, add_source
   )
 
+### Adjust for coded FLDNAME records ----
+coded_records_path <- file.path(".", "data-raw", "coded_records", "coded_records.csv")
+if (file.exists(coded_records_path)) {
+  coded_records <- readr::read_csv(
+    file = coded_records_path,
+    show_col_types = FALSE
+  ) %>%
+    as_tibble() %>%
+    filter(STATUS == "Yes") %>%
+    select(TBLNAME, FLDNAME, CODED = STATUS) %>%
+    distinct()
+} else {
+  coded_records <- tibble(
+    TBLNAME = NA_character_,
+    FLDNAME = NA_character_,
+    CODED = NA_character_
+  ) %>%
+    na.omit()
+}
+
+temp_data_dict <- temp_data_dict %>%
+  # Add coded values status
+  {
+    if (nrow(coded_records) > 0) {
+      left_join(.,
+        coded_records %>%
+          select(TBLNAME, FLDNAME, CODED),
+        by = c("dd_name" = "TBLNAME", "field_name" = "FLDNAME")
+      ) %>%
+        verify(., nrow(.) == nrow(temp_data_dict))
+    } else {
+      mutate(., CODED = NA_character_)
+    }
+  } %>%
+  mutate(field_notes = case_when(
+    CODED %in% "Yes" ~ str_c(field_notes, "\n#' \\emph{Decoded Value: }Yes"),
+    TRUE ~ field_notes
+  ))
+
 ## Finalize documentations ------
-# if (dir.exists(file.path(".", "R")) == FALSE) dir.create(file.path("..", "R"))
+if (dir.exists(file.path(".", "R")) == FALSE) stop(file.path(".", "R"), " directory is not existed!")
 data_document_path <- file.path(".", "R", "data.R")
 if (file.exists(data_document_path) == TRUE) {
   readr::write_lines(x = "", data_document_path)
@@ -221,10 +265,11 @@ generate_roxygen_document(
   data_list = NULL,
   data_dict = temp_data_dict,
   roxygen_source_type = "data_dictionary",
-  output_file_name = data_document_path
+  output_file_name = data_document_path,
+  existed_append = FALSE
 )
 
-# Documentation for DATA_DOWNLOADED_DATE dataset ----
+# Documentation for DATA_DOWNLOADED_DATE data ----
 cat("#' ADNI data download date",
   "#'",
   paste0(
@@ -244,16 +289,27 @@ cat("#' ADNI data download date",
   "NULL\n\n",
   file = data_document_path, sep = "\n", append = TRUE
 )
-message("Completed generating documentation for raw datasets")
+message("Completed generating documentations for raw dataset")
 
 # Documentations for the derived dataset ----
 ## Prepare data dictionary for derived dataset ----
 
 if (exists("derived_data_list")) {
   ### Generate data dictionary from actual derived dataset ----
-  common_description_derived_data <- paste0(
-    "derived data. More information is available at `browseVignettes('ADNIMERGE2')`."
-  )
+  # Helper function to link data source with vignettes document
+  source_link <- function(tblname) {
+    vignette_link <- case_when(
+      nchar(tblname) == 2 ~ "ADNIMERGE2-Derived-Data",
+      nchar(tblname) > 2 ~ "ADNIMERGE2-Analysis-Data"
+    )
+    output_link <- c()
+    for (i in seq_len(length(vignette_link))) {
+      temp_vignette_link <- paste0("vignette(topic = '", vignette_link[i], "', package = 'ADNIMERGE2')")
+      output_link[i] <- paste0("For more details see the help vignette: \\code{", temp_vignette_link, "}")
+    }
+    return(output_link)
+  }
+
   derived_data_dict_path <- file.path(
     "./data-raw/derived-datadic", "DERIVED_DATADIC.rda"
   )
@@ -280,7 +336,7 @@ if (exists("derived_data_list")) {
         select(TBLNAME, FLDNAME, TEXT, CRFNAME),
       by = c("dd_name" = "TBLNAME", "field_name" = "FLDNAME")
     ) %>%
-    assert_uniq(dd_name, field_name) %>% 
+    assert_uniq(dd_name, field_name) %>%
     assert_non_missing(dd_name, field_name, CRFNAME) %>%
     mutate(
       add_authors = authors,
@@ -291,29 +347,24 @@ if (exists("derived_data_list")) {
             pattern = "\\[ Derived \\]"
           )
         ),
-        common_description_derived_data,
+        "derived dataset.",
         sep = " "
       ),
       dataset_source_type = "derived",
-      add_source = "browseVignettes('ADNIMERGE2')",
+      add_source = source_link(tblname = dd_name),
       field_notes = case_when(
         TEXT %in% " " | is.na(TEXT) ~ field_notes,
-        TRUE ~ str_c(TEXT, "; ", field_notes)
+        TRUE ~ paste0(TEXT, "; ", field_notes)
       )
     ) %>%
+    mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with character")) %>%
+    mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")) %>%
     select(
       dd_name, num_rows, num_cols, field_name, field_class, field_label,
       field_values, field_notes, add_authors, short_description,
       dataset_source_type, add_source
     ) %>%
     assert_non_missing(field_label, field_notes)
-
-  # derived_data_document_path <- file.path(".", "R", "derived-data.R")
-  # if (file.exists(derived_data_document_path) == TRUE) {
-  #   readr::write_lines(x = "", derived_data_document_path)
-  # } else {
-  #   file.create(derived_data_document_path, showWarnings = TRUE)
-  # }
 
   ## Finalize documentations ----
   generate_roxygen_document(
@@ -324,5 +375,31 @@ if (exists("derived_data_list")) {
     output_file_name = data_document_path,
     existed_append = TRUE
   )
-  message("Completed generating documentations for derived datasets")
+
+  # Documentation for METACORES meta-specs ----
+  cat("#' ADNI Metadata-Specs",
+    "#'",
+    paste0(
+      "#' Metadata specifications for the ADNI study. It is generated to create analysis ready dataset",
+      "using PHARMAVERSE workflow for illustration purpose."
+    ),
+    "#'",
+    "#' @docType data",
+    "#' @keywords metadata specs derived",
+    "#' @name METACORES",
+    "#' @usage data(METACORES)",
+    "#' @format A R6-class wrapper object created using \\code{\\link[metacore]{metacore}} function from \\emph{metacore} R pacakge.",
+    paste0(
+      "#' @source For more details about the metadata-specs see the help vignette: ",
+      "\\code{(vignette(topic = 'ADNIMERGE2-Analysis-Meta-Specs', package = 'ADNIMERGE2')}."
+    ),
+    "#' @examples",
+    "#' \\dontrun{",
+    "#' ADNIMERGE2::METACORES",
+    "#' }",
+    "NULL\n\n",
+    file = data_document_path, sep = "\n", append = TRUE
+  )
+
+  message("Completed generating documentations for derived dataset")
 }

@@ -521,13 +521,11 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
   data_doc <- str_c(
     str_c("#' @title ", data_source_label, " ", str_remove_all(dataset_label, "\\[|\\]"), "\n"),
     "#'\n",
-    # str_c("#' @description ", short_description, "\n"),
-    # "#' \n",
     str_c("#' @docType data \n"),
     "#'\n",
     str_c("#' @usage data(", dataset_name, ") \n"),
     "#'\n",
-    str_c("#' @keywords ", dataset_source_type, " datasets \n"),
+    str_c("#' @keywords ", dataset_source_type, " dataset \n"),
     "#'\n",
     format_description,
     "#' @details\n",
@@ -853,12 +851,6 @@ generate_variable_format <- function(data_dict, var_name, field_nameVar = NULL, 
                                      field_labelVar = NULL, field_notesVar = NULL) {
   require(tidyverse)
 
-  # function for escaping braces
-  escape <- function(x) {
-    y <- gsub("{", "\\{", x, fixed = TRUE)
-    gsub("}", "\\}", y, fixed = TRUE)
-  }
-
   temp_dd <- data_dict_column_names(
     data_dict = data_dict,
     field_nameVar = field_nameVar,
@@ -873,9 +865,10 @@ generate_variable_format <- function(data_dict, var_name, field_nameVar = NULL, 
   if (is.na(temp_dd$classVar)) stop("Variable class of `", var_name, "` must not be missing.")
   if (is.na(temp_dd$nameVar)) stop("Variable name of `", var_name, "` must not be missing.")
 
-  return(paste0("#' \\item ", temp_dd$nameVar, ": ",
-    " *", temp_dd$classVar, "* ",
-    escape(label_value), " ", escape(note_value),
-    collapse = ""
-  ))
+  return(
+    paste0("#' \\item{\\strong{", temp_dd$nameVar, "}",
+      " \\emph{", temp_dd$classVar, "}}{ ", label_value, " ", note_value, " }",
+      collapse = ""
+    )
+  )
 }

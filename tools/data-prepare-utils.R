@@ -24,8 +24,8 @@
 #' @importFrom usethis use_data_raw use_data
 #' @importFrom readr read_lines write_lines
 #' @export
-use_data_modified <- function(dataset_name, 
-                              dataset, 
+use_data_modified <- function(dataset_name,
+                              dataset,
                               edit_type = "create",
                               run_script = TRUE,
                               add_text = NULL,
@@ -141,7 +141,7 @@ get_unzip_file <- function(input_dir,
 #' @param input_dir Directory location where the file is stored
 #' @param output_dir Output directory
 #' @param file_extension File extension, Default: ".csv"
-#' @param action Either `rename` or `copy` 
+#' @param action Either `rename` or `copy`
 #' @param remove_name_pattern Strings that will be removed from the file name, Default = `NULL`
 #' @return `TRUE` if the file action is properly completed (either renamed or copied)
 #' @rdname file_action
@@ -151,7 +151,7 @@ get_unzip_file <- function(input_dir,
 file_action <- function(input_dir,
                         output_dir = ".",
                         file_extension = ".csv",
-                        action = "rename", 
+                        action = "rename",
                         remove_name_pattern = NULL) {
   require(rlang)
   require(stringr)
@@ -159,10 +159,10 @@ file_action <- function(input_dir,
   # file list
   old_file_name <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
   new_file_name <- old_file_name
-  if (!is.null(remove_name_pattern)){
+  if (!is.null(remove_name_pattern)) {
     new_file_name <- str_remove_all(old_file_name, pattern = remove_name_pattern)
   }
-  
+
   if (output_dir %in% ".") output_dir <- input_dir
   if (!output_dir %in% ".") {
     if (dir.exists(output_dir) == FALSE) stop(output_dir, " directory is not existed.")
@@ -262,10 +262,11 @@ adjust_code_labels <- function(data_dict,
                                textVar = "TEXT") {
   require(tidyverse)
   require(rlang)
+  require(tibble)
   arg_match0(arg = phaseVar, values = colnames(data_dict))
   arg_match0(arg = codeVar, values = colnames(data_dict))
   arg_match0(arg = textVar, values = colnames(data_dict))
-  
+
   column_list_dd <- tibble::tibble(
     specified_name_list = c(phaseVar, codeVar, textVar),
     renamed_list = c("phase_var", "code_var", "text_var")
@@ -291,17 +292,26 @@ adjust_code_labels <- function(data_dict,
 
     if (unique_rows > 1) {
       data_dict <- data_dict %>%
-        mutate(phase_code_var = paste0("\n #' *", phase_var, "* : ", code_var, "\n "))
-      temp_code <- paste0(paste0(data_dict$phase_code_var, collapse = ""), "#' ")
+        mutate(phase_code_var = case_when(
+          !is.na(code_var) ~ paste0("\n#' \\item{\\emph{", phase_var, ":}}{ ", code_var, "}\n"),
+          is.na(code_var) ~ paste0("\n#' \\item{\\emph{", phase_var, "}}\n")
+        ))
+      temp_code <- paste0("\n#' \\itemize{", paste0(data_dict$phase_code_var, collapse = ""), "#' }")
       temp_text <- data_dict %>%
         filter(row_number() %in% n()) %>%
         pull(text_var)
-      output_data <- tibble::tibble(field_value = temp_code, field_label = temp_text)
+      output_data <- tibble::tibble(
+        field_value = temp_code,
+        field_label = temp_text
+      )
     }
-  } 
-  
+  }
+
   if (nrow(data_dict) == 1) {
-    output_data <- tibble::tibble(field_value = data_dict$code_var, field_label = data_dict$text_var)
+    output_data <- tibble::tibble(
+      field_value = data_dict$code_var,
+      field_label = data_dict$text_var
+    )
   }
 
   return(output_data)
@@ -426,7 +436,7 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
   if (any(!str_detect(string = concat_phase, pattern = concat_char))) stop(concat_char, " must be presented.")
   concat_phase_list <- str_split(string = concat_phase, pattern = concat_char, simplify = FALSE)
   names(concat_phase_list) <- concat_phase
-  
+
   output_data_dict <- lapply(names(concat_phase_list), function(i) {
     split_phase <- as.character(unlist(concat_phase_list[i]))
     if (!any(str_detect(split_phase, "ADNI"))) stop("At least one `ADNI` prefix is not presented.")
@@ -438,7 +448,7 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
       verify(nrow(.) >= length(split_phase)))
   }) %>%
     bind_rows()
-  
+
   output_data_dict <- data_dict %>%
     filter(!PHASE %in% names(concat_phase_list)) %>%
     bind_rows(output_data_dict)
