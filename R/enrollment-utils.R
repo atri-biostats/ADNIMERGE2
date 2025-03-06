@@ -1,7 +1,7 @@
-# Function to extract baseline visit examdate -----
-#' @title Function to extract enrollment date (baseline visit examdate)
+# Function to extract baseline visit date/ enrollment date -----
+#' @title ADNI Enrollment Date (Baseline Visit Date)
 #' @description
-#'  This function is used to extract enrollment date (baseline visit examdate) when participant are enrolled in ADNI study for the first time.
+#'  This function is used to extract enrollment date (baseline visit date) when participant are enrolled in ADNI study for the first time.
 #' @param data_registry Data.frame of REGISTRY eCRF
 #' @return
 #'  \itemize{
@@ -9,19 +9,19 @@
 #'  }
 #' @examples
 #' \dontrun{
-#' # Overall enrollment: when participants enrolled as newly enrollee in ADNI study for the first time.
 #' overall_enroll_registry <- adni_enrollment(
 #'   data_registry = ADNIMERGE2::REGISTRY
 #' )
 #' }
-#' @seealso \code{\link{extract_adni_screen_date}()}
+#' @seealso \code{\link{adni_screen_date}()}
 #' @rdname adni_enrollment
-#' @family adni_fun_enroll
-#' @export
+#' @family ADNI enrollment
+#' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify is_uniq
 #' @importFrom magrittr %>%
+#' @export
 adni_enrollment <- function(data_registry) {
   COLPROT <- ORIGPROT <- RID <- EXAMDATE <- PTTYPE <- NULL
   overall_baseline_flag <- NULL
@@ -30,7 +30,7 @@ adni_enrollment <- function(data_registry) {
     col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "VISTYPE", "EXAMDATE"),
     strict = TRUE
   )
-  # `VISTYPE` and `RGCONDUCT` must not contains any numeric value
+  
   detect_numeric_value(
     value = data_registry$VISTYPE,
     num_type = "any",
@@ -71,9 +71,9 @@ adni_enrollment <- function(data_registry) {
 }
 
 # Function to extract screening date -----
-#' @title Gets Screening Date
+#' @title Gets ADNI Screening Date
 #' @description
-#'  This function is used to extract screening date of participants in ADNI study.
+#'  This function is used to extract participant screening date in the ADNI study.
 #' @param data_registry Data frame of REGISTRY eCRF
 #' @param phase Either `Overall` or phase-specific screening date, Default: 'Overall'
 #' @param both A boolean value to include both overall and phase-specific enrollment list, Default: FALSE
@@ -84,7 +84,7 @@ adni_enrollment <- function(data_registry) {
 #'    \item  Otherwise a data frame corresponding to the provided input arguments:
 #'         \itemize{
 #'            \item Overall screen if `phase = "Overall"` and will contains one records per participant regardless the value of `multiple_screen_visit`
-#'            \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = TRUE`.
+#'            \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = FALSE`.
 #'  }
 #'  \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables.
 #'        \itemize{
@@ -94,35 +94,35 @@ adni_enrollment <- function(data_registry) {
 #' @examples
 #' \dontrun{
 #' # Overall screening: when participants screened for the first time in ADNI study.
-#' overall_screen_registry <- extract_adni_screen_date(
+#' overall_screen_registry <- adni_screen_date(
 #'   data_registry = ADNIMERGE2::REGISTRY,
 #'   phase = "Overall",
 #'   both = FALSE,
 #'   multiple_screen_visit = FALSE
 #' )
 #' # Phase-specific screening: when participants screened for the first time in ADNI3 study phase.
-#' adni3_screen_registry <- extract_adni_screen_date(
+#' adni3_screen_registry <- adni_screen_date(
 #'   data_registry = ADNIMERGE2::REGISTRY,
 #'   phase = "ADNI3",
 #'   both = FALSE,
 #'   multiple_screen_visit = FALSE
 #' )
-#' # Multiple screens visit in each ADNIGO and ADNI2 study phases.
-#' adnigo2_screen_registry <- extract_adni_screen_date(
+#' # Multiple screen visits in each ADNIGO and ADNI2 study phases.
+#' adnigo2_screen_registry <- adni_screen_date(
 #'   data_registry = ADNIMERGE2::REGISTRY,
 #'   phase = c("ADNIGO", "ADNI2"),
 #'   both = FALSE,
 #'   multiple_screen_visit = TRUE
 #' )
 #' # Screening across each ADNI phases
-#' phase_screen_registry <- extract_adni_screen_date(
+#' phase_screen_registry <- adni_screen_date(
 #'   data_registry = ADNIMERGE2::REGISTRY,
-#'   phase = adni_phase(),
+#'   phase = ADNIMERGE2::adni_phase(),
 #'   both = FALSE,
 #'   multiple_screen_visit = FALSE
 #' )
 #' # Overall and phase-specific screening
-#' both_screen_registry <- extract_adni_screen_date(
+#' both_screen_registry <- adni_screen_date(
 #'   data_registry = ADNIMERGE2::REGISTRY,
 #'   phase = "Overall",
 #'   both = TRUE,
@@ -130,14 +130,15 @@ adni_enrollment <- function(data_registry) {
 #' )
 #' }
 #' @seealso \code{\link{adni_enrollment}()}
-#' @rdname extract_adni_screen_date
-#' @family adni_fun_enroll
-#' @export
+#' @rdname adni_screen_date
+#' @family ADNI screening
+#' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify assert
 #' @importFrom magrittr %>%
-extract_adni_screen_date <- function(data_registry, phase = "Overall", both = FALSE, multiple_screen_visit = FALSE) {
+#' @export
+adni_screen_date <- function(data_registry, phase = "Overall", both = FALSE, multiple_screen_visit = FALSE) {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- PTTYPE <- NULL
   overall_screen_flag <- adnigo_screen_flag <- adni2_screen_flag <- second_screen_visit <- NULL
   arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
@@ -149,7 +150,6 @@ extract_adni_screen_date <- function(data_registry, phase = "Overall", both = FA
   if (!is.logical(both)) stop("`both` must be a boolean value")
   if (!is.logical(multiple_screen_visit)) stop("`multiple_screen_visit` must be a boolean value")
 
-  # `VISTYPE` must not contains any numeric value
   detect_numeric_value(
     value = data_registry$VISTYPE,
     num_type = "any",
@@ -243,9 +243,10 @@ extract_adni_screen_date <- function(data_registry, phase = "Overall", both = FA
 }
 
 # Function to extract baseline/screening diagnostics status ----
-#' @title Gets Baseline/Screening Diagnostics Status
+#' @title Gets ADNI Baseline/Screening Diagnostics Summary
 #' @description
-#'  This function is used to extract the baseline diagnostics status when participant are enrolled in ADNI study or screening diagnostics status of those were screened for the study.
+#'  This function is used to extract the baseline diagnostics status when participant are enrolled in the ADNI study. 
+#'    Also screening diagnostics status of those were screened for the study.
 #' @param data_dxsum Data frame of DXSUM eCRF
 #' @param phase Either `Overall` or phase-specific diagnostics status, Default: 'Overall'
 #' @param visit_type Either `baseline` or `screen` diagnostic status, Default: 'baseline'
@@ -254,38 +255,39 @@ extract_adni_screen_date <- function(data_registry, phase = "Overall", both = FA
 #' @examples
 #' \dontrun{
 #' # Baseline diagnostics status of newly enrolled participant in ADNI study
-#' overall_baseline_dx <- extract_blscreen_dxsum(
+#' overall_baseline_dx <- adni_blscreen_dxsum(
 #'   data_dxsum = ADNIMERGE2::DXSUM,
 #'   phase = "Overall",
 #'   visit_type = "baseline"
 #' )
 #' # Phase-specific baseline diagnostic status: when participants enrolled in ADNI3 study phase.
-#' adni3_baseline_dx <- extract_blscreen_dxsum(
+#' adni3_baseline_dx <- adni_blscreen_dxsum(
 #'   data_dxsum = ADNIMERGE2::DXSUM,
 #'   phase = "ADNI3",
 #'   visit_type = "baseline"
 #' )
 #' # Screening diagnostics status: when participants screened for first time in ADNI study.
-#' first_screen_dx <- extract_blscreen_dxsum(
+#' first_screen_dx <- adni_blscreen_dxsum(
 #'   data_dxsum = ADNIMERGE2::DXSUM,
 #'   phase = "Overall",
 #'   visit_type = "screen"
 #' )
 #' # Phase-specific screening diagnostic status: when participants screened for ADNI3 study phase.
-#' adni3_screen_dx <- extract_blscreen_dxsum(
+#' adni3_screen_dx <- adni_blscreen_dxsum(
 #'   data_dxsum = ADNIMERGE2::DXSUM,
 #'   phase = "ADNI3",
 #'   visit_type = "screen"
 #' )
 #' }
-#' @rdname extract_blscreen_dxsum
+#' @rdname adni_blscreen_dxsum
+#' @family ADNI enrollment
+#' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify
 #' @importFrom magrittr %>%
-#' @family adni_fun_enroll
 #' @export
-extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "baseline") {
+adni_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "baseline") {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- DIAGNOSIS <- NULL
   overall_baseline_dx_flag <- overall_screen_dx_flag <- PTTYPE <- NULL
   arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
@@ -403,9 +405,10 @@ extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "
   return(output_dd)
 }
 
-## Extract Death Flag ----
-#' @title Extract Death Flag
-#' @description This function is used to extract death records in the study based on the adverse events record (i.e. in `ADVERSE` for ADNI3-4 and `RECADV` in ADNI1-GO-2) and study sum record (i.e. in `STUDSUM` for ADNI3-4).
+# Get Death Flag -----
+#' @title Death Flag
+#' @description This function is used to extract death records in the study.  
+#'   Based on the adverse events record (i.e. in `ADVERSE` for ADNI3-4 and `RECADV` in ADNI1-GO-2) and study sum record (i.e. in `STUDSUM` for ADNI3-4).
 #' @param adverse_dd Adverse events record data frame for ADNI3-4, similar to `ADVERSE`
 #' @param recadv_dd Adverse events record data frame for ADNI1-GO-2, similar to `RECADV`
 #' @param studysum_dd Final dispositions(study sum) data frame for ADNI3-4, similar ro `STUDYSUM`
@@ -419,18 +422,19 @@ extract_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "
 #'  }
 #' @examples
 #' \dontrun{
-#' extract_death_flag(
+#' get_death_flag(
 #'   studysum_dd = ADNIMERGE2::STUDYSUM,
 #'   adverse_dd = ADNIMERGE2::ADVERSE,
 #'   recadv_dd = ADNIMERGE2::RECADV
 #' )
 #' }
-#' @rdname extract_death_flag
-#' @family adni_fun_enroll
+#' @rdname get_death_flag
+#' @family ADNI flag
+#' @keywords adni_enroll_fun
 #' @importFrom dplyr full_join distinct group_by ungroup filter select mutate
 #' @importFrom assertr assert
 #' @export
-extract_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
+get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
   SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- AEHDTHDT <- NULL
   VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- NULL
   
@@ -494,6 +498,7 @@ extract_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
   return(death_event_dataset)
 }
 
+# Detect Closest Baseline Score -----
 #' @title Detect Closest Baseline Score
 #' @description
 #'  This function is used to flag the closest assessment record score to the
@@ -506,7 +511,8 @@ extract_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
 #'  The returned vector will contains `Yes` flag for the closest record
 #'  within the specified window period. Otherwise, missing value.
 #' @rdname detect_baseline_score
-#' @family utils_fun
+#' @family ADNI enrollment
+#' @keywords utils_fun
 detect_baseline_score <- function(cur_record_date, enroll_date, time_interval = 30) {
   time_diff <- as.numeric(as.Date(cur_record_date) - as.Date(enroll_date))
   abs_time_diff <- abs(time_diff)

@@ -23,7 +23,6 @@ data_path <- list.files(
   path = data_dir, pattern = "\\.rda$", all.files = TRUE,
   full.names = TRUE, recursive = FALSE
 )
-
 derived_data_path <- file.path(data_dir, str_c(DERIVED_DATASET_LIST, ".rda"))
 data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
 metadata_specs_path <- file.path(data_dir, "METACORES.rda")
@@ -33,7 +32,8 @@ updated_data_dict_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATAD
 dataset_date_stamped_file_path <- "./data-raw/date_stamped/dataset_list_date_stamped.csv"
 
 if (file.exists(dataset_date_stamped_file_path)) {
-  dataset_list_date_stamped <- readr::read_csv(dataset_date_stamped_file_path,
+  dataset_list_date_stamped <- readr::read_csv(
+    dataset_date_stamped_file_path,
     show_col_types = FALSE
   ) %>%
     mutate(
@@ -140,29 +140,43 @@ temp_data_dict <- temp_data_dict %>%
   # Add dataset labels
   left_join(
     DATADIC %>%
-      distinct(CRFNAME, TBLNAME) %>%
-      # Add dataset label manually for "ADNI2_VISITID" and "VISITS"
-      bind_rows(tibble(
-        TBLNAME = "ADNI2_VISITID",
-        CRFNAME = "ADNI2 Visit Code Mapping List"
-      )) %>%
-      mutate(CRFNAME = case_when(
-        is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "Combined list of phase specific visit code",
-        TRUE ~ CRFNAME
-      )) %>%
-      mutate(TBLNAME = str_to_lower(TBLNAME)) %>%
+      distinct(CRFNAME, TBLNAME, STATUS) %>%
       group_by(TBLNAME) %>%
-      mutate(CRFNAME = as.character(toString(CRFNAME))) %>%
+      filter((n() == 1 & row_number() == 1) |
+        (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" & row_number() == 1) |
+        (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
+        (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
+        (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)) %>%
       ungroup() %>%
-      distinct(TBLNAME, CRFNAME) %>%
       assert_uniq(TBLNAME) %>%
-      select(TBLNAME, CRFNAME),
-    by = c("tblname" = "TBLNAME")
+      mutate(CRFNAME = ifelse(CRFNAME == "-4", NA_character_, CRFNAME)) %>%
+      # Add dataset label manually for "ADNI2_VISITID" and "VISITS"
+      bind_rows(
+        tibble(
+          TBLNAME = "ADNI2_VISITID",
+          CRFNAME = "ADNI2 Visit Code Mapping List"
+        )
+      ) %>%
+      mutate(
+        CRFNAME = case_when(
+          is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "Combined list of phase specific visit code",
+          is.na(CRFNAME) ~ TBLNAME,
+          TRUE ~ CRFNAME
+        ),
+        tblname = str_to_lower(TBLNAME)
+      ) %>%
+      distinct(tblname, CRFNAME),
+    by = c("tblname" = "tblname")
   ) %>%
   # Add date stamp for dataset with a date stamped file extension
-  left_join(dataset_list_date_stamped, by = c("tblname" = "TBLNAME")) %>%
-  # verify(nrow(.) == nrow(temp_data_dict)) %>%
-  filter(!is.na(CRFNAME)) %>%
+  left_join(dataset_list_date_stamped,
+    by = c("tblname" = "TBLNAME")
+  ) %>%
+  verify(nrow(.) == nrow(temp_data_dict)) %>%
+  mutate(CRFNAME = case_when(
+    is.na(CRFNAME) ~ toupper(tblname),
+    !is.na(CRFNAME) ~ CRFNAME
+  )) %>%
   mutate(CRFNAME = case_when(
     !is.na(STAMPED_DATE) ~ str_c(CRFNAME, ": ", STAMPED_DATE),
     TRUE ~ CRFNAME
@@ -176,8 +190,9 @@ temp_data_dict <- temp_data_dict %>%
   mutate(prefix_char = str_remove(string = prefix_char, pattern = "_")) %>%
   mutate(
     dataset_label = case_when(
-      !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
-      is.na(prefix_char) ~ CRFNAME
+      !tblname %in% str_to_lower("DATADIC") & !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
+      !tblname %in% str_to_lower("DATADIC") & is.na(prefix_char) ~ CRFNAME,
+      tblname %in% str_to_lower("DATADIC") ~ "Data dictionary dataset"
     ),
     add_authors = authors,
     short_description = case_when(
@@ -213,6 +228,38 @@ temp_data_dict <- temp_data_dict %>%
     field_values, field_notes, dataset_label, add_authors, short_description,
     dataset_source_type, add_source
   )
+
+### Add dataset category/keywords ----
+dataset_cat_path <- file.path(".", "data-raw", "dataset_cat", "dataset_catgory.csv")
+if (file.exists(dataset_cat_path)) {
+  dataset_cat <- readr::read_csv(
+    file = dataset_cat_path,
+    col_names = TRUE,
+    show_col_types = FALSE
+  ) %>%
+    select(dir_cat, TBLNAME)
+} else {
+  dataset_cat <- tibble(
+    dir_cat = NA_character_,
+    TBLNAME = NA_character_
+  ) %>%
+    na.omit()
+}
+
+temp_data_dict <- temp_data_dict %>%
+  left_join(
+    tab <- dataset_cat %>%
+      mutate(dir_cat = str_remove_all(string = dir_cat, ",")) %>%
+      select(TBLNAME, dir_cat) %>% 
+      distinct(),
+    by = c("dd_name" = "TBLNAME")
+  ) %>%
+  verify(nrow(.) == nrow(temp_data_dict)) %>%
+  mutate(add_keywords = case_when(
+    is.na(dir_cat) ~ "other_raw_dataset",
+    !is.na(dir_cat) ~ dir_cat
+  )) %>% 
+  select(-dir_cat)
 
 ### Adjust for coded FLDNAME records ----
 coded_records_path <- file.path(".", "data-raw", "coded_records", "coded_records.csv")
@@ -282,7 +329,7 @@ cat("#' ADNI data download date",
   "#' @keywords datasets",
   "#' @name DATA_DOWNLOADED_DATE",
   "#' @usage data(DATA_DOWNLOADED_DATE)",
-  "#' @family raw_dataset",
+  "#' @keywords other_raw_dataset",
   "#' @format A `Date` class object.",
   "#' @examples",
   "#' \\dontrun{",
@@ -341,6 +388,7 @@ if (exists("derived_data_list")) {
     assert_uniq(dd_name, field_name) %>%
     assert_non_missing(dd_name, field_name, CRFNAME) %>%
     mutate(
+      dataset_label = CRFNAME,
       add_authors = authors,
       short_description = str_c(
         str_to_sentence(
@@ -357,15 +405,27 @@ if (exists("derived_data_list")) {
       field_notes = case_when(
         TEXT %in% " " | is.na(TEXT) ~ field_notes,
         TRUE ~ paste0(TEXT, "; ", field_notes)
-      )
+      ), 
+      add_keywords = "derived_dataset"
     ) %>%
-    mutate(across(c(field_label, field_notes, field_values), ~ str_replace_all(.x, "\\%", "\\\\%"))) %>%
-    mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with character")) %>%
-    mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")) %>%
+    mutate(across(
+      c(field_label, field_notes, field_values),
+      ~ str_replace_all(.x, "\\%", "\\\\%")
+    )) %>%
+    mutate(field_notes = str_replace_all(
+      string = field_notes,
+      pattern = "Character variable with",
+      replacement = ", with character"
+    )) %>%
+    mutate(field_notes = str_replace_all(
+      string = field_notes,
+      pattern = "Factor variable with levels",
+      replacement = ", with factor levels"
+    )) %>%
     select(
-      dd_name, num_rows, num_cols, field_name, field_class, field_label,
-      field_values, field_notes, add_authors, short_description,
-      dataset_source_type, add_source
+      dd_name, dataset_label, num_rows, num_cols, field_name, field_class,
+      field_label, field_values, field_notes, add_authors, short_description,
+      dataset_source_type, add_source, add_keywords
     ) %>%
     assert_non_missing(field_label, field_notes)
 
@@ -391,7 +451,7 @@ if (exists("derived_data_list")) {
     "#' @keywords metadata specs derived",
     "#' @name METACORES",
     "#' @usage data(METACORES)",
-    "#' @family derived_dataset",
+    "#' @keywords derived_dataset",
     "#' @format A R6-class wrapper object created using [metacore::metacore()] function.",
     paste0(
       "#' @source For more details about the metadata-specs see the help vignette: \n",

@@ -18,8 +18,10 @@
 #'   run_script = TRUE
 #' )
 #' }
-#' @seealso [usethis::use_data()]
 #' @rdname use_data_modified
+#' @family functions related to use_data
+#' @keywords use_data
+#' @seealso [usethis::use_data()]
 #' @importFrom rlang arg_match0
 #' @importFrom usethis use_data_raw use_data
 #' @importFrom readr read_lines write_lines
@@ -110,6 +112,7 @@ use_data_modified <- function(dataset_name,
 #' @param overwrite Indicator to overwrite file, Default: TRUE
 #' @return `TRUE` if the file is properly unzipped
 #' @rdname get_unzip_file
+#' @keywords utils_fun
 #' @importFrom utils unzip
 #' @export
 get_unzip_file <- function(input_dir,
@@ -145,6 +148,7 @@ get_unzip_file <- function(input_dir,
 #' @param remove_name_pattern Strings that will be removed from the file name, Default = `NULL`
 #' @return `TRUE` if the file action is properly completed (either renamed or copied)
 #' @rdname file_action
+#' @keywords utils_fun
 #' @importFrom stringr str_remove_all
 #' @importFrom rlang arg_match0
 #' @export
@@ -193,9 +197,6 @@ file_action <- function(input_dir,
 #' @param input_dir The directory where the .csv file is located.
 #' @param file_extension File extension, Default: ".csv"
 #' @return `TRUE` if the .rda dataset is created and stored in `data` directory
-#' @rdname using_use_data
-#' @seealso
-#'  \code{\link[ADNIMERGE2]{use_data_modified}}
 #' @examples
 #' \dontrun{
 #' using_use_data(
@@ -203,6 +204,9 @@ file_action <- function(input_dir,
 #'   file_extension = ".csv"
 #' )
 #' }
+#' @rdname using_use_data
+#' @keywords use_data
+#' @family functions related to use_data
 #' @importFrom readr read_csv
 #' @importFrom stringr str_c str_remove_all
 #' @importFrom rlang arg_match0
@@ -220,9 +224,11 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 
   csv_data_list <- lapply(file_list, function(x) {
     message("Importing ", x, " dataset")
-    readr::read_csv(file = file.path(input_dir, x), 
-                    col_names = TRUE, 
-                    show_col_types = FALSE)
+    readr::read_csv(
+      file = file.path(input_dir, x),
+      col_names = TRUE,
+      show_col_types = FALSE
+    )
   })
   names(csv_data_list) <- str_remove_all(file_list, pattern = file_extension)
 
@@ -254,6 +260,8 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 #' @param textVar Variable name for field text. Default: "TEXT"
 #' @return Returned one row data.frame  that contains `field_value` and `field_label` variables.
 #' @rdname adjust_code_labels
+#' @keywords adni_datadic_fun
+#' @family data dictionary related functions
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate rename_with across pull row_number
 #' @importFrom tidyselect where all_of
@@ -277,7 +285,9 @@ adjust_code_labels <- function(data_dict,
   data_dict <- data_dict %>%
     mutate(across(all_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
     rename_with(
-      ~ paste0(column_list_dd %>% filter(specified_name_list == .x) %>% pull(renamed_list)),
+      ~ paste0(column_list_dd %>%
+        filter(specified_name_list == .x) %>%
+        pull(renamed_list)),
       all_of(column_list_dd$specified_name_list)
     )
 
@@ -289,7 +299,10 @@ adjust_code_labels <- function(data_dict,
       data_dict <- data_dict %>% filter(row_number() %in% n())
       temp_code <- data_dict$code_var
       temp_text <- data_dict$text_var
-      output_data <- tibble::tibble(field_value = temp_code, field_label = temp_text)
+      output_data <- tibble::tibble(
+        field_value = temp_code,
+        field_label = temp_text
+      )
     }
 
     if (unique_rows > 1) {
@@ -337,6 +350,8 @@ adjust_code_labels <- function(data_dict,
 #' )
 #' }
 #' @rdname common_cols_description_datadic
+#' @keywords adni_datadic_fun
+#' @family data dictionary related functions
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across filter bind_rows
 #' @importFrom assertr verify
@@ -404,14 +419,18 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
 #' @title Checks Directory Path Pattern
 #' @description This function is used check whether the last character of a directory name is "/".
 #' @param dir_path Directory path name
-#' @return A stop message if the last character is "/". Otherwise return `TRUE`.
+#' @return A stop message if directory is not existed or the last character is "/" . Otherwise return `TRUE`.
 #' @rdname check_dir_path
+#' @keywords utils_fun
+#' @family checks function
 check_dir_path <- function(dir_path) {
-  if (grepl(pattern = "/$", x = dir_path, perl = TRUE)) {
+  if (all(grepl(pattern = "/$", x = dir_path, perl = TRUE))) {
     stop("The last `/` character must be removed from ", dir_path, ".")
-  } else {
-    return(TRUE)
   }
+  if (all(dir.exists(dir_path) == FALSE)) {
+    stop(dir_path, " directory is not existed!")
+  }
+  return(TRUE)
 }
 
 # Expand DATADIC Across Study Phase ----
@@ -422,6 +441,8 @@ check_dir_path <- function(dir_path) {
 #' @param concat_char Concatenate character
 #' @return Updated data directory data frame with the same structure as `data_dict`
 #' @rdname expand_data_dict
+#' @keywords adni_datadic_fun
+#' @family data dictionary related functions
 #' @importFrom stringr str_split str_detect
 #' @importFrom dplyr filter select bind_rows
 #' @importFrom assertr verify
@@ -431,12 +452,21 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
   require(stringr)
   require(assertr)
   PHASE <- NULL
-  check_colnames(data = data_dict, col_names = "PHASE", strict = TRUE, stop_message = TRUE)
+  check_colnames(
+    data = data_dict,
+    col_names = "PHASE",
+    strict = TRUE,
+    stop_message = TRUE
+  )
   if (all(is.na(concat_phase))) {
     return(data_dict)
   }
   if (any(!str_detect(string = concat_phase, pattern = concat_char))) stop(concat_char, " must be presented.")
-  concat_phase_list <- str_split(string = concat_phase, pattern = concat_char, simplify = FALSE)
+  concat_phase_list <- str_split(
+    string = concat_phase,
+    pattern = concat_char,
+    simplify = FALSE
+  )
   names(concat_phase_list) <- concat_phase
 
   output_data_dict <- lapply(names(concat_phase_list), function(i) {
@@ -455,4 +485,72 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
     filter(!PHASE %in% names(concat_phase_list)) %>%
     bind_rows(output_data_dict)
   return(output_data_dict)
+}
+
+
+# Functions to get dataset category/groups ----
+#' @title Get Dataset Category/Group
+#' @description This function is used to categorize dataset based on the corresponding directory location.
+#' @param dir.path Directory path
+#' @param extension_pattern File extension patterns, Default: '\.csv$'
+#' @return A data.frame that contains the following columns:
+#' @examples
+#' \dontrun{
+#' get_dataset_cat(
+#'   dir.path = file.path(".", "data-raw"),
+#'   extension_pattern = "\\.csv$"
+#' )
+#' }
+#' @rdname get_dataset_cat
+#' @family utility function
+#' @keywords utils_fun
+#' @importFrom stringr str_remove_all str_detect str_to_lower
+#' @importFrom tibble tibble
+#' @importFrom dplyr bind_rows mutate case_when select 
+#' @export
+get_dataset_cat <- function(dir.path, extension_pattern = "\\.csv$") {
+  require(tidyverse)
+  dir <- file_list <- dir_cat <- NULL
+  # Function to extract all `*.csv$` files within a single directory
+  get_file_list <- function(dir.path, extension_pattern) {
+    check_dir_path(dir.path)
+    file_list <- list.files(path = dir.path, pattern = extension_pattern, all.files = TRUE)
+    if (all(!is.na(file_list))) {
+      file_list <- str_remove_all(string = file_list, pattern = extension_pattern)
+    }
+    output_data <- tibble(dir = dir.path, file_list = file_list)
+    return(output_data)
+  }
+  check_dir_path(dir.path)
+  # Get directories list
+  dir_list <- list.dirs(path = dir.path, full.names = TRUE, recursive = FALSE)
+  if (all(!is.na(dir_list))) {
+    dir_list <- dir_list[str_detect(string = dir_list, pattern = "/\\_|/Tables\\_")]
+  } else {
+    dir_list <- NA_character_
+  }
+  dir_list <- c(dir.path, dir_list)
+  dir_list <- dir_list[!is.na(dir_list)]
+  dir_list <- unique(dir_list)
+
+  output_data <- lapply(dir_list, function(i) {
+    get_file_list(dir.path = i, extension_pattern = extension_pattern)
+  }) %>%
+    bind_rows() %>%
+    mutate(dir_cat = str_remove_all(
+      string = dir,
+      pattern = str_c(dir.path, "/")
+    )) %>%
+    mutate(dir_cat = str_remove_all(
+      string = dir_cat,
+      pattern = "^\\_"
+    )) %>%
+    mutate(dir_cat = str_to_lower(dir_cat)) %>%
+    mutate(dir_cat = case_when(
+      str_detect(string = dir_cat, pattern = "^table") | dir_cat %in% dir.path ~ "other_raw_dataset",
+      TRUE ~ dir_cat
+    )) %>%
+    select(dir, file_list, dir_cat)
+
+  return(output_data)
 }

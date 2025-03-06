@@ -5,16 +5,19 @@ source(file.path(".", "R", "checks-assert.R"))
 
 # Libraries ----
 library(tidyverse)
+library(readr)
 library(assertr)
 
 # Directories ----
 raw_data_dir <- "./data-raw"
 # Clear up the following directories ----
 updated_datadic_dir <- file.path(raw_data_dir, "updated_datadic")
-date_stamped_dir <- file.path(raw_data_dir, "date_stamped") 
+date_stamped_dir <- file.path(raw_data_dir, "date_stamped")
 common_columns_dir <- file.path(raw_data_dir, "common_columns")
+dataset_cat_dir <- file.path(raw_data_dir, "dataset_cat")
 data_dir <- "./data"
-specified_dir <- c(data_dir, updated_datadic_dir, date_stamped_dir, common_columns_dir)
+specified_dir <- c(data_dir, updated_datadic_dir, date_stamped_dir, 
+                   common_columns_dir, dataset_cat_dir)
 lapply(specified_dir, function(i) {
   if (dir.exists(i) == TRUE) unlink(i, recursive = TRUE)
   message(i, " directory has been removed!")
@@ -61,7 +64,10 @@ if (EXISTED_ZIPFILE) {
     ### Unzipped file ----
     unzipped_file_status <- get_unzip_file(
       input_dir = raw_data_dir,
-      file_name = str_remove_all(string = zip_file, pattern = str_c("^\\", raw_data_dir, "/")),
+      file_name = str_remove_all(
+        string = zip_file,
+        pattern = str_c("^\\", raw_data_dir, "/")
+      ),
       output_dir = ".",
       overwrite = TRUE
     )
@@ -123,6 +129,22 @@ if (EXISTED_CSVFILE) {
 }
 rm(list = c("date_stamped_suffix", "csv_file_list", "csv_name_pattern"))
 
+# Create dataset category/groups ----
+if (dir.exists(dataset_cat_dir)) unlink(dataset_cat_dir)
+dir.create(dataset_cat_dir)
+dataset_cat <- get_dataset_cat(
+  dir.path = raw_data_dir,
+  extension_pattern = "\\.csv$"
+) %>%
+  group_by(file_list) %>%
+  filter((n() == 1 & row_number() == 1) |
+    (n() > 1 & any(dir_cat %in% "raw_other") & !dir_cat %in% "raw_other") |
+    (n() > 1 & all(!dir_cat %in% "raw_other"))) %>%
+  mutate(dir_cat = toString(dir_cat)) %>%
+  ungroup()
+
+# See line 330
+
 # Adding common columns and converting `-4` & `-1` value as missing values ----
 data_path_list <- list.files(
   path = data_dir, pattern = "\\.rda$", full.names = TRUE,
@@ -147,14 +169,23 @@ if (UPDATE_MISSING_VALUE) {
 
   tblname_list_dd <- tibble(file_path = data_path_list) %>%
     mutate(
-      short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern),
-      tblname = str_to_upper(str_remove_all(string = file_path, pattern = string_removed_pattern))
+      short_tblname = str_remove_all(
+        string = file_path,
+        pattern = file_path_pattern
+      ),
+      tblname = str_remove_all(
+        string = file_path,
+        pattern = string_removed_pattern
+      ),
+      tblname = str_to_upper(tblname)
     )
 
   for (tb in tblname_list_dd$short_tblname) {
     ## Load all the datasets to .GlobalEnv
     lapply(
-      tblname_list_dd %>% filter(short_tblname == tb) %>% pull(file_path),
+      tblname_list_dd %>%
+        filter(short_tblname == tb) %>%
+        pull(file_path),
       load, .GlobalEnv
     )
     assign("dd", get(tb))
@@ -226,15 +257,35 @@ data_path_list <- data_path_list[!data_path_list %in% c(
 
 date_stamped_pattern <- "\\_[0-9]{2}\\_[0-9]{2}\\_[0-9]{2}"
 dataset_list_dd <- tibble(file_path = data_path_list) %>%
-  mutate(short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern)) %>%
-  filter(str_detect(string = file_path, pattern = date_stamped_pattern)) %>%
+  mutate(short_tblname = str_remove_all(
+    string = file_path,
+    pattern = file_path_pattern
+  )) %>%
+  filter(str_detect(
+    string = file_path,
+    pattern = date_stamped_pattern
+  )) %>%
   {
     if (nrow(.) > 1) {
       mutate(.,
-        updated_file_path = str_remove_all(string = file_path, pattern = date_stamped_pattern),
-        stamped_date = str_extract_all(string = file_path, pattern = date_stamped_pattern, simplify = TRUE)
+        updated_file_path = str_remove_all(
+          string = file_path,
+          pattern = date_stamped_pattern
+        ),
+        stamped_date = str_extract_all(
+          string = file_path,
+          pattern = date_stamped_pattern,
+          simplify = TRUE
+        )
       ) %>%
-        mutate(., stamped_date = str_replace_all(string = str_sub(string = stamped_date, start = 2), pattern = "\\_", "-")) %>%
+        mutate(., stamped_date = str_sub(
+          string = stamped_date,
+          start = 2
+        )) %>%
+        mutate(., stamped_date = str_replace_all(
+          string = stamped_date,
+          pattern = "\\_", "-"
+        )) %>%
         mutate(., stamped_date = as.Date(stamped_date, "%m-%d-%y")) %>%
         # To add version extension for the dataset with multiple truncation
         group_by(., updated_file_path) %>%
@@ -246,7 +297,11 @@ dataset_list_dd <- tibble(file_path = data_path_list) %>%
         ungroup(.) %>%
         mutate(., version_extension = str_c("_V", version_order, ".rda")) %>%
         mutate(., updated_file_path = case_when(
-          num_records > 1 ~ str_c(str_replace(string = updated_file_path, pattern = "\\.rda$", replacement = version_extension)),
+          num_records > 1 ~ str_c(str_replace(
+            string = updated_file_path,
+            pattern = "\\.rda$",
+            replacement = version_extension
+          )),
           TRUE ~ updated_file_path
         )) %>%
         mutate(., updated_short_tblname = str_remove_all(
@@ -260,15 +315,38 @@ dataset_list_dd <- tibble(file_path = data_path_list) %>%
     }
   }
 
-# Save the list of dataset with date stamped file extension
+## Save the list of dataset with date stamped file extension ----
 dir.create(date_stamped_dir)
+dataset_stamped_date <- dataset_list_dd %>%
+  mutate(
+    ID = row_number(),
+    PREVIOUS_TBLNAME = short_tblname,
+    STAMPED_DATE = stamped_date,
+    UPDATED_TBLNAME = updated_short_tblname
+  ) %>%
+  select(ID, PREVIOUS_TBLNAME, STAMPED_DATE, UPDATED_TBLNAME)
 readr::write_csv(
-  x = dataset_list_dd %>%
-    mutate(ID = row_number()) %>%
-    select(ID, PREVIOUS_TBLNAME = short_tblname, STAMPED_DATE = stamped_date, UPDATED_TBLNAME = updated_short_tblname),
+  x = dataset_stamped_date,
   file = file.path(date_stamped_dir, "dataset_list_date_stamped.csv")
 )
+dataset_cat <- dataset_cat %>%
+  left_join(
+    dataset_stamped_date %>%
+      select(PREVIOUS_TBLNAME, UPDATED_TBLNAME),
+    by = c("file_list" = "PREVIOUS_TBLNAME")
+  ) %>%
+  mutate(TBLNAME = case_when(
+    !is.na(UPDATED_TBLNAME) ~ UPDATED_TBLNAME,
+    TRUE ~ file_list
+  ))
 
+## Save dataset category ----
+readr::write_csv(
+  x = dataset_cat,
+  file = file.path(dataset_cat_dir, "dataset_catgory.csv")
+)
+
+## Save the updated dataset with date stamped ---- 
 if (nrow(dataset_list_dd) > 0) {
   updated_data_path_list <- str_remove_all(string = data_path_list, pattern = "^\\./data/")
   if (any(dataset_list_dd$updated_short_tblname %in% updated_data_path_list)) stop("Check for duplicated files in `./data` before adjusting date stamped extension")
@@ -339,10 +417,18 @@ if (length(data_path_list) > 0) {
 if (CHECK_COMMON_COL) {
   dataset_not_contains_common_col <- lapply(data_path_list, function(tblname) {
     common_cols <- c("ORIGPROT", "COLPROT")
-    short_tblname <- str_remove_all(string = tblname, pattern = file_path_pattern)
+    short_tblname <- str_remove_all(
+      string = tblname,
+      pattern = file_path_pattern
+    )
     lapply(tblname, load, .GlobalEnv)
     # message("Checking for common cols (ORIGPROT and COLPROT) in ", short_tblname)
-    status <- check_colnames(data = get(short_tblname), col_names = common_cols, strict = TRUE, stop_message = FALSE)
+    status <- check_colnames(
+      data = get(short_tblname),
+      col_names = common_cols,
+      strict = TRUE,
+      stop_message = FALSE
+    )
     if (status != TRUE) result <- str_c(short_tblname, " = ", status) else result <- str_c(short_tblname, " = ", "NA")
     rm(list = short_tblname, envir = .GlobalEnv)
     return(result)
@@ -352,12 +438,21 @@ if (CHECK_COMMON_COL) {
     separate(col = tblname, into = c("tblname", "colname_list"), sep = " = ") %>%
     filter(!colname_list %in% "NA" & !is.na(colname_list)) %>%
     mutate(
-      contains_colport_status = case_when(str_detect(string = colname_list, pattern = "COLPROT") ~ "No"),
-      contains_origport_status = case_when(str_detect(string = colname_list, pattern = "ORIGPROT") ~ "No")
+      contains_colport_status = case_when(str_detect(
+        string = colname_list,
+        pattern = "COLPROT"
+      ) ~ "No"),
+      contains_origport_status = case_when(str_detect(
+        string = colname_list,
+        pattern = "ORIGPROT"
+      ) ~ "No")
     )
 
   dataset_list_dd <- tibble(file_path = data_path_list) %>%
-    mutate(short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern)) %>%
+    mutate(short_tblname = str_remove_all(
+      string = file_path,
+      pattern = file_path_pattern
+    )) %>%
     assert_uniq(short_tblname) %>%
     left_join(
       result_table %>%
@@ -365,7 +460,10 @@ if (CHECK_COMMON_COL) {
       by = c("short_tblname" = "tblname")
     ) %>%
     assert_uniq(short_tblname) %>%
-    mutate(across(c(contains_colport_status, contains_origport_status), ~ case_when(is.na(.x) ~ "Yes", TRUE ~ "No"))) %>%
+    mutate(across(
+      c(contains_colport_status, contains_origport_status),
+      ~ case_when(is.na(.x) ~ "Yes", TRUE ~ "No")
+    )) %>%
     mutate(contain_common_cols = case_when(
       contains_colport_status == "Yes" & contains_origport_status == "Yes" ~ "Both COLPROT and ORIGPROT",
       contains_colport_status == "Yes" & contains_origport_status == "No" ~ "Only COLPROT",
@@ -421,9 +519,9 @@ if (CREATE_UPDATED_DATADIC) {
       TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI3" ~ "TAUMETA3",
       TBLNAME %in% "TAUQC" & PHASE %in% "ADNI3" ~ "TAUQC3",
       TBLNAME %in% "TBM" ~ "TBM22",
-      TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2", 
-      TBLNAME %in% "PETMETA" & PHASE %in% "ADNI1" ~ "PETMETA_ADNI1", 
-      TBLNAME %in% "PETMETA" & PHASE %in% c("ADNIGO", "ADNI2") ~ "PETMETA_ADNIGO2", 
+      TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2",
+      TBLNAME %in% "PETMETA" & PHASE %in% "ADNI1" ~ "PETMETA_ADNI1",
+      TBLNAME %in% "PETMETA" & PHASE %in% c("ADNIGO", "ADNI2") ~ "PETMETA_ADNIGO2",
       TBLNAME %in% "PETMETA" & PHASE %in% "ADNI3" ~ "PETMETA3"
     )) %>%
     filter(!is.na(TBLNAME))
@@ -455,7 +553,10 @@ if (CHECK_COMMON_COL == TRUE & CREATE_UPDATED_DATADIC == TRUE) {
     filter(short_tblname %in% unique(UPDATED_DATADIC$TBLNAME))
 
   # Description of common cols
-  common_description_text <- list(ORIGPROT = "Original study protocol", COLPROT = "Study protocol of data collection")
+  common_description_text <- list(
+    ORIGPROT = "Original study protocol",
+    COLPROT = "Study protocol of data collection"
+  )
 
   for (tblname in unique(dataset_list_dd$short_tblname)) {
     tblname_common_col <- dataset_list_dd %>%

@@ -48,7 +48,11 @@ if (file.exists(cur_data_dict_path)) {
 if (EXISTED_DATADTIC) {
   # Expand DATADIC for combined phases
   DATADIC <- DATADIC %>%
-    mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]"))
+    mutate(PHASE = str_remove_all(
+      string = PHASE,
+      pattern = "\\[|\\]"
+    ))
+
   concat_phase <- unique(DATADIC$PHASE)[!is.na(unique(DATADIC$PHASE))]
   concat_phase <- concat_phase[str_detect(concat_phase, ",")]
   DATADIC <- expand_data_dict(
@@ -64,12 +68,22 @@ if (EXISTED_DATADTIC) {
 
   tblname_list_dd <- tibble(file_path = data_path_list) %>%
     mutate(
-      short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern),
-      tblname = str_to_upper(str_remove_all(string = file_path, pattern = string_removed_pattern))
+      short_tblname = str_remove_all(
+        string = file_path,
+        pattern = file_path_pattern
+      ),
+      tblname = str_remove_all(
+        string = file_path,
+        pattern = string_removed_pattern
+      ),
+      tblname = str_to_upper(tblname)
     )
 
   # Extract all FLDNAMEs for existed TBLNAMEs with coded value
-  adverse_event_col <- c(str_c("AESEV", 3:10), str_c("AEDATE", 3:10), str_c("AECHRON", 3:10), str_c("AECHANGE", 3:10))
+  adverse_event_col <- c(
+    str_c("AESEV", 3:10), str_c("AEDATE", 3:10),
+    str_c("AECHRON", 3:10), str_c("AECHANGE", 3:10)
+  )
 
   data_dict <- get_factor_levels_datadict(
     data_dict = DATADIC,
@@ -183,7 +197,10 @@ if (DECODE_VALUE) {
         filter(!TBLNAME %in% cur_tblname) %>%
         bind_rows(convert_codelist)
 
-      phaseVar <- extract_cols(data = dd, col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID"))
+      phaseVar <- get_cols_name(
+        data = dd,
+        col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID")
+      )
 
       if (!is.na(phaseVar)) {
         message(note_prefix, "Start replacing values of dataset: ", cur_tblname_short)

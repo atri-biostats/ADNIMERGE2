@@ -461,8 +461,8 @@ summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
 generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, data = NULL, data_dict = NULL,
                                             dataset_source_type = "raw", short_description = NULL,
                                             field_nameVar = NULL, field_classVar = NULL, field_labelVar = NULL, field_notesVar = NULL,
-                                            add_source = NULL, add_seealso = NULL, add_authors = NULL, add_reference = NULL, add_rdname_prefix = NULL,
-                                            output_file_name = NULL) {
+                                            add_source = NULL, add_seealso = NULL, add_authors = NULL, add_reference = NULL, 
+                                            add_rdname_prefix = NULL, add_keywords = NULL, output_file_name = NULL) {
   require(tidyverse)
   require(tibble)
   require(rlang)
@@ -514,8 +514,9 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
     "#' @format A data frame with ", unique(temp_summarized_dd$num_rows),
     " observations and ", unique(temp_summarized_dd$num_cols), " variables. \n"
   )
-  # }
-
+  
+  if (is.null(add_keywords)) add_keywords <- str_c(tolower(dataset_source_type), "_dataset")
+    
   data_doc <- str_c(
     str_c("#' @title ", data_source_label, " ", str_remove_all(dataset_label, "\\[|\\]"), "\n"),
     "#'\n",
@@ -523,9 +524,7 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
     "#'\n",
     str_c("#' @usage data(", dataset_name, ") \n"),
     "#'\n",
-    str_c("#' @keywords ", dataset_source_type, " dataset \n"),
-    "#'\n",
-    str_c("#' @family ", tolower(dataset_source_type), "_dataset \n"),
+    str_c("#' @keywords ", add_keywords, " \n"),
     "#'\n",
     format_description,
     "#' @details\n",
@@ -658,7 +657,7 @@ generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "
     ## Add default values for the variable names that are not presented in the data_dict
     common_col_names <- c(
       "dataset_label", "short_description", "add_source", "add_seealso",
-      "add_authors", "add_reference", "add_rdname_prefix"
+      "add_authors", "add_reference", "add_rdname_prefix", "add_keywords"
     )
     missing_common_cols <- common_col_names[!common_col_names %in% colnames(data_dict)]
     if (length(missing_common_cols) > 0) {
@@ -704,6 +703,7 @@ generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "
       add_authors = return_null_missing(data = temp_data_dict, var_name = "add_authors"),
       add_reference = return_null_missing(data = temp_data_dict, var_name = "add_reference"),
       add_rdname_prefix = return_null_missing(data = temp_data_dict, var_name = "add_rdname_prefix"),
+      add_keywords = return_null_missing(data = temp_data_dict, var_name = "add_keywords"),
       output_file_name = NULL
     )
     return(temp_single_dd)
