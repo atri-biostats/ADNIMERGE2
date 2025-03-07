@@ -3,37 +3,79 @@ template:
   bootstrap: 5
 
 reference:
-- title: ADNI Specific Functions
-- subtitle: Enrollment
-  contents:
-  - has_keyword("adni_enroll_fun")
+  - title: ADNI Raw Datasets
+  - subtitle: Subject Characteristics
+    contents:
+    - has_keyword("subject_characteristics")
+    
+  - subtitle: Enrollment
+    contents:
+    - has_keyword("enrollment")
+    
+  - subtitle: Medical History, Initial Health History, Adverse Events
+    contents:
+    - has_keyword("medical_history")
+
+  - subtitle: Assessments
+    contents:
+    - has_keyword("assessments")
   
-- subtitle: Study Protocol/Phase
-  contents:
-  - has_keyword("adni_fun_procotol")
+  - subtitle: Imaging
+    contents:
+    - has_keyword("imaging")   
+    
+  - subtitle: Biospecimen
+    contents:
+    - has_keyword("biospecimen")
+
+  - subtitle: Other Raw Datasets
+    contents:
+    - has_keyword("other_raw_dataset")
+    
+  - title: ADNI Derived Datasets
+    contents:
+    - has_keyword("derived_dataset")
   
-- subtitle: Data Dictionary - DATADIC
-  contents:
-  - has_keyword("adni_fun_datadic")
+  - title: ADNI Specific Functions
+  - subtitle: Enrollment
+    contents:
+    - has_keyword("adni_enroll_fun")
+    
+  - subtitle: Study Protocol/Phase
+    contents:
+    - has_keyword("adni_procotol_fun")
+    
+  - subtitle: Data Dictionary - DATADIC
+    contents:
+    - has_keyword("adni_datadic_fun")
+    - has_keyword("adni_replace_fun")
+    
+  - subtitle: Scoring Functions
+    contents:
+    - has_keyword("adni_scoring_fun")
   
-- subtitle: Data Dictionary - DATADIC
-  contents:
-  - has_keyword("adni_fun_datadic")
-  - has_keyword("adni_fun_replace")
-  
-- subtitle: Scoring Functions
-  contents:
-  - has_keyword("adni_score_fun")
-  
-- title: Utility Functions
-   contents:
-   - has_keyword("utils_fun")
-   
-- title: ADNI Raw Dataset
-   contents:
-   - has_keyword("raw_dataset")
-   
-- title: ADNI Derived Dataset
-   contents:
-   - has_keyword("derived_dataset")
-   
+  - title: Utility Functions
+    contents:
+    - has_keyword("utils_fun")
+     
+navbar:
+  structure:
+    left:  [intro, reference, articles]
+    right: [search, github]
+  components:
+    reference:
+      text: Reference
+      href: reference/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/atrihub/ADNIMERGE2/
+      aria-label: github
+    articles:
+      text: Articles
+      menu:
+      - text: ADNIMERGE2-Derived-Data
+        href: articles/ADNIMERGE2-Derived-Data.html
+      - text: ADNIMERGE2-Analysis-Meta-Specs
+        href: articles/ADNIMERGE2-Analysis-Meta-Specs.html
+      - text: ADNIMERGE2-Analysis-Data
+        href: articles/ADNIMERGE2-Analysis-Data.html
