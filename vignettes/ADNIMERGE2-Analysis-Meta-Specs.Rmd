@@ -1,0 +1,752 @@
+---
+title: "ADNIMERGE2-Analysis-Meta-Specs"
+output: 
+   rmarkdown::html_vignette:
+     toc: true
+     code_folding: hide
+vignette: >
+  %\VignetteIndexEntry{ADNIMERGE2-Analysis-Meta-Specs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  class.source = "fold-show"
+)
+# Data print function
+datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
+  DT::datatable(
+    data = data, ...,
+    options = list(paging = paging, searchable = searchable, bInfo = bInfo, ...)
+  )
+}
+```
+
+# Introduction
+
+This document describes creating a metadata specification using [PHARMAVERSE]() workflow. The matadata-specs can be used to generate analysis ready dataset (i.e., ADaM). The matadata-specs required standardized derived dataset, such as SDTM, as input. For illustration purpose, a metadata-specs for following selected analysis ready dataset will be created.
+
+* Subject-Level Analysis Dataset - ADSL
+* Adverse Events Analysis Dataset - ADAE
+* Analysis Dataset of Questionnaires - ADQS
+
+The metadata-specs is created using the [metacore](https://atorus-research.github.io/metacore/) R package.
+ 
+# Load required R packages {.unlisted}
+
+```{r setup-libraries, class.source = NULL, echo = TRUE}
+library(tidyverse)
+library(assertr)
+library(labelled)
+library(DT)
+library(metacore)
+```
+
+# Building Metadata Specification
+
+```{r prep-adsl-spec, class.source = NULL}
+# ADSL Specs ----
+adsl_dic <- bind_rows(
+  c(variable = "STUDYID", type = "text", length = "4", label = "Study Identifier", common = TRUE, origin = "Predecessor", derivation = "DM.STUDYID"),
+  c(variable = "USUBJID", type = "text", length = "20", label = "Unique Subject Identifier", common = TRUE, origin = "Predecessor", derivation = "DM.USUBJID"),
+  c(variable = "SUBJID", type = "text", length = "15", label = "Subject Identifier for the Study", origin = "Predecessor", derivation = "DM.SUBJID"),
+  c(variable = "SITEID", type = "text", length = "3", label = "Study Site Identifier", origin = "Predecessor", derivation = "DM.SITEID"),
+  c(variable = "AGE", type = "float", length = "3", label = "Age (in Years)", common = TRUE, sig_dig = 1, origin = "Predecessor", derivation = "DM.AGE"),
+  c(variable = "AGEU", type = "text", length = "5", label = "Age Units", common = TRUE, code_id = "AGEU", origin = "Predecessor", derivation = "DM.AGEU"),
+  c(
+    variable = "AGEGR1N", type = "integer", length = "1", label = "Pooled Age Group 1 (N)", common = FALSE, code_id = "AGEGR1N", origin = "Derived",
+    derivation = "AGEGR1 = 1 if AGE <65. AGEGR1 = 2 if AGE >=65."
+  ),
+  c(
+    variable = "AGEGR1", type = "text", length = "8", label = "Pooled Age Group 1", common = FALSE, code_id = "AGEGR1", origin = "Derived",
+    derivation = "Character variable derived from ADSL.AGEGR1N"
+  ),
+  c(variable = "SEX", type = "text", length = "8", label = "Sex", common = TRUE, code_id = "SEX", origin = "Predecessor", derivation = "DM.SEX"),
+  c(variable = "RACE", type = "text", length = "45", label = "Race", common = TRUE, code_id = "RACE", origin = "Predecessor", derivation = "DM.RACE"),
+  c(variable = "RACEN", type = "integer", length = "3", label = "Race (N)", common = FALSE, code_id = "RACEN", origin = "Predecessor", derivation = "Numeric code for RACE"),
+  c(variable = "ETHNIC", type = "text", length = "40", label = "Ethnicity", code_id = "ETHNIC", origin = "Predecessor", derivation = "DM.ETHNIC"),
+  c(
+    variable = "ENRLFL", type = "text", length = "3", label = "Enrolled Population Flag", common = TRUE, code_id = "YN", origin = "Derived",
+    derivation = "Yes if ENRLDT is non-missing. No otherwise"
+  ),
+  c(variable = "DTHFL", type = "text", length = "3", label = "Death Flag", code_id = "Y_BLANK", origin = "Predecessor", derivation = "DM.DTHFL"),
+  c(variable = "ARM", type = "text", length = "40", label = "Description of Planned Arm", origin = "Predecessor", derivation = "DM.ARM"),
+  c(variable = "ACTARM", type = "text", length = "40", label = "Description of Actual Arm", origin = "Predecessor", derivation = "DM.ACTARM"),
+  c(variable = "ENRLDT", type = "date", length = "10", label = "Date of Enrollment", format = "DATE10.", origin = "Predecessor", derivation = "DM.RFSTDTC"),
+  # c(variable = "EOSSTT", type = "text", length = "30", label = "End of Study Status", code_id = "SBJTSTAT", origin = "Derived"),
+  c(
+    variable = "EOSDT", type = "date", length = "10", format = "DATE10.", label = "End of Study Date",
+    common = TRUE, origin = "Predecessor", derivation = "DM.RFPENDTC"
+  ),
+  c(
+    variable = "EOSDTF", type = "text", length = "1", label = "End of Study Date Imputation Flag", common = TRUE, origin = "Derived",
+    derivation = "ADSL.EOSDTF is missing"
+  ),
+  # c(variable = "DCSREAS", type = "text", length = "60", label = "Reasons for Discontinuation from Study",   origin = "Derived"),
+  # c(variable = "DCSREASP", type = "text", length = "60", label = "Reason Spec for Discont from Study",   origin = "Derived"),
+  c(variable = "DTHDT", type = "date", length = "10", label = "Date of Death", format = "DATE10.", origin = "Predecessor", derivation = "DM.DTHDTC"),
+  c(variable = "DTHDTF", type = "text", length = "1", label = "Date of Death Imputation Flag", origin = "Derived", derivation = "ADSL.DTHDT if days or month missing."),
+  c(
+    variable = "EDUC", type = "float", length = "2", label = "Education", sig_dig = 1, origin = "Derived",
+    derivation = "SC.SCSTRESN where SC.SCTESTCD=EDUCAT and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+  ),
+  c(
+    variable = "MARISTAT", type = "text", length = "25", label = "Marital Status", origin = "Derived",
+    derivation = "SC.SCORRES where SC.SCTESTCD=PTMARRY and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+  ),
+  c(
+    variable = "BMI", type = "float", length = "3", label = "Body Mass Index", sig_dig = 1, origin = "Derived",
+    derivation = "Compute from VS.VSSTRESN where VS.VSTESTCD=WEIGHT and VS.VSTESTCD=HEIGHT, and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+  ),
+  c(variable = "BMIBLU", type = "text", length = "8", label = "Body Mass Index Unit", code_id = "BMIBLU", origin = "Assigned"),
+  c(
+    variable = "DX", type = "text", length = "40", label = "Baseline Diagnostics Status", common = TRUE, code_id = "DX", origin = "Derived",
+    derivation = "RS.RSSTRESC where RS.RSTESTCD=DX and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+  ),
+  c(
+    variable = "AMYSTAT", type = "text", length = "20", label = "Baseline Amyloid Status", code_id = "AMYSTAT",
+    origin = "Predecessor", derivation = "NV.NVSTRESC where NV.NVTESTCD=AMYSTAT and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+  ), 
+  c(variable = "ORIGPROT", type = "text", length = "8", label = "Original Study Protocol", origin = "Predecessor", derivation = "DM.ORIGPROT"),
+) %>%
+  as_tibble() %>%
+  mutate(
+    dataset = "ADSL",
+    structure = "One record per subject",
+    dataset.label = "Subject-Level Analysis Dataset",
+    key_seq = case_when(variable %in% "USUBJID" ~ 1),
+    order = row_number(),
+    keep = FALSE,
+    core = case_when(
+      variable %in% c(
+        "STUDYID", "USUBJID", "SUBJID", "SITEID",
+        "AGE", "AGEU", "SEX", "RACE", "ARM", "ENRLFL", "DX"
+      ) ~ "Required",
+      variable %in% c("DTHDTF") ~ "Conditionally Required",
+      TRUE ~ "Permissible"
+    ),
+    supp_flag = FALSE,
+    length = as.numeric(length),
+    common = as.logical(ifelse(is.na(common), FALSE, common)),
+    format = ifelse(is.na(format), NA_character_, format),
+    sig_dig = as.integer(ifelse(is.na(sig_dig), NA_real_, sig_dig)),
+    where = NA_character_,
+    derivation_id = paste0(dataset, ".", variable)
+  )
+```
+
+```{r prep-adae-spec, class.source = NULL}
+# ADAE Specs ----
+adae_dic <- bind_rows(
+  c(variable = "STUDYID", type = "text", length = "4", label = "Study Identifier", common = TRUE, origin = "Predecessor", derivation = "ADSL.STUDYID"),
+  c(variable = "USUBJID", type = "text", length = "20", label = "Unique Subject Identifier", common = TRUE, origin = "Predecessor", derivation = "ADSL.USUBJID"),
+  c(
+    variable = "SUBJID", type = "text", length = "15", label = "Subject Identifier for the Study", common = TRUE, origin = "Predecessor",
+    derivation = "ADSL.SUBJID"
+  ),
+  c(variable = "SITEID", type = "text", length = "3", label = "Study Site Identifier", origin = "Predecessor", derivation = "ADSL.SITEID"),
+  c(variable = "TRTA", type = "text", length = "40", label = "Actual Arm", origin = "Predecessor", derivation = "ADSL.ARM"),
+  c(variable = "TRTP", type = "text", length = "40", label = "Planned Arm", origin = "Predecessor", derivation = "ADSL.ACTARM"),
+  c(variable = "AGE", type = "float", length = "3", label = "Age (in Years)", common = TRUE, sig_dig = 1, origin = "Predecessor", derivation = "ADSL.AGE"),
+  c(variable = "AGEU", type = "text", length = "5", label = "Age Units", common = TRUE, code_id = "AGEU", origin = "Predecessor", derivation = "ADSL.AGEU"),
+  c(variable = "AGEGR1", type = "text", length = "8", label = "Pooled Age Group 1", code_id = "AGEGR1", origin = "Predecessor", derivation = "ADSL.AGEGR1"),
+  c(variable = "AGEGR1N", type = "integer", length = "1", label = "Pooled Age Group 1 (N)", code_id = "AGEGR1N", origin = "Predecessor", derivation = "ADSL.AGEGR1N"),
+  c(variable = "SEX", type = "text", length = "6", label = "Sex", common = TRUE, code_id = "SEX", origin = "Predecessor", derivation = "ADSL.SEX"),
+  c(variable = "RACE", type = "text", length = "45", label = "Race", common = TRUE, code_id = "RACE", origin = "Predecessor", derivation = "ADSL.RACE"),
+  c(variable = "RACEN", type = "integer", length = "3", label = "Race (N)", code_id = "RACEN", origin = "Predecessor", derivation = "ADSL.RACEN"),
+  c(variable = "ETHNIC", type = "text", length = "40", label = "Ethnicity", code_id = "ETHNIC", origin = "Predecessor", derivation = "ADSL.ETHNIC"),
+  c(variable = "DX", type = "text", length = "40", label = "Baseline Diagnostics Status", common = TRUE, code_id = "DX", origin = "Predecessor", derivation = "ADSL.DX"),
+  c(variable = "ENRLFL", type = "text", length = "3", label = "Enrolled Population Flag", common = TRUE, code_id = "YN", origin = "Predecessor", derivation = "ADSL.ENRLFL"),
+  c(variable = "ENRLDT", type = "date", length = "10", label = "Date of Enrollment", common = TRUE, format = "DATE10.", origin = "Predecessor", derivation = "ADSL.ENRLDT"),
+  c(variable = "EOSDT", type = "date", length = "10", label = "End of Study Date", common = TRUE, format = "DATE10.", origin = "Predecessor", derivation = "ADSL.EOSDT"),
+  c(variable = "EOSDTF", type = "text", length = "1", label = "End of Study Date Imputation Flag", common = TRUE, origin = "Predecessor", derivation = "ADSL.EOSDTF"),
+  c(
+    variable = "ASTDT", type = "date", length = "10", label = "Analysis Start Date", format = "DATE10.", origin = "Derived",
+    derivation = paste0(
+      "AE.AESTDTC, converted into date format. A maximum of month will be imputed for parital date.",
+      "There are no events with completely missing start dates."
+    )
+  ),
+  c(
+    variable = "ASTDTF", type = "text", length = "1", label = "Analysis Start Date Imputation Flag", origin = "Assigned",
+    derivation = "ASTDTF='D' if the day value within the character date is imputed. Note that only day values needed to be imputed for this study."
+  ),
+  c(
+    variable = "ASTDY", type = "integer", length = "10", label = "Analysis Start Relative Day", origin = "Derived",
+    derivation = "IF ASTDT>=ENRLDT then ASTDY=ASTDT-ENRLDT+1 Else if ENRLDT>ASTDT then ASTDY=ASTDT-ENRLDT"
+  ),
+  c(
+    variable = "AENDT", type = "date", length = "1", label = "Analysis End Date", format = "DATE10.", origin = "Derived",
+    derivation = "AE.AEENDTC, converted into date format. A maximum of month will be imputed for parital date."
+  ),
+  c(
+    variable = "AENDTF", type = "text", length = "1", label = "Analysis End Date Imputation Flag", origin = "Assigned",
+    derivation = "AENDT='M' if the day/month value within the character date is imputed."
+  ),
+  c(
+    variable = "AENDY", type = "integer", length = "10", label = "Analysis End Relative Day", origin = "Derived",
+    derivation = "IF AENDT>=ENRLDT then AENDY=AENDT-ENRLDT+1 Else if ENRLDT>AENDT then AENDY=AENDT-ENRLDT"
+  ),
+  c(
+    variable = "ADURN", type = "integer", length = "1", label = "Adverse Events Duration (N)", origin = "Derived",
+    derivation = "ADURN=AENDT-ASTDT+1"
+  ),
+  c(variable = "ADURU", type = "text", length = "8", label = "Analysis Duration Unit", origin = "Assigned", derivation = "If ADURN is not missing then ADURU='DAY'"),
+  c(
+    variable = "AETERM", type = "text", length = "200", label = "Reported Term for the Adverse Event", origin = "Predecessor",
+    derivation = "AE.AETERM"
+  ),
+  c(variable = "AELLT", type = "text", length = "200", label = "Lowest Level Term", origin = "Predecessor", derivation = "AE.AELLT"),
+  c(variable = "AELLTCD", type = "integer", length = "8", label = "Lowest Level Term Code", origin = "Predecessor", derivation = "AE.AELLTCD"),
+  c(variable = "AEDECOD", type = "text", length = "200", label = "Dictionary-Derived Term", origin = "Predecessor", derivation = "AE.AEDECOD"),
+  c(variable = "AEPTCD", type = "integer", length = "8", label = "Preferred Term Code", origin = "Predecessor", derivation = "AE.AEPTCD"),
+  c(variable = "AEHLT", type = "text", length = "200", label = "High Level Term", origin = "Predecessor", derivation = "AE.AEHLT"),
+  c(variable = "AEHLTCD", type = "integer", length = "8", label = "High Level Term Code", origin = "Predecessor", derivation = "AE.AEHLTCD"),
+  c(variable = "AEHLGT", type = "text", length = "200", label = "High Level Group Term", origin = "Predecessor", derivation = "AE.AEHLGT"),
+  c(variable = "AEHLGTCD", type = "integer", length = "8", label = "High Level Group Term Code", origin = "Predecessor", derivation = "AE.AEHLGTCD"),
+  c(variable = "AESOC", type = "text", length = "200", label = "Primary Sytem Organ Class", origin = "Predecessor", derivation = "AE.AESOC"),
+  c(variable = "AESOCCD", type = "integer", length = "8", label = "Primary Sytem Organ Class Code", origin = "Predecessor", derivation = "AE.AESOCCD"),
+  c(variable = "AESEV", type = "text", length = "8", label = "Severity/Intensity", code_id = "AESEV", origin = "Predecessor", derivation = "AE.AESEV"),
+  c(variable = "AESER", type = "text", length = "3", label = "Serious Event", code_id = "YN", origin = "Predecessor", derivation = "AE.AESER"),
+  c(variable = "AESCONG", type = "text", length = "3", label = "Congenital Anomaly or Birth Defect", code_id = "YN", origin = "Predecessor", derivation = "AE.AESCONG"),
+  c(variable = "AESDISAB", type = "text", length = "3", label = "Persist or Signif Disability/Incapacity", code_id = "YN", origin = "Predecessor", derivation = "AE.AESDISAB"),
+  c(variable = "AESDTH", type = "text", length = "3", label = "Results in Death", code_id = "YN", origin = "Predecessor", derivation = "AE.AESDTH"),
+  c(variable = "AESHOSP", type = "text", length = "3", label = "Requires or Prologns Hospitalization", code_id = "YN", origin = "Predecessor", derivation = "AE.AESHOSP"),
+  c(variable = "AESLIFE", type = "text", length = "3", label = "Is Life Threating", code_id = "YN", origin = "Predecessor", derivation = "AE.AESLIFE"),
+  c(variable = "AESMIE", type = "text", length = "3", label = "Other Medically Important Serious Event", origin = "Predecessor", derivation = "AE.AESMIE"),
+  c(variable = "AERELCM", type = "text", length = "40", label = "Related to Concomitant Therapy", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELCM"),
+  c(variable = "AERELFLRBTBN", type = "text", length = "40", label = "Related to Florbetaben Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELFLRBTBN"),
+  c(variable = "AERELFLRBPR", type = "text", length = "40", label = "Related to PET/MRI Imaging Procedure", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELFLRBPR"),
+  c(variable = "AERELTAU", type = "text", length = "40", label = "Related to Flotaucipir Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELTAU"),
+  c(variable = "AERELNAV", type = "text", length = "40", label = "Related to NAV-4694 Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELNAV"),
+  c(variable = "AERELMK", type = "text", length = "40", label = "Related to MK-6240 Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELMK"),
+  c(variable = "AERELPI", type = "text", length = "40", label = "Related to PI-2620 Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELPI"),
+  c(variable = "AEHLUMB", type = "text", length = "40", label = "Related to Lumbar Puncture", code_id = "REL", origin = "Predecessor", derivation = "AE.AEHLUMB"),
+  c(variable = "AERELCOVID", type = "text", length = "40", label = "Related to COVID-19 Illness", code_id = "RELCOVID", origin = "Predecessor", derivation = "AE.AERELCOVID"),
+  c(variable = "AERELPAN", type = "text", length = "40", label = "Related to COVID-19 Pandemic Disruption", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELPAN"),
+  c(variable = "AERELATESP", type = "text", length = "40", label = "Related to Other Study Procedure(s)", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELATESP"),
+  c(variable = "AECONTRT", type = "text", length = "3", label = "Concomitant or Additional Trtmnt Given", code_id = "YN", origin = "Predecessor", derivation = "AE.AECONTRT"),
+  c(variable = "AEOUT", type = "text", length = "60", label = "Outcome of Adverse Event", origin = "Predecessor", derivation = "AE.AEOUT"),
+  c(variable = "AESEQ", type = "integer", length = "8", label = "Sequence Number", origin = "Predecessor", derivation = "AE.AESEQ")
+) %>%
+  as_tibble() %>%
+  mutate(
+    dataset = "ADAE",
+    dataset.label = "Analysis Dataset of Adverse Events",
+    structure = "One record per adverse event per subject",
+    key_seq = case_when(
+      variable %in% "USUBJID" ~ 1,
+      variable %in% "AEOUT" ~ 2,
+      variable %in% "ASTDT" ~ 3,
+      variable %in% "AESEQ" ~ 4
+    ),
+    order = row_number(),
+    keep = FALSE,
+    core = case_when(
+      variable %in% c("STUDYID", "USUBJID", "AEOUT", "AESEV", "AESER") ~ "Required",
+      variable %in% c("ASTDTF", "AENDTF") ~ "Conditionally Required",
+      TRUE ~ "Permissible"
+    ),
+    supp_flag = FALSE,
+    length = as.numeric(length),
+    common = as.logical(ifelse(is.na(common), FALSE, common)),
+    format = ifelse(is.na(format), NA_character_, format),
+    sig_dig = as.integer(ifelse(is.na(sig_dig), NA_real_, sig_dig)),
+    where = NA_character_,
+    derivation_id = paste0(dataset, ".", variable),
+  )
+```
+
+
+```{r prep-adqs-spec, class.source = NULL}
+# ADQS Specs ----
+adqs_dic <- bind_rows(
+  c(variable = "STUDYID", type = "text", length = "4", label = "Study Identifier", common = TRUE, origin = "Predecessor", derivation = "ADSL.STUDYID"),
+  c(variable = "USUBJID", type = "text", length = "20", label = "Unique Subject Identifier", common = TRUE, origin = "Predecessor", derivation = "ADSL.USUBJID"),
+  c(variable = "SUBJID", type = "text", length = "15", label = "Subject Identifier for the Study", common = TRUE, origin = "Predecessor", derivation = "ADSL.SUBJID"),
+  c(variable = "SITEID", type = "text", length = "3", label = "Study Site Identifier", origin = "Predecessor", derivation = "ADSL.SITEID"),
+  c(variable = "AGE", type = "float", length = "3", label = "Age (in Years)", common = TRUE, sig_dig = 1, origin = "Predecessor", derivation = "ADSL.AGE"),
+  c(variable = "AGEU", type = "text", length = "5", label = "Age Units", common = TRUE, code_id = "AGEU", origin = "Predecessor", derivation = "ADSL.AGEU"),
+  c(variable = "AGEGR1", type = "text", length = "8", label = "Pooled Age Group 1", code_id = "AGEGR1", origin = "Predecessor", derivation = "ADSL.AGEGR1"),
+  c(variable = "AGEGR1N", type = "integer", length = "1", label = "Pooled Age Group 1 (N)", code_id = "AGEGR1N", origin = "Predecessor", derivation = "ADSL.AGEGR1N"),
+  c(variable = "SEX", type = "text", length = "6", label = "Sex", common = TRUE, code_id = "SEX", origin = "Predecessor", derivation = "ADSL.SEX"),
+  c(variable = "RACE", type = "text", length = "45", label = "Race", common = TRUE, code_id = "RACE", origin = "Predecessor", derivation = "ADSL.RACE"),
+  c(variable = "BMI", type = "float", length = "3", label = "Body Mass Index", sig_dig = 2, origin = "Predecessor", derivation = "ADSL.BMI"),
+  c(variable = "BMIBLU", type = "text", length = "8", label = "Body Mass Index Unit", origin = "Predecessor", derivation = "ADSL.BMIBLU"),
+  c(variable = "DX", type = "text", length = "40", label = "Baseline Diagnostics Status", common = TRUE, code_id = "DX", origin = "Predecessor", derivation = "ADSL.DX"),
+  c(variable = "AMYSTAT", type = "text", length = "40", label = "Baseline Amyloid Status", code_id = "AMYSTAT", origin = "Predecessor", derivation = "ADSL.AMYSTAT"),
+  c(variable = "ENRLFL", type = "text", length = "3", label = "Enrolled Population Flag", common = TRUE, code_id = "YN", origin = "Predecessor", derivation = "ADSL.ENRLFL"),
+  c(variable = "ENRLDT", type = "date", length = "10", label = "Date of Enrollment", common = TRUE, format = "DATE10.", origin = "Predecessor", derivation = "ADSL.ENRLDT"),
+  c(variable = "EOSDT", type = "date", length = "10", label = "End of Study Date", common = TRUE, format = "DATE10.", origin = "Predecessor", derivation = "ADSL.EOSDT"),
+  c(variable = "EOSDTF", type = "text", length = "1", label = "End of Study Date Imputation Flag", common = TRUE, origin = "Predecessor", derivation = "ADSL.EOSDTF"),
+  #  TRTA and TRTP are included for illustration purpose
+  c(variable = "TRTA", type = "text", length = "40", label = "Actual Arm", origin = "Predecessor", derivation = "ADSL.ARM"),
+  c(variable = "TRTP", type = "text", length = "40", label = "Planned Arm", origin = "Predecessor", derivation = "ADSL.ACTARM"),
+  c(variable = "AVISIT", type = "text", length = "10", label = "Analysis Visit", origin = "Derived"),
+  c(variable = "AVISITN", type = "integer", length = "3", label = "Analysis Visit (N)", origin = "Derived"),
+  c(variable = "VISIT", type = "text", length = "10", label = "Visit Name", origin = "Predecessor", derivation = "QS.VISIT"),
+  c(variable = "VISITNUM", type = "integer", length = "3", label = "Visit Number", origin = "Predecessor", derivation = "QS.VISITNUM"),
+  c(variable = "ADY", type = "integer", length = "40", label = "Analysis Relative Day", origin = "Derived", derivation = "ADADAS.ENRLDT - ADADAS.ADT"),
+  c(variable = "ADT", type = "date", length = "10", label = "Analysis Date", format = "DATE10.", origin = "Predecessor", derivation = "QS.QSDTC"),
+  c(variable = "PARAM", type = "text", length = "200", label = "Parameter", origin = "Predecessor", derivation = "QS.QSTEST"),
+  c(variable = "PARAMCD", type = "text", length = "40", label = "Parameter Code", code_id = "PARAMCD", origin = "Predecessor", derivation = "QS.QSTESTCD"),
+  c(variable = "PARAMN", type = "integer", length = "10", label = "Parameter (N)", code_id = "PARAMN", origin = "Derived", derivation = "Derived from ADQS.PARAMCD"),
+  c(variable = "AVAL", type = "float", length = "10", label = "Analysis Value", sig_dig = 5, origin = "Predecessor", derivation = "QS.QSSTRESN"),
+  c(variable = "AVALC", type = "text", length = "40", label = "Analysis Value (C)", origin = "Predecessor", derivation = "QS.QSSTRESC"),
+  c(variable = "BASE", type = "float", length = "10", label = "Baseline Value", sig_dig = 5, origin = "Derived", derivation = "QS.QSSTRSEN if QS.QSBLFL is 'Y'"),
+  c(variable = "CHG", type = "float", length = "10", label = "Change from Baseline", sig_dig = 5, origin = "Derived", derivation = "ADQS.AVAL - ADQS.BASE"),
+  c(
+    variable = "PCHG", type = "float", length = "4", label = "Percent Change from Baseline", sig_dig = 2, origin = "Derived",
+    derivation = "(ADQS.AVAL - ADQS.BASE)/ADADAS.BASE. NULL if ADQS.BASE is missing."
+  ),
+  c(variable = "ABLFL", type = "text", length = "3", label = "Baseline Record Flag", code_id = "YN", origin = "Predecessor", derivation = "QS.QSBLFL"),
+  c(variable = "QSSEQ", type = "integer", length = "8", label = "Sequence Number", origin = "Predecessor", derivation = "QS.QSSEQ")
+) %>%
+  as_tibble() %>%
+  mutate(
+    dataset = "ADQS",
+    dataset.label = "Analysis Dataset of Questionnaires",
+    structure = "One record per subject per parameter per analysis visit per analysis date",
+    key_seq = case_when(
+      variable %in% "USUBJID" ~ 1,
+      variable %in% "PARAMCD" ~ 2,
+      variable %in% "AVISIT" ~ 3,
+      variable %in% "ADT" ~ 4
+    ),
+    order = row_number(),
+    keep = FALSE,
+    core = case_when(
+      variable %in% c("STUDYID", "USUBJID", "PARAM", "PARAMCD", "AVISIT") ~ "Required",
+      variable %in% c("AVAL", "AVALC", "DTYPE") ~ "Conditionally Required",
+      TRUE ~ "Permissible"
+    ),
+    supp_flag = FALSE,
+    length = as.numeric(length),
+    common = as.logical(ifelse(is.na(common), FALSE, common)),
+    format = ifelse(is.na(format), NA_character_, format),
+    sig_dig = as.integer(ifelse(is.na(sig_dig), NA_real_, sig_dig)),
+    where = NA_character_,
+    derivation_id = paste0(dataset, ".", variable)
+  )
+```
+
+```{r prep-dataset-spec, echo = TRUE}
+# Based on manual codes
+data_spec <- bind_rows(adsl_dic, adae_dic, adqs_dic)
+```
+
+## Dataset-Level Information
+
+```{r ds-spec, echo = TRUE}
+ds_spec_labels <- as.list(c(
+  dataset = "Dataset Name",
+  structure = "Value Structure",
+  label = "Dataset Label"
+))
+
+ds_spec <- data_spec %>%
+  select(dataset, structure, label = dataset.label) %>%
+  distinct() %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.5), everything()) %>%
+  labelled::set_variable_labels(.labels = ds_spec_labels, .strict = TRUE)
+```
+
+```{r print-ds-spec}
+datatable(ds_spec, paging = FALSE)
+```
+
+## Dataset and Variable Information
+
+```{r ds-vars, echo = TRUE}
+ds_vars_labels <- as.list(c(
+  dataset = "Dataset Name",
+  variable = "Variable Name",
+  key_seq = "Sequence Key",
+  order = "Variable Order",
+  keep = "Keep (Boolean)",
+  core = "ADaM core (Expected, required, Permissible)",
+  supp_flag = "Supplemental Flag"
+))
+ds_vars <- data_spec %>%
+  select(dataset, variable, key_seq, order, keep, core, supp_flag) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.5), !key_seq) %>%
+  labelled::set_variable_labels(.labels = ds_vars_labels, .strict = TRUE)
+```
+
+```{r print-ds-vars}
+datatable(
+  ds_vars %>%
+    mutate(across(where(is.logical), ~ toupper(.x))),
+  paging = TRUE
+)
+```
+
+## Variable-Level Information
+
+```{r var-spec, echo = TRUE}
+var_spec_labels <- as.list(c(
+  variable = "Variable Name",
+  length = "Variable Length",
+  label = "Variable Label",
+  type = "Variable Class",
+  common = "Common Across ADaM",
+  format = "Variable Format"
+))
+var_spec <- data_spec %>%
+  select(all_of(names(var_spec_labels))) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.5), !format) %>%
+  labelled::set_variable_labels(.labels = var_spec_labels, .strict = TRUE)
+```
+
+```{r print-var-spec}
+datatable(var_spec, paging = TRUE)
+```
+
+## Value-Level Information
+
+```{r value-spec, echo = TRUE}
+value_spec_labels <- as.list(c(
+  dataset = "Dataset Name",
+  variable = "Variable Name",
+  type = "Value Type",
+  origin = "Value Source",
+  sig_dig = "Significant Digits for Numeric Value",
+  code_id = "ID of the Code List",
+  where = "Value of the Variable",
+  derivation_id = "ID of Derivation"
+))
+value_spec <- data_spec %>%
+  select(all_of(names(value_spec_labels))) %>%
+  assert_rows(
+    num_row_NAs,
+    within_bounds(0, 0.5),
+    dataset, variable, origin
+  ) %>%
+  labelled::set_variable_labels(.labels = value_spec_labels, .strict = FALSE)
+```
+
+```{r print-value-spec}
+datatable(value_spec, paging = TRUE)
+```
+
+## Derivations 
+
+```{r derivations-spec, echo = TRUE}
+derivations_labels <- as.list(c(
+  derivation_id = "ID of Derivation",
+  derivation = "Derivation"
+))
+derivations <- data_spec %>%
+  select(all_of(names(derivations_labels))) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 0.05), derivation_id)
+```
+
+```{r print-derivations-spec}
+datatable(derivations, paging = TRUE)
+```
+
+## Code List 
+
+```{r codelist-spec, class.source = NULL}
+# Pre-specified variables with coded values, illustration purpose
+# Age Group ----
+AGEGR1_CODEDLIST <- tibble(
+  code_id = "AGEGR1", name = "AGEGR1", type = "code_decode",
+  tibble(
+    code = c("<65", ">=65"),
+    decode = c("<65", ">=65")
+  )
+)
+AGEGR1N_CODEDLIST <- tibble(
+  code_id = "AGEGR1N", name = "AGEGR1N", type = "code_decode",
+  tibble(
+    code = c("1", "2"),
+    decode = c("<65", ">=65")
+  )
+)
+
+AGEU_CODEDLIST <- tibble(
+  code_id = "AGEU", name = "AGEU", type = "code_decode",
+  tibble(
+    code = c("Years"),
+    decode = c("Years")
+  )
+)
+
+# Sex ----
+SEX_CODEDLIST <- tibble(
+  code_id = "SEX", name = "SEX", type = "code_decode",
+  tibble(
+    code = c("Female", "Male"),
+    decode = c("Female", "Male")
+  )
+)
+
+# Race -----
+race_code_value <- c(
+  "American Indian or Alaskan Native", "Asian", "Black or African American",
+  "Native Hawaiian or Other Pacific Islander", "Other Pacific Islander",
+  "White", "More than one race", "Unknown"
+)
+
+RACE_CODEDLIST <- tibble(
+  code_id = "RACE", name = "RACE", type = "code_decode",
+  tibble(
+    code = race_code_value,
+    decode = race_code_value
+  )
+)
+
+race_code_num <- c(seq_along(race_code_value)[-length(race_code_value)], 999)
+RACEN_CODEDLIST <- tibble(
+  code_id = "RACEN", name = "RACEN", type = "code_decode",
+  tibble(
+    code = as.character(race_code_num),
+    decode = race_code_value
+  )
+)
+
+# Ethnicity ----
+ETHNIC_CODEDLIST <- tibble(
+  code_id = "ETHNIC", name = "ETHNIC", type = "code_decode",
+  tibble(
+    code = c("Hispanic or Latino", "Not Hispanic or Latino", "Unknown"),
+    decode = c("Hispanic or Latino", "Not Hispanic or Latino", "Unknown")
+  )
+)
+
+# Diagnostics status ----
+DX_CODEDLIST <- tibble(
+  code_id = "DX", name = "DX", type = "code_decode",
+  tibble(
+    code = c("CN", "MCI", "DEM"),
+    decode = c(
+      "Cognitive Normal",
+      "Mild Cognitive Impairment",
+      "Dementia/Alzheimer's"
+    )
+  )
+)
+
+# Amyloid Status ----
+AMYSTAT_CODEDLIST <- tibble(
+  code_id = "AMYSTAT", name = "AMYSTAT", type = "code_decode",
+  tibble(
+    code = c("Elevated", "Non Elevated"),
+    decode = c("Elevated", "Non Elevated")
+  )
+)
+
+# BMI Units ----
+BMIBLU_CODEDLIST <- tibble(
+  code_id = "BMIBLU", name = "BMIBLU", type = "code_decode",
+  tibble(
+    code = c("kg/m^2"),
+    decode = c("kg/m^2")
+  )
+)
+
+# Adverse Events Possible Relation ----
+REL_CODEDLIST <- tibble(
+  code_id = "REL", name = "REL", type = "code_decode",
+  tibble(
+    code = c("1", "2", "3", "4", "5", "999"),
+    decode = c(
+      "Definitely", "Probably", "Possibly",
+      "Unlikely", "Not related", "Uknown"
+    )
+  )
+)
+
+RELCOVID_CODEDLIST <- tibble(
+  code_id = "RELCOVID", name = "RELCOVID", type = "code_decode",
+  tibble(
+    code = c("1", "2", "3", "4", "5", "999"),
+    decode = c(
+      "Definitely (Confirmed COVID-19 test)", "Probably", "Possibly",
+      "Unlikely", "Not related", "Uknown"
+    )
+  )
+)
+
+# AE Severity  ---
+AESEV_CODEDLIST <- tibble(
+  code_id = "AESEV", name = "AESEV", type = "code_decode",
+  tibble(
+    code = c("1", "2", "3"),
+    decode = c("Mild", "Moderate", "Severe")
+  )
+)
+
+# Parameter code list ----
+QSTESTCD_LIST <- c(
+  "CDGLOBAL", "CDRSB", "DIGITSCOR", "ECOGPTTOTAL", "ECOGSPTOTAL", "FAQTOTAL",
+  "FCISCORE", "GDTOTAL", "LDELTOTAL", "LIMMTOTAL", "MMSCORE", "MOCA",
+  "NPIQTOTAL", "NPITOTAL", "RAVLTFORG", "RAVLTFORGOPERC", "RAVLTIM",
+  "RAVLTLEARN", "TOTAL11", "TOTALMOD", "TRABSCOR"
+)
+# To apply with flows
+# QSTESTCD_LIST <- QS %>%
+#   select(QSTESTCD) %>%
+#   distinct() %>%
+#   drop_na() %>%
+#   pull()
+
+
+PARAMCD_CODEDLIST <- tibble(
+  code_id = "PARAMCD", name = "PARAMCD", type = "code_decode",
+  tibble(
+    code = QSTESTCD_LIST,
+    decode = QSTESTCD_LIST
+  )
+)
+
+PARAMN_CODEDLIST <- tibble(
+  code_id = "PARAMN", name = "PARAMN", type = "code_decode",
+  tibble(
+    code = as.character(seq_along(QSTESTCD_LIST)),
+    decode = QSTESTCD_LIST
+  )
+)
+
+# YN ----
+YN_CODEDLIST <- tibble(
+  code_id = "YN", name = "YN", type = "code_decode",
+  tibble(
+    code = c("Y", "N"),
+    decode = c("Yes", "No")
+  )
+)
+
+# Y_BLANK
+Y_BLANK_CODEDLIST <- tibble(
+  code_id = "Y_BLANK", name = "Y_BLANK", type = "code_decode",
+  tibble(
+    decode = c("Y"),
+    code = c("Yes")
+  )
+)
+
+meta_coded_id <- data_spec$code_id[!is.na(data_spec$code_id)]
+
+codelist <- mget(ls()[str_detect(ls(), "_CODEDLIST")]) %>%
+  bind_rows() %>%
+  group_by(code_id, name, type) %>%
+  nest(codes = all_of(c("code", "decode"))) %>%
+  ungroup() %>%
+  verify(all(code_id %in% meta_coded_id)) %>%
+  verify(all(meta_coded_id %in% code_id))
+```
+
+```{r print-codelist-spec}
+datatable(
+  codelist %>%
+    unnest(codes),
+  paging = TRUE
+)
+```
+
+## Metadata Specification
+
+```{r check-common-variables, echo = FALSE}
+check_inconsistent_common <- function(metacore, show_mismatch = FALSE) {
+  require(tidyverse)
+  require(tibble)
+  require(tidyr)
+
+  if (!is_metacore(metacore)) stop("metacore must be a R6-Wrapper object.")
+  if (!is.logical(show_mismatch)) stop("show_mismatch must be a boolen value.")
+
+  # Common variable list
+  common_var <- metacore$var_spec %>%
+    as_tibble() %>%
+    {
+      if ("common" %in% colnames(.)) {
+        filter(., common == TRUE)
+      } else {
+        filter(., row_number() %in% 0)
+      }
+    } %>%
+    distinct(variable) %>%
+    pull()
+
+  expected_ds_var <- expand_grid(
+    dataset = as.character(metacore$ds_spec$dataset),
+    variable = as.character(common_var)
+  ) %>%
+    mutate(dataset.var = paste0(dataset, ".", variable))
+
+  actual_ds_var <- metacore$ds_vars %>%
+    as_tibble() %>%
+    verify(nrow(.) > 0) %>%
+    filter(variable %in% common_var) %>%
+    mutate(dataset.var = paste0(dataset, ".", variable)) %>%
+    distinct(dataset.var) %>%
+    pull(dataset.var)
+
+  if (length(common_var) > 0) {
+    ds_var_list <- expected_ds_var$dataset.var
+    non_existed_ds_var <- ds_var_list[!ds_var_list %in% actual_ds_var]
+  }
+
+  if (all(!is.na(non_existed_ds_var))) {
+    non_existed_var <- sapply(strsplit(
+      x = non_existed_ds_var,
+      split = "\\."
+    ), function(x) {
+      x[[2]]
+    })
+    checks <- expected_ds_var %>%
+      filter(variable %in% non_existed_var) %>%
+      mutate(common_var_status = case_when(
+        dataset.var %in% non_existed_ds_var ~ FALSE,
+        !dataset.var %in% non_existed_ds_var ~ TRUE
+      )) %>%
+      arrange(variable, dataset) %>%
+      select(dataset, variable, common_var_status) %>%
+      as_tibble()
+  } else {
+    checks <- NULL
+  }
+  if (nrow(checks) > 0 & is.data.frame(checks)) {
+    if (show_mismatch) {
+      return(checks)
+    } else {
+      stop("Mismatch common variables, set show_mismatch = TRUE")
+    }
+  }
+  warning("No mismatch common variables")
+  return(NULL)
+}
+```
+
+```{r meta-spec, echo = TRUE, message = TRUE, warning = FALSE}
+# Generate Metadata Specs -  R6 class wrapper object
+METACORES <- metacore(
+  ds_spec = ds_spec,
+  ds_vars = ds_vars,
+  var_spec = var_spec,
+  value_spec = value_spec,
+  derivations = derivations,
+  codelist = codelist
+)
+# Checking for mismatch labels
+check_inconsistent_labels(METACORES) %>%
+  verify(nrow(.) == 0)
+# Checking for mismatch format
+check_inconsistent_formats(METACORES) %>%
+  verify(nrow(.) == 0)
+# Checking for mismatch type
+check_inconsistent_types(METACORES) %>%
+  verify(nrow(.) == 0)
+
+# Checking for mismatch common variables: user defined function
+check_inconsistent_common(METACORES) %>%
+  verify(nrow(.) == 0)
+```
