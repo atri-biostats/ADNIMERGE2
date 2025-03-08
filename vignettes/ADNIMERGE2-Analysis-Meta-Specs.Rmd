@@ -112,8 +112,7 @@ adsl_dic <- bind_rows(
   c(
     variable = "AMYSTAT", type = "text", length = "20", label = "Baseline Amyloid Status", code_id = "AMYSTAT",
     origin = "Predecessor", derivation = "NV.NVSTRESC where NV.NVTESTCD=AMYSTAT and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
-  ), 
-  c(variable = "ORIGPROT", type = "text", length = "8", label = "Original Study Protocol", origin = "Predecessor", derivation = "DM.ORIGPROT"),
+  )
 ) %>%
   as_tibble() %>%
   mutate(
