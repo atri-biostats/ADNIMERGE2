@@ -539,8 +539,7 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
       })),
       collapse = "\n"
     ),
-    "#' \n",
-    "#' } \n",
+    "\n#' } \n",
     collapse = ""
   )
 

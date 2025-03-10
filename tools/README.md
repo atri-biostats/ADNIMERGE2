@@ -1,6 +1,6 @@
 # Building ADNIMERGE2 from csv files <a href="https://adni.loni.usc.edu/"><img src="../man/figures/logo.png" align="right" height="138" /></a>
 
-The document describes the procedure to build a package from source `.csv` files with similar workflow. Assumed the following pre-conditions are existed/completed in the beginning.
+The document describes the procedure to build an R data package from source `.csv` files with similar workflow. Assumed the following pre-conditions are existed/completed in the beginning.
 
  a. Local R package working directory: If not existed, it can be created using [usethis::create_package](https://usethis.r-lib.org/reference/create_package.html) function.
  
@@ -48,11 +48,11 @@ To build a package from source `.csv` files with similar workflow:
       
   + Generate data-related documentations:
     
-    - Based on available data in the [`/data`](https://github.com/atrihub/ADNIMERGE2/tree/main/data) directory, data dictionary using user-defined function.
+    - Based on available data in the [`./data`](https://github.com/atrihub/ADNIMERGE2/tree/main/data) directory including a data dictionary using user-defined function.
     
     - [`./tools/document.R`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools/document.R):
         
-        + Using actual dataset values and data dictionary 
+        + Using actual dataset values and a data dictionary 
         
         + Required two input arguments: a boolean indicator to use an updated data dictionary (`USE_UPDATED_DATADIC`) and list of derived dataset (`DERIVED_DATASET_LIST`)
           
