@@ -419,6 +419,8 @@ dm_data_dic <- bind_rows(
     TBLNAME = "DM",
     CRFNAME = "[ Derived ] Demographic Characteristics"
   )
+
+names(dm_data_dic$LABEL) <- dm_data_dic$FLDNAME
 ```
 
 ```{r dm-data-dic-print, echo=FALSE}
@@ -623,7 +625,7 @@ DM <- DM %>%
   select(all_of(dm_data_dic$FLDNAME)) %>%
   assert_non_missing(SITEID, USUBJID, SUBJID) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(dm_data_dic$LABEL), dm_data_dic$FLDNAME),
+    .labels = dm_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -708,6 +710,8 @@ sc_data_dic <- bind_rows(
     TBLNAME = "SC",
     CRFNAME = "[ Derived ] Subject Characteristics"
   )
+
+names(sc_data_dic$LABEL) <- sc_data_dic$FLDNAME
 ```
 
 ```{r sc-data-dic-print, eval=TRUE, echo=FALSE}
@@ -869,7 +873,7 @@ SC <- SC %>%
   # check_duplicate_records(col_names = c("RID", "SCTESTCD", "VISDATE")) %>%
   select(all_of(sc_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(sc_data_dic$LABEL), sc_data_dic$FLDNAME),
+    .labels = sc_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -1068,6 +1072,8 @@ ae_data_dic <- bind_rows(
     TBLNAME = "AE",
     CRFNAME = "[ Derived ] Adverse Events"
   )
+
+names(ae_data_dic$LABEL) <- ae_data_dic$FLDNAME
 ```
 
 ```{r ae-data-dic-print, eval=TRUE, echo=FALSE}
@@ -1183,7 +1189,7 @@ AE <- AE %>%
   ) %>%
   select(all_of(ae_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(ae_data_dic$LABEL), ae_data_dic$FLDNAME),
+    .labels = ae_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -1281,6 +1287,8 @@ qs_data_dic <- bind_rows(
     TBLNAME = "QS",
     CRFNAME = "[ Derived ] Questionnaires"
   )
+
+names(qs_data_dic$LABEL) <- qs_data_dic$FLDNAME
 ```
 
 ```{r qs-data-dic-print, eval=TRUE, echo=FALSE}
@@ -1635,7 +1643,7 @@ QS <- QS %>%
   # check_duplicate_records(col_names = c("RID", "QSTESTCD", "VISDATE")) %>%
   select(all_of(qs_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(qs_data_dic$LABEL), qs_data_dic$FLDNAME),
+    .labels = qs_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -1731,6 +1739,8 @@ rs_data_dic <- bind_rows(
     TBLNAME = "RS",
     CRFNAME = "[ Derived ] Clinical Classification"
   )
+
+names(rs_data_dic$LABEL) <- rs_data_dic$FLDNAME
 ```
 
 ```{r rs-data-dic-print, eval=TRUE, echo=FALSE}
@@ -1853,7 +1863,7 @@ RS <- RS %>%
   # check_duplicate_records(col_names = c("RID", "RSTESTCD", "RSDTC")) %>%
   select(all_of(rs_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(rs_data_dic$LABEL), rs_data_dic$FLDNAME),
+    .labels = rs_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -1959,6 +1969,8 @@ nv_data_dic <- bind_rows(
     TBLNAME = "NV",
     CRFNAME = "[ Derived ] Nervous System Finding"
   )
+
+names(nv_data_dic$LABEL) <- nv_data_dic$FLDNAME
 ```
 
 ```{r nv-data-dic-print, eval=TRUE, echo=FALSE}
@@ -2210,7 +2222,7 @@ NV <- NV %>%
   )) %>%
   select(all_of(nv_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(nv_data_dic$LABEL), nv_data_dic$FLDNAME),
+    .labels = nv_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -2327,6 +2339,8 @@ bs_data_dic <- bind_rows(
     TBLNAME = "BS",
     CRFNAME = "[ Derived ] Biospecimen Findings"
   )
+
+names(bs_data_dic$LABEL) <- bs_data_dic$FLDNAME
 ```
 
 ```{r bs-data-dic-print, eval=TRUE, echo=FALSE}
@@ -2499,7 +2513,7 @@ BS <- BS %>%
   mutate(BSGRPID = COLPROT) %>%
   select(all_of(bs_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(bs_data_dic$LABEL), bs_data_dic$FLDNAME),
+    .labels = bs_data_dic$LABEL,
     .strict = TRUE
   )
 ```
@@ -2605,6 +2619,8 @@ vs_data_dic <- bind_rows(
     TBLNAME = "VS",
     CRFNAME = "[ Derived ] Vital Signs"
   )
+
+names(vs_data_dic$LABEL) <- vs_data_dic$FLDNAME
 ```
 
 ```{r vs-data-dic-print, eval=TRUE, echo=FALSE}
@@ -2824,7 +2840,7 @@ VS <- VS %>%
   # check_duplicate_records(col_names = c("RID", "VSTESTCD", "VSDTC")) %>%
   select(all_of(vs_data_dic$FLDNAME)) %>%
   labelled::set_variable_labels(
-    .labels = setNames(as.list(vs_data_dic$LABEL), vs_data_dic$FLDNAME),
+    .labels = vs_data_dic$LABEL,
     .strict = TRUE
   )
 ```

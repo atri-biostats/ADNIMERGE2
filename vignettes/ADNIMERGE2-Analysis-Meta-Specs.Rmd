@@ -343,11 +343,11 @@ data_spec <- bind_rows(adsl_dic, adae_dic, adqs_dic)
 ## Dataset-Level Information
 
 ```{r ds-spec, echo = TRUE}
-ds_spec_labels <- as.list(c(
+ds_spec_labels <- c(
   dataset = "Dataset Name",
   structure = "Value Structure",
   label = "Dataset Label"
-))
+)
 
 ds_spec <- data_spec %>%
   select(dataset, structure, label = dataset.label) %>%
@@ -363,7 +363,7 @@ datatable(ds_spec, paging = FALSE)
 ## Dataset and Variable Information
 
 ```{r ds-vars, echo = TRUE}
-ds_vars_labels <- as.list(c(
+ds_vars_labels <- c(
   dataset = "Dataset Name",
   variable = "Variable Name",
   key_seq = "Sequence Key",
@@ -371,7 +371,7 @@ ds_vars_labels <- as.list(c(
   keep = "Keep (Boolean)",
   core = "ADaM core (Expected, required, Permissible)",
   supp_flag = "Supplemental Flag"
-))
+)
 ds_vars <- data_spec %>%
   select(dataset, variable, key_seq, order, keep, core, supp_flag) %>%
   assert_rows(num_row_NAs, within_bounds(0, 0.5), !key_seq) %>%
@@ -389,14 +389,14 @@ datatable(
 ## Variable-Level Information
 
 ```{r var-spec, echo = TRUE}
-var_spec_labels <- as.list(c(
+var_spec_labels <- c(
   variable = "Variable Name",
   length = "Variable Length",
   label = "Variable Label",
   type = "Variable Class",
   common = "Common Across ADaM",
   format = "Variable Format"
-))
+)
 var_spec <- data_spec %>%
   select(all_of(names(var_spec_labels))) %>%
   assert_rows(num_row_NAs, within_bounds(0, 0.5), !format) %>%
@@ -410,7 +410,7 @@ datatable(var_spec, paging = TRUE)
 ## Value-Level Information
 
 ```{r value-spec, echo = TRUE}
-value_spec_labels <- as.list(c(
+value_spec_labels <- c(
   dataset = "Dataset Name",
   variable = "Variable Name",
   type = "Value Type",
@@ -419,7 +419,7 @@ value_spec_labels <- as.list(c(
   code_id = "ID of the Code List",
   where = "Value of the Variable",
   derivation_id = "ID of Derivation"
-))
+)
 value_spec <- data_spec %>%
   select(all_of(names(value_spec_labels))) %>%
   assert_rows(
@@ -437,10 +437,10 @@ datatable(value_spec, paging = TRUE)
 ## Derivations 
 
 ```{r derivations-spec, echo = TRUE}
-derivations_labels <- as.list(c(
+derivations_labels <- c(
   derivation_id = "ID of Derivation",
   derivation = "Derivation"
-))
+)
 derivations <- data_spec %>%
   select(all_of(names(derivations_labels))) %>%
   assert_rows(num_row_NAs, within_bounds(0, 0.05), derivation_id)
