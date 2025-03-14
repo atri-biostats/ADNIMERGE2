@@ -1,4 +1,4 @@
-url: https://atrihub.github.io/ADNIMERGE2
+url: https://atri-biostats.github.io/ADNIMERGE2
 template:
   bootstrap: 5
 
@@ -68,7 +68,7 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/atrihub/ADNIMERGE2/
+      href: https://github.com/atri-biostats/ADNIMERGE2/
       aria-label: github
     articles:
       text: Articles

@@ -4,9 +4,9 @@ The document describes the procedure to build an R data package from source `.cs
 
  a. Local R package working directory: If not existed, it can be created using [usethis::create_package](https://usethis.r-lib.org/reference/create_package.html) function.
  
- b. Package metadata `DESCRIPTION` file (similar to [this](https://github.com/atrihub/ADNIMERGE2/blob/main/DESCRIPTION)): It can be created using [usethis::use_description](https://usethis.r-lib.org/reference/use_description.html) function and modified as necessary. 
+ b. Package metadata `DESCRIPTION` file (similar to [this](https://github.com/atri-biostats/ADNIMERGE2/blob/main/DESCRIPTION)): It can be created using [usethis::use_description](https://usethis.r-lib.org/reference/use_description.html) function and modified as necessary. 
 
-To build a package from source `.csv` files with similar workflow, clone the [https://github.com/atrihub/ADNIMERGE2](https://github.com/atrihub/ADNIMERGE2) repository. This will create the following directories:
+To build a package from source `.csv` files with similar workflow, clone the [https://github.com/atri-biostats/ADNIMERGE2](https://github.com/atri-biostats/ADNIMERGE2) repository. This will create the following directories:
 
    + `data-raw`: to store raw-data
    + `R`: to store package-specific defined functions that includes utils function
@@ -14,42 +14,42 @@ To build a package from source `.csv` files with similar workflow, clone the [ht
    + `tests`: to store package related test and retest scripts.
    + `tools`: to store all user defined additional utils script/function that includes package building script.
 
-* Download the ADNI study data from the data-shared platform at [https://adni.loni.usc.edu/data-samples/adni-data/](https://adni.loni.usc.edu/data-samples/adni-data/) either in `*.zip` or `*.csv` file format, and store the files in [`./data-raw`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw) directory
+* Download the ADNI study data from the data-shared platform at [https://adni.loni.usc.edu/data-samples/adni-data/](https://adni.loni.usc.edu/data-samples/adni-data/) either in `*.zip` or `*.csv` file format, and store the files in [`./data-raw`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw) directory
    
    + Required to downloaded a data dictionary `*.csv` file
    
    + It is recommend to download all the files from the data-shared platform on the same date.
 
-* Copy all pre-defined scripts/functions as necessary within the above-mentioned directory of the [ADNIMERGE2 github repository](https://github.com/atrihub/ADNIMERGE2) with the same file path
+* Copy all pre-defined scripts/functions as necessary within the above-mentioned directory of the [ADNIMERGE2 github repository](https://github.com/atri-biostats/ADNIMERGE2) with the same file path
 
-* Run the [`./tools/build.R`](https://github.com/atrihub/ADNIMERGE2/tree/main//tools/build.R) script to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atrihub/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
+* Run the [`./tools/build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
 
   + Data preparation: 
     
-    - [`./data-raw/data_prep.R`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep.R): 
+    - [`./data-raw/data_prep.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R): 
          
          + To store all dataset in *`./data`* directory using [`usethis::use_data()`](https://usethis.r-lib.org/reference/use_data.html)
          
-         + Some additional data preparation, please see  [here](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep.R) for more information. 
+         + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R) for more information. 
          
          + Required the date of data downloaded (`DATA_DOWNLOADED_DATE`) as an input argument
          
-    - [`./data-raw/data_prep_recode.R`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R): 
+    - [`./data-raw/data_prep_recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R): 
          
          + To decode dataset values based on a data dictionary as necessary
          
          + Required a boolean input argument regarding whether to use an UPDATED data dictionary (`USE_UPDATED_DATADIC`)
          
-    - [`./tools/generate_derived_data.R`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools/generate_derived_data.R):  
+    - [`./tools/generate_derived_data.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools/generate_derived_data.R):  
          + To generate derived dataset
          
-         + Required list of derived dataset (`DERIVED_DATASET_LIST`) as an input argument and also all `.Rmd` files in the [`vignettes`](https://github.com/atrihub/ADNIMERGE2/tree/main/vignettes) directory
+         + Required list of derived dataset (`DERIVED_DATASET_LIST`) as an input argument and also all `.Rmd` files in the [`vignettes`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/vignettes) directory
       
   + Generate data-related documentations:
     
-    - Based on available data in the [`./data`](https://github.com/atrihub/ADNIMERGE2/tree/main/data) directory including a data dictionary using user-defined function.
+    - Based on available data in the [`./data`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data) directory including a data dictionary using user-defined function.
     
-    - [`./tools/document.R`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools/document.R):
+    - [`./tools/document.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools/document.R):
         
         + Using actual dataset values and a data dictionary 
         
