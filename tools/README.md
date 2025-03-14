@@ -22,7 +22,7 @@ To build a package from source `.csv` files with similar workflow, clone the [ht
 
 * Copy all pre-defined scripts/functions as necessary within the above-mentioned directory of the [ADNIMERGE2 github repository](https://github.com/atri-biostats/ADNIMERGE2) with the same file path
 
-* Run the [`./tools/build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
+* Run `source('tools/build.R')` to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
 
   + Data preparation: 
     

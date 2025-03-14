@@ -141,7 +141,7 @@ adni_enrollment <- function(data_registry) {
 adni_screen_date <- function(data_registry, phase = "Overall", both = FALSE, multiple_screen_visit = FALSE) {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- PTTYPE <- NULL
   overall_screen_flag <- adnigo_screen_flag <- adni2_screen_flag <- second_screen_visit <- NULL
-  arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
+  rlang::arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
   check_colnames(
     data = data_registry,
     col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "VISTYPE", "EXAMDATE"),
@@ -290,8 +290,8 @@ adni_screen_date <- function(data_registry, phase = "Overall", both = FALSE, mul
 adni_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "baseline") {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- DIAGNOSIS <- NULL
   overall_baseline_dx_flag <- overall_screen_dx_flag <- PTTYPE <- NULL
-  arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
-  arg_match0(arg = visit_type, values = c("baseline", "screen"))
+  rlang::arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
+  rlang::arg_match0(arg = visit_type, values = c("baseline", "screen"))
   col_name_list <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "EXAMDATE", "DIAGNOSIS")
   check_colnames(
     data = data_dxsum,

@@ -77,8 +77,8 @@ devtools::build_readme()
 # Build website ----
 # run once:
 # For non manual website development:
-# # usethis::use_pkgdown() # overwrite any existed `_pkgdown.yml` file
-# For manual website development: required to modify the pre-existed `_pkgdown.yml` as needed
+# # usethis::use_pkgdown() # overwrite any existing `_pkgdown.yml` file
+# For manual website development: required to modify `_pkgdown.yml` as needed
 # pkgdown::build_site()
 # publish online:
 # # pkgdown::deploy_to_branch()
