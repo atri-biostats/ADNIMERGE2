@@ -6,14 +6,13 @@ The document describes the procedure to build an R data package from source `.cs
  
  b. Package metadata `DESCRIPTION` file (similar to [this](https://github.com/atrihub/ADNIMERGE2/blob/main/DESCRIPTION)): It can be created using [usethis::use_description](https://usethis.r-lib.org/reference/use_description.html) function and modified as necessary. 
 
-To build a package from source `.csv` files with similar workflow: 
+To build a package from source `.csv` files with similar workflow, clone the [https://github.com/atrihub/ADNIMERGE2](https://github.com/atrihub/ADNIMERGE2) repository. This will create the following directories:
 
-* Create the following directories under your local working directory:
-   + [`./data-raw`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw): to store raw-data
-   + [`./R`](https://github.com/atrihub/ADNIMERGE2/tree/main/R): to store package-specific defined functions that includes utils function
-   + [`./vignettes`](https://github.com/atrihub/ADNIMERGE2/tree/main/vignettes): to add guidance document/article about the package if necessary
-   + *`./tests`*: to store package related test and retest scripts. It has not been yet applied in the current `ADNIMERGE2` package. 
-   + [`./tools`](https://github.com/atrihub/ADNIMERGE2/tree/main/tools): to store all user defined additional utils script/function that includes package building script.
+   + `data-raw`: to store raw-data
+   + `R`: to store package-specific defined functions that includes utils function
+   + `vignettes`: to add guidance document/article about the package if necessary
+   + `tests`: to store package related test and retest scripts.
+   + `tools`: to store all user defined additional utils script/function that includes package building script.
 
 * Download the ADNI study data from the data-shared platform at [https://adni.loni.usc.edu/data-samples/adni-data/](https://adni.loni.usc.edu/data-samples/adni-data/) either in `*.zip` or `*.csv` file format, and store the files in [`./data-raw`](https://github.com/atrihub/ADNIMERGE2/tree/main/data-raw) directory
    
