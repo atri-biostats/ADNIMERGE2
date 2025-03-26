@@ -7,6 +7,7 @@ source(file.path(".", "R", "checks-assert.R"))
 library(tidyverse)
 library(readr)
 library(assertr)
+library(rlang)
 
 # Directories ----
 raw_data_dir <- "./data-raw"

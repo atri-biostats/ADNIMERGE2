@@ -1,14 +1,23 @@
 # Function to use use_data function ----
 #' @title Use usethis::use_data Function
-#' @description This function is used to apply usethis::use_data function for data preparation
+#' @description
+#'  This function is used to apply usethis::use_data function for data preparation.
 #' @param dataset_name Dataset name
 #' @param dataset Actual dataset
-#' @param edit_type Edit type: either to create a new script or modify the existed files, Default: 'create'
+#' @param edit_type Edit type, Default: 'create'
+#'  \item{create}{To create a new script}
+#'  \item{modify}{To modify the existed files}
 #' @param run_script Indicator for running script, Default: TRUE
-#' @param add_text Additional text that will appended in the script, Default: NULL
-#' @param include_pipe Whether to include a pipe after the first line of the script, Default: FALSE
+#' @param add_text
+#'  Additional text that will appended in the script, Default: NULL
+#' @param include_pipe
+#'  A boolean to include a pipe after the first line of the script, Default: FALSE
 #' @param clean If TRUE, remove script file
-#' @return A file path if the script is not compiled (i.e. `run_script == FALSE`) otherwise `TRUE` value
+#' @return
+#'  \itemize{
+#'    \item A file path if the script is not compiled for \code{\emph{run_script == FALSE}}
+#'    \item Otherwise \emph{TRUE} boolean values
+#'  }
 #' @examples
 #' \dontrun{
 #' use_data_modified(
@@ -85,7 +94,12 @@ use_data_modified <- function(dataset_name,
 
   temp_script <- c(prefix_lines, added_script, suffix_lines)
   ## Write the 'dataset_name.R' script in data-raw directory to use quoted objects
-  readr::write_lines(x = temp_script, file = data_script_path, sep = "\n", append = FALSE)
+  readr::write_lines(
+    x = temp_script,
+    file = data_script_path,
+    sep = "\n",
+    append = FALSE
+  )
 
   if (run_script == TRUE) {
     new_env <- new.env()
@@ -107,8 +121,9 @@ use_data_modified <- function(dataset_name,
 #' @description This function is used to extracted raw datasets from zip files
 #' @param input_dir The directory where the zip file is located.
 #' @param file_name Zip file name
-#' @param output_dir The directory where the unzipped file is to be stored, Default: NULL.
-#'                   Stored the file in the same input directory if it is NULL.
+#' @param output_dir
+#'    The directory where the unzipped file is to be stored, Default: NULL.
+#'    Store the file in the same input directory if it is NULL.
 #' @param overwrite Indicator to overwrite file, Default: TRUE
 #' @return `TRUE` if the file is properly unzipped
 #' @rdname get_unzip_file
@@ -128,7 +143,9 @@ get_unzip_file <- function(input_dir,
   output_dir <- file.path(output_dir, gsub(pattern = "\\.zip$", replacement = "", x = file_name))
   if (dir.exists(output_dir) == FALSE) dir.create(output_dir)
   file_path <- file.path(input_dir, file_name)
-  if (file.exists(file_path) == FALSE) stop(file_name, " zip file is not found in the ", input_dir)
+  if (file.exists(file_path) == FALSE) {
+    stop(file_name, " zip file is not found in the ", input_dir)
+  }
   utils::unzip(
     zipfile = file_path, exdir = output_dir,
     files = NULL, list = FALSE, overwrite = overwrite,
@@ -145,8 +162,9 @@ get_unzip_file <- function(input_dir,
 #' @param output_dir Output directory
 #' @param file_extension File extension, Default: ".csv"
 #' @param action Either `rename` or `copy`
-#' @param remove_name_pattern Strings that will be removed from the file name, Default = `NULL`
-#' @return `TRUE` if the file action is properly completed (either renamed or copied)
+#' @param remove_name_pattern
+#'   Strings that will be removed from the file name, Default = `NULL`
+#' @return `TRUE` if the file action is properly renamed or copied
 #' @rdname file_action
 #' @keywords utils_fun
 #' @importFrom stringr str_remove_all
@@ -168,9 +186,6 @@ file_action <- function(input_dir,
   }
 
   if (output_dir %in% ".") output_dir <- input_dir
-  if (!output_dir %in% ".") {
-    if (dir.exists(output_dir) == FALSE) stop(output_dir, " directory is not existed.")
-  }
 
   lapply(c(input_dir, output_dir), check_dir_path)
 
@@ -217,7 +232,11 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
   arg_match0(arg = file_extension, values = ".csv")
   file_extension <- str_c("\\", file_extension, "$")
   check_dir_path(input_dir)
-  file_list <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
+  file_list <- list.files(
+    path = input_dir,
+    pattern = file_extension,
+    all.files = TRUE
+  )
   if (is.null(file_list)) {
     return("no file is found")
   }
@@ -253,12 +272,14 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 
 # Relabel field code and text from DATADIC dataset ----
 #' @title Function to adjust for field code and text
-#' @description This function is used to adjust the field code and text from DATADIC
+#' @description
+#'  This function is used to adjust the field code and text from DATADIC
 #' @param data_dict A data.frame (i.e. from DATADIC)
 #' @param phaseVar Variable name for study phase. Default: "PHASE"
 #' @param codeVar Variable name for field code. Default: "CODE"
 #' @param textVar Variable name for field text. Default: "TEXT"
-#' @return Returned one row data.frame  that contains `field_value` and `field_label` variables.
+#' @return
+#'  A data.frame  that contains `field_value` and `field_label` variables.
 #' @rdname adjust_code_labels
 #' @keywords adni_datadic_fun
 #' @family data dictionary related functions
@@ -283,7 +304,8 @@ adjust_code_labels <- function(data_dict,
   )
 
   data_dict <- data_dict %>%
-    mutate(across(all_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
+    mutate(across(all_of(column_list_dd$specified_name_list) &
+      where(is.factor), as.character)) %>%
     rename_with(
       ~ paste0(column_list_dd %>%
         filter(specified_name_list == .x) %>%
@@ -308,10 +330,16 @@ adjust_code_labels <- function(data_dict,
     if (unique_rows > 1) {
       data_dict <- data_dict %>%
         mutate(phase_code_var = case_when(
-          !is.na(code_var) ~ paste0("\n#' \\item{\\emph{", phase_var, ":}}{ ", code_var, "}\n"),
-          is.na(code_var) ~ paste0("\n#' \\item{\\emph{", phase_var, "}}\n")
+          !is.na(code_var) ~ paste0(
+            "\n#' \\item \\emph{",
+            phase_var, ":} ", code_var, "\n"
+          ),
+          is.na(code_var) ~ paste0("\n#' \\item \\emph{", phase_var, "} \n")
         ))
-      temp_code <- paste0("\n#' \\itemize{", paste0(data_dict$phase_code_var, collapse = ""), "#' }")
+      temp_code <- paste0(
+        "\n#' \\itemize{",
+        paste0(data_dict$phase_code_var, collapse = ""), "#' }"
+      )
       temp_text <- data_dict %>%
         filter(row_number() %in% n()) %>%
         pull(text_var)
@@ -329,12 +357,16 @@ adjust_code_labels <- function(data_dict,
     )
   }
 
+  output_data <- output_data %>%
+    mutate(field_label = str_replace_all(field_label, "\\{P\\}", " P"))
+
   return(output_data)
 }
 
 # Add description for common columns in DATADIC ----
 #' @title Add description text for common columns in DATADIC
-#' @description This fucntion is used to add description text for common columns in the DATADIC.
+#' @description
+#'  This function is used to add description text for common columns in the DATADIC.
 #' @param tblname Dataset name (TBNAME)
 #' @param data_dict Data dictionary dataset
 #' @param fldname Common column names (usually "ORIGPROT" or "CORPORT")
@@ -379,7 +411,9 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
 
   if (!is.vector(fldname)) stop("fldname must be a vector character")
   if (!is.vector(description)) stop("description must be a vector character")
-  if (length(description) != length(fldname)) stop("The length of description and FLDNAME must be the same")
+  if (length(description) != length(fldname)) {
+    stop("The length of description and FLDNAME must be the same")
+  }
   description <- as.list(description)
   names(description) <- fldname
 
@@ -417,9 +451,12 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
 
 # Checks Directory Path Pattern ----
 #' @title Checks Directory Path Pattern
-#' @description This function is used check whether the last character of a directory name is "/".
+#' @description
+#'  This function is used check whether the last character of a directory name is "/".
 #' @param dir_path Directory path name
-#' @return A stop message if directory is not existed or the last character is "/" . Otherwise return `TRUE`.
+#' @return
+#'  A stop message if directory is not existed or the last character is "/" .
+#'  Otherwise return `TRUE`.
 #' @rdname check_dir_path
 #' @keywords utils_fun
 #' @family checks function
@@ -435,11 +472,16 @@ check_dir_path <- function(dir_path) {
 
 # Expand DATADIC Across Study Phase ----
 #' @title Expand Data Directory Dataset By Study Phase
-#' @description This function is used expand the data dictionary dataset by possible ADNI study phase if the dataset contains combined study phases.
+#' @description
+#'  This function is used expand the data dictionary dataset by possible ADNI
+#'   study phase if the dataset contains combined study phases.
 #' @param data_dict Data Dictionary Dataset
-#' @param concat_phase A character vector that contains study phase that concatenated with `concat_char` character.
+#' @param concat_phase
+#'  A character vector that contains study phase that concatenated with
+#'  \emph{concat_char} character.
 #' @param concat_char Concatenate character
-#' @return Updated data directory data frame with the same structure as `data_dict`
+#' @return
+#'  Updated data directory data frame with the same structure as \emph{data_dict}.
 #' @rdname expand_data_dict
 #' @keywords adni_datadic_fun
 #' @family data dictionary related functions
@@ -461,7 +503,9 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
   if (all(is.na(concat_phase))) {
     return(data_dict)
   }
-  if (any(!str_detect(string = concat_phase, pattern = concat_char))) stop(concat_char, " must be presented.")
+  if (any(!str_detect(string = concat_phase, pattern = concat_char))) {
+    stop(concat_char, " must be presented.")
+  }
   concat_phase_list <- str_split(
     string = concat_phase,
     pattern = concat_char,
@@ -471,7 +515,9 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
 
   output_data_dict <- lapply(names(concat_phase_list), function(i) {
     split_phase <- as.character(unlist(concat_phase_list[i]))
-    if (!any(str_detect(split_phase, "ADNI"))) stop("At least one `ADNI` prefix is not presented.")
+    if (!any(str_detect(split_phase, "ADNI"))) {
+      stop("At least one `ADNI` prefix is not presented.")
+    }
     split_phase[!str_detect(split_phase, "ADNI")] <- str_c("ADNI", split_phase[!str_detect(split_phase, "ADNI")])
     return(data_dict %>%
       filter(PHASE %in% i) %>%
@@ -490,7 +536,9 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
 
 # Functions to get dataset category/groups ----
 #' @title Get Dataset Category/Group
-#' @description This function is used to categorize dataset based on the corresponding directory location.
+#' @description
+#'  This function is used to categorize dataset based on the corresponding
+#'  directory location.
 #' @param dir.path Directory path
 #' @param extension_pattern File extension patterns, Default: '\.csv$'
 #' @return A data.frame that contains the following columns:
@@ -506,7 +554,7 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
 #' @keywords utils_fun
 #' @importFrom stringr str_remove_all str_detect str_to_lower
 #' @importFrom tibble tibble
-#' @importFrom dplyr bind_rows mutate case_when select 
+#' @importFrom dplyr bind_rows mutate case_when select
 #' @export
 get_dataset_cat <- function(dir.path, extension_pattern = "\\.csv$") {
   require(tidyverse)
@@ -514,18 +562,32 @@ get_dataset_cat <- function(dir.path, extension_pattern = "\\.csv$") {
   # Function to extract all `*.csv$` files within a single directory
   get_file_list <- function(dir.path, extension_pattern) {
     check_dir_path(dir.path)
-    file_list <- list.files(path = dir.path, pattern = extension_pattern, all.files = TRUE)
+    file_list <- list.files(
+      path = dir.path,
+      pattern = extension_pattern,
+      all.files = TRUE
+    )
     if (all(!is.na(file_list))) {
-      file_list <- str_remove_all(string = file_list, pattern = extension_pattern)
+      file_list <- str_remove_all(
+        string = file_list,
+        pattern = extension_pattern
+      )
     }
     output_data <- tibble(dir = dir.path, file_list = file_list)
     return(output_data)
   }
   check_dir_path(dir.path)
   # Get directories list
-  dir_list <- list.dirs(path = dir.path, full.names = TRUE, recursive = FALSE)
+  dir_list <- list.dirs(
+    path = dir.path,
+    full.names = TRUE,
+    recursive = FALSE
+  )
   if (all(!is.na(dir_list))) {
-    dir_list <- dir_list[str_detect(string = dir_list, pattern = "/\\_|/Tables\\_")]
+    dir_list <- dir_list[str_detect(
+      string = dir_list,
+      pattern = "/\\_|/Tables\\_"
+    )]
   } else {
     dir_list <- NA_character_
   }
@@ -547,7 +609,8 @@ get_dataset_cat <- function(dir.path, extension_pattern = "\\.csv$") {
     )) %>%
     mutate(dir_cat = str_to_lower(dir_cat)) %>%
     mutate(dir_cat = case_when(
-      str_detect(string = dir_cat, pattern = "^table") | dir_cat %in% dir.path ~ "other_raw_dataset",
+      str_detect(string = dir_cat, pattern = "^table") |
+        dir_cat %in% dir.path ~ "other_raw_dataset",
       TRUE ~ dir_cat
     )) %>%
     select(dir, file_list, dir_cat)

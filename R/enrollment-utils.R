@@ -3,10 +3,7 @@
 #' @description
 #'  This function is used to extract enrollment date (baseline visit date) when participant are enrolled in ADNI study for the first time.
 #' @param data_registry Data.frame of REGISTRY eCRF
-#' @return
-#'  \itemize{
-#'    \item A data frame of overall enrollment in ADNI study that will contains `RID`, `ORIGPROT`, `COLPROT`, and `EXAMDATE` variables.
-#'  }
+#' @return A data frame of overall enrollment in ADNI study that will contains `RID`, `ORIGPROT`, `COLPROT`, and `EXAMDATE` variables.
 #' @examples
 #' \dontrun{
 #' overall_enroll_registry <- adni_enrollment(
@@ -79,18 +76,15 @@ adni_enrollment <- function(data_registry) {
 #' @param both A boolean value to include both overall and phase-specific enrollment list, Default: FALSE
 #' @param multiple_screen_visit A boolean value to include multiple screen visits in ADNIGO and ADNI2 phases, Default: FALSE
 #' @return
+#' \itemize{
+#' \item If `both = TRUE`: a list of data frames that includes both overall (`overall_screen`) and phase-specific enrollment (`phase_screen`)
+#' \item Otherwise a data frame corresponding to the provided input arguments:
 #'  \itemize{
-#'    \item If `both = TRUE`: a list of data frames that includes both overall (`overall_screen`) and phase-specific enrollment (`phase_screen`)
-#'    \item  Otherwise a data frame corresponding to the provided input arguments:
-#'         \itemize{
-#'            \item Overall screen if `phase = "Overall"` and will contains one records per participant regardless the value of `multiple_screen_visit`
-#'            \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = FALSE`.
-#'  }
-#'  \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables.
-#'        \itemize{
-#'             \item The data frame will contains `VISCODE` for `multiple_screen_visit = TRUE`
-#'  }
-#'  }
+#'    \item Overall screen if `phase = "Overall"` and will contains one records per participant regardless the value of `multiple_screen_visit`
+#'    \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = FALSE`.
+#' }
+#' \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables. The data frame will contains `VISCODE` for `multiple_screen_visit = TRUE`
+#' }
 #' @examples
 #' \dontrun{
 #' # Overall screening: when participants screened for the first time in ADNI study.
@@ -414,12 +408,12 @@ adni_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "bas
 #' @param studysum_dd Final dispositions(study sum) data frame for ADNI3-4, similar ro `STUDYSUM`
 #' @return A data frame with the following columns:
 #' \itemize{
-#'    \item `RID` Participant ID
-#'    \item `ORIGPROT` Original study protocols
-#'    \item `COLPROT` Current study protocols which the event was recorded
-#'    \item `DTHDTC` Death date
-#'    \item `DTHFL` Death flag, `Yes`
-#'  }
+#'  \item RID: Participant ID
+#'  \item ORIGPROT: Original study protocols
+#'  \item COLPROT: Current study protocols which the event was recorded
+#'  \item DTHDTC: Death date
+#'  \item DTHFL: Death flag, `Yes`
+#' }
 #' @examples
 #' \dontrun{
 #' get_death_flag(

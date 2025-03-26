@@ -1,6 +1,7 @@
 url: https://atri-biostats.github.io/ADNIMERGE2
 template:
   bootstrap: 5
+  light-switch: true
 
 reference:
   - title: ADNI Raw Datasets
@@ -57,11 +58,11 @@ reference:
   - title: Utility Functions
     contents:
     - has_keyword("utils_fun")
-     
+  
 navbar:
   structure:
     left:  [intro, reference, articles]
-    right: [search, github]
+    right: [search, github, lightswitch]
   components:
     reference:
       text: Reference
@@ -73,9 +74,18 @@ navbar:
     articles:
       text: Articles
       menu:
+      - text: R Package Build
+      - text: Building an R Package from Raw Dataset
+        href: articles/ADNIMERGE2-Package-Building.html
+      - text: -------
+      - text: Derived/Analysis Ready Data
       - text: ADNIMERGE2-Derived-Data
         href: articles/ADNIMERGE2-Derived-Data.html
       - text: ADNIMERGE2-Analysis-Meta-Specs
         href: articles/ADNIMERGE2-Analysis-Meta-Specs.html
       - text: ADNIMERGE2-Analysis-Data
         href: articles/ADNIMERGE2-Analysis-Data.html
+footer:
+  structure: 
+    left: developed_by
+    right: built_with

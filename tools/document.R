@@ -88,16 +88,11 @@ source(file.path(".", "R", "checks-assert.R"))
 
 ## Common texts ----
 ### Data source link
-loni_url_link <- str_c(
-  "\\href{https://adni.loni.usc.edu/data-samples/adni-data/}",
-  "{https://adni.loni.usc.edu/data-samples/adni-data/}"
-)
+loni_url_link <- "<https://adni.loni.usc.edu/data-samples/adni-data/>"
 ### Common data description
-common_description <- str_c(
-  "data. More information is available at ", loni_url_link
-)
+common_description <- str_c("data. More information is available at ", loni_url_link)
 ### Authors
-authors <- "\\href{adni-data@googlegroups.com}{adni-data@googlegroups.com}"
+authors <- "<adni-data@googlegroups.com>"
 
 ## Prepare data dictionary for raw dataset ----
 ### Generate data dictionary from actual raw dataset ----
@@ -143,7 +138,8 @@ temp_data_dict <- temp_data_dict %>%
       distinct(CRFNAME, TBLNAME, STATUS) %>%
       group_by(TBLNAME) %>%
       filter((n() == 1 & row_number() == 1) |
-        (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" & row_number() == 1) |
+        (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" &
+          row_number() == 1) |
         (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
         (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
         (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)) %>%
@@ -190,13 +186,15 @@ temp_data_dict <- temp_data_dict %>%
   mutate(prefix_char = str_remove(string = prefix_char, pattern = "_")) %>%
   mutate(
     dataset_label = case_when(
-      !tblname %in% str_to_lower("DATADIC") & !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
-      !tblname %in% str_to_lower("DATADIC") & is.na(prefix_char) ~ CRFNAME,
+      !tblname %in% str_to_lower("DATADIC") &
+        !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
+      !tblname %in% str_to_lower("DATADIC") &
+        is.na(prefix_char) ~ CRFNAME,
       tblname %in% str_to_lower("DATADIC") ~ "Data dictionary dataset"
     ),
     add_authors = authors,
     short_description = case_when(
-      tblname %in% str_to_lower("DATADIC") ~ str_c("Data dictionary dataset. More information is available at ", loni_url_link, "."),
+      tblname %in% str_to_lower("DATADIC") ~ str_c("Data dictionary dataset. ", "More information is available at ", loni_url_link, "."),
       tblname %in% str_to_lower("VISITS") ~ str_c(CRFNAME, ". More information is available at ", loni_url_link, "."),
       TRUE ~ str_c(CRFNAME, common_description, sep = " ")
     ),
@@ -250,7 +248,7 @@ temp_data_dict <- temp_data_dict %>%
   left_join(
     tab <- dataset_cat %>%
       mutate(dir_cat = str_remove_all(string = dir_cat, ",")) %>%
-      select(TBLNAME, dir_cat) %>% 
+      select(TBLNAME, dir_cat) %>%
       distinct(),
     by = c("dd_name" = "TBLNAME")
   ) %>%
@@ -258,7 +256,7 @@ temp_data_dict <- temp_data_dict %>%
   mutate(add_keywords = case_when(
     is.na(dir_cat) ~ "other_raw_dataset",
     !is.na(dir_cat) ~ dir_cat
-  )) %>% 
+  )) %>%
   select(-dir_cat)
 
 ### Adjust for coded FLDNAME records ----
@@ -301,7 +299,9 @@ temp_data_dict <- temp_data_dict %>%
   ))
 
 ## Finalize documentations ------
-if (dir.exists(file.path(".", "R")) == FALSE) stop(file.path(".", "R"), " directory is not existed!")
+if (dir.exists(file.path(".", "R")) == FALSE) {
+  stop(file.path(".", "R"), " directory is not existed!")
+}
 data_document_path <- file.path(".", "R", "data.R")
 if (file.exists(data_document_path) == TRUE) {
   readr::write_lines(x = "", data_document_path)
@@ -353,8 +353,14 @@ if (exists("derived_data_list")) {
     )
     output_link <- c()
     for (i in seq_len(length(vignette_link))) {
-      temp_vignette_link <- paste0("\\code{vignette(topic = '", vignette_link[i], "', package = 'ADNIMERGE2')}")
-      output_link[i] <- paste0("For more details see the help vignette: \n#' ", temp_vignette_link)
+      temp_vignette_link <- paste0(
+        "\\code{vignette(topic = '", vignette_link[i],
+        "', package = 'ADNIMERGE2')}"
+      )
+      output_link[i] <- paste0(
+        "For more details see the help vignette: \n#' ",
+        temp_vignette_link
+      )
     }
     return(output_link)
   }
@@ -405,7 +411,7 @@ if (exists("derived_data_list")) {
       field_notes = case_when(
         TEXT %in% " " | is.na(TEXT) ~ field_notes,
         TRUE ~ paste0(TEXT, "; ", field_notes)
-      ), 
+      ),
       add_keywords = "derived_dataset"
     ) %>%
     mutate(across(
@@ -444,7 +450,7 @@ if (exists("derived_data_list")) {
     "#'",
     paste0(
       "#' Metadata specifications for the ADNI study. It is generated to create analysis ready dataset",
-      "using PHARMAVERSE workflow for illustration purpose."
+      "using [PHARMAVERSE](https://pharmaverse.org/) workflow for illustration purpose."
     ),
     "#'",
     "#' @docType data",

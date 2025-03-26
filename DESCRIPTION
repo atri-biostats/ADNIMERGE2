@@ -6,11 +6,11 @@ Version: 0.1.1
 Authors@R: person("ATRI Biostatistics", email = "biostat_request@atrihub.io",
   role = c("aut", "cre"))
 BugReports: https://github.com/atri-biostats/ADNIMERGE2/issues
-URL: https://adni.loni.usc.edu
+URL: https://atri-biostats.github.io/ADNIMERGE2
 License: https://ida.loni.usc.edu/collaboration/access/appLicense.jsp
 Encoding: UTF-8
 LazyData: true
-LazyDataCompression:bzip2
+LazyDataCompression: bzip2
 Imports: 
   stringr, 
   rlang,
@@ -30,7 +30,9 @@ Suggests:
   metatools,
   admiral,
   admiraldev,
-  xportr
+  xportr,
+  labelled,
+  measurements
 Depends: 
     R (>= 2.10)
 RoxygenNote: 7.3.2

@@ -1,0 +1,33 @@
+---
+title: "ADNIMERGE2-Package-Building"
+output: 
+   rmarkdown::html_vignette:
+     toc: false
+     code_folding: hide
+vignette: >
+  %\VignetteIndexEntry{ADNIMERGE2-Package-Building}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  class.source = "fold-show"
+)
+getwd()
+```
+
+# Building an R Package from csv files
+
+```{r convert-md-to-rmd, echo = FALSE, eval = TRUE}
+pkg_build_md_path <- file.path("..", "tools", "README.md")
+pkg_build_md <- readLines(pkg_build_md_path)
+pkg_build_rmd <- paste0(pkg_build_md[-1], collapse = "\n")
+```
+
+`r pkg_build_rmd`
