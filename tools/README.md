@@ -18,7 +18,7 @@ To build a package from source `.csv` files with similar workflow, clone the [ht
    
    + Required to downloaded a data dictionary `*.csv` file
    
-   + It is recommend to download all the files from the data-shared platform on the same date.
+   + It is recommend to download files from the data-shared platform on the same date and without adding any file name prefix.
 
 * Copy all pre-defined scripts/functions as necessary within the above-mentioned directory of the [ADNIMERGE2 github repository](https://github.com/atri-biostats/ADNIMERGE2) with the same file path
 

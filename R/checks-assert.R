@@ -23,21 +23,19 @@ assert_uniq <- function(...) {
 #' @title Checks Missing Values
 #' @description
 #'  This function is used to check any missing values within the provided column.
-#' @param ... \code{\link[assertr]{assert_rows}} arguments
+#' @param ... \code{\link[assertr]{assert}} arguments
 #' @return A stop message if there is at least one duplicated records.
 #' @rdname assert_non_missing
 #' @family assert checks
 #' @keywords utils_fun
 #' @seealso
-#'  \code{\link[assertr]{assert_rows}}
-#'  \code{\link[assertr]{num_row_NAs}}
-#'  \code{\link[assertr]{within_bounds}}
-#' @importFrom assertr assert_rows num_row_NAs within_bounds
+#'  \code{\link[assertr]{assert}}
+#'  \code{\link[assertr]{not_na}}
+#' @importFrom assertr assert not_na
 #' @export
 assert_non_missing <- function(...) {
-  assert_rows(
-    row_reduction_fn = num_row_NAs,
-    predicate = within_bounds(0, 0.01),
+  assert(
+    predicate = not_na,
     ...
   )
 }

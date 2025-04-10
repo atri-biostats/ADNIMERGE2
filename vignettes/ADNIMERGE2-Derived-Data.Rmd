@@ -4,6 +4,7 @@ output:
    rmarkdown::html_vignette:
      toc: true
      code_folding: hide
+date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Derived-Data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -57,7 +58,7 @@ library(tidyverse)
 library(assertr)
 library(labelled)
 library(DT)
-library(measurements) # Unit converters
+library(measurements)
 ```
 
 ```{r study-library, purl=FALSE}
@@ -68,7 +69,7 @@ library(ADNIMERGE2)
 ```{r mapping-ids, echo = FALSE, results = 'hide', class.source = NULL}
 MAPPING_ID <- tibble(PTID = unique(c(ROSTER$PTID, REGISTRY$PTID, PTDEMOG$PTID))) %>%
   mutate(
-    RID = as.numeric(str_remove_all(string = PTID, pattern = "^[0-9]{3}_S_")),
+    RID = as.numeric(str_remove_all(string = PTID, pattern = "^[0-9]{3}\\_S\\_")),
     SITEID = str_extract_all(string = PTID, pattern = "^[0-9]{3}", simplify = TRUE),
     PTID = str_c("ADNI-", str_remove(
       string = str_replace_all(string = PTID, pattern = "\\_", replacement = "-"),
@@ -85,25 +86,27 @@ MAPPING_ID <- tibble(PTID = unique(c(ROSTER$PTID, REGISTRY$PTID, PTDEMOG$PTID)))
    
   + *Rollover Participant: * Participant that participated/enrolled at least in one of the previous study phases before a given study phase.
 
-```{r phase-visit-epoch, class.source = NULL}
+```{r phase-visit-epoch, class.source = NULL, echo = FALSE}
 # Create study epoch stage- overall and phase-specific
 EPOCH_LIST <- VISITS %>%
   filter(!VISCODE %in% "reg") %>%
   # Add ADNI4 phase visit
-  bind_rows(tibble(
-    Phase = "ADNI4",
-    VISCODE = c("4_sc", "4_bl", "4_init", "4_m12", "4_m24", "4_m36", "4_m48"),
-    VISNAME = c(
-      "Screening - New Pt", "Baseline - New Pt",
-      "ADNI4 Initial Visit - Continuing Pt", "ADNI4 Month 12 Visit",
-      "ADNI4 Month 24 Visit", "ADNI4 Month 36 Visit",
-      "ADNI4 Month 48 Visit"
-    )
+  bind_rows(
+    tibble(
+      Phase = "ADNI4",
+      VISCODE = c("4_sc", "4_bl", "4_init", "4_m12", "4_m24", "4_m36", "4_m48"),
+      VISNAME = c(
+        "Screening - New Pt", "Baseline - New Pt",
+        "ADNI4 Initial Visit - Continuing Pt", "ADNI4 Month 12 Visit",
+        "ADNI4 Month 24 Visit", "ADNI4 Month 36 Visit",
+        "ADNI4 Month 48 Visit"
+      )
+    ) %>%
+      mutate(
+        ID = row_number(),
+        VISORDER = row_number()
+      )
   ) %>%
-    mutate(
-      ID = row_number(),
-      VISORDER = row_number()
-    )) %>%
   mutate(EPOCH = case_when(
     VISCODE %in% c("sc", "4_sc", "scmri", "f", "v01", "v02") ~ "Screening",
     VISCODE %in% c("bl", "4_bl", "init", "4_init", "v03", "v06") ~ "Baseline",
@@ -166,7 +169,7 @@ EPOCH_LIST_LONG <- EPOCH_LIST %>%
   )
 ```
 
-```{r include-origprot-colprot, class.source = NULL}
+```{r include-origprot-colprot, class.source = NULL, echo = FALSE}
 # Add participant type (New or Rollovers)
 REGISTRY <- REGISTRY %>%
   mutate(
@@ -189,7 +192,7 @@ ROSTER <- ROSTER %>%
   ))
 ```
 
-```{r study-visit-flows, class.source = NULL}
+```{r study-visit-flows, class.source = NULL, echo = FALSE}
 # Unique participant IDs
 unique_rid <- unique(c(ROSTER$RID, REGISTRY$RID, PTDEMOG$RID))
 
@@ -197,12 +200,13 @@ unique_rid <- unique(c(ROSTER$RID, REGISTRY$RID, PTDEMOG$RID))
 PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
   # Add ORIGPOL
   mutate(ORIGPROT = original_study_protocol(RID = RID)) %>%
-  # Last known study phases based ROSTER data/ ?REGISTRY
+  # Last known study phases based ROSTER/REGISTRY data
   left_join(
     ROSTER %>%
       # Add study phase order number
       mutate(PHASE_NUM = adni_phase_order_num(COLPROT)) %>%
       assert_non_missing(PHASE_NUM) %>%
+      distinct(RID, COLPROT, PHASE_NUM) %>%
       group_by(RID) %>%
       filter(PHASE_NUM == max(PHASE_NUM)) %>%
       ungroup() %>%
@@ -297,7 +301,7 @@ ADNI_VISIT_RECORD <- bind_rows(
 
 ## Demographic (DM)
 
-[DM](DM.html) dataset contains one records per participant when participant are enrolled in the ADNI study for the first time (i.e. as new-enrollee). The [DM](DM.html) dataset will contains the following characteristics:
+[`DM`](../reference/DM.html) dataset contains one records per participant when participant were enrolled or screened in the ADNI study for the first time (i.e. as new-enrollee). The [`DM`](../reference/DM.html) dataset will contains the following characteristics:
 
 ```{r dm-data-dic, echo=FALSE}
 dm_data_dic <- bind_rows(
@@ -469,8 +473,7 @@ DM <- tibble(RID = unique_rid) %>%
   # Add enrollment date (i.e. baseline visit date)
   left_join(
     adni_enrollment(data_registry = REGISTRY) %>%
-      select(RID, ORIGPROT, ENROLLDATE = EXAMDATE) %>%
-      assert(is_uniq, RID),
+      select(RID, ORIGPROT, ENROLLDATE = EXAMDATE),
     by = dm_join_by
   ) %>%
   # Add the first screening visit date
@@ -632,7 +635,7 @@ DM <- DM %>%
 
 ## Subject Characteristics (SC)
 
-[SC](SC.html) dataset contains participant-related data that are not collected in [DM](DM.html) domain and/or characteristics that are collected over time (i.e. across the ADNI phases: ADNI1, ADNIGO, ADNI2, ADNI3, and ADNI4). The [SC](SC.html) dataset will contains the following characteristics:
+[`SC`](../reference/SC.html) dataset contains participant-related data that are not collected in [`DM`](../reference/DM.html) domain and/or characteristics that are collected over time (i.e. across the ADNI phases: ADNI1, ADNIGO, ADNI2, ADNI3, and ADNI4). The [`SC`](../reference/SC.html) dataset will contains the following characteristics:
 
 ```{r sc-data-dic, echo=FALSE}
 sc_data_dic <- bind_rows(
@@ -880,7 +883,7 @@ SC <- SC %>%
 
 ## Adverse Events (AE)
 
-[AE](AE.html) dataset contains one records per adverse event per participant. The [AE](AE.html) dataset will includes the following characteristics for participant that have at least one adverse events experience during the study.
+[`AE`](../reference/AE.html) dataset contains one records per adverse event per participant. The [`AE`](../reference/AE.html) dataset will includes the following characteristics for participant that have at least one adverse events experience during the study.
 
 ```{r ae-data-dic, echo=FALSE}
 ae_data_dic <- bind_rows(
@@ -1133,7 +1136,7 @@ AE_ADNI34 <- ADVERSE %>%
 ```
 
 ```{r generate-ae-adni12go}
-# ?? Required checking for missing AENUMBER in RECADV
+# Required checking for missing AENUMBER in RECADV
 AE_ADNI12GO <- tibble(RID = NA_real_) %>%
   na.omit()
 ```
@@ -1196,7 +1199,7 @@ AE <- AE %>%
 
 ## Questionnaires (QS)
 
-[QS](QS.html) dataset contains one record per parameter finding (i.e. total score) per visit per participant. The [QS](QS.html) dataset will contains the following characteristics:
+[`QS`](../reference/QS.html) dataset contains one record per parameter finding (i.e. total score) per visit per participant. The [`QS`](../reference/QS.html) dataset will contains the following characteristics:
 
 ```{r qs-data-dic, echo=FALSE}
 qs_data_dic <- bind_rows(
@@ -1297,7 +1300,7 @@ qs_data_dic %>%
   datatable(., paging = TRUE)
 ```
 
-The following total and sub-scores will be included the [QS](QS.html) dataset. 
+The following total and sub-scores will be included the [`QS`](../reference/QS.html) dataset. 
 
 ```{r qs-testcd-list, eval=TRUE, echo=FALSE}
 QS_TESTCD_LIST <- bind_rows(
@@ -1651,7 +1654,7 @@ QS <- QS %>%
 
 ## Clinical Classification (RS)
 
-[RS](RS.html) dataset will contains one record per instrument status per visit per participant. The [RS](RS.html) dataset will contains the following characteristics:
+[`RS`](../reference/RS.html) dataset will contains one record per instrument status per visit per participant. The [`RS`](../reference/RS.html) dataset will contains the following characteristics:
 
 ```{r rs-data-dic, echo=FALSE}
 rs_data_dic <- bind_rows(
@@ -1749,7 +1752,7 @@ rs_data_dic %>%
   datatable(., paging = TRUE)
 ```
 
-The [RS](RS.html) domain will contains the diagnostics status of participant per the scheduled study visit. The clinical diagnostics status (i.e. either Cognitive Normal (CN), Mild Cognitive Impairment (MCI) or Dementia/Alzheimer's (DEM/AD)) of a participant was determined by a clinician judgment.
+The [`RS`](../reference/RS.html) domain will contains the diagnostics status of participant per the scheduled study visit. The clinical diagnostics status (i.e. either Cognitive Normal (CN), Mild Cognitive Impairment (MCI) or Dementia/Alzheimer's (DEM/AD)) of a participant was determined by a clinician judgment.
 
 ```{r rs-testcd-list, eval=TRUE, echo=FALSE}
 # Required checking variable name length and test labels
@@ -1838,14 +1841,14 @@ RS_BASELINE_FLG <- RS %>%
   filter(!is.na(RFSTDTC)) %>%
   group_by(RID, RSTESTCD) %>%
   filter(!is.na(RSORRES)) %>%
-  filter(VISITNUM <= 1 & RSDTC <= RFSTDTC + 30) %>%
+  filter(VISITNUM <= 1 & RSDTC <= RFSTDTC + 90) %>%
   filter(VISITNUM == max(VISITNUM) | RSDTC == max(RSDTC, na.rm = TRUE)) %>%
   # Few instance with screening visit record after baseline date
   verify(ORIGPROT == COLPROT) %>%
   filter(VISITNUM == max(VISITNUM)) %>%
   ungroup() %>%
   # verify(ORIGPROT == COLPROT) %>%
-  assert_rows(col_concat, is_uniq, RID, RSTESTCD)
+  assert_uniq(RID, RSTESTCD)
 
 RS <- RS %>%
   # Add baseline flag
@@ -1871,7 +1874,7 @@ RS <- RS %>%
 
 ## Nervous System Finding (NV)
 
-[NV](NV.html) domain contains one record of physiological and morphological finding related to the nervous system (including brain) per visit per participant. The [NV](NV.html) dataset will contains the following characteristics:
+[`NV`](../reference/NV.html) domain contains one record of physiological and morphological finding related to the nervous system (including brain) per visit per participant. The [`NV`](../reference/NV.html) dataset will contains the following characteristics:
 
 ```{r nv-data-dic, echo=FALSE}
 nv_data_dic <- bind_rows(
@@ -1979,7 +1982,7 @@ nv_data_dic %>%
   datatable(., paging = TRUE)
 ```
 
-* **Amyloid Status: ** The amyloid status (i.e. elevated vs non-elevated) of a participant was determined by a clinician judgment after consensus session review if required. At this moment, the amyloid status is included only for ADNI4 participant. 
+* **Amyloid Status: ** The amyloid status (i.e. elevated vs non-elevated) of a participant was determined by a clinician judgment after consensus session review if required. At this moment, the amyloid status for the ADNI4 participants is only included. 
 
 ```{r nv-testcd-list, eval=TRUE, echo=FALSE}
 # Required checking variable name length and test labels
@@ -2079,7 +2082,7 @@ PIB_PET_DD <- PIBPETSUVR %>%
     na.rm = FALSE
   )) %>%
   select(RID, ORIGPROT, VISCODE, EXAMDATE, NVSTRESN = PIB, LONIUID) %>%
-  assert_rows(num_row_NAs, within_bounds(0, 0.01), VISCODE) %>%
+  assert_non_missing(VISCODE) %>%
   check_duplicate_records(col_names = c("RID", "EXAMDATE")) %>%
   mutate(
     NVMETHOD = "PET SCAN",
@@ -2364,7 +2367,7 @@ BS_TESTCD_LIST <- bind_rows(
     BSSTRESU = "pg/mL"
   ),
   c(
-    BSTESTCD = "AB42_AB40",
+    BSTESTCD = "AB42AB40",
     BSTEST = "Abeta 42/40 Ratio",
     BSORRESU = "Ratio",
     BSSTRESU = "Ratio"
@@ -2378,19 +2381,19 @@ BS_TESTCD_LIST <- bind_rows(
     BSTEST = "Amyloid Probability Score 2"
   ),
   c(
-    BSTESTCD = "npT217",
+    BSTESTCD = "NPT217",
     BSTEST = "Non-Phosphorylated Tau217 Concentration",
     BSORRESU = "pg/mL",
     BSSTRESU = "pg/mL"
   ),
   c(
-    BSTESTCD = "pT217",
+    BSTESTCD = "PT217",
     BSTEST = "Phosphorylated Tau217 Concentration",
     BSORRESU = "pg/mL",
     BSSTRESU = "pg/mL"
   ),
   c(
-    BSTESTCD = "pT217_npT217",
+    BSTESTCD = "PT217NPT",
     BSTEST = "Percentage of Phosphorylated Tau217",
     BSORRESU = "%",
     BSSTRESU = "%"
@@ -2404,7 +2407,6 @@ BS_TESTCD_LIST %>%
 ```
 
 ```{r bs-prepare-c2n-data}
-# ?? Categorized COMMENT
 # C2N Blood Plasma Result ----
 C2N_PLASMA_RESULT <- c(
   "pT217_C2N", "npT217_C2N", "AB42_C2N", "AB40_C2N", "AB42_AB40_C2N",
@@ -2421,8 +2423,15 @@ C2N_PLASMA <- C2N_PRECIVITYAD2_PLASMA %>%
     names_to = "BSTESTCD",
     values_to = "BSORRES"
   ) %>%
-  mutate(BSTESTCD = str_remove_all(string = BSTESTCD, pattern = "\\_C2N")) %>%
+  mutate(BSTESTCD = toupper(str_remove_all(
+    string = BSTESTCD,
+    pattern = "\\_C2N|\\_"
+  ))) %>%
   mutate(
+    BSTESTCD = case_when(
+      BSTESTCD %in% "PT217NPT217" ~ "PT217NPT",
+      TRUE ~ BSTESTCD
+    ),
     BSNAM = "C2N",
     BSSPEC = "PLASMA"
   )
@@ -2520,7 +2529,7 @@ BS <- BS %>%
 
 ## Vital Sign (VS)
 
-[VS](VS.html) domain contains measurement finding of blood pressure, heart beat, respiratory rate,  temperature, weight and height per visit per participant. The [VS](VS.html) dataset will contains the following characteristics:
+[`VS`](../reference/VS.html) domain contains measurement finding of blood pressure, heart beat, respiratory rate,  temperature, weight and height per visit per participant. The [`VS`](../reference/VS.html) dataset will contains the following characteristics:
 
 ```{r vs-data-dic, echo=FALSE}
 vs_data_dic <- bind_rows(

@@ -11,14 +11,13 @@ Initiative (ADNI) study. All datasets are included as shared on
 ## Package Access
 
 The ADNI study R data package, ADNIMERGE2, will be available on the same
-data sharing platform on [LONI website](https://adni.loni.usc.edu/). To
-request access of the R package as well as data collected in the ADNI
-study, required to submit an online application via LONI website and
-acceptance of the ADNI Data Use Agreement. Details of the Data Use
-Agreement can be found
-[here](https://ida.loni.usc.edu/collaboration/access/appLicense.jsp).
+data sharing platform at [LONI website](https://adni.loni.usc.edu/). To
+request access of the R package, required to submit an online
+application via LONI website and acceptance of the ADNI Data Use
+Agreement. Details of the Data Use Agreement can be found
+[here](https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf).
 
 ## Installation
 
 To install the package locally, run
-`install.packages("path/to/ADNIMERGE2_0.1.1.tar.gz", repos = NULL, type = "source")`
+`install.packages("path/to/ADNIMERGE2_0.1.1.tar.gz", repos = NULL, type = "source")`.

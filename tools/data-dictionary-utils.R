@@ -107,10 +107,12 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
 #' @importFrom rlang arg_match0
 #' @importFrom tibble tibble
 #' @importFrom assertr verify
+#' @importFrom stringr str_detect
 summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
+  require(stringr)
   var_values <- data %>%
     select(all_of(var_name)) %>%
     pull()
@@ -120,18 +122,20 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
   check_logical(wider_format)
   # Warning message if number of item value is more than 10
   var_values <- unique(var_values)[!is.na(unique(var_values))]
-  var_notes <- paste0(
-    "Character variable with options: ",
-    paste0(var_values, collapse = ", ")
-  )
-  if (length(var_values) > 10) {
-    warning(paste0("There are more than 10 values in ", var_name, " variable"))
-    var_values <- NA_character_
-    var_notes <- paste0(" ")
+  id_format_pattern <- "[0-9]{3}\\_s\\_d+|[0-9]{3}\\_S\\_d+|[0-9]{3}-s-d+|[0-9]{3}-S-d+"
+  contain_ids <- any(str_detect(string = var_values, pattern = id_format_pattern))
+  if (all(length(var_values) <= 10 & length(var_values) > 0 & contain_ids != TRUE)) {
+    var_notes <- paste0(
+      "Character variable with options: ",
+      paste0(var_values, collapse = ", ")
+    )
   }
-
-  if (length(var_values) == 0) {
-    warning(paste0("There are none values in ", var_name, " variable"))
+  if (any(length(var_values) == 0 | length(var_values) > 10 | contain_ids == TRUE)) {
+    warning(paste0(
+      "There are more than ",
+      ifelse(length(var_values) == 0, "none", length(var_values)),
+      " values in ", var_name, " variable"
+    ))
     var_values <- NA_character_
     var_notes <- paste0(" ")
   }

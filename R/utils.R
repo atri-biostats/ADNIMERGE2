@@ -377,9 +377,13 @@ extract_codelist_datadict <- function(data_dict) {
   data_dict <- data_dict %>%
     convert_to_missing_value(col_name = "CODE", value = "-4", missing_char = NA)
   # Convert coded range values: i.e., 0...10 as missing values
-  exc_range <-  paste0(c("\\b\\d+\\.\\.\\d+\\b", "\\b\\d+\\.\\.\\..\\d+\\b", 
-                         "Range: 0+", "Range:  0+"),
-                       collapse = "|")
+  exc_range <- paste0(
+    c(
+      "\\b\\d+\\.\\.\\d+\\b", "\\b\\d+\\.\\.\\..\\d+\\b",
+      "Range: 0+", "Range:  0+"
+    ),
+    collapse = "|"
+  )
   data_dict <- data_dict %>%
     mutate(CODE = case_when(
       str_detect(CODE, exc_range) == TRUE ~ NA,
@@ -398,7 +402,7 @@ extract_codelist_datadict <- function(data_dict) {
     "ADNI code", "MM/DD/YYYY", '"ADNI" or "DIAN"', "pg/mL", "complete; partial",
     "-4=Insufficient sample", "-4 = Not Available", "NA = Not Available",
     "-4=Insufficient sample; -5=Sample quantity not sufficient"
-    )
+  )
   data_dict <- data_dict %>%
     mutate(CODE = case_when(
       CODE %in% exc_add_text ~ NA,
@@ -472,7 +476,7 @@ extract_codelist_datadict <- function(data_dict) {
 #'   tbl_name = NULL,
 #'   nested_value = TRUE
 #' )
-#' # List of available factor columns in data dictionary 
+#' # List of available factor columns in data dictionary
 #' # \code{\link{DATADIC}()} for the \code{\link{ADAS_ADNIGO23}()} dataset
 #' get_factor_fldname(
 #'   data_dict = data_dict_dd,
@@ -816,8 +820,8 @@ replace_multiple_values <- function(input_string, code, decode) {
 #' @description This function is used to detect any numeric values from a string.
 #' @param value Input string
 #' @param num_type Numeric value type: `any`, `positive` or `negative`, Default: 'any'
-#' @param stop_message 
-#'  A boolean value to return a stop message when there is the specified numeric 
+#' @param stop_message
+#'  A boolean value to return a stop message when there is the specified numeric
 #'  value type `num_type`, Default: `FALSE`
 #' @return A boolean value or a stop message if \emph{stop_message=TRUE}:
 #'   \item{TRUE }{If any of the specified numeric type value is presented.}
@@ -870,7 +874,7 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 ## Single Variable - Single Phase Specific Value Replacement -----
 #' @title Replace Phase Specific Values for Single Variable
 #' @description
-#'  This function is used to recode/replace phase specific values of a 
+#'  This function is used to recode/replace phase specific values of a
 #'  single variable in a dataset.
 #' @param data Data frame
 #' @param fld_name Variable name
@@ -909,7 +913,7 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 #' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with
 #' @importFrom tidyselect all_of
 #' @importFrom stringr str_detect str_c str_extract str_remove_all
-phase_specific_value_replacement <- function(data, fld_name, phase = NULL, 
+phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
                                              phaseVar = "PHASE", code, decode) {
   phase_var <- NULL
   if (is.null(phase)) {
@@ -986,12 +990,12 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
 ## Single Variable - Multiple Phase Specific Value Replacement -----
 #' @title Value Replace for Single Column
 #' @description
-#'  This function is used to replace values for a single column in the dataset 
+#'  This function is used to replace values for a single column in the dataset
 #'  across different ADNI study phases.
 #' @param data Data frame
 #' @param fld_name Variable name
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
-#' @param input_values 
+#' @param input_values
 #'  A list value associated with each ADNI study phase and the format will be
 #'   \emph{[phase_name]$values}.
 #' \itemize{
@@ -1040,9 +1044,9 @@ multiple_phase_value_replacement <- function(data, fld_name, phaseVar = "PHASE",
   }
 
   for (phase_list in phase_name_list) {
-    if (is.na(phase_list)){
-      adjust_phase_list <- 1 
-      } else {
+    if (is.na(phase_list)) {
+      adjust_phase_list <- 1
+    } else {
       adjust_phase_list <- phase_list
     }
     data <- phase_specific_value_replacement(
@@ -1066,7 +1070,7 @@ multiple_phase_value_replacement <- function(data, fld_name, phaseVar = "PHASE",
 #' @param data Data frame
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
-#'  A nested list values of each columns associated with corresponding ADNI 
+#'  A nested list values of each columns associated with corresponding ADNI
 #'  study phase and the format will be: [column_name][[phase_name]]$values
 #' \itemize{
 #'   \item \emph{code} Value that will be replaced
@@ -1124,10 +1128,10 @@ data_value_replacement <- function(data, phaseVar = "PHASE", input_values) {
 #'  This function is used to convert specific value into missing values.
 #' @param data Data frame
 #' @param col_name Variable name
-#' @param value 
+#' @param value
 #'  Specific value that will be considered as missing value, Default: '-4'
 #' @param missing_char Character for missing value, Default: NA
-#' @param phase 
+#' @param phase
 #'  Phase-specific value replacement, Default: NULL for all ADNI phases
 #' @return A data frame with replaced value.
 #' @examples
@@ -1142,7 +1146,7 @@ data_value_replacement <- function(data, phaseVar = "PHASE", input_values) {
 #' @importFrom rlang arg_match sym
 #' @importFrom tidyselect all_of
 #' @export
-convert_to_missing_value <- function(data, col_name = NULL, value = "-4", 
+convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
                                      missing_char = NA, phase = NULL) {
   if (is.null(phase)) {
     overall_replacement <- TRUE
@@ -1185,14 +1189,14 @@ convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
 # Additional Utils Function ----
 ## Gets columns that contains specific values ------
 #' @title Get Columns With Specific Values
-#' @description 
+#' @description
 #'  This function is used to list columns that contains the provided specific value.
 #' @param data Data.frame
 #' @param value Specific value
-#' @param col_name 
+#' @param col_name
 #'  Character vector of columns, Default: `NULL` to check for all available columns.
 #' @return
-#'  A character vector of column names that contains the provided specific value. 
+#'  A character vector of column names that contains the provided specific value.
 #'  Otherwise return `NA`.
 #' @examples
 #' \dontrun{
@@ -1227,7 +1231,7 @@ get_cols_value <- function(data, value, col_name = NULL) {
 #' @param data Data frame
 #' @param col_names Column names
 #' @param strict A boolean value to apply strict checking.
-#' @param stop_message 
+#' @param stop_message
 #'  A boolean value to return a stop message if the criteria does not met.
 #' @return
 #' \itemize{
@@ -1236,12 +1240,16 @@ get_cols_value <- function(data, value, col_name = NULL) {
 #'  }
 #' @examples
 #' \dontrun{
-#' check_colnames(dd = ADNIMERGE2::ADAS_ADNIGO23, 
-#' col_names = c("Phase", "VISCODE"), 
-#' strict = FALSE)
-#' check_colnames(dd = ADNIMERGE2::ADAS_ADNIGO23, 
-#' col_names = c("RID", "VISCODE"), 
-#' strict = TRUE)
+#' check_colnames(
+#'   dd = ADNIMERGE2::ADAS_ADNIGO23,
+#'   col_names = c("Phase", "VISCODE"),
+#'   strict = FALSE
+#' )
+#' check_colnames(
+#'   dd = ADNIMERGE2::ADAS_ADNIGO23,
+#'   col_names = c("RID", "VISCODE"),
+#'   strict = TRUE
+#' )
 #' }
 #' @rdname check_colnames
 #' @family checks function
@@ -1269,12 +1277,12 @@ check_colnames <- function(data, col_names, strict = FALSE, stop_message = TRUE)
 ## Get column names from a dataset ----
 #' @title Extract Column Name
 #' @description
-#'   This function is used to get column names if the provided column name 
+#'   This function is used to get column names if the provided column name
 #'   is existed in the dataset.
 #' @param data Data.frame
 #' @param col_name Column names
 #' @return
-#'  A character vector of column names that are existed in the dataset. 
+#'  A character vector of column names that are existed in the dataset.
 #'  Otherwise return `NA`.
 #' @examples
 #' \dontrun{
@@ -1292,22 +1300,22 @@ get_cols_name <- function(data, col_name) {
 
 ## Value Matching Functions ----
 #' @title Checks Variable Value Matching
-#' @description 
-#'  This function is used to check if the variable values are the same as 
+#' @description
+#'  This function is used to check if the variable values are the same as
 #'  the input values.
 #' @param values Existed variable values
 #' @param check_list Vector of input values
-#' @param excluded.na 
+#' @param excluded.na
 #'  A boolean to skip \emph{NA} from the existed variable values \emph{values},
 #'   Default: \emph{TRUE}
-#' @param stop_message 
-#'  A boolean value to return a stop message if one of the existed values 
+#' @param stop_message
+#'  A boolean value to return a stop message if one of the existed values
 #'  does not match with the check list, Default: \emph{FALSE}
-#' @param add_stop_message 
+#' @param add_stop_message
 #'  Additional text message that will be added in the stop message.
-#' @param value_split 
+#' @param value_split
 #'  A boolean value whether to split the values with specified split pattern \emph{split_pattern}
-#' @param split_pattern 
+#' @param split_pattern
 #' Split string pattern. Only applicable if \code{value_split = TRUE}
 #' @return
 #'   \item{ \emph{TRUE}}{If all the existed variable values are matched with the input values}
@@ -1329,12 +1337,12 @@ get_cols_name <- function(data, col_name) {
 #' @rdname check_value_match
 #' @family checks function
 #' @keywords internal
-check_value_match <- function(values, 
-                              check_list, 
-                              excluded.na = TRUE, 
-                              stop_message = FALSE, 
-                              add_stop_message = NULL, 
-                              value_split = FALSE, 
+check_value_match <- function(values,
+                              check_list,
+                              excluded.na = TRUE,
+                              stop_message = FALSE,
+                              add_stop_message = NULL,
+                              value_split = FALSE,
                               split_pattern = "\\||:|;") {
   if (!is.logical(excluded.na)) stop("`excluded.na` must be a boolean value")
   if (!is.logical(stop_message)) stop("`stop_message` must be a boolean value")
@@ -1363,14 +1371,14 @@ check_value_match <- function(values,
 #'  based on the combination of the provided column names.
 #' @param data Data frame
 #' @param col_names Character vector of column names
-#' @param stop_message 
+#' @param stop_message
 #'  A boolean value to return a stop message if there is any duplicated records, Default: `TRUE`
-#' @param return_duplicate_record 
+#' @param return_duplicate_record
 #'  A boolean value to return any duplicated records, Default: `FALSE`
-#' @param add_cols 
+#' @param add_cols
 #'  Additional columns that will be returned for `stop_message == FALSE`
-#' @return 
-#'  The same data frame `data` if there is not duplicated records. 
+#' @return
+#'  The same data frame `data` if there is not duplicated records.
 #'  Otherwise an assert stop message.
 #' @examples
 #' \dontrun{
@@ -1389,9 +1397,9 @@ check_value_match <- function(values,
 #' @importFrom tidyr unite
 #' @importFrom tidyselect all_of any_of
 #' @export
-check_duplicate_records <- function(data, 
-                                    col_names, 
-                                    stop_message = TRUE, 
+check_duplicate_records <- function(data,
+                                    col_names,
+                                    stop_message = TRUE,
                                     return_duplicate_record = FALSE,
                                     add_cols = NULL) {
   combined_id <- num_records <- NULL
@@ -1433,7 +1441,7 @@ check_duplicate_records <- function(data,
 
 ## ID Format Functions ----
 #' @title Convert USUBJID into RID
-#' @description 
+#' @description
 #'  This function is used to convert USUBJID format into RID format.
 #' @param x USUBJID variable
 #' @return A character vector of the same size as USUBJID.
@@ -1449,7 +1457,7 @@ convert_usubjid_rid <- function(x) {
 #' @title Create USUBJID from RID
 #' @description This function is used to create USUBJID from RID.
 #' @param x RID variable
-#' @return 
+#' @return
 #'  A character vector of the same size as RID with `STUDYNAME-` prefix.
 #' @rdname create_usubjid
 #' @family ID format functions

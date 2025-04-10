@@ -17,17 +17,22 @@ date_stamped_dir <- file.path(raw_data_dir, "date_stamped")
 common_columns_dir <- file.path(raw_data_dir, "common_columns")
 dataset_cat_dir <- file.path(raw_data_dir, "dataset_cat")
 data_dir <- "./data"
-specified_dir <- c(data_dir, updated_datadic_dir, date_stamped_dir, 
-                   common_columns_dir, dataset_cat_dir)
+specified_dir <- c(
+  data_dir, updated_datadic_dir, date_stamped_dir,
+  common_columns_dir, dataset_cat_dir
+)
 lapply(specified_dir, function(i) {
   if (dir.exists(i) == TRUE) unlink(i, recursive = TRUE)
   message(i, " directory has been removed!")
 })
 
 # Data downloaded date arg parameter ----
+# Input arg parameter ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) == 1) {
-  DATA_DOWNLOADED_DATE <- as.character(args)
+if (length(args) > 2) stop("Input argument must be size of 2.")
+if (length(args) > 0) {
+  DATA_DOWNLOADED_DATE <- as.character(args[1])
+  UPDATE_DATADIC <- as.logical(args[2])
 }
 
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
@@ -204,7 +209,7 @@ if (UPDATE_MISSING_VALUE) {
       }
       dd <- dd %>%
         create_col_protocol(data = ., phaseVar = c("Phase", "PHASE", "ProtocolID")) %>%
-        # If there any missing RID but have PTID
+        # ?? If there any missing RID but have PTID
         {
           if (all(num_missing_rid > 0 & "PTID" %in% colnames(.))) {
             mutate(., RID = case_when(
@@ -221,10 +226,22 @@ if (UPDATE_MISSING_VALUE) {
     }
     # Replacing `-4` as missing value -----
     message("Convert `-4` values as missing values in ", tb)
-    dd <- convert_to_missing_value(data = dd, col_name = names(dd), value = "-4", missing_char = NA, phase = NULL)
+    dd <- convert_to_missing_value(
+      data = dd,
+      col_name = names(dd),
+      value = "-4",
+      missing_char = NA,
+      phase = NULL
+    )
 
     message("Convert `-1` values as missing values in ", tb, " for ADNI1 phase")
-    dd <- convert_to_missing_value(data = dd, col_name = names(dd), value = "-1", missing_char = NA, phase = "ADNI1")
+    dd <- convert_to_missing_value(
+      data = dd,
+      col_name = names(dd),
+      value = "-1",
+      missing_char = NA,
+      phase = "ADNI1"
+    )
 
     data_update_status <- use_data_modified(
       dataset_name = tb,
@@ -347,10 +364,12 @@ readr::write_csv(
   file = file.path(dataset_cat_dir, "dataset_catgory.csv")
 )
 
-## Save the updated dataset with date stamped ---- 
+## Save the updated dataset with date stamped ----
 if (nrow(dataset_list_dd) > 0) {
   updated_data_path_list <- str_remove_all(string = data_path_list, pattern = "^\\./data/")
-  if (any(dataset_list_dd$updated_short_tblname %in% updated_data_path_list)) stop("Check for duplicated files in `./data` before adjusting date stamped extension")
+  if (any(dataset_list_dd$updated_short_tblname %in% updated_data_path_list)) {
+    stop("Check for duplicated files in `./data` before adjusting date stamped extension!")
+  }
 
   for (tbl_name in dataset_list_dd$file_path) {
     cur_file_path <- dataset_list_dd %>%
@@ -381,7 +400,9 @@ if (nrow(dataset_list_dd) > 0) {
       edit_type = "create",
       run_script = TRUE
     )
-    if (data_update_status != TRUE) stop("The date stamped file extension has not been removed from ", tbl_name)
+    if (data_update_status != TRUE) {
+      stop("The date stamped file extension has not been removed from ", tbl_name)
+    }
 
     # Copy dataset with a date stamped file extension from "./data" to "./data-raw/date_stamped/" folder
     # file.copy(from = cur_file_path, to = new_file_path, overwrite = TRUE)
@@ -430,7 +451,11 @@ if (CHECK_COMMON_COL) {
       strict = TRUE,
       stop_message = FALSE
     )
-    if (status != TRUE) result <- str_c(short_tblname, " = ", status) else result <- str_c(short_tblname, " = ", "NA")
+    if (status != TRUE) {
+      result <- str_c(short_tblname, " = ", status)
+    } else {
+      result <- str_c(short_tblname, " = ", "NA")
+    }
     rm(list = short_tblname, envir = .GlobalEnv)
     return(result)
   })
@@ -488,24 +513,39 @@ if (CHECK_COMMON_COL) {
 ### Currently to update the DATADIC file manually (required confirmation!)
 if (exists("DATADIC") == FALSE) {
   load(data_dic_path)
-  CREATE_UPDATED_DATADIC <- TRUE
   # Adjust for coded values of diagnostics summary in ADNI1GO2
-  # ?? Required confirmation about harmonized values
-  temp_DATADIC_dxsum <- tibble(
-    PHASE = c("ADNI1", "ADNI2", "ADNIGO"),
+  temp_DATADIC_dxsum <- bind_rows(
+    tibble(
+      PHASE = c("ADNI1", "ADNI2", "ADNIGO"),
+      DATADIC %>%
+        filter(TBLNAME %in% "DXSUM" & FLDNAME %in% "DIAGNOSIS") %>%
+        filter(PHASE %in% "ADNI3") %>%
+        select(-PHASE)
+    ),
+    # Add dataset label manually for "ADNI2_VISITID", "VISITS" and "DATADIC"
     DATADIC %>%
-      filter(TBLNAME %in% "DXSUM" & FLDNAME %in% "DIAGNOSIS") %>%
-      filter(PHASE %in% "ADNI3") %>%
-      select(-PHASE)
+      filter(TBLNAME %in% c("VISITS", "DATADIC")) %>%
+      mutate(CRFNAME = case_when(
+        is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "ADNI study visit code across phases",
+        is.na(CRFNAME) & TBLNAME %in% "DATADIC" ~ "Data Dictionary Dataset",
+        TRUE ~ CRFNAME
+      )) %>%
+      filter(TBLNAME %in% "VISITS" |
+        (TBLNAME %in% "DATADIC" & FLDNAME %in% c(names(DATADIC)))),
+    tibble(
+      TBLNAME = "ADNI2_VISITID",
+      CRFNAME = "ADNI2 Visit Code Mapping List"
+    )
   )
   DATADIC <- DATADIC %>%
+    filter(!TBLNAME %in% "DATADIC") %>%
     bind_rows(temp_DATADIC_dxsum)
 } else {
   message("`DATADIC` is not found and UPDATED_DATADIC will not be created.")
-  CREATE_UPDATED_DATADIC <- FALSE
+  UPDATE_DATADIC <- FALSE
 }
 
-if (CREATE_UPDATED_DATADIC) {
+if (UPDATE_DATADIC) {
   # Assumed the same data dictionary for those paired datasets
   # ?? Required confirmation
   temp_DATADIC <- DATADIC %>%
@@ -537,7 +577,7 @@ if (CREATE_UPDATED_DATADIC) {
 }
 
 ## Add a description for common columns: "ORIGPROT" or "COLPROT" ----
-if (CHECK_COMMON_COL == TRUE & CREATE_UPDATED_DATADIC == TRUE) {
+if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
   dataset_list_dd <- dataset_list_dd %>%
     # Long format
     pivot_longer(
@@ -582,7 +622,7 @@ if (CHECK_COMMON_COL == TRUE & CREATE_UPDATED_DATADIC == TRUE) {
 
 ## Save the UPDATED DATADIC ----
 ## The UPDATED DATADIC will be stored in the "data-raw/updated_datadic" directory
-if (CREATE_UPDATED_DATADIC) {
+if (UPDATE_DATADIC) {
   dir.create(updated_datadic_dir)
   readr::write_csv(
     x = UPDATED_DATADIC,

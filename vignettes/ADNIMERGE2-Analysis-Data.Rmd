@@ -4,6 +4,7 @@ output:
    rmarkdown::html_vignette:
      toc: true
      code_folding: hide
+date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Analysis-Data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -20,8 +21,7 @@ knitr::opts_chunk$set(
 )
 
 # Data print function
-datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE,
-                      ...) {
+datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
   DT::datatable(
     data = data, ...,
     options = list(
@@ -63,15 +63,62 @@ convert_metacore_to_dataframe <- function(metacore_data, dataset_name = NULL) {
 }
 ```
 
-# Introduction
-\label{sec:introduction}
+```{r single-dataset-build-derived, echo = FALSE, class.source = NULL}
+# Derived data from a single dataset
+single_build_from_derived <- function(metacore, ds_list, dataset_name = NULL, predecessor_only = TRUE, keep = FALSE) {
+  require(metacore)
+  require(dplyr)
+  require(stringr)
 
-This article describes creating analysis ready dataset using the [PHARMERVERSE](https://pharmaverse.org/) workflow. It uses some pre-generated standardized derived dataset and a metadata-specs as input. Please refer to the following articles about how the derived dataset and metadata-specs are generated. 
+  if (length(names(ds_list)) != 1) stop("`ds_list` must be a length of one!")
+  input_dataset_name <- names(ds_list)
+  input_dataset_name <- toupper(input_dataset_name)
+  metacore <- metacore %>%
+    select_dataset(.data = ., dataset = dataset_name, simplify = FALSE)
+
+  # Predecessor from a single dataset
+  derivations <- metacore$derivations %>%
+    filter(str_detect(string = derivation, pattern = paste0("^", input_dataset_name, "\\.")))
+
+  if (nrow(metacore$supp) == 0) {
+    supp <- tibble(
+      dataset = character(),
+      variable = character(),
+      idvar = character(),
+      qeval = character()
+    )
+  } else {
+    supp <- metacore$supp
+  }
+  # Internal modified metacores
+  internal_metacore <- metacore::metacore(
+    ds_spec = metacore$ds_spec,
+    supp = supp,
+    codelist = metacore$codelist,
+    derivations = derivations,
+    value_spec = metacore$value_spec,
+    var_spec = metacore$var_spec,
+    ds_vars = metacore$ds_vars
+  )
+  data <- build_from_derived(
+    metacore = internal_metacore,
+    ds_list = ds_list,
+    dataset_name = dataset_name,
+    predecessor_only = predecessor_only,
+    keep = keep
+  )
+  return(data)
+}
+```
+
+# Introduction
+
+This article describes creating analysis ready dataset using the [PHARMERVERSE](https://pharmaverse.org/) workflow. It uses some pre-generated standardized dataset and a metadata-specs as input. Please refer to the following articles to see how the derived dataset and metadata-specs are generated. 
 
 * [ADNIMERGE2-Derived-Data](ADNIMERGE2-Derived-Data.html)
-* [ADNIMERGE2-Analysis-Meta-Specs](ADNIMERGE2-Analysis-Meta-Specs)
+* [ADNIMERGE2-Analysis-Meta-Specs](ADNIMERGE2-Analysis-Meta-Specs.html)
 
-In ADNI study, the following selected analysis ready datasets will be created for illustration purpose. 
+In ADNI study, the following selected analysis ready dataset will be created for illustration purpose. 
 
 * Subject-Level Analysis Dataset - ADSL
 * Analysis Dataset of Adverse Events - ADAE
@@ -79,14 +126,13 @@ In ADNI study, the following selected analysis ready datasets will be created fo
 
 **NOTE** 
 
-* *These analysis ready dataset may not be fully complied with tthe CDISC-ADaM standardization. More information about the CDISC-ADaM can be found [here](https://www.cdisc.org/standards/foundational/adam).*
+* *These anlaysis ready dataset may not be fully complied with tthe CDISC-ADaM standardization. More information about the CDISC-ADaM can be found [here](https://www.cdisc.org/standards/foundational/adam).*
 
-## Load Required R Packages
+# Load Required R Packages
 
 ```{r setup-libraries, class.source = NULL}
 library(tidyverse)
 library(assertr)
-library(DT)
 library(metacore)
 library(metatools)
 library(admiral)
@@ -116,9 +162,8 @@ meta_data_dic <- convert_metacore_to_dataframe(METACORES) %>%
 ```
 
 ## Subject-Level Analysis Dataset - ADSL
-\label{sec:adsl}
 
-[ADSL](ADSLhtml) dataset contains one records per participant. In ADNI study, [ADSL](ADSLhtml) dataset includes only the first records/baseline characteristics of participant when they were enrolled in the study as newly-enrollee.
+[`ADSL`](../reference/ADSL.html) dataset contains one records per participant. In ADNI study, [`ADSL`](../reference/ADSL.html) dataset includes only the first records/baseline characteristics of participant when they were enrolled in the study as newly-enrollee or screened to the study for the first time.
 
 ```{r adsl-data-dic-print, class.source = NULL, echo = FALSE}
 adsl_data_dic <- meta_data_dic %>%
@@ -171,12 +216,18 @@ ADSL <- build_from_derived(
     relationship = "one-to-one"
   ) %>%
   # Convert to factor with Control Terms (CT)
-  # convert_var_to_fct(
-  #   data = .,
-  #   metacore = METACORES %>%
-  #     select_dataset(dataset = "ADSL"),
-  #   var = DX
-  # ) %>%
+  convert_var_to_fct(
+    data = .,
+    metacore = METACORES %>%
+      select_dataset(dataset = "ADSL"),
+    var = ORIGPROT
+  ) %>%
+  convert_var_to_fct(
+    data = .,
+    metacore = METACORES %>%
+      select_dataset(dataset = "ADSL"),
+    var = DX
+  ) %>%
   # Add baseline amyloid status
   call_derivation(
     dataset = .,
@@ -199,17 +250,15 @@ ADSL <- build_from_derived(
     derivation = derive_vars_merged,
     variable_params = list(
       params(
-        filter_add = SCTESTCD == "PTEDUCAT" & !is.na(SCORRES) &
-          VISITNUM <= 1 & VISITNUM == min(VISITNUM),
+        filter_add = SCTESTCD == "PTEDUCAT" & !is.na(SCORRES) & VISITNUM <= 1,
         new_vars = exprs(EDUC = SCSTRESN)
       ),
       params(
-        filter_add = SCTESTCD == "PTMARRY" & !is.na(SCORRES) &
-          VISITNUM <= 1 & VISITNUM == min(VISITNUM),
+        filter_add = SCTESTCD == "PTMARRY" & !is.na(SCORRES) & VISITNUM <= 1,
         new_vars = exprs(MARISTAT = SCORRES)
       )
     ),
-    order = NULL,
+    order = exprs(VISITNUM),
     mode = "first",
     by_vars = exprs(STUDYID, USUBJID),
     check_type = "error",
@@ -244,10 +293,7 @@ ADSL <- build_from_derived(
     dataset = .,
     by_vars = exprs(STUDYID, USUBJID),
     flag_events = list(
-      flag_event(
-        dataset_name = "DM",
-        condition = !is.na(RFSTDTC)
-      )
+      flag_event(dataset_name = "DM", condition = !is.na(RFSTDTC))
     ),
     source_datasets = list(DM = DM),
     new_var = ENRLFL,
@@ -266,12 +312,8 @@ ADSL <- build_from_derived(
     dataset = .,
     derivation = derive_vars_dtm,
     variable_params = list(
-      params(
-        dtc = DTHDTC, new_vars_prefix = "DTH"
-      ),
-      params(
-        dtc = EOSDTHC, new_vars_prefix = "EOS"
-      )
+      params(dtc = DTHDTC, new_vars_prefix = "DTH"),
+      params(dtc = EOSDTHC, new_vars_prefix = "EOS")
     ),
     highest_imputation = "M",
     date_imputation = "mid",
@@ -323,6 +365,12 @@ ADSL <- ADSL %>%
     data = .,
     metacore = METACORES,
     dataset_name = "ADSL"
+  ) %>%
+  # Check uniqueness of records by key columns
+  check_unique_keys(
+    data = .,
+    metacore = METACORES,
+    datase = "ADSL"
   )
 ```
 
@@ -347,9 +395,8 @@ ADSL <- ADSL %>%
 ```
 
 ## Analysis Dataset of Adverse Events - ADAE
-\label{sec:adae}
 
-[ADAE](ADAE.html) dataset contains one records per adverse events per participant with the following characteristics.
+[`ADAE`](../reference/ADAE.html) dataset contains one records per adverse events per participant with the following characteristics.
 
 ```{r adae-data-dic-print, class.source = NULL, echo = FALSE}
 adae_data_dic <- meta_data_dic %>%
@@ -362,10 +409,11 @@ adae_data_dic %>%
 
 ```{r adae-data-dic}
 adae_metacore <- METACORES %>%
-  select_dataset(dataset = "ADAE", simplify = FALSE)
+  select_dataset(.data = ., dataset = "ADAE", simplify = FALSE)
 ```
 
 ```{r generate-adae}
+# Modified user-defined function
 ADAE <- build_from_derived(
   metacore = adae_metacore,
   dataset_name = "ADAE",
@@ -470,6 +518,10 @@ ADAE <- ADAE %>%
     data = .,
     metacore = adae_metacore
   ) %>%
+  check_unique_keys(
+    data = .,
+    metacore = adae_metacore
+  ) %>%
   xportr_metadata(
     .df = .,
     metadata = adae_metacore,
@@ -483,9 +535,8 @@ ADAE <- ADAE %>%
 
 
 ## Analysis Dataset of Questionnaires - ADQS
-\label{sec:adadas}
 
-[ADQS](ADQS.html) dataset contains one records per questionnaire parameter per visits per participant with the following characteristics. 
+[`ADQS`](../reference/ADQS.html) dataset contains one records per questionnaire parameter per visits per participant with the following characteristics. 
 
 ```{r adqs-data-dic-print, class.source = NULL, echo = FALSE}
 adqs_data_dic <- meta_data_dic %>%
@@ -503,14 +554,28 @@ adqs_metacore <- METACORES %>%
 
 ```{r adqs-data-prep}
 # Assumed all questionnaire parameters are continuous (numeric)
-ADQS <- build_from_derived(
+ADQS <- single_build_from_derived(
   metacore = adqs_metacore,
   dataset_name = "ADQS",
-  ds_list = list("QS" = QS, "ADSL" = ADSL),
+  ds_list = list("QS" = QS),
   predecessor_only = TRUE,
-  keep = FALSE
+  keep = TRUE
 ) %>%
-  filter(USUBJID %in% c(QS$USUBJID)) %>%
+  # Add variable from ADSL dataset
+  derive_vars_merged(
+    dataset = .,
+    dataset_add = single_build_from_derived(
+      metacore = adqs_metacore,
+      dataset_name = "ADQS",
+      ds_list = list("ADSL" = ADSL),
+      predecessor_only = TRUE,
+      keep = TRUE
+    ),
+    by_vars = exprs(USUBJID),
+    new_vars = NULL,
+    check_type = "error",
+    relationship = "many-to-one"
+  ) %>%
   verify(nrow(.) == nrow(QS)) %>%
   mutate(ADT = as.Date(ADT)) %>%
   # Add analysis timing variable
@@ -596,6 +661,10 @@ ADQS <- ADQS %>%
     data = .,
     metacore = adqs_metacore
   ) %>%
+  # check_unique_keys(
+  #   data = .,
+  #   metacore = adqs_metacore
+  # ) %>%
   xportr_metadata(
     .df = .,
     metadata = adqs_metacore,
@@ -607,9 +676,9 @@ ADQS <- ADQS %>%
 ```
 
 
-### Anlaysis Dataset of ADAS-Cog Behaviour - ADADAS
+### Analysis Dataset of ADAS-Cog Behaviour - ADADAS
 
-Suppose the primary of the analysis was the ADAS-Cog behaviors 13-item total score, then ADAS-Cog behavior analysis dataset (`ADADAS`) could be created either directly from [ADQS](ADQS.html) or with a dataset-specific meta-specs. The following chuck illustrate how the `ADADAS` can be created directly from the [ADQS](ADQS.html).
+Suppose the ADAS-Cog behaviors 13-item total score was the primary outcome in the analysis, then ADAS-Cog Behavior Analysis Dataset (`ADADAS`) can be created either directly from [`ADQS`](../reference/ADQS.html) or with a dataset-specific metadata-specs (i.e. [adding here](../reference/METACORES.html)). The following chuck illustrate how the `ADADAS` can be created directly from pre-generated [`ADQS`](../reference/ADQS.html).
 
 ```{r generate-adadas}
 ADADAS <- ADQS %>%

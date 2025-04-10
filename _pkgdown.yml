@@ -58,12 +58,15 @@ reference:
   - title: Utility Functions
     contents:
     - has_keyword("utils_fun")
-  
+
 navbar:
   structure:
     left:  [intro, reference, articles]
     right: [search, github, lightswitch]
   components:
+    intro:
+      text: ADNI
+      href: articles/ADNI-Study.html
     reference:
       text: Reference
       href: reference/index.html
@@ -78,12 +81,14 @@ navbar:
       - text: Building an R Package from Raw Dataset
         href: articles/ADNIMERGE2-Package-Building.html
       - text: -------
-      - text: Derived/Analysis Ready Data
-      - text: ADNIMERGE2-Derived-Data
-        href: articles/ADNIMERGE2-Derived-Data.html
-      - text: ADNIMERGE2-Analysis-Meta-Specs
+      - text: Metadata Specs
+      - text: ADNIMERGE2 Analysis Metadata Specs
         href: articles/ADNIMERGE2-Analysis-Meta-Specs.html
-      - text: ADNIMERGE2-Analysis-Data
+      - text: -------
+      - text: Derived/Analysis Ready Data
+      - text: ADNIMERGE2 Derived Data
+        href: articles/ADNIMERGE2-Derived-Data.html
+      - text: ADNIMERGE2 Analysis Ready Data
         href: articles/ADNIMERGE2-Analysis-Data.html
 footer:
   structure: 

@@ -4,7 +4,7 @@ library(assertr)
 
 # Input args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) > 2) stop("The impute argument must be size of 2.")
+if (length(args) > 2) stop("Input argument must be size of 2.")
 if (length(args) > 0) {
   DERIVED_DATASET_LIST <- str_remove_all(
     string = args[1],
@@ -88,11 +88,17 @@ source(file.path(".", "R", "checks-assert.R"))
 
 ## Common texts ----
 ### Data source link
-loni_url_link <- "<https://adni.loni.usc.edu/data-samples/adni-data/>"
+loni_url_link <- paste0(
+  "\\href{https://adni.loni.usc.edu/data-samples/adni-data/}",
+  "{https://adni.loni.usc.edu/data-samples/adni-data/}"
+)
 ### Common data description
 common_description <- str_c("data. More information is available at ", loni_url_link)
 ### Authors
-authors <- "<adni-data@googlegroups.com>"
+authors <- paste0(
+  "\\href{adni-data@googlegroups.com}",
+  "{adni-data@googlegroups.com}"
+)
 
 ## Prepare data dictionary for raw dataset ----
 ### Generate data dictionary from actual raw dataset ----
@@ -145,20 +151,8 @@ temp_data_dict <- temp_data_dict %>%
         (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)) %>%
       ungroup() %>%
       assert_uniq(TBLNAME) %>%
-      mutate(CRFNAME = ifelse(CRFNAME == "-4", NA_character_, CRFNAME)) %>%
-      # Add dataset label manually for "ADNI2_VISITID" and "VISITS"
-      bind_rows(
-        tibble(
-          TBLNAME = "ADNI2_VISITID",
-          CRFNAME = "ADNI2 Visit Code Mapping List"
-        )
-      ) %>%
       mutate(
-        CRFNAME = case_when(
-          is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "Combined list of phase specific visit code",
-          is.na(CRFNAME) ~ TBLNAME,
-          TRUE ~ CRFNAME
-        ),
+        CRFNAME = ifelse(CRFNAME == "-4", NA_character_, CRFNAME),
         tblname = str_to_lower(TBLNAME)
       ) %>%
       distinct(tblname, CRFNAME),
@@ -186,17 +180,13 @@ temp_data_dict <- temp_data_dict %>%
   mutate(prefix_char = str_remove(string = prefix_char, pattern = "_")) %>%
   mutate(
     dataset_label = case_when(
-      !tblname %in% str_to_lower("DATADIC") &
-        !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
-      !tblname %in% str_to_lower("DATADIC") &
-        is.na(prefix_char) ~ CRFNAME,
-      tblname %in% str_to_lower("DATADIC") ~ "Data dictionary dataset"
+      !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
+      is.na(prefix_char) ~ CRFNAME
     ),
     add_authors = authors,
     short_description = case_when(
-      tblname %in% str_to_lower("DATADIC") ~ str_c("Data dictionary dataset. ", "More information is available at ", loni_url_link, "."),
-      tblname %in% str_to_lower("VISITS") ~ str_c(CRFNAME, ". More information is available at ", loni_url_link, "."),
-      TRUE ~ str_c(CRFNAME, common_description, sep = " ")
+      !tblname %in% str_to_lower(c("DATADIC", "VISITS", "ADNI2_VISITID")) ~ str_c(CRFNAME, common_description, sep = " "),
+      tblname %in% str_to_lower(c("DATADIC", "VISITS", "ADNI2_VISITID")) ~ str_c(CRFNAME, str_remove(common_description, "^data"), sep = " ")
     ),
     dataset_source_type = "raw",
     add_source = loni_url_link
@@ -368,7 +358,9 @@ if (exists("derived_data_list")) {
   derived_data_dict_path <- file.path(
     "./data-raw/derived-datadic", "DERIVED_DATADIC.rda"
   )
-  if (!file.exists(derived_data_dict_path)) stop(derived_data_dict_path, " is not existed!")
+  if (!file.exists(derived_data_dict_path)) {
+    stop(derived_data_dict_path, " is not existed!")
+  }
   load(derived_data_dict_path, .GlobalEnv)
 
   derived_data_name <- names(derived_data_list)
@@ -449,8 +441,9 @@ if (exists("derived_data_list")) {
   cat("#' ADNI Metadata-Specs",
     "#'",
     paste0(
-      "#' Metadata specifications for the ADNI study. It is generated to create analysis ready dataset",
-      "using [PHARMAVERSE](https://pharmaverse.org/) workflow for illustration purpose."
+      "#' Metadata specifications for the ADNI study. It is generated to create ",
+      "analysis ready dataset using \\href{https://pharmaverse.org/}{PHARMAVERSE} ",
+      "workflow for illustration purpose."
     ),
     "#'",
     "#' @docType data",
@@ -458,7 +451,7 @@ if (exists("derived_data_list")) {
     "#' @name METACORES",
     "#' @usage data(METACORES)",
     "#' @keywords derived_dataset",
-    "#' @format A R6-class wrapper object created using [metacore::metacore()] function.",
+    "#' @format A R6-class wrapper object created using \\code{\\link[metacore]{metacore}} function.",
     paste0(
       "#' @source For more details about the metadata-specs see the help vignette: \n",
       "#' \\code{vignette(topic = 'ADNIMERGE2-Analysis-Meta-Specs', package = 'ADNIMERGE2')}."
