@@ -1,0 +1,187 @@
+---
+title: "ADNI-Enrollment"
+output: 
+   rmarkdown::html_vignette:
+     toc: true
+     code_folding: hide
+date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteIndexEntry{ADNI-Enrollment}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  echo = FALSE,
+  fig.width = 6,
+  fig.height = 4,
+  class.source = "fold-show",
+  result = "asis"
+)
+```
+
+# ADNI Enrollment Summaries
+
+This article demonstrate how to use the `ADNIMERGE2` R package to generate simple enrollment summaries.
+
+# Load Required R Packages
+
+```{r setup-libraries, echo = TRUE}
+library(dplyr)
+library(gtsummary)
+library(labelled)
+library(ggplot2)
+library(cowplot)
+library(ggforce)
+library(ADNIMERGE2)
+```
+
+```{r abbrev, echo = FALSE}
+# Abbreviation list
+abbrev_list <- paste0(
+  paste0("CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; "),
+  paste0("SD: Standard Deviation; Q1: the 25 percentile; ", "Q3: the 75 percentile")
+)
+# Adjust BMI variable labels
+var_label(ADSL$BMI) <- paste0("Baseline ", get_variable_labels(ADSL)$BMI)
+```
+
+# Demographic Summaries: By Study Phase
+
+```{r overall-summary, echo = TRUE, class.source = NULL}
+ADSL %>%
+  filter(ENRLFL %in% "Yes") %>%
+  tbl_summary(
+    data = .,
+    by = ORIGPROT,
+    include = c(AGE, SEX, EDUC, RACE, ETHNIC, MARISTAT, BMI, DX),
+    type = all_continuous() ~ "continuous2",
+    statistic = list(
+      all_continuous() ~ c(
+        "{mean} ({sd})",
+        "{median} ({p25}, {p75})",
+        "{min}, {max}"
+      ),
+      all_categorical() ~ "{n} ({p}%)"
+    ),
+    digits = all_continuous() ~ 1,
+    percent = "column",
+    missing_text = "(Missing)"
+  ) %>%
+  add_overall(last = TRUE) %>%
+  modify_footnote_header(
+    footnote = "Column-wise percentage; n (%)",
+    columns = all_stat_cols(),
+    replace = TRUE
+  ) %>%
+  modify_abbreviation(abbreviation = abbrev_list) %>%
+  modify_caption(
+    caption = "Table 1. ADNI - Participant Characteristics: By Study Phase"
+  ) %>%
+  bold_labels()
+```
+
+```{r viloin-plot, echo = FALSE, fig.height = 6, fig.width = 7, fig.alt = "Distribution of age, education and baseline BMI: Overall"}
+var_label_list <- get_variable_labels(ADSL)
+cont_var_list <- c("AGE", "EDUC", "BMI")
+cont_bl_violin_plot <- lapply(cont_var_list, function(x) {
+  ADSL %>%
+    filter(ENRLFL %in% "Yes") %>%
+    mutate(xlabel = " ") %>%
+    rename_with(~ paste0("yvalue"), all_of(x)) %>%
+    ggplot(., aes(x = xlabel, y = yvalue)) +
+    geom_violin(alpha = 0.5, draw_quantiles = c(0.25, 0.5, 0.75), color = "#0072B2") +
+    geom_sina(alpha = 0.15) +
+    labs(
+      y = paste0(var_label_list[[x]]), x = NULL,
+      title = paste0(var_label_list[[x]])
+    ) +
+    theme_bw() +
+    theme(
+      legend.position = "none",
+      text = element_text(size = 10),
+      legend.text = element_text(size = 7)
+    )
+})
+names(cont_bl_violin_plot) <- cont_var_list
+plot_grid(
+  plotlist = cont_bl_violin_plot,
+  byrow = TRUE,
+  ncol = 2,
+  label_size = 12
+)
+``` 
+
+# Demographic Summaries: By Baseline Diagnostics Status
+
+```{r bl-demog-summary-bldx, echo = TRUE,  class.source = 'hide'}
+ADSL %>%
+  filter(ENRLFL %in% "Yes") %>%
+  tbl_summary(
+    data = .,
+    by = DX,
+    include = c(AGE, SEX, EDUC, RACE, ETHNIC, MARISTAT, BMI),
+    type = all_continuous() ~ "continuous2",
+    statistic = list(
+      all_continuous() ~ c(
+        "{mean} ({sd})",
+        "{median} ({p25}, {p75})",
+        "{min}, {max}"
+      ),
+      all_categorical() ~ "{n} ({p}%)"
+    ),
+    digits = all_continuous() ~ 1,
+    percent = "row",
+    missing_text = "(Missing)"
+  ) %>%
+  modify_caption(caption = paste0(
+    "Table 2. ADNI - Participant Characteristics: ",
+    "By Baseline Diagnosis Status"
+  )) %>%
+  modify_footnote_header(
+    footnote = "Row-wise percentage; n (%)",
+    columns = all_stat_cols(),
+    replace = TRUE
+  ) %>%
+  modify_abbreviation(abbreviation = abbrev_list) %>%
+  bold_labels()
+```
+
+
+```{r viloin-plot-bl-dx, echo = FALSE, fig.height = 6, fig.width = 7.5, fig.alt = "Distribution of age, education and baseline BMI: By baseline diagnostics status"}
+cont_violin_plot_bl_dx <- lapply(cont_var_list, function(x) {
+  ADSL %>%
+    filter(ENRLFL %in% "Yes") %>%
+    mutate(xlabel = " ") %>%
+    filter(!is.na(DX)) %>%
+    rename_with(~ paste0("yvalue"), all_of(x)) %>%
+    ggplot(data = ., aes(x = xlabel, y = yvalue, color = DX)) +
+    geom_violin(alpha = 0.9, draw_quantiles = c(0.25, 0.5, 0.75)) +
+    geom_sina(alpha = 0.2, show.legend = FALSE) +
+    labs(
+      y = paste0(var_label_list[[x]]),
+      x = NULL,
+      color = paste0(get_variable_labels(ADSL$DX)),
+      title = paste0(var_label_list[[x]], ": By ", get_variable_labels(ADSL$DX))
+    ) +
+    scale_color_manual(values = c("#73C186", "#F2B974", "#DF957C")) +
+    theme_bw() +
+    theme(
+      legend.position = "bottom",
+      text = element_text(size = 8.5),
+      legend.text = element_text(size = 6)
+    )
+})
+names(cont_violin_plot_bl_dx) <- cont_var_list
+plot_grid(
+  plotlist = cont_violin_plot_bl_dx,
+  byrow = TRUE,
+  ncol = 2,
+  label_size = 12
+)
+``` 
