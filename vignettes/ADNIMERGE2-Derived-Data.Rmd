@@ -560,7 +560,7 @@ nerolled_early_discon_adni34 <- STUDYSUM %>%
     INCLUSION, EXCLUSION, INCROLL, VERSION, INCNEWPT, EXCCRIT, MRIFIND,
     NVRDISC, NVROT, AENUM
   )) %>%
-  assert_uniq(RID)
+  assert_uniq(RID, COLPROT)
 
 # Adjust for participant that early discontinued
 #  but they came in the next study phase
@@ -1558,6 +1558,8 @@ QS <- bind_rows(
   GDS_SCORE_DD, MMSE_SCORE_DD, MOCA_SCORE_DD, NPI_SCORE_DD, NPIQ_SCORE_DD,
   NEUROBAT_SCORE_DD
 ) %>%
+  assert_rows(num_row_NAs, within_bounds(0, 2.1), VISCODE) %>%
+  filter(!is.na(VISCODE)) %>%
   assert_non_missing(RID, COLPROT, VISCODE, QSTESTCD) %>%
   mutate(QSSTRESN = as.numeric(QSSTRESC)) %>%
   verify(all_of(QS_TESTCD_LIST$QSTESTCD %in% QSTESTCD)) %>%
@@ -2817,7 +2819,6 @@ VS <- VS %>%
   verify(nrow(.) == nrow(VS)) %>%
   assert_uniq(RID, COLPROT, VISCODE, VSTESTCD) %>%
   assert_non_missing(VISITNUM, USUBJID)
-
 
 # Baseline flag
 VS_BASELINE_FLG <- VS %>%

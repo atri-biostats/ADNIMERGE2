@@ -4,18 +4,13 @@ library(assertr)
 
 # Input args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) > 2) stop("Input argument must be size of 2.")
-if (length(args) > 0) {
-  DERIVED_DATASET_LIST <- str_remove_all(
-    string = args[1],
-    pattern = '[\\(\\)]|\\"|^c'
-  ) %>%
-    str_split(string = ., pattern = ",") %>%
-    unlist() %>%
-    str_trim(string = ., side = "both")
-  if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
-  USE_UPDATED_DATADIC <- as.logical(args[2])
-}
+if (length(args) != 2) stop("Input argument must be size of 2.")
+DERIVED_DATASET_LIST <- str_remove_all(string = args[1], pattern = '[\\(\\)]|\\"|^c') %>%
+  str_split(string = ., pattern = ",") %>%
+  unlist() %>%
+  str_trim(string = ., side = "both")
+if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
+USE_UPDATED_DATADIC <- as.logical(args[2])
 
 # Load all data from "./data" to .GlobalEnv ----
 data_dir <- "./data"

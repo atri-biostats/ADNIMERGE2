@@ -534,6 +534,161 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
 }
 
 
+# Add Prefix for Coded Values Based DATADIC  ----
+#' @title Add Prefix for Coded Values Based DATADIC
+#' @description
+#'  This function is used to add prefix on the data dictionary (`DATADIC`)
+#'  coded values to match values in the actual data.
+#' @param data_dict
+#'  Data dictionary dataset that prepared using
+#'  `get_factor_levels_datadict` function.
+#' @param prefix_char Prefix character, Default: "0"
+#' @param nested_value
+#'  A boolean value to indicate the code and decode values are
+#'  nested in the `data_dict`. Defualt: TRUE
+#' @param position Either in the beginning (first) or in the end (last), Default: "first"
+#' @param add_char
+#'  Character that will be concatenated with `prefix_char` character based on
+#'  the provided `position`.
+#' @return
+#'  A same data.frame as `data_dict` with additional records if there coded
+#'  values that did not contains the specified prefix character.
+#' @rdname add_code_prefix
+#' @keywords adni_datadic_fun
+#' @family data dictionary related functions
+#' @importFrom stringr str_split str_detect
+#' @importFrom dplyr filter select bind_rows
+#' @importFrom assertr verify
+#' @importFrom tidyr expand_grid
+add_code_prefix <- function(data_dict, prefix_char = "0",
+                            nested_value = TRUE, position = "first",
+                            add_char = NULL) {
+  require(tidyverse)
+  require(stringr)
+  require(assertr)
+  CODES <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- NULL
+  prefix_char <- as.character(prefix_char)
+  if (!is.logical(nested_value)) stop("`run_script` must be a boolean value.")
+  if (nested_value) add_cols <- "CODES" else add_cols <- c("prefix", "suffix")
+  check_colnames(
+    data = data_dict,
+    col_names = c("PHASE", "CRFNAME", "TBLNAME", "FLDNAME", add_cols),
+    strict = TRUE,
+    stop_message = TRUE
+  )
+
+  initial_nrow <- nrow(data_dict)
+
+  output_data_dict <- data_dict %>%
+    {
+      if (nested_value) {
+        unnest(., CODES)
+      } else {
+        (.)
+      }
+    } %>%
+    as_tibble() %>%
+    update_code_prefix_char(
+      data_dict = .,
+      prefix_char = prefix_char,
+      position = position,
+      add_char = add_char
+    ) %>%
+    group_by(CRFNAME, TBLNAME, FLDNAME, PHASE) %>%
+    {
+      if (nested_value) {
+        nest(., CODES = all_of(c("prefix", "suffix"))) %>%
+          ungroup(.) %>%
+          verify(., nrow(.) == initial_nrow)
+      } else {
+        (.)
+      }
+    }
+
+  return(output_data_dict)
+}
+
+#' @title Checks Specific Character in Coded Values (Prefix)
+#' @description
+#'  This function is used to add prefix on the data dictionary (`DATADIC`)
+#'  coded values to match values in the actual data.
+#' @param data_dict
+#'  Data dictionary dataset that prepared using
+#'  `get_factor_levels_datadict` function, not in nested format.
+#' @param prefix_char Prefix character that will be concatenated with `prefix` or `CODED` values
+#' @param position Either in the beginning (first) or in the end (last), Default: "first"
+#' @param add_char
+#'  Character that will be concatenated with `prefix_char` character based on
+#'  the provided `position`.
+#' @return A data.frame similar the provided data dictionary dataset `data_dict`.
+#' @rdname update_code_prefix_char
+#' @keywords adni_datadic_fun internal
+#' @family data dictionary related internal functions
+#' @importFrom dplyr mutate case_when bind_rows
+#' @importFrom tibble as_tibble
+#' @importFrom assertr assert not_na
+update_code_prefix_char <- function(data_dict, prefix_char, position, add_char = NULL) {
+  require(tidyverse)
+  require(assertr)
+  require(rlang)
+  status <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- overall_status <- prefix <- NULL
+  arg_match(arg = position, values = c("first", "last"))
+  cols_list <- c("PHASE", "CRFNAME", "TBLNAME", "FLDNAME", "prefix", "suffix")
+  check_colnames(
+    data = data_dict,
+    col_names = cols_list,
+    strict = TRUE,
+    stop_message = TRUE
+  )
+  # Identify records that contains `char` in prefix
+  data_dict <- data_dict %>%
+    as_tibble() %>%
+    mutate(status = case_when(
+      prefix %in% prefix_char ~ TRUE,
+      !prefix %in% prefix_char ~ FALSE
+    )) %>%
+    assert(not_na, status)
+
+  if (position %in% "first") first_char <- prefix_char
+  if (position %in% "last") last_char <- prefix_char
+
+  if (!is.null(add_char)) {
+    if (position %in% "first") first_char <- paste0(add_char, first_char)
+    if (position %in% "last") last_char <- paste0(add_char, last_char)
+  }
+
+  # Group by Phase, CFRNAME, TBLNAME, FLDNAME,
+  data_dict_update <- data_dict %>%
+    group_by(CRFNAME, TBLNAME, FLDNAME, PHASE) %>%
+    mutate(overall_status = any(status)) %>%
+    ungroup() %>%
+    filter(overall_status == FALSE)
+
+  if (nrow(data_dict_update) > 0) {
+    data_dict_update <- data_dict_update %>%
+      {
+        if (position %in% "first") {
+          mutate(., prefix = paste0(first_char, prefix))
+        } else {
+          mutate(., prefix = paste0(prefix, last_char))
+        }
+      } %>%
+      select(-any_of("overall_status"))
+  }
+
+  result_data_dict <- data_dict %>%
+    {
+      if (nrow(data_dict_update) > 0) {
+        bind_rows(., data_dict_update)
+      } else {
+        (.)
+      }
+    } %>%
+    select(-any_of("status")) %>%
+    arrange(CRFNAME, TBLNAME, FLDNAME, PHASE)
+  return(result_data_dict)
+}
+
 # Functions to get dataset category/groups ----
 #' @title Get Dataset Category/Group
 #' @description

@@ -11,8 +11,8 @@ library(callr)
 # setwd(cur_script_dir)
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-02-25" # Data downloaded date
-UPDATE_DATADIC <- TRUE # Please see line 490 in the `./data-raw/data_prep.R`
+DATA_DOWNLOADED_DATE <- "2025-04-10" # Data downloaded date
+UPDATE_DATADIC <- TRUE # Please see line 513 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data_prep.R",
   wd = ".",
@@ -78,18 +78,6 @@ devtools::build_readme()
 # # Caution about overwriting any existing `_pkgdown.yml` file
 # usethis::use_pkgdown()
 # pkgdown::check_pkgdown()
-# # Initialize site in order to add `ADNI Data Use Agreement` document
-# #  to "./docs/articles" directory
-# pkgdown::init_site()
-# docs_article_dir <- "docs/articles"
-# if (!dir.exists(paths = file.path(".", docs_article_dir))) {
-#   dir.create(path = file.path(".", docs_article_dir), recursive = TRUE)
-# }
-# rmarkdown::render(
-#   input = file.path("vignettes", "ADNI-Study.Rmd"),
-#   params = list(download_file_dir = file.path("..", docs_article_dir)),
-#   quiet = TRUE
-# )
 # pkgdown::build_site()
 # # Publish website online: ----
 # # To publish a site: PUBLISH_SITE = TRUE

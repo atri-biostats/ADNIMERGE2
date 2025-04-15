@@ -6,18 +6,12 @@ library(rlang)
 
 # Input parameter - derived/analysis datasets ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) == 1) {
-  DERIVED_DATASET_LIST <- str_remove_all(
-    string = args,
-    pattern = '[\\(\\)]|\\"|^c'
-  ) %>%
-    str_split(string = ., pattern = ",") %>%
-    unlist() %>%
-    str_trim(string = ., side = "both")
-  if (all(DERIVED_DATASET_LIST %in% "NULL")) {
-    stop("`DERIVED_DATASET_LIST` must not be missing.")
-  }
-} else {
+if (length(args) != 1) stop("`DERIVED_DATASET_LIST` must not be missing.")
+DERIVED_DATASET_LIST <- str_remove_all(string = args, pattern = '[\\(\\)]|\\"|^c') %>%
+  str_split(string = ., pattern = ",") %>%
+  unlist() %>%
+  str_trim(string = ., side = "both")
+if (all(DERIVED_DATASET_LIST %in% "NULL")) {
   stop("`DERIVED_DATASET_LIST` must not be missing.")
 }
 

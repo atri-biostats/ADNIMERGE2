@@ -111,6 +111,20 @@ single_build_from_derived <- function(metacore, ds_list, dataset_name = NULL, pr
 }
 ```
 
+```{r convert-var-to-fact-wrapper, echo = FALSE, class.source = NULL}
+# Wrapper function to apply convert_var_to_fct for multiple variables
+convert_var_to_fct_wrapper <- function(data, metacore, var) {
+  for (var_name in var) {
+    data <- metatools::convert_var_to_fct(
+      data = data,
+      metacore = metacore,
+      var = !!rlang::sym(var_name)
+    )
+  }
+  return(data)
+}
+```
+
 # Introduction
 
 This article describes creating analysis ready dataset using the [PHARMERVERSE](https://pharmaverse.org/) workflow. It uses some pre-generated standardized dataset and a metadata-specs as input. Please refer to the following articles to see how the derived dataset and metadata-specs are generated. 
@@ -216,17 +230,11 @@ ADSL <- build_from_derived(
     relationship = "one-to-one"
   ) %>%
   # Convert to factor with Control Terms (CT)
-  convert_var_to_fct(
+  convert_var_to_fct_wrapper(
     data = .,
     metacore = METACORES %>%
       select_dataset(dataset = "ADSL"),
-    var = ORIGPROT
-  ) %>%
-  convert_var_to_fct(
-    data = .,
-    metacore = METACORES %>%
-      select_dataset(dataset = "ADSL"),
-    var = DX
+    var = c("ORIGPROT", "DX", "RACE")
   ) %>%
   # Add baseline amyloid status
   call_derivation(

@@ -419,17 +419,20 @@ extract_codelist_datadict <- function(data_dict) {
     mutate(CODE = case_when(TYPE %in% exc_type ~ NA, TRUE ~ CODE))
 
   # Convert codelist of some pre-specified TBLNAME/FLDNAME as missing values
+  exc_cdr <- c(
+    "CDMEMORY", "CDORIENT", "CDJUDGE", "CDCOMMUN", "CDHOME",
+    "CDCARE", "CDGLOBAL", "CDRSB"
+  )
   exc_mri_infacts <- c("INFARCT.NUMBER", "LOCATION.XYZ", "SIDE", "SIZE")
   exc_nuropath <- c(
     "NACCMOD", "NPFORMVER", "ADCID", "NACCWRI1",
     "NACCWRI2", "NACCWRI3", "NACCYOD"
   )
   exc_uscffsxs51 <- c("IMAGETYPE")
-  exc_ptdemog <- c("PTCOGBEG", "PTORIENT")
+  exc_ptdemog <- c("PTCOGBEG", "PTORIENT", "PTASIAN", "PTADDX")
   exc_fldname <- c(
-    "INCNEWPT", "EXCCRIT", "FAILEXCLU", "CatFlu_Practise", "CATFLU_PRACTISE",
-    "CDMEMORY", "CDORIENT", "CDJUDGE", "CDCOMMUN",
-    "CDHOME", "CDCARE", "CDGLOBAL", "CDRSB", "GDS"
+    "INCNEWPT", "EXCCRIT", "FAILEXCLU", "CatFlu_Practise",
+    "CATFLU_PRACTISE", "GDS"
   )
   exc_tbl <- c(
     "ADNI_DIAN_COMPARISON", "AMPRION_ASYN_SAA", "BATEMANLAB",
@@ -442,7 +445,8 @@ extract_codelist_datadict <- function(data_dict) {
 
   data_dict <- data_dict %>%
     mutate(CODE = case_when(
-      ((FLDNAME %in% exc_mri_infacts & TBLNAME %in% "MRI_INFARCTS") |
+      ((FLDNAME %in% exc_cdr & TBLNAME %in% "CDR") |
+        (FLDNAME %in% exc_mri_infacts & TBLNAME %in% "MRI_INFARCTS") |
         (FLDNAME %in% exc_nuropath & TBLNAME %in% "NEUROPATH") |
         (FLDNAME %in% exc_uscffsxs51 & TBLNAME %in% "UCSFFSX51") |
         (FLDNAME %in% exc_ptdemog & TBLNAME %in% "PTDEMOG") |
@@ -785,13 +789,22 @@ replace_multiple_values <- function(input_string, code, decode) {
     num_type = "negative",
     stop_message = FALSE
   )
-
+  
   if (negative_value == TRUE) {
     adjusted_code <- gsub(pattern = "-", x = code, replacement = "negative")
     output_string <- gsub("-", x = output_string, replacement = "negative")
   } else {
     adjusted_code <- code
   }
+  
+  # Checking for decimal places 
+  decimal_value <- detect_decimal_value(value = code)
+  
+  if (decimal_value == TRUE) {
+    adjusted_code <- gsub(pattern = "\\.", x = adjusted_code, replacement = "decimal")
+    output_string <- gsub("\\.", x = output_string, replacement = "decimal")
+  } 
+  
   # To ensure exact replacement
   adjusted_code <- paste0("\\b", adjusted_code, "\\b")
   # Replace values with actual new values
@@ -869,6 +882,27 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
   }
 
   return(result)
+}
+
+### Detect Decimal Values ----
+#' @title Detect Decimal Values
+#' @description This function is used to detect decimal values.
+#' @param value Input string
+#' @return A boolean value
+#' @rdname detect_decimal_value
+#' @family checks function
+#' @keywords utils_fun
+detect_decimal_value <- function(value) {
+  # convert to numeric values
+  if (all(is.na(value)) | is.null(value)) {
+    return(FALSE)
+  }
+  numeric_value <- suppressWarnings(as.numeric(value))
+  contain_decimal <- FALSE
+  if (any(is.numeric(numeric_value))) {
+    contain_decimal <- any(grepl(pattern = "\\.", x = value, perl = FALSE, fixed = FALSE))
+  }
+  return(contain_decimal)
 }
 
 ## Single Variable - Single Phase Specific Value Replacement -----
