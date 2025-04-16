@@ -86,4 +86,4 @@ To build an R data package from source `.csv` files with similar workflow:
         
         + Required two input arguments: a boolean indicator whether to use the `UPDATED` data dictionary (`USE_UPDATED_DATADIC`) and list of derived dataset name (`DERIVED_DATASET_LIST`)
           
-  + Build the data package: using [devtools R pacakge](https://devtools.r-lib.org/)
+  + Build the data package: using [devtools R package](https://devtools.r-lib.org/)

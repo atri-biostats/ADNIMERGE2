@@ -55,4 +55,4 @@ To build a package from source `.csv` files with similar workflow, clone the [ht
         
         + Required two input arguments: a boolean indicator to use an updated data dictionary (`USE_UPDATED_DATADIC`) and list of derived dataset (`DERIVED_DATASET_LIST`)
           
-  + Build the data package: using [`devtools` R pacakge](https://devtools.r-lib.org/)
+  + Build the data package: using [`devtools` R package](https://devtools.r-lib.org/)
