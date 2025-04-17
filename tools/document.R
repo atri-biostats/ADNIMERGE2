@@ -125,7 +125,6 @@ temp_field_codetext <- DATADIC %>%
   filter(removed_records == FALSE | is.na(removed_records)) %>%
   mutate(across(c(TEXT, CODE), ~ str_remove_all(string = .x, pattern = exc_code_text))) %>%
   group_by(TBLNAME, FLDNAME) %>%
-  mutate(num_records = n()) %>%
   nest() %>%
   ungroup() %>%
   mutate(adjust_fldcodes = map(data, ~ adjust_code_labels(data_dict = .x))) %>%
@@ -138,12 +137,13 @@ temp_data_dict <- temp_data_dict %>%
     DATADIC %>%
       distinct(CRFNAME, TBLNAME, STATUS) %>%
       group_by(TBLNAME) %>%
-      filter((n() == 1 & row_number() == 1) |
-        (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" &
-          row_number() == 1) |
-        (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
-        (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
-        (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)) %>%
+      filter(
+        (n() == 1 & row_number() == 1) |
+          (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" & row_number() == 1) |
+          (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
+          (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
+          (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)
+      ) %>%
       ungroup() %>%
       assert_uniq(TBLNAME) %>%
       mutate(
@@ -201,6 +201,10 @@ temp_data_dict <- temp_data_dict %>%
     field_label = case_when(
       is.na(field_label) ~ data_field_label,
       !is.na(field_label) ~ field_label
+    ),
+    field_class = case_when(
+      field_class %in% c("Date", "POSIXct", "POSIXt", "hms", "difftime") ~ " ",
+      TRUE ~ field_class
     )
   ) %>%
   mutate(across(c(field_label, field_notes, field_value), ~ str_replace_all(.x, "\\%", "\\\\%"))) %>%
@@ -213,7 +217,7 @@ temp_data_dict <- temp_data_dict %>%
   )
 
 ### Add dataset category/keywords ----
-dataset_cat_path <- file.path(".", "data-raw", "dataset_cat", "dataset_catgory.csv")
+dataset_cat_path <- file.path(".", "data-raw", "dataset_cat", "dataset_category.csv")
 if (file.exists(dataset_cat_path)) {
   dataset_cat <- readr::read_csv(
     file = dataset_cat_path,

@@ -329,13 +329,15 @@ adjust_code_labels <- function(data_dict,
 
     if (unique_rows > 1) {
       data_dict <- data_dict %>%
+        group_by(code_var) %>%
+        mutate(phase_var = toString(phase_var)) %>%
+        ungroup() %>%
+        distinct(phase_var, code_var, text_var) %>%
         mutate(phase_code_var = case_when(
-          !is.na(code_var) ~ paste0(
-            "\n#' \\item \\emph{",
-            phase_var, ":} ", code_var, "\n"
-          ),
+          !is.na(code_var) ~ paste0("\n#' \\item \\emph{", phase_var, ":} ", code_var, "\n"),
           is.na(code_var) ~ paste0("\n#' \\item \\emph{", phase_var, "} \n")
         ))
+
       temp_code <- paste0(
         "\n#' \\itemize{",
         paste0(data_dict$phase_code_var, collapse = ""), "#' }"

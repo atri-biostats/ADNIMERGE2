@@ -356,7 +356,7 @@ dataset_cat <- dataset_cat %>%
 ## Save dataset category ----
 readr::write_csv(
   x = dataset_cat,
-  file = file.path(dataset_cat_dir, "dataset_catgory.csv")
+  file = file.path(dataset_cat_dir, "dataset_category.csv")
 )
 
 ## Save the updated dataset with date stamped ----

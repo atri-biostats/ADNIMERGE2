@@ -23,6 +23,8 @@ knitr::opts_chunk$set(
   class.source = "fold-show",
   result = "asis"
 )
+# tbl_summary theme
+gtsummary::theme_gtsummary_compact()
 ```
 
 # ADNI Enrollment Summaries
@@ -74,6 +76,7 @@ ADSL %>%
     missing_text = "(Missing)"
   ) %>%
   add_overall(last = TRUE) %>%
+  add_stat_label(label = all_continuous2() ~ c("Mean (SD)", "Median (Q1, Q3)", "Range")) %>%
   modify_footnote_header(
     footnote = "Column-wise percentage; n (%)",
     columns = all_stat_cols(),
@@ -139,6 +142,7 @@ ADSL %>%
     percent = "row",
     missing_text = "(Missing)"
   ) %>%
+  add_stat_label(label = all_continuous2() ~ c("Mean (SD)", "Median (Q1, Q3)", "Range")) %>%
   modify_caption(caption = paste0(
     "Table 2. ADNI - Participant Characteristics: ",
     "By Baseline Diagnosis Status"

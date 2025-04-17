@@ -1480,8 +1480,7 @@ FAQ_SCORE_DD <- FAQ %>%
   mutate(
     QSSTRESC = as.character(QSSTRESC),
     QSTESTCD = "FAQTOTAL"
-  ) %>%
-  filter(!(RID %in% 4604 & COLPROT %in% "ADNI4"))
+  )
 
 # Geriatric Depression Scale ----
 GDS_SCORE_DD <- GDSCALE %>%
