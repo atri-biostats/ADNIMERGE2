@@ -8,8 +8,11 @@ library(tidyverse)
 data_dir <- "./data"
 # All data from "./data" directory, except DATADIC if it is existed
 data_path_list <- list.files(
-  path = data_dir, pattern = "\\.rda$", full.names = TRUE,
-  all.files = TRUE, recursive = FALSE
+  path = data_dir,
+  pattern = "\\.rda$",
+  full.names = TRUE,
+  all.files = TRUE,
+  recursive = FALSE
 )
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
 updated_data_dic_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATADIC.rda")
@@ -17,9 +20,8 @@ data_path_list <- data_path_list[!data_path_list == data_dic_path]
 
 # Input Args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) > 0) {
-  USE_UPDATED_DATADIC <- as.logical(args)
-}
+if (length(args) != 1) stop("Input argument must be size of 1.")
+USE_UPDATED_DATADIC <- as.logical(args)
 
 if (USE_UPDATED_DATADIC) {
   # To use manually updated data dictionary, see line 390-434 & 479-489 in `./data-raw/data_prep.R`
@@ -48,10 +50,7 @@ if (file.exists(cur_data_dict_path)) {
 if (EXISTED_DATADTIC) {
   # Expand DATADIC for combined phases
   DATADIC <- DATADIC %>%
-    mutate(PHASE = str_remove_all(
-      string = PHASE,
-      pattern = "\\[|\\]"
-    ))
+    mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]"))
 
   concat_phase <- unique(DATADIC$PHASE)[!is.na(unique(DATADIC$PHASE))]
   concat_phase <- concat_phase[str_detect(concat_phase, ",")]
@@ -68,14 +67,8 @@ if (EXISTED_DATADTIC) {
 
   tblname_list_dd <- tibble(file_path = data_path_list) %>%
     mutate(
-      short_tblname = str_remove_all(
-        string = file_path,
-        pattern = file_path_pattern
-      ),
-      tblname = str_remove_all(
-        string = file_path,
-        pattern = string_removed_pattern
-      ),
+      short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern),
+      tblname = str_remove_all(string = file_path, pattern = string_removed_pattern),
       tblname = str_to_upper(tblname)
     )
 
@@ -89,20 +82,32 @@ if (EXISTED_DATADTIC) {
     data_dict = DATADIC,
     nested_value = TRUE
   ) %>%
+    # Add "0" prefix character for FLDNAME coded value that contains "0" value
+    add_code_prefix(
+      data_dict = .,
+      prefix_char = "0",
+      nested_value = TRUE,
+      position = "first",
+      add_char = NULL
+    ) %>%
+    add_code_prefix(
+      data_dict = .,
+      prefix_char = "0",
+      nested_value = TRUE,
+      position = "last",
+      add_char = "."
+    ) %>%
     filter(TBLNAME %in% tblname_list_dd$tblname) %>%
     filter(class_type == "factor") %>%
     # ?? Required to confirm the coded values for the following tblnames/fldnames:
     mutate(excluded_fld_name = case_when(
-      (TBLNAME %in% c("ADAS_ADNI1", "MRINCLUSIO", "RECCMEDS", "TREATDIS") |
-        (TBLNAME %in% "ADAS_ADNIGO23" & FLDNAME %in% c("Q9TASK", "Q10TASK", "Q11TASK", "Q12TASK")) |
+      (TBLNAME %in% c("RECCMEDS", "TREATDIS") |
+        (TBLNAME %in% "MRINCLUSIO" &
+          FLDNAME %in% c("DEVANOMALY", "EDEMA", "LESION", "NPH", "SURGERY")) |
         (TBLNAME %in% "ADVERSE" & FLDNAME %in% adverse_event_col) |
-        (TBLNAME %in% "AV45META" & FLDNAME %in% "PMFRAME") |
-        (TBLNAME %in% "BIOMARK" & FLDNAME %in% "BILPOTPROC") |
-        (TBLNAME %in% "DXSUM" & FLDNAME %in% c("DXMDES", "DXAPOSS")) |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
-        (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQREASON", "PQPROERR", "PQISSUES")) |
-        (TBLNAME %in% "PTDEMOG" & FLDNAME %in% c("PTASIAN", "PTLANGWR6")) |
+        (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
         (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS")
       ) ~ "Yes"
     ))

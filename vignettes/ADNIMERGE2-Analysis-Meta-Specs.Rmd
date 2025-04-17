@@ -4,6 +4,7 @@ output:
    rmarkdown::html_vignette:
      toc: true
      code_folding: hide
+date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Analysis-Meta-Specs}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,18 +20,114 @@ knitr::opts_chunk$set(
   echo = FALSE,
   class.source = "fold-show"
 )
+```
+
+
+```{r internal-setup-function, echo = FALSE, include = FALSE}
 # Data print function
 datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
+  require(DT)
   DT::datatable(
-    data = data, ...,
-    options = list(paging = paging, searchable = searchable, bInfo = bInfo, ...)
+    data = data,
+    options = list(paging = paging, searchable = searchable, bInfo = bInfo, ...),
+    ...
   )
+}
+
+# Unique values
+assert_uniq <- function(...) {
+  require(assertr)
+  assert_rows(
+    row_reduction_fn = col_concat,
+    predicate = is_uniq,
+    ...
+  )
+}
+
+# Non missing value
+assert_non_missing <- function(...) {
+  require(assertr)
+  assert(
+    predicate = not_na,
+    ...
+  )
+}
+
+# Check common variables in a metcore
+check_inconsistent_common <- function(metacore, show_mismatch = FALSE) {
+  require(tidyverse)
+  require(tibble)
+  require(tidyr)
+
+  if (!is_metacore(metacore)) stop("metacore must be a R6-Wrapper object.")
+  if (!is.logical(show_mismatch)) stop("show_mismatch must be a boolen value.")
+
+  # Common variable list
+  common_var <- metacore$var_spec %>%
+    as_tibble() %>%
+    {
+      if ("common" %in% colnames(.)) {
+        filter(., common == TRUE)
+      } else {
+        filter(., row_number() %in% 0)
+      }
+    } %>%
+    distinct(variable) %>%
+    pull()
+
+  expected_ds_var <- expand_grid(
+    dataset = as.character(metacore$ds_spec$dataset),
+    variable = as.character(common_var)
+  ) %>%
+    mutate(dataset.var = paste0(dataset, ".", variable))
+
+  actual_ds_var <- metacore$ds_vars %>%
+    as_tibble() %>%
+    verify(nrow(.) > 0) %>%
+    filter(variable %in% common_var) %>%
+    mutate(dataset.var = paste0(dataset, ".", variable)) %>%
+    distinct(dataset.var) %>%
+    pull(dataset.var)
+
+  if (length(common_var) > 0) {
+    ds_var_list <- expected_ds_var$dataset.var
+    non_existed_ds_var <- ds_var_list[!ds_var_list %in% actual_ds_var]
+  }
+
+  if (all(!is.na(non_existed_ds_var))) {
+    non_existed_var <- sapply(strsplit(
+      x = non_existed_ds_var,
+      split = "\\."
+    ), function(x) {
+      x[[2]]
+    })
+    checks <- expected_ds_var %>%
+      filter(variable %in% non_existed_var) %>%
+      mutate(common_var_status = case_when(
+        dataset.var %in% non_existed_ds_var ~ FALSE,
+        !dataset.var %in% non_existed_ds_var ~ TRUE
+      )) %>%
+      arrange(variable, dataset) %>%
+      select(dataset, variable, common_var_status) %>%
+      as_tibble()
+  } else {
+    checks <- NULL
+  }
+  if (nrow(checks) > 0 & is.data.frame(checks)) {
+    if (show_mismatch) {
+      return(checks)
+    } else {
+      stop("Mismatch common variables, set `show_mismatch = TRUE`")
+    }
+  }
+  warning("No mismatch common variables")
+  return(NULL)
 }
 ```
 
 # Introduction
 
-This document describes creating a metadata specification using [PHARMAVERSE]() workflow. The matadata-specs can be used to generate analysis ready dataset (i.e., ADaM). The matadata-specs required standardized derived dataset, such as SDTM, as input. For illustration purpose, a metadata-specs for following selected analysis ready dataset will be created.
+This document describes creating a metadata specification using [PHARMAVERSE](https://pharmaverse.org/) workflow. The matadata-specs can be used to generate analysis ready dataset (i.e., ADaM). The matadata-specs required standardized derived dataset, such as SDTM, as input. For illustration purpose, a metadata-specs for following selected analysis ready dataset will be created.
 
 * Subject-Level Analysis Dataset - ADSL
 * Adverse Events Analysis Dataset - ADAE
@@ -57,6 +154,7 @@ adsl_dic <- bind_rows(
   c(variable = "USUBJID", type = "text", length = "20", label = "Unique Subject Identifier", common = TRUE, origin = "Predecessor", derivation = "DM.USUBJID"),
   c(variable = "SUBJID", type = "text", length = "15", label = "Subject Identifier for the Study", origin = "Predecessor", derivation = "DM.SUBJID"),
   c(variable = "SITEID", type = "text", length = "3", label = "Study Site Identifier", origin = "Predecessor", derivation = "DM.SITEID"),
+  c(variable = "ORIGPROT", type = "text", length = "8", label = "Original Study Protocol", common = FALSE, code_id = "PHASE", origin = "Predecessor", derivation = "DM.ORIGPROT"),
   c(variable = "AGE", type = "float", length = "3", label = "Age (in Years)", common = TRUE, sig_dig = 1, origin = "Predecessor", derivation = "DM.AGE"),
   c(variable = "AGEU", type = "text", length = "5", label = "Age Units", common = TRUE, code_id = "AGEU", origin = "Predecessor", derivation = "DM.AGEU"),
   c(
@@ -221,7 +319,8 @@ adae_dic <- bind_rows(
   c(variable = "AESMIE", type = "text", length = "3", label = "Other Medically Important Serious Event", origin = "Predecessor", derivation = "AE.AESMIE"),
   c(variable = "AERELCM", type = "text", length = "40", label = "Related to Concomitant Therapy", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELCM"),
   c(variable = "AERELFLRBTBN", type = "text", length = "40", label = "Related to Florbetaben Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELFLRBTBN"),
-  c(variable = "AERELFLRBPR", type = "text", length = "40", label = "Related to PET/MRI Imaging Procedure", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELFLRBPR"),
+  c(variable = "AERELFLRBPR", type = "text", length = "40", label = "Related to Florbetapir Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELFLRBPR"),
+  c(variable = "AEHIMG", type = "text", length = "40", label = "Related to PET/MRI Imaging Procedure", code_id = "REL", origin = "Predecessor", derivation = "AE.AEHIMG"),
   c(variable = "AERELTAU", type = "text", length = "40", label = "Related to Flotaucipir Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELTAU"),
   c(variable = "AERELNAV", type = "text", length = "40", label = "Related to NAV-4694 Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELNAV"),
   c(variable = "AERELMK", type = "text", length = "40", label = "Related to MK-6240 Tracer", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELMK"),
@@ -229,6 +328,7 @@ adae_dic <- bind_rows(
   c(variable = "AEHLUMB", type = "text", length = "40", label = "Related to Lumbar Puncture", code_id = "REL", origin = "Predecessor", derivation = "AE.AEHLUMB"),
   c(variable = "AERELCOVID", type = "text", length = "40", label = "Related to COVID-19 Illness", code_id = "RELCOVID", origin = "Predecessor", derivation = "AE.AERELCOVID"),
   c(variable = "AERELPAN", type = "text", length = "40", label = "Related to COVID-19 Pandemic Disruption", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELPAN"),
+  c(variable = "AERELAD", type = "text", length = "40", label = "Related to Early Stage/Progression of AD", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELAD"),
   c(variable = "AERELATESP", type = "text", length = "40", label = "Related to Other Study Procedure(s)", code_id = "REL", origin = "Predecessor", derivation = "AE.AERELATESP"),
   c(variable = "AECONTRT", type = "text", length = "3", label = "Concomitant or Additional Trtmnt Given", code_id = "YN", origin = "Predecessor", derivation = "AE.AECONTRT"),
   c(variable = "AEOUT", type = "text", length = "60", label = "Outcome of Adverse Event", origin = "Predecessor", derivation = "AE.AEOUT"),
@@ -352,7 +452,7 @@ ds_spec_labels <- c(
 ds_spec <- data_spec %>%
   select(dataset, structure, label = dataset.label) %>%
   distinct() %>%
-  assert_rows(num_row_NAs, within_bounds(0, 0.5), everything()) %>%
+  assert_non_missing(everything()) %>%
   labelled::set_variable_labels(.labels = ds_spec_labels, .strict = TRUE)
 ```
 
@@ -369,12 +469,12 @@ ds_vars_labels <- c(
   key_seq = "Sequence Key",
   order = "Variable Order",
   keep = "Keep (Boolean)",
-  core = "ADaM core (Expected, required, Permissible)",
+  core = "ADaM core (Expected, Required, Permissible)",
   supp_flag = "Supplemental Flag"
 )
 ds_vars <- data_spec %>%
   select(dataset, variable, key_seq, order, keep, core, supp_flag) %>%
-  assert_rows(num_row_NAs, within_bounds(0, 0.5), !key_seq) %>%
+  assert_non_missing(!key_seq) %>%
   labelled::set_variable_labels(.labels = ds_vars_labels, .strict = TRUE)
 ```
 
@@ -399,12 +499,16 @@ var_spec_labels <- c(
 )
 var_spec <- data_spec %>%
   select(all_of(names(var_spec_labels))) %>%
-  assert_rows(num_row_NAs, within_bounds(0, 0.5), !format) %>%
+   assert_non_missing(!format) %>%
   labelled::set_variable_labels(.labels = var_spec_labels, .strict = TRUE)
 ```
 
 ```{r print-var-spec}
-datatable(var_spec, paging = TRUE)
+datatable(
+  var_spec %>%
+    mutate(across(where(is.logical), ~ toupper(.x))),
+  paging = TRUE
+)
 ```
 
 ## Value-Level Information
@@ -422,11 +526,7 @@ value_spec_labels <- c(
 )
 value_spec <- data_spec %>%
   select(all_of(names(value_spec_labels))) %>%
-  assert_rows(
-    num_row_NAs,
-    within_bounds(0, 0.5),
-    dataset, variable, origin
-  ) %>%
+  assert_non_missing(dataset, variable, origin) %>%
   labelled::set_variable_labels(.labels = value_spec_labels, .strict = FALSE)
 ```
 
@@ -443,7 +543,7 @@ derivations_labels <- c(
 )
 derivations <- data_spec %>%
   select(all_of(names(derivations_labels))) %>%
-  assert_rows(num_row_NAs, within_bounds(0, 0.05), derivation_id)
+  assert_non_missing(derivation_id)
 ```
 
 ```{r print-derivations-spec}
@@ -475,6 +575,15 @@ AGEU_CODEDLIST <- tibble(
   tibble(
     code = c("Years"),
     decode = c("Years")
+  )
+)
+
+# PHASE/ORIGPROT ----
+PHASE_CODEDLIST <- tibble(
+  code_id = "PHASE", name = "PHASE", type = "code_decode",
+  tibble(
+    code = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4"),
+    decode = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4")
   )
 )
 
@@ -597,7 +706,6 @@ QSTESTCD_LIST <- c(
 #   drop_na() %>%
 #   pull()
 
-
 PARAMCD_CODEDLIST <- tibble(
   code_id = "PARAMCD", name = "PARAMCD", type = "code_decode",
   tibble(
@@ -623,7 +731,7 @@ YN_CODEDLIST <- tibble(
   )
 )
 
-# Y_BLANK
+# Y_BLANK ----
 Y_BLANK_CODEDLIST <- tibble(
   code_id = "Y_BLANK", name = "Y_BLANK", type = "code_decode",
   tibble(
@@ -652,78 +760,6 @@ datatable(
 ```
 
 ## Metadata Specification
-
-```{r check-common-variables, echo = FALSE}
-check_inconsistent_common <- function(metacore, show_mismatch = FALSE) {
-  require(tidyverse)
-  require(tibble)
-  require(tidyr)
-
-  if (!is_metacore(metacore)) stop("metacore must be a R6-Wrapper object.")
-  if (!is.logical(show_mismatch)) stop("show_mismatch must be a boolen value.")
-
-  # Common variable list
-  common_var <- metacore$var_spec %>%
-    as_tibble() %>%
-    {
-      if ("common" %in% colnames(.)) {
-        filter(., common == TRUE)
-      } else {
-        filter(., row_number() %in% 0)
-      }
-    } %>%
-    distinct(variable) %>%
-    pull()
-
-  expected_ds_var <- expand_grid(
-    dataset = as.character(metacore$ds_spec$dataset),
-    variable = as.character(common_var)
-  ) %>%
-    mutate(dataset.var = paste0(dataset, ".", variable))
-
-  actual_ds_var <- metacore$ds_vars %>%
-    as_tibble() %>%
-    verify(nrow(.) > 0) %>%
-    filter(variable %in% common_var) %>%
-    mutate(dataset.var = paste0(dataset, ".", variable)) %>%
-    distinct(dataset.var) %>%
-    pull(dataset.var)
-
-  if (length(common_var) > 0) {
-    ds_var_list <- expected_ds_var$dataset.var
-    non_existed_ds_var <- ds_var_list[!ds_var_list %in% actual_ds_var]
-  }
-
-  if (all(!is.na(non_existed_ds_var))) {
-    non_existed_var <- sapply(strsplit(
-      x = non_existed_ds_var,
-      split = "\\."
-    ), function(x) {
-      x[[2]]
-    })
-    checks <- expected_ds_var %>%
-      filter(variable %in% non_existed_var) %>%
-      mutate(common_var_status = case_when(
-        dataset.var %in% non_existed_ds_var ~ FALSE,
-        !dataset.var %in% non_existed_ds_var ~ TRUE
-      )) %>%
-      arrange(variable, dataset) %>%
-      select(dataset, variable, common_var_status) %>%
-      as_tibble()
-  } else {
-    checks <- NULL
-  }
-  if (nrow(checks) > 0 & is.data.frame(checks)) {
-    if (show_mismatch) {
-      return(checks)
-    } else {
-      stop("Mismatch common variables, set show_mismatch = TRUE")
-    }
-  }
-  warning("No mismatch common variables")
-  return(NULL)
-}
-```
 
 ```{r meta-spec, echo = TRUE, message = TRUE, warning = FALSE}
 # Generate Metadata Specs -  R6 class wrapper object

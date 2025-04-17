@@ -4,18 +4,13 @@ library(assertr)
 
 # Input args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) > 2) stop("The impute argument must be size of 2.")
-if (length(args) > 0) {
-  DERIVED_DATASET_LIST <- str_remove_all(
-    string = args[1],
-    pattern = '[\\(\\)]|\\"|^c'
-  ) %>%
-    str_split(string = ., pattern = ",") %>%
-    unlist() %>%
-    str_trim(string = ., side = "both")
-  if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
-  USE_UPDATED_DATADIC <- as.logical(args[2])
-}
+if (length(args) != 2) stop("Input argument must be size of 2.")
+DERIVED_DATASET_LIST <- str_remove_all(string = args[1], pattern = '[\\(\\)]|\\"|^c') %>%
+  str_split(string = ., pattern = ",") %>%
+  unlist() %>%
+  str_trim(string = ., side = "both")
+if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
+USE_UPDATED_DATADIC <- as.logical(args[2])
 
 # Load all data from "./data" to .GlobalEnv ----
 data_dir <- "./data"
@@ -88,16 +83,17 @@ source(file.path(".", "R", "checks-assert.R"))
 
 ## Common texts ----
 ### Data source link
-loni_url_link <- str_c(
+loni_url_link <- paste0(
   "\\href{https://adni.loni.usc.edu/data-samples/adni-data/}",
   "{https://adni.loni.usc.edu/data-samples/adni-data/}"
 )
 ### Common data description
-common_description <- str_c(
-  "data. More information is available at ", loni_url_link
-)
+common_description <- str_c("data. More information is available at ", loni_url_link)
 ### Authors
-authors <- "\\href{adni-data@googlegroups.com}{adni-data@googlegroups.com}"
+authors <- paste0(
+  "\\href{adni-data@googlegroups.com}",
+  "{adni-data@googlegroups.com}"
+)
 
 ## Prepare data dictionary for raw dataset ----
 ### Generate data dictionary from actual raw dataset ----
@@ -129,7 +125,6 @@ temp_field_codetext <- DATADIC %>%
   filter(removed_records == FALSE | is.na(removed_records)) %>%
   mutate(across(c(TEXT, CODE), ~ str_remove_all(string = .x, pattern = exc_code_text))) %>%
   group_by(TBLNAME, FLDNAME) %>%
-  mutate(num_records = n()) %>%
   nest() %>%
   ungroup() %>%
   mutate(adjust_fldcodes = map(data, ~ adjust_code_labels(data_dict = .x))) %>%
@@ -142,27 +137,17 @@ temp_data_dict <- temp_data_dict %>%
     DATADIC %>%
       distinct(CRFNAME, TBLNAME, STATUS) %>%
       group_by(TBLNAME) %>%
-      filter((n() == 1 & row_number() == 1) |
-        (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" & row_number() == 1) |
-        (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
-        (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
-        (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)) %>%
+      filter(
+        (n() == 1 & row_number() == 1) |
+          (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" & row_number() == 1) |
+          (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
+          (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
+          (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)
+      ) %>%
       ungroup() %>%
       assert_uniq(TBLNAME) %>%
-      mutate(CRFNAME = ifelse(CRFNAME == "-4", NA_character_, CRFNAME)) %>%
-      # Add dataset label manually for "ADNI2_VISITID" and "VISITS"
-      bind_rows(
-        tibble(
-          TBLNAME = "ADNI2_VISITID",
-          CRFNAME = "ADNI2 Visit Code Mapping List"
-        )
-      ) %>%
       mutate(
-        CRFNAME = case_when(
-          is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "Combined list of phase specific visit code",
-          is.na(CRFNAME) ~ TBLNAME,
-          TRUE ~ CRFNAME
-        ),
+        CRFNAME = ifelse(CRFNAME == "-4", NA_character_, CRFNAME),
         tblname = str_to_lower(TBLNAME)
       ) %>%
       distinct(tblname, CRFNAME),
@@ -190,15 +175,13 @@ temp_data_dict <- temp_data_dict %>%
   mutate(prefix_char = str_remove(string = prefix_char, pattern = "_")) %>%
   mutate(
     dataset_label = case_when(
-      !tblname %in% str_to_lower("DATADIC") & !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
-      !tblname %in% str_to_lower("DATADIC") & is.na(prefix_char) ~ CRFNAME,
-      tblname %in% str_to_lower("DATADIC") ~ "Data dictionary dataset"
+      !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
+      is.na(prefix_char) ~ CRFNAME
     ),
     add_authors = authors,
     short_description = case_when(
-      tblname %in% str_to_lower("DATADIC") ~ str_c("Data dictionary dataset. More information is available at ", loni_url_link, "."),
-      tblname %in% str_to_lower("VISITS") ~ str_c(CRFNAME, ". More information is available at ", loni_url_link, "."),
-      TRUE ~ str_c(CRFNAME, common_description, sep = " ")
+      !tblname %in% str_to_lower(c("DATADIC", "VISITS", "ADNI2_VISITID")) ~ str_c(CRFNAME, common_description, sep = " "),
+      tblname %in% str_to_lower(c("DATADIC", "VISITS", "ADNI2_VISITID")) ~ str_c(CRFNAME, str_remove(common_description, "^data"), sep = " ")
     ),
     dataset_source_type = "raw",
     add_source = loni_url_link
@@ -218,6 +201,10 @@ temp_data_dict <- temp_data_dict %>%
     field_label = case_when(
       is.na(field_label) ~ data_field_label,
       !is.na(field_label) ~ field_label
+    ),
+    field_class = case_when(
+      field_class %in% c("Date", "POSIXct", "POSIXt", "hms", "difftime") ~ " ",
+      TRUE ~ field_class
     )
   ) %>%
   mutate(across(c(field_label, field_notes, field_value), ~ str_replace_all(.x, "\\%", "\\\\%"))) %>%
@@ -230,7 +217,7 @@ temp_data_dict <- temp_data_dict %>%
   )
 
 ### Add dataset category/keywords ----
-dataset_cat_path <- file.path(".", "data-raw", "dataset_cat", "dataset_catgory.csv")
+dataset_cat_path <- file.path(".", "data-raw", "dataset_cat", "dataset_category.csv")
 if (file.exists(dataset_cat_path)) {
   dataset_cat <- readr::read_csv(
     file = dataset_cat_path,
@@ -250,7 +237,7 @@ temp_data_dict <- temp_data_dict %>%
   left_join(
     tab <- dataset_cat %>%
       mutate(dir_cat = str_remove_all(string = dir_cat, ",")) %>%
-      select(TBLNAME, dir_cat) %>% 
+      select(TBLNAME, dir_cat) %>%
       distinct(),
     by = c("dd_name" = "TBLNAME")
   ) %>%
@@ -258,7 +245,7 @@ temp_data_dict <- temp_data_dict %>%
   mutate(add_keywords = case_when(
     is.na(dir_cat) ~ "other_raw_dataset",
     !is.na(dir_cat) ~ dir_cat
-  )) %>% 
+  )) %>%
   select(-dir_cat)
 
 ### Adjust for coded FLDNAME records ----
@@ -301,7 +288,9 @@ temp_data_dict <- temp_data_dict %>%
   ))
 
 ## Finalize documentations ------
-if (dir.exists(file.path(".", "R")) == FALSE) stop(file.path(".", "R"), " directory is not existed!")
+if (dir.exists(file.path(".", "R")) == FALSE) {
+  stop(file.path(".", "R"), " directory is not existed!")
+}
 data_document_path <- file.path(".", "R", "data.R")
 if (file.exists(data_document_path) == TRUE) {
   readr::write_lines(x = "", data_document_path)
@@ -353,8 +342,14 @@ if (exists("derived_data_list")) {
     )
     output_link <- c()
     for (i in seq_len(length(vignette_link))) {
-      temp_vignette_link <- paste0("\\code{vignette(topic = '", vignette_link[i], "', package = 'ADNIMERGE2')}")
-      output_link[i] <- paste0("For more details see the help vignette: \n#' ", temp_vignette_link)
+      temp_vignette_link <- paste0(
+        "\\code{vignette(topic = '", vignette_link[i],
+        "', package = 'ADNIMERGE2')}"
+      )
+      output_link[i] <- paste0(
+        "For more details see the help vignette: \n#' ",
+        temp_vignette_link
+      )
     }
     return(output_link)
   }
@@ -362,7 +357,9 @@ if (exists("derived_data_list")) {
   derived_data_dict_path <- file.path(
     "./data-raw/derived-datadic", "DERIVED_DATADIC.rda"
   )
-  if (!file.exists(derived_data_dict_path)) stop(derived_data_dict_path, " is not existed!")
+  if (!file.exists(derived_data_dict_path)) {
+    stop(derived_data_dict_path, " is not existed!")
+  }
   load(derived_data_dict_path, .GlobalEnv)
 
   derived_data_name <- names(derived_data_list)
@@ -405,7 +402,7 @@ if (exists("derived_data_list")) {
       field_notes = case_when(
         TEXT %in% " " | is.na(TEXT) ~ field_notes,
         TRUE ~ paste0(TEXT, "; ", field_notes)
-      ), 
+      ),
       add_keywords = "derived_dataset"
     ) %>%
     mutate(across(
@@ -443,8 +440,9 @@ if (exists("derived_data_list")) {
   cat("#' ADNI Metadata-Specs",
     "#'",
     paste0(
-      "#' Metadata specifications for the ADNI study. It is generated to create analysis ready dataset",
-      "using PHARMAVERSE workflow for illustration purpose."
+      "#' Metadata specifications for the ADNI study. It is generated to create ",
+      "analysis ready dataset using \\href{https://pharmaverse.org/}{PHARMAVERSE} ",
+      "workflow for illustration purpose."
     ),
     "#'",
     "#' @docType data",
@@ -452,7 +450,7 @@ if (exists("derived_data_list")) {
     "#' @name METACORES",
     "#' @usage data(METACORES)",
     "#' @keywords derived_dataset",
-    "#' @format A R6-class wrapper object created using [metacore::metacore()] function.",
+    "#' @format A R6-class wrapper object created using \\code{\\link[metacore]{metacore}} function.",
     paste0(
       "#' @source For more details about the metadata-specs see the help vignette: \n",
       "#' \\code{vignette(topic = 'ADNIMERGE2-Analysis-Meta-Specs', package = 'ADNIMERGE2')}."

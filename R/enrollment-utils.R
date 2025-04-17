@@ -3,10 +3,7 @@
 #' @description
 #'  This function is used to extract enrollment date (baseline visit date) when participant are enrolled in ADNI study for the first time.
 #' @param data_registry Data.frame of REGISTRY eCRF
-#' @return
-#'  \itemize{
-#'    \item A data frame of overall enrollment in ADNI study that will contains `RID`, `ORIGPROT`, `COLPROT`, and `EXAMDATE` variables.
-#'  }
+#' @return A data frame of overall enrollment in ADNI study that will contains `RID`, `ORIGPROT`, `COLPROT`, and `EXAMDATE` variables.
 #' @examples
 #' \dontrun{
 #' overall_enroll_registry <- adni_enrollment(
@@ -30,7 +27,7 @@ adni_enrollment <- function(data_registry) {
     col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "VISTYPE", "EXAMDATE"),
     strict = TRUE
   )
-  
+
   detect_numeric_value(
     value = data_registry$VISTYPE,
     num_type = "any",
@@ -44,7 +41,7 @@ adni_enrollment <- function(data_registry) {
 
   data_registry <- data_registry %>%
     mutate(across(c(COLPROT, ORIGPROT), as.character)) %>%
-    # Adding participant types (i.e. study track)
+    # Add participant type
     mutate(PTTYPE = adni_study_track(cur_study_phase = COLPROT, orig_study_phase = ORIGPROT)) %>%
     # Enrollment flag
     mutate(overall_baseline_flag = case_when(
@@ -63,6 +60,7 @@ adni_enrollment <- function(data_registry) {
   output_dd <- data_registry %>%
     filter(ORIGPROT == COLPROT) %>%
     filter(overall_baseline_flag %in% "Yes") %>%
+    filter(!is.na(EXAMDATE)) %>%
     verify(PTTYPE == "New") %>%
     assert_uniq(RID) %>%
     select(RID, ORIGPROT, COLPROT, EXAMDATE)
@@ -79,18 +77,15 @@ adni_enrollment <- function(data_registry) {
 #' @param both A boolean value to include both overall and phase-specific enrollment list, Default: FALSE
 #' @param multiple_screen_visit A boolean value to include multiple screen visits in ADNIGO and ADNI2 phases, Default: FALSE
 #' @return
+#' \itemize{
+#' \item If `both = TRUE`: a list of data frames that includes both overall (`overall_screen`) and phase-specific enrollment (`phase_screen`)
+#' \item Otherwise a data frame corresponding to the provided input arguments:
 #'  \itemize{
-#'    \item If `both = TRUE`: a list of data frames that includes both overall (`overall_screen`) and phase-specific enrollment (`phase_screen`)
-#'    \item  Otherwise a data frame corresponding to the provided input arguments:
-#'         \itemize{
-#'            \item Overall screen if `phase = "Overall"` and will contains one records per participant regardless the value of `multiple_screen_visit`
-#'            \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = FALSE`.
-#'  }
-#'  \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables.
-#'        \itemize{
-#'             \item The data frame will contains `VISCODE` for `multiple_screen_visit = TRUE`
-#'  }
-#'  }
+#'    \item Overall screen if `phase = "Overall"` and will contains one records per participant regardless the value of `multiple_screen_visit`
+#'    \item Phase specific screen if `phase != "Overall"` and will contains one records per participant if `multiple_screen_visit = FALSE`.
+#' }
+#' \item The data frame will contains `RID`, `ORIGPROT`, `COLPROT`, and `SCREENDATE` variables. The data frame will contains `VISCODE` for `multiple_screen_visit = TRUE`
+#' }
 #' @examples
 #' \dontrun{
 #' # Overall screening: when participants screened for the first time in ADNI study.
@@ -245,7 +240,7 @@ adni_screen_date <- function(data_registry, phase = "Overall", both = FALSE, mul
 # Function to extract baseline/screening diagnostics status ----
 #' @title Gets ADNI Baseline/Screening Diagnostics Summary
 #' @description
-#'  This function is used to extract the baseline diagnostics status when participant are enrolled in the ADNI study. 
+#'  This function is used to extract the baseline diagnostics status when participant are enrolled in the ADNI study.
 #'    Also screening diagnostics status of those were screened for the study.
 #' @param data_dxsum Data frame of DXSUM eCRF
 #' @param phase Either `Overall` or phase-specific diagnostics status, Default: 'Overall'
@@ -407,19 +402,19 @@ adni_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "bas
 
 # Get Death Flag -----
 #' @title Death Flag
-#' @description This function is used to extract death records in the study.  
+#' @description This function is used to extract death records in the study.
 #'   Based on the adverse events record (i.e. in `ADVERSE` for ADNI3-4 and `RECADV` in ADNI1-GO-2) and study sum record (i.e. in `STUDSUM` for ADNI3-4).
 #' @param adverse_dd Adverse events record data frame for ADNI3-4, similar to `ADVERSE`
 #' @param recadv_dd Adverse events record data frame for ADNI1-GO-2, similar to `RECADV`
 #' @param studysum_dd Final dispositions(study sum) data frame for ADNI3-4, similar ro `STUDYSUM`
 #' @return A data frame with the following columns:
 #' \itemize{
-#'    \item `RID` Participant ID
-#'    \item `ORIGPROT` Original study protocols
-#'    \item `COLPROT` Current study protocols which the event was recorded
-#'    \item `DTHDTC` Death date
-#'    \item `DTHFL` Death flag, `Yes`
-#'  }
+#'  \item RID: Participant ID
+#'  \item ORIGPROT: Original study protocols
+#'  \item COLPROT: Current study protocols which the event was recorded
+#'  \item DTHDTC: Death date
+#'  \item DTHFL: Death flag, `Yes`
+#' }
 #' @examples
 #' \dontrun{
 #' get_death_flag(
@@ -437,7 +432,7 @@ adni_blscreen_dxsum <- function(data_dxsum, phase = "Overall", visit_type = "bas
 get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
   SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- AEHDTHDT <- NULL
   VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- NULL
-  
+
   # Based on reported study disposition; for ADNI3 & ADNI4 phases
   check_colnames(
     data = studysum_dd,
@@ -450,7 +445,7 @@ get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
     filter(SDPRIMARY == "Death") %>%
     select(RID, ORIGPROT, COLPROT, SDPRIMARY) %>%
     assert_uniq(RID)
-  
+
   # Based on reported adverse events: ADNI3 & ADNI4 phases
   check_colnames(
     data = adverse_dd,
@@ -458,13 +453,13 @@ get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
     strict = TRUE,
     stop_message = TRUE
   )
-  
+
   death_adverse_even_adni34 <- adverse_dd %>%
     assert(is.character, SAEDEATH) %>%
     filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
     select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
     assert_uniq(RID)
-  
+
   # Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
   check_colnames(
     data = recadv_dd,
@@ -472,7 +467,7 @@ get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
     strict = TRUE,
     stop_message = TRUE
   )
-  
+
   death_adverse_even_adni12go <- recadv_dd %>%
     assert(is.character, AEHDEATH) %>%
     filter(AEHDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
@@ -483,7 +478,7 @@ get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
     filter(VISCODE == min(VISCODE)) %>%
     ungroup() %>%
     assert_uniq(RID)
-  
+
   death_event_dataset <- full_join(
     x = death_studysum,
     y = death_adverse_even_adni34 %>%
@@ -494,7 +489,7 @@ get_death_flag <- function(studysum_dd, adverse_dd, recadv_dd) {
     assert_uniq(RID) %>%
     mutate(DTHFL = "Yes", DTHDTC = AEHDTHDT) %>%
     select(RID, ORIGPROT, COLPROT, DTHDTC, DTHFL)
-  
+
   return(death_event_dataset)
 }
 

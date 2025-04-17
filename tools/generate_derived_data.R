@@ -2,19 +2,16 @@
 library(tidyverse)
 library(devtools)
 library(knitr)
+library(rlang)
 
 # Input parameter - derived/analysis datasets ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) == 1) {
-  DERIVED_DATASET_LIST <- str_remove_all(
-    string = args,
-    pattern = '[\\(\\)]|\\"|^c'
-  ) %>%
-    str_split(string = ., pattern = ",") %>%
-    unlist() %>%
-    str_trim(string = ., side = "both")
-  if (all(DERIVED_DATASET_LIST %in% "NULL")) stop("`DERIVED_DATASET_LIST` must not be missing.")
-} else {
+if (length(args) != 1) stop("`DERIVED_DATASET_LIST` must not be missing.")
+DERIVED_DATASET_LIST <- str_remove_all(string = args, pattern = '[\\(\\)]|\\"|^c') %>%
+  str_split(string = ., pattern = ",") %>%
+  unlist() %>%
+  str_trim(string = ., side = "both")
+if (all(DERIVED_DATASET_LIST %in% "NULL")) {
   stop("`DERIVED_DATASET_LIST` must not be missing.")
 }
 
@@ -51,7 +48,9 @@ save_derived_data <- lapply(DERIVED_DATASET_LIST, function(tbl_name) {
 })
 
 save_derived_data <- unlist(save_derived_data)
-if (any(!is.null(save_derived_data))) stop("One of the derived dataset has not been stored in `./data` directory.")
+if (any(!is.null(save_derived_data))) {
+  stop("One of the derived dataset has not been stored in `./data` directory.")
+}
 
 # Derived/Analysis data dictionary ----
 DERIVED_DATASET_LIST <- DERIVED_DATASET_LIST[!DERIVED_DATASET_LIST %in% "METACORES"]
