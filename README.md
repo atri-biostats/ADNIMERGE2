@@ -1,5 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- R package versioning: first two digits are for code; last digit is data release number  -->
 
 # ADNIMERGE2 <a href="https://adni.loni.usc.edu/"><img src="man/figures/logo.png" align="right" height="138" /></a>
