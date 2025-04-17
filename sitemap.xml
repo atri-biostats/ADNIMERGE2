@@ -1,8 +1,10 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/404.html</loc></url>
+<url><loc>https://atri-biostats.github.io/ADNIMERGE2/articles/ADNI-Enrollment.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Analysis-Data.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Analysis-Meta-Specs.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html</loc></url>
+<url><loc>https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Package-Building.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/articles/index.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/authors.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/index.html</loc></url>
@@ -89,9 +91,7 @@
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/FCI.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/FHQ.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/FNIHBC_BLOOD_BIOMARKER_TRAJECTORIES.html</loc></url>
-<url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/FOXLABBSI.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/GDSCALE.html</loc></url>
-<url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/GENETIC.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/IES.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/INCLUSIO.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/INITHEALTH.html</loc></url>
@@ -137,8 +137,6 @@
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PIBMETA.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PIBPETSUVR.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PIBQC.html</loc></url>
-<url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PICSLASHS.html</loc></url>
-<url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PICSL_ASHS.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/POSAMYDISC.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PREAMYDISC.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/PSS.html</loc></url>
@@ -162,7 +160,6 @@
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/TAUMETA.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/TAUQC.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/TBM22.html</loc></url>
-<url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/TCV.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/TREATDIS.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/UASPMVBM.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/UCBERKELEYFDG_8mm.html</loc></url>
@@ -222,6 +219,7 @@
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/create_usubjid.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/data_value_replacement.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/detect_baseline_score.html</loc></url>
+<url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/detect_decimal_value.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/detect_numeric_value.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/extract_codelist_datadict.html</loc></url>
 <url><loc>https://atri-biostats.github.io/ADNIMERGE2/reference/get_cols_name.html</loc></url>

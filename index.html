@@ -12,10 +12,10 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="ADNI Study Data Package">
 <meta name="description" content="This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study.">
 <meta property="og:description" content="This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study.">
@@ -25,7 +25,7 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">ADNIMERGE2</a>
 
@@ -42,9 +42,17 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2-Derived-Data</a></li>
-    <li><a class="dropdown-item" href="articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2-Analysis-Meta-Specs</a></li>
-    <li><a class="dropdown-item" href="articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2-Analysis-Data</a></li>
+<li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
+    <li><a class="dropdown-item" href="articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
+    <li><a class="dropdown-item" href="articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><a class="dropdown-item" href="articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
+    <li><a class="dropdown-item" href="articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
   </ul>
 </li>
       </ul>
@@ -53,6 +61,14 @@
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
+</li>
       </ul>
 </div>
 
@@ -70,12 +86,12 @@
 <div class="section level2">
 <h2 id="package-access">Package Access<a class="anchor" aria-label="anchor" href="#package-access"></a>
 </h2>
-<p>The ADNI study R data package, ADNIMERGE2, will be available on the same data sharing platform on <a href="https://adni.loni.usc.edu/" class="external-link">LONI website</a>. To request access of the R package as well as data collected in the ADNI study, it required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement. Details of the Data Use Agreement is presented <a href="https://ida.loni.usc.edu/collaboration/access/appLicense.jsp" class="external-link">here</a>.</p>
+<p>The ADNI study R data package, ADNIMERGE2, will be available on the same data sharing platform at <a href="https://adni.loni.usc.edu/" class="external-link">LONI website</a>. To request access of the R package, required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement. Details of the Data Use Agreement can be found <a href="https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>To install the package locally, run <code>install.packages("path/to/ADNIMERGE2_0.1.1.tar.gz", repos = NULL, type = "source")</code></p>
+<p>To install the package locally, run <code>install.packages("path/to/ADNIMERGE2_0.1.1.tar.gz", repos = NULL, type = "source")</code>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
