@@ -246,7 +246,8 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
     readr::read_csv(
       file = file.path(input_dir, x),
       col_names = TRUE,
-      show_col_types = FALSE
+      show_col_types = FALSE,
+      guess_max = length(count.fields(file.path(input_dir, x), skip = 1))
     )
   })
   names(csv_data_list) <- str_remove_all(file_list, pattern = file_extension)
