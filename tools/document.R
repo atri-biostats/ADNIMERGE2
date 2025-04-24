@@ -30,7 +30,7 @@ if (file.exists(dataset_date_stamped_file_path)) {
   dataset_list_date_stamped <- readr::read_csv(
     file = dataset_date_stamped_file_path,
     show_col_types = FALSE,
-    guess_max = length(count.fields(dataset_date_stamped_file_path, skip = 1))
+    guess_max = Inf
   ) %>%
     mutate(
       TBLNAME = str_to_lower(UPDATED_TBLNAME),
@@ -224,7 +224,7 @@ if (file.exists(dataset_cat_path)) {
     file = dataset_cat_path,
     col_names = TRUE,
     show_col_types = FALSE,
-    guess_max = length(count.fields(dataset_cat_path, skip = 1))
+    guess_max = Inf
   ) %>%
     select(dir_cat, TBLNAME)
 } else {
@@ -256,7 +256,7 @@ if (file.exists(coded_records_path)) {
   coded_records <- readr::read_csv(
     file = coded_records_path,
     show_col_types = FALSE, 
-    guess_max = length(count.fields(coded_records_path, skip = 1))
+    guess_max = Inf
   ) %>%
     as_tibble() %>%
     filter(STATUS == "Yes") %>%
