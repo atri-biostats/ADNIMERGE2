@@ -182,8 +182,6 @@ if (length(data_path_list) > 0) {
 }
 
 if (UPDATE_MISSING_VALUE) {
-  string_removed_pattern <- str_c(c(prefix_pattern), collapse = "|")
-
   tblname_list_dd <- tibble(file_path = data_path_list) %>%
     mutate(
       short_tblname = str_remove_all(
@@ -192,7 +190,7 @@ if (UPDATE_MISSING_VALUE) {
       ),
       tblname = str_remove_all(
         string = file_path,
-        pattern = string_removed_pattern
+        pattern = str_c(c(prefix_pattern), collapse = "|")
       ),
       tblname = str_to_upper(tblname)
     )
@@ -215,23 +213,17 @@ if (UPDATE_MISSING_VALUE) {
         filter(is.na(RID)) %>%
         nrow()
       if (num_missing_rid > 0) {
-        message(tb, " dataset have ", num_missing_rid, " records with missing RID")
-        warning("These IDs will be replaced from PTID if it is existed in the dataset.")
+        message(tb, " dataset contains ", num_missing_rid, " missing RID records.")
       }
       dd <- dd %>%
         create_col_protocol(data = ., phaseVar = c("Phase", "PHASE", "ProtocolID")) %>%
-        # ?? If there any missing RID but have PTID
         {
-          if (all(num_missing_rid > 0 & "PTID" %in% colnames(.))) {
-            mutate(., RID = case_when(
-              is.na(RID) ~ as.numeric(str_remove_all(string = PTID, pattern = "^[0-9]{3}\\_S\\_")),
-              !is.na(RID) ~ as.numeric(RID)
-            ))
+          if (num_missing_rid == 0) {
+            create_orig_protocol(data = .)
           } else {
             (.)
           }
-        } %>%
-        create_orig_protocol(data = .)
+        }
     } else {
       message("ORIGPROT and COLPROT are not addedd in ", tb)
     }
@@ -266,8 +258,7 @@ if (UPDATE_MISSING_VALUE) {
   }
 
   rm(list = c(
-    "tblname_list_dd", "string_removed_pattern", "check_RID_col",
-    "DATA_DOWNLOADED_DATE", "data_update_status",
+    "tblname_list_dd", "check_RID_col", "DATA_DOWNLOADED_DATE", "data_update_status",
     tblname_list_dd$short_tblname
   ))
 }
