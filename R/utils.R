@@ -429,7 +429,7 @@ extract_codelist_datadict <- function(data_dict) {
     "NACCWRI2", "NACCWRI3", "NACCYOD"
   )
   exc_uscffsxs51 <- c("IMAGETYPE")
-  exc_ptdemog <- c("PTCOGBEG", "PTORIENT", "PTASIAN", "PTADDX")
+  exc_ptdemog <- c("PTCOGBEG", "PTORIENT", "PTADDX")
   exc_fldname <- c(
     "INCNEWPT", "EXCCRIT", "FAILEXCLU", "CatFlu_Practise",
     "CATFLU_PRACTISE", "GDS"
@@ -451,7 +451,8 @@ extract_codelist_datadict <- function(data_dict) {
         (FLDNAME %in% exc_uscffsxs51 & TBLNAME %in% "UCSFFSX51") |
         (FLDNAME %in% exc_ptdemog & TBLNAME %in% "PTDEMOG") |
         (FLDNAME %in% exc_fldname) |
-        (TBLNAME %in% c(exc_tbl, exc_tbl_add))) ~ NA,
+        (TBLNAME %in% c(exc_tbl, exc_tbl_add))) ~ NA_character_,
+      CODE %in% "" ~ NA_character_,
       TRUE ~ CODE
     ))
 

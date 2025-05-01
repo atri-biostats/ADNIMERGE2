@@ -72,12 +72,6 @@ if (EXISTED_DATADTIC) {
       tblname = str_to_upper(tblname)
     )
 
-  # Extract all FLDNAMEs for existed TBLNAMEs with coded value
-  adverse_event_col <- c(
-    str_c("AESEV", 3:10), str_c("AEDATE", 3:10),
-    str_c("AECHRON", 3:10), str_c("AECHANGE", 3:10)
-  )
-
   data_dict <- get_factor_levels_datadict(
     data_dict = DATADIC,
     nested_value = TRUE
@@ -102,9 +96,6 @@ if (EXISTED_DATADTIC) {
     # ?? Required to confirm the coded values for the following tblnames/fldnames:
     mutate(excluded_fld_name = case_when(
       (TBLNAME %in% c("RECCMEDS", "TREATDIS") |
-        (TBLNAME %in% "MRINCLUSIO" &
-          FLDNAME %in% c("DEVANOMALY", "EDEMA", "LESION", "NPH", "SURGERY")) |
-        (TBLNAME %in% "ADVERSE" & FLDNAME %in% adverse_event_col) |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
