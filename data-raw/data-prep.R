@@ -8,30 +8,59 @@ library(tidyverse)
 library(readr)
 library(assertr)
 library(rlang)
+library(cli)
 
 # Directories ----
 raw_data_dir <- "./data-raw"
-# Clear up the following directories ----
+# Clear up directories ----
 updated_datadic_dir <- file.path(raw_data_dir, "updated_datadic")
 date_stamped_dir <- file.path(raw_data_dir, "date_stamped")
 common_columns_dir <- file.path(raw_data_dir, "common_columns")
 dataset_cat_dir <- file.path(raw_data_dir, "dataset_cat")
+coded_record_dir <- file.path(raw_data_dir, "coded_records")
+derived_datadic_dir <- file.path(raw_data_dir, "derived-datadic")
 data_dir <- "./data"
-specified_dir <- c(
-  data_dir, updated_datadic_dir, date_stamped_dir,
-  common_columns_dir, dataset_cat_dir
+specified_dir_list <- c(
+  data_dir, updated_datadic_dir, date_stamped_dir, common_columns_dir,
+  dataset_cat_dir, coded_record_dir, derived_datadic_dir
 )
-lapply(specified_dir, function(i) {
-  if (dir.exists(i) == TRUE) unlink(i, recursive = TRUE)
-  message(i, " directory has been removed!")
+
+check_dir_list <- lapply(specified_dir_list, function(dir) {
+  if (dir.exists(dir) == TRUE) unlink(dir, recursive = TRUE)
+  cli::cli_alert_info(text = "{.path {dir}} deleted")
 })
 
 # Data downloaded date arg parameter ----
 # Input arg parameter ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 2) stop("Input argument must be size of 2.")
+if (length(args) != 2) {
+  cli::cli_abort(
+    message = c(
+      "Input argument {.val arg} must be size of 2. \n",
+      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+    )
+  )
+}
+
 DATA_DOWNLOADED_DATE <- as.character(args[1])
+if (!is.character(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
+  cli::cli_abort(
+    message = c(
+      "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format. \n",
+      "The value of {.var DATA_DOWNLOADED_DATE} is {.val {DATA_DOWNLOADED_DATE}}."
+    )
+  )
+}
+
 UPDATE_DATADIC <- as.logical(args[2])
+if (!is.logical(UPDATE_DATADIC) | is.na(UPDATE_DATADIC)) {
+  cli::cli_abort(
+    message = c(
+      "{.var UPDATE_DATADIC} must be a Boolean value. \n",
+      "The value of {.var UPDATE_DATADIC} is {.val {UPDATE_DATADIC}}."
+    )
+  )
+}
 
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
 usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
@@ -52,10 +81,13 @@ if (length(zip_file_list) > 0) {
   EXISTED_ZIPFILE <- TRUE
 } else {
   EXISTED_ZIPFILE <- FALSE
-  warning("No existed zip file existed in data-raw directory")
+  cli::cli_alert_warning(
+    text = "No existed zip file existed in {.val './data-raw'} directory."
+  )
 }
 
 if (EXISTED_ZIPFILE) {
+  cli::cli_alert_info(text = "Reading zipped files")
   zip_files_prefix <- str_remove_all(
     string = zip_file_list,
     pattern = "Tables\\.zip$|\\.zip$|^\\./data-raw/"
@@ -79,7 +111,7 @@ if (EXISTED_ZIPFILE) {
       output_dir = ".",
       overwrite = TRUE
     )
-    if (unzipped_file_status != TRUE) stop("Check the ", zip_file, " file")
+    if (unzipped_file_status != TRUE) cli::cli_abort(message = "Check the {.path {zip_file}}")
     ### Renamed csv files ----
     rawdata_csv_path <- str_remove_all(
       string = zip_file,
@@ -92,15 +124,19 @@ if (EXISTED_ZIPFILE) {
       remove_name_pattern = zip_name_pattern,
       action = "rename"
     )
-    if (rename_file_status != TRUE) stop("Check renaming files in ", zip_file, " file")
+    if (rename_file_status != TRUE) cli::cli_abort(message = "Check renaming files in {.path {zip_file}}")
+
     ### Create .rda dataset ----
     data_create_status <- using_use_data(
       input_dir = rawdata_csv_path,
       file_extension = ".csv"
     )
-    if (data_create_status != TRUE) stop("The .rda files are not created!")
+    if (data_create_status != TRUE) {
+      cli::cli_abort(message = "{.var .rda} of the {.path {rawdata_csv_path}} data is not created {.path './data'}")
+    }
     rm(list = c("data_create_status", "rename_file_status"))
   })
+  cli::cli_alert_success(text = "Completed unzip zipped files")
 }
 rm(list = c("zip_file_list", "zip_name_pattern"))
 
@@ -117,10 +153,13 @@ if (length(csv_file_list) > 0) {
   EXISTED_CSVFILE <- TRUE
 } else {
   EXISTED_CSVFILE <- FALSE
-  warning("No existed csv file existed in data-raw directory")
+  cli::cli_alert_warning(
+    text = "No existed csv file existed in {.path './data-raw'}."
+  )
 }
 
 if (EXISTED_CSVFILE) {
+  cli::cli_alert_info(text = "Reading csv files")
   # Removing the common date stamped file extension;
   # And any files started with ADNI prefix
   csv_name_pattern <- str_c(c(str_to_upper(prefix_pattern), date_stamped_suffix), collapse = "|")
@@ -132,14 +171,18 @@ if (EXISTED_CSVFILE) {
     remove_name_pattern = csv_name_pattern,
     action = "rename"
   )
-  if (rename_file_status != TRUE) stop("Check renaming files in ", csv_file_list, " file")
+  if (rename_file_status != TRUE) cli::cli_abort(message = "Check file rename of {.path {csv_file_list}}")
   # Store datasets in "./data" folder
   data_create_status <- using_use_data(
     input_dir = raw_data_dir,
     file_extension = ".csv"
   )
-  if (data_create_status != TRUE) stop("The .rda files are not created!")
+  if (data_create_status != TRUE) {
+    cli::cli_abort(message = "{.var .rda} of the {.path {csv_file_list}} data is not created {.path './data'}")
+  }
   rm(list = c("data_create_status", "rename_file_status"))
+
+  cli::cli_alert_success(text = "Completed importing csv files")
 }
 rm(list = c("date_stamped_suffix", "csv_file_list", "csv_name_pattern"))
 
@@ -148,14 +191,21 @@ if (dir.exists(dataset_cat_dir)) unlink(dataset_cat_dir)
 dir.create(dataset_cat_dir)
 dataset_cat <- get_dataset_cat(
   dir.path = raw_data_dir,
-  extension_pattern = "\\.csv$"
+  file_extension_pattern = "\\.csv$",
+  recursive = TRUE
 ) %>%
   group_by(file_list) %>%
   filter((n() == 1 & row_number() == 1) |
-    (n() > 1 & any(dir_cat %in% "raw_other") & !dir_cat %in% "raw_other") |
-    (n() > 1 & all(!dir_cat %in% "raw_other"))) %>%
+    (n() > 1 & any(dir_cat %in% "other_raw_dataset") & !dir_cat %in% "other_raw_dataset") |
+    (n() > 1 & all(!dir_cat %in% "other_raw_dataset"))) %>%
   mutate(dir_cat = toString(dir_cat)) %>%
-  ungroup()
+  ungroup() %>%
+  # Adjust the Neuropathology dataset
+  mutate(dir_cat = case_when(
+    file_list %in% "NEUROPATH" & dir_cat %in% "other_raw_dataset" ~ "neuropath",
+    file_list %in% "DATADIC" & dir_cat %in% "other_raw_dataset" ~ "data_dict",
+    TRUE ~ dir_cat
+  ))
 
 # See line 360
 
@@ -168,6 +218,8 @@ data_path_list <- list.files(
   recursive = FALSE
 )
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
+if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not existed")
+
 data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
 data_path_list <- data_path_list[!data_path_list %in% c(
   data_dic_path,
@@ -178,10 +230,14 @@ if (length(data_path_list) > 0) {
   UPDATE_MISSING_VALUE <- TRUE
 } else {
   UPDATE_MISSING_VALUE <- FALSE
-  warning("No existed datasets in data directory")
+  cli::cli_alert_warning(
+    text = "No existed data in the {.path './data'}"
+  )
 }
 
 if (UPDATE_MISSING_VALUE) {
+  cli::cli_alert_info(text = "Start converting values into missing value")
+
   tblname_list_dd <- tibble(file_path = data_path_list) %>%
     mutate(
       short_tblname = str_remove_all(
@@ -195,7 +251,7 @@ if (UPDATE_MISSING_VALUE) {
       tblname = str_to_upper(tblname)
     )
 
-  for (tb in tblname_list_dd$short_tblname) {
+  lapply(tblname_list_dd$short_tblname, function(tb) {
     ## Load all the dataset to .GlobalEnv
     lapply(
       tblname_list_dd %>%
@@ -208,38 +264,48 @@ if (UPDATE_MISSING_VALUE) {
     if ("RID" %in% names(dd)) check_RID_col <- TRUE else check_RID_col <- FALSE
     ## Adding common columns -----
     if (check_RID_col) {
-      message("Adding ORIGPROT and COLPROT variables in ", tb)
+      cli::cli_alert_info(
+        text = "Adding {.val ORIGPROT} and {.val COLPROT} variables in {.val {tb}} data"
+      )
       num_missing_rid <- dd %>%
         filter(is.na(RID)) %>%
         nrow()
       if (num_missing_rid > 0) {
-        message(tb, " dataset contains ", num_missing_rid, " missing RID records.")
+        cli::cli_alert_warning(
+          text = "{.val {tb}} data contains {.val {num_missing_rid}} missing RID."
+        )
       }
       dd <- dd %>%
-        create_col_protocol(data = ., phaseVar = c("Phase", "PHASE", "ProtocolID")) %>%
+        create_col_protocol(.data = ., phaseVar = c("Phase", "PHASE", "ProtocolID")) %>%
         {
           if (num_missing_rid == 0) {
-            create_orig_protocol(data = .)
+            create_orig_protocol(.data = .)
           } else {
             (.)
           }
         }
     } else {
-      message("ORIGPROT and COLPROT are not addedd in ", tb)
+      cli::cli_alert_danger(
+        text = "{.val ORIGPROT} and {.val COLPROT} have not been addedd in {.val {tb}} data."
+      )
     }
-    # Replacing `-4` as missing value -----
-    message("Convert `-4` values as missing values in ", tb)
+    # Replacing `-4` and `-1` as missing value -----
+    cli::cli_alert_info(
+      text = "Convert {.val -4} values into missing values in {.val {tb}} data"
+    )
     dd <- convert_to_missing_value(
-      data = dd,
+      .data = dd,
       col_name = names(dd),
       value = "-4",
       missing_char = NA,
       phase = NULL
     )
 
-    message("Convert `-1` values as missing values in ", tb, " for ADNI1 phase")
+    cli::cli_alert_info(
+      text = "Convert {.val -1} values into missing values ADNI1 phase in {.val {tb}} data"
+    )
     dd <- convert_to_missing_value(
-      data = dd,
+      .data = dd,
       col_name = names(dd),
       value = "-1",
       missing_char = NA,
@@ -252,20 +318,19 @@ if (UPDATE_MISSING_VALUE) {
       edit_type = "create",
       run_script = TRUE
     )
-    if (data_update_status != TRUE) stop("The ", tb, " has not been updated!")
+    if (data_update_status != TRUE) cli::cli_abort(message = "{.val {tb}} has not been updated")
+    rm(list = c("tb", "dd", "check_RID_col", "data_update_status"))
+  })
 
-    rm(list = c("tb", "dd"))
-  }
-
-  rm(list = c(
-    "tblname_list_dd", "check_RID_col", "DATA_DOWNLOADED_DATE", "data_update_status",
-    tblname_list_dd$short_tblname
-  ))
+  rm(list = c("tblname_list_dd", "DATA_DOWNLOADED_DATE", tblname_list_dd$short_tblname))
+  cli::cli_alert_success(text = "Completed converting values into missing value")
 }
 
-# Remove date stamped file extension -----
+# Remove date stamp from file extension -----
+
 ## Some of the imaging dataset might have a date stamped file extension
-## These dataset will be copied to `./data-raw/date_stamped` directory
+## A summary of dataset list will be copied to `./data-raw/date_stamped` directory
+cli::cli_alert_info(text = "Start removing date stamped from file name")
 data_path_list <- list.files(
   path = data_dir,
   pattern = "\\.rda$",
@@ -283,7 +348,7 @@ dataset_list_dd <- tibble(file_path = data_path_list) %>%
   mutate(short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern)) %>%
   filter(str_detect(string = file_path, pattern = date_stamped_pattern) == TRUE) %>%
   {
-    if (nrow(.) > 1) {
+    if (nrow(.) > 0) {
       mutate(.,
         updated_file_path = str_remove_all(string = file_path, pattern = date_stamped_pattern),
         stamped_date = str_extract(string = file_path, pattern = date_stamped_pattern)
@@ -357,10 +422,15 @@ if (nrow(dataset_list_dd) > 0) {
     pattern = "^\\./data/"
   )
   if (any(dataset_list_dd$updated_short_tblname %in% updated_data_path_list)) {
-    stop("Check for duplicated files in `./data` before adjusting date stamped extension!")
+    cli::cli_abort(
+      message = paste0(
+        "Required to check for duplicated files in {.val `./data`}",
+        " prior removing the date stamped file extension"
+      )
+    )
   }
 
-  for (tbl_name in dataset_list_dd$file_path) {
+  lapply(dataset_list_dd$file_path, function(tbl_name) {
     cur_file_path <- dataset_list_dd %>%
       filter(file_path == tbl_name) %>%
       pull(file_path)
@@ -390,24 +460,31 @@ if (nrow(dataset_list_dd) > 0) {
       run_script = TRUE
     )
     if (data_update_status != TRUE) {
-      stop("The date stamped file extension has not been removed from ", tbl_name)
+      cli::cli_abort(
+        message = paste0(
+          "The date stamped extension has not been removed from {.path {cur_file_path}}"
+        )
+      )
     }
 
     # Copy dataset with a date stamped file extension from "./data" to "./data-raw/date_stamped/" folder
     # file.copy(from = cur_file_path, to = new_file_path, overwrite = TRUE)
-    message("Removed date stamped file extension from ", cur_short_tblname)
+    cli::cli_alert_success(
+      text = "Removed date stamped file extension from {.val {cur_short_tblname}}"
+    )
     ## Remove objects from the .GlobalEnv
     rm(list = c(
       "tb", "dd", "cur_file_path", "new_file_path", "cur_short_tblname",
       "cur_updated_short_tblname", "data_update_status",
       cur_short_tblname
     ))
-  }
+  })
 
   # Remove already stored dataset with a date stamped file extension from './data/' directory
   file.remove(dataset_list_dd$file_path)
 }
 rm(list = c("date_stamped_pattern", "dataset_list_dd"))
+cli::cli_alert_success(text = "Completed removing date stamped from file name")
 
 # Checking for common columns "COLPROT" and "ORIGPROT" across all dataset -----
 data_path_list <- list.files(
@@ -429,6 +506,7 @@ if (length(data_path_list) > 0) {
   CHECK_COMMON_COL <- FALSE
 }
 if (CHECK_COMMON_COL) {
+  cli::cli_alert_info(text = "Start adding common variables")
   dataset_not_contains_common_col <- lapply(data_path_list, function(tblname) {
     common_cols <- c("ORIGPROT", "COLPROT")
     short_tblname <- str_remove_all(
@@ -438,7 +516,7 @@ if (CHECK_COMMON_COL) {
     lapply(tblname, load, .GlobalEnv)
     # message("Checking for common cols (ORIGPROT and COLPROT) in ", short_tblname)
     status <- check_colnames(
-      data = get(short_tblname),
+      .data = get(short_tblname),
       col_names = common_cols,
       strict = TRUE,
       stop_message = FALSE
@@ -494,14 +572,15 @@ if (CHECK_COMMON_COL) {
       select(TBLNAME = short_tblname, CONTAIN_COMMON_COLS = contain_common_cols),
     file = file.path(common_columns_dir, "dataset_list_common_columns.csv")
   )
+  cli::cli_alert_success(text = "Completed adding common variables")
 }
 
 # Update DATADIC -----
 ## Prepare the data dictionary dataset ----
 ### Some of the datasets might have an additional file extension or they are study phase-specific
 ### E.g. "_V1$", "_V2$", "^ADNI2_", "_ADNI1$", "_ADNIG023$"
-### Currently to update the DATADIC file manually (required confirmation!)
-if (exists("DATADIC") == FALSE) {
+### Currently to update the DATADIC file manually
+if (!exists("DATADIC")) {
   load(data_dic_path)
   # Adjust for coded values of diagnostics summary in ADNI1GO2
   temp_DATADIC_dxsum <- bind_rows(
@@ -517,7 +596,7 @@ if (exists("DATADIC") == FALSE) {
       filter(TBLNAME %in% c("VISITS", "DATADIC")) %>%
       mutate(CRFNAME = case_when(
         is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "ADNI study visit code across phases",
-        is.na(CRFNAME) & TBLNAME %in% "DATADIC" ~ "Data Dictionary Dataset",
+        is.na(CRFNAME) & TBLNAME %in% "DATADIC" ~ paste0("Data Dictionary Dataset", ifelse(UPDATE_DATADIC, " - Updated", "")),
         TRUE ~ CRFNAME
       )) %>%
       filter(TBLNAME %in% "VISITS" |
@@ -531,11 +610,39 @@ if (exists("DATADIC") == FALSE) {
     filter(!TBLNAME %in% "DATADIC") %>%
     bind_rows(temp_DATADIC_dxsum)
 } else {
-  message("`DATADIC` is not found and UPDATED_DATADIC will not be created.")
+  cli::cli_alert_warning(
+    text = "{.var DATADIC} is not found in the list and {.var UPDATED_DATADIC} will not be created."
+  )
   UPDATE_DATADIC <- FALSE
 }
 
+if (!exists("REMOTE_DATADIC")) {
+  load(file.path("./data", "REMOTE_DATADIC.rda"))
+  REMOTE_DATADIC <- REMOTE_DATADIC %>%
+    mutate(across(everything(), as.character))
+
+  REMOTE_DATADIC <- REMOTE_DATADIC %>%
+    bind_rows(
+      tibble(
+        CRFNAME = "Remote Collected Data Dictionary Dataset",
+        TBLNAME = "REMOTE_DATADIC",
+        FLDNAME = names(REMOTE_DATADIC)
+      )
+    )
+
+  remote_data_dict_status <- use_data_modified(
+    dataset_name = "REMOTE_DATADIC",
+    dataset = REMOTE_DATADIC,
+    edit_type = "create",
+    run_script = TRUE
+  )
+  if (remote_data_dict_status != TRUE) {
+    cli::cli_abort(message = "{.val REMOTE_DATADIC} has not been updated")
+  }
+}
+
 if (UPDATE_DATADIC) {
+  cli::cli_alert_info(text = "Updating DATADIC")
   # Assumed the same data dictionary for those paired dataset
   # ?? Required confirmation
   temp_DATADIC <- DATADIC %>%
@@ -565,6 +672,7 @@ if (UPDATE_DATADIC) {
         filter(TBLNAME %in% "UCD_WMH_V1") %>%
         mutate(TBLNAME = "UCD_WMH_V2")
     )
+  cli::cli_alert_success(text = "Completed updating DATADIC")
 }
 
 ## Add a description for common columns: "ORIGPROT" or "COLPROT" ----
@@ -591,6 +699,7 @@ if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
   )
 
   for (tblname in unique(dataset_list_dd$short_tblname)) {
+    # Add notes info cli_alter
     tblname_common_col <- dataset_list_dd %>%
       filter(short_tblname %in% tblname) %>%
       assert_uniq(common_cols) %>%
@@ -604,7 +713,7 @@ if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
 
     UPDATED_DATADIC <- common_cols_description_datadic(
       tblname = tblname,
-      data_dict = UPDATED_DATADIC,
+      .datadic = UPDATED_DATADIC,
       fldname = tblname_common_col,
       description = description_text
     )
@@ -623,4 +732,15 @@ if (UPDATE_DATADIC) {
     list = "UPDATED_DATADIC",
     file = file.path(updated_datadic_dir, "UPDATED_DATADIC.rda")
   )
+} else {
+  data_dict_status <- use_data_modified(
+    dataset_name = "DATADIC",
+    dataset = DATADIC,
+    edit_type = "create",
+    run_script = TRUE
+  )
+  if (data_dict_status != TRUE) {
+    cli::cli_abort(message = "{.val DATADIC} has not been updated")
+  }
+  cli::cli_alert_success(text = "{.val DATADIC} has been updated")
 }

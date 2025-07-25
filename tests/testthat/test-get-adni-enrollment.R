@@ -2,10 +2,11 @@ library(testthat)
 library(tidyverse)
 library(assertr)
 
-# PET Scan Tracer Type in ADNI ----
+# Test ADNI enrollment function ----
 test_that("Check adni_enrollment function", {
   # Enrollment summary based on registry
-  enroll_summary <- adni_enrollment(data_registry = REGISTRY) %>%
+  enroll_summary <- REGISTRY %>%
+    get_adni_enrollment(.registry = .) %>%
     verify(ORIGPROT == COLPROT) %>%
     group_by(ORIGPROT) %>%
     count() %>%
@@ -24,7 +25,7 @@ test_that("Check adni_enrollment function", {
   # Enrollment based on ADSL
   enroll_summary_adsl <- ADSL %>%
     mutate(ORIGPROT = as.character(ORIGPROT)) %>%
-    filter(ENRLFL %in% "Yes") %>%
+    filter(ENRLFL %in% "Y") %>%
     group_by(ORIGPROT) %>%
     count() %>%
     ungroup() %>%
@@ -41,5 +42,4 @@ test_that("Check adni_enrollment function", {
     expected = enroll_summary,
     info = "Check adni_enrollment function based on registry and ADSL records"
   )
-
 })

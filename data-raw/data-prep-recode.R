@@ -1,8 +1,11 @@
 # Data preparation script setup ----
 source(file.path(".", "tools", "data-prepare-utils.R"))
-source(file.path(".", "r", "utils.R"))
+source(file.path(".", "R", "utils.R"))
+source(file.path(".", "R", "checks-assert.R"))
 # Libraries ----
 library(tidyverse)
+library(assertr)
+library(cli)
 
 # Directory ----
 data_dir <- "./data"
@@ -15,13 +18,29 @@ data_path_list <- list.files(
   recursive = FALSE
 )
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
+data_dic_path_remote <- file.path(data_dir, "REMOTE_DATADIC.rda")
 updated_data_dic_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATADIC.rda")
 data_path_list <- data_path_list[!data_path_list == data_dic_path]
 
 # Input Args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 1) stop("Input argument must be size of 1.")
+if (length(args) != 1) {
+  cli::cli_abort(
+    message = c(
+      "Input argument {.val arg} must be size of 1. \n",
+      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+    )
+  )
+}
 USE_UPDATED_DATADIC <- as.logical(args)
+if (!is.logical(USE_UPDATED_DATADIC) | is.na(USE_UPDATED_DATADIC)) {
+  cli::cli_abort(
+    message = c(
+      "{.var USE_UPDATED_DATADIC} must be a Boolean value. \n",
+      "The value of {.var USE_UPDATED_DATADIC} is {.val {USE_UPDATED_DATADIC}}."
+    )
+  )
+}
 
 if (USE_UPDATED_DATADIC) {
   # To use manually updated data dictionary, see line 390-434 & 479-489 in `./data-raw/data_prep.R`
@@ -39,9 +58,16 @@ if (file.exists(cur_data_dict_path)) {
     DATADIC <- UPDATED_DATADIC
     rm(list = "UPDATED_DATADIC", envir = .GlobalEnv)
   }
+  load(file = data_dic_path_remote, envir = .GlobalEnv)
+  if (!exists("REMOTE_DATADIC")) {
+    REMOTE_DATADIC <- tibble(PHASE = NA_character_) %>%
+      na.omit()
+  }
 } else {
   EXISTED_DATADTIC <- FALSE
-  warning("No existed data dictionary `", cur_data_dict_path, "`!")
+  cli_alert_warning(
+    text = "No existed data dictionary with file name {.val {cur_data_dict_path}}"
+  )
   DECODE_VALUE <- FALSE
 }
 
@@ -50,12 +76,14 @@ if (file.exists(cur_data_dict_path)) {
 if (EXISTED_DATADTIC) {
   # Expand DATADIC for combined phases
   DATADIC <- DATADIC %>%
+    # Add a DATADIC of the remote digital cohort
+    bind_rows(REMOTE_DATADIC) %>%
     mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]"))
 
   concat_phase <- unique(DATADIC$PHASE)[!is.na(unique(DATADIC$PHASE))]
   concat_phase <- concat_phase[str_detect(concat_phase, ",")]
   DATADIC <- expand_data_dict(
-    data_dict = DATADIC,
+    .datadic = DATADIC,
     concat_phase = concat_phase,
     concat_char = ","
   )
@@ -73,26 +101,27 @@ if (EXISTED_DATADTIC) {
     )
 
   data_dict <- get_factor_levels_datadict(
-    data_dict = DATADIC,
+    .datadic = DATADIC,
     nested_value = TRUE
   ) %>%
     # Add "0" prefix character for FLDNAME coded value that contains "0" value
     add_code_prefix(
-      data_dict = .,
+      .datadic = .,
       prefix_char = "0",
       nested_value = TRUE,
       position = "first",
       add_char = NULL
     ) %>%
     add_code_prefix(
-      data_dict = .,
+      .datadic = .,
       prefix_char = "0",
       nested_value = TRUE,
       position = "last",
       add_char = "."
     ) %>%
+    datadict_as_tibble() %>%
     filter(TBLNAME %in% tblname_list_dd$tblname) %>%
-    filter(class_type == "factor") %>%
+    filter(class_type %in% "factor") %>%
     # ?? Required to confirm the coded values for the following tblnames/fldnames:
     mutate(excluded_fld_name = case_when(
       (TBLNAME %in% c("RECCMEDS", "TREATDIS") |
@@ -104,19 +133,27 @@ if (EXISTED_DATADTIC) {
     ))
 
   dataset_data_dict <- data_dict %>%
-    filter(is.na(excluded_fld_name))
+    filter(is.na(excluded_fld_name)) %>%
+    set_datadict_tbl()
 
   unique_adni_phase <- unique(dataset_data_dict$PHASE)[!is.na(unique(dataset_data_dict$PHASE))]
 
   if (length(unique_adni_phase) > 0 & any(!unique_adni_phase %in% adni_phase())) {
-    stop("Additional ADNI phase coded values is presented in the data dictionary `DATADIC`.")
+    cli_abort(
+      message = c(
+        "Additional ADNI phase coded values is presented in {.var DATADIC} data dictionary. \n",
+        "The value must be {.val {adni_phase()}}."
+      )
+    )
   }
 
   if (nrow(dataset_data_dict) > 0) {
     DECODE_VALUE <- TRUE
   } else {
     DECODE_VALUE <- FALSE
-    warning("No existed dataset name with coded values in the data dictionary `DATADIC`.")
+    cli_alert_warning(
+      text = "No existed data conatins variables with coded values"
+    )
   }
 }
 
@@ -132,8 +169,9 @@ if (DECODE_VALUE) {
     PHASE_CODES = list()
   )
 
+  # Replace with function ?
   for (tb in seq_len(nrow(coded_tblname))) {
-    note_prefix <- str_c(tb, "/", nrow(coded_tblname), ": ")
+    note_prefix <- str_c(tb, "/", nrow(coded_tblname), ":")
     cur_tblname_dd <- coded_tblname %>% filter(row_number() == tb)
     cur_tblname_full <- cur_tblname_dd %>% pull(file_path)
     cur_tblname_short <- cur_tblname_dd %>% pull(short_tblname)
@@ -143,7 +181,7 @@ if (DECODE_VALUE) {
     lapply(cur_tblname_full, load, .GlobalEnv)
 
     unique_tb_fldname <- get_factor_fldname(
-      data_dict = dataset_data_dict,
+      .datadic = dataset_data_dict,
       tbl_name = cur_tblname,
       dd_fldnames = colnames(get(cur_tblname_short))
     )
@@ -159,7 +197,12 @@ if (DECODE_VALUE) {
     )
 
     if (length(unique_tb_fldname) == 0) {
-      message(note_prefix, "No existed unique columns with coded value in ", cur_tblname_short, " dataset.")
+      cli_alert_info(
+        text = paste0(
+          "{.val {.emph {note_prefix}}} No existed unique columns with ",
+          "coded values in {.val {cur_tblname_short}} data"
+        )
+      )
       # Update the code fldname records
       coded_fldname_records <- coded_fldname_records %>%
         mutate(STATUS = case_when(
@@ -171,14 +214,14 @@ if (DECODE_VALUE) {
 
     if (length(unique_tb_fldname) > 0) {
       assign("dd", get(cur_tblname_short))
-      codelist <- collect_values(
-        data_dict = dataset_data_dict,
+      codelist <- collect_value_mapping(
+        .datadic = dataset_data_dict,
         tbl_name = cur_tblname,
         all_fld_name = unique_tb_fldname
       )
 
       # Convert listed code values into data.frame
-      convert_codelist <- convert_collect_values(
+      convert_codelist <- convert_value_mapping(
         coded_values = codelist,
         tbl_name = cur_tblname
       ) %>%
@@ -193,24 +236,42 @@ if (DECODE_VALUE) {
         filter(!TBLNAME %in% cur_tblname) %>%
         bind_rows(convert_codelist)
 
+      pre_phase_vars <- c("COLPROT", "PHASE", "Phase", "ProtocolID")
       phaseVar <- get_cols_name(
-        data = dd,
-        col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID")
+        .data = dd,
+        col_name = pre_phase_vars
       )
 
       if (!is.na(phaseVar)) {
-        message(note_prefix, "Start replacing values of dataset: ", cur_tblname_short)
-        dd <- data_value_replacement(
-          data = dd,
+        cli_alert_info(
+          text = paste0(
+            "{.val {.emph {note_prefix}}} Start replacing coded values in ",
+            "{.val {cur_tblname_short}} data"
+          )
+        )
+        dd <- replace_values_dataset(
+          .data = dd,
           phaseVar = phaseVar,
           input_values = codelist
         )
-        message(" > ", note_prefix, "Replaced values of dataset: ", cur_tblname_short)
+        cli_alert_success(
+          text = paste0(
+            "{.val {.emph {note_prefix}}} Completed replacing coded values in ",
+            "{.val {cur_tblname_short}} data"
+          )
+        )
       }
 
       if (is.na(phaseVar)) {
-        warning(note_prefix, "No existed `COLPROT/PHASE/Phase/ProtocolID` columns in the ", cur_tblname_short, " dataset.")
-        message("The ", cur_tblname_short, " has not been updated!")
+        cli_alert_warning(
+          text = paste0(
+            "{.val {.emph {note_prefix}}} No existed either of the {.val {pre_phase_vars}} columns in ",
+            "{.val {cur_tblname_short}} data"
+          )
+        )
+        cli_alert_info(
+          text = paste0("{.val {cur_tblname_short}} data has not been updated")
+        )
         # Update the code fldname records
         coded_fldname_records <- coded_fldname_records %>%
           mutate(STATUS = case_when(
@@ -226,9 +287,10 @@ if (DECODE_VALUE) {
         edit_type = "create",
         run_script = TRUE
       )
-      if (data_update_status != TRUE) stop("The ", cur_tblname_short, " has not been updated!")
-
-      message(" >> ", cur_tblname_short, " dataset has been removed from .GlobalEnv.")
+      if (data_update_status != TRUE) cli::cli_abort(message = "{.val {cur_tblname_short}} has not been updated")
+      cli_alert_success(
+        text = paste0("{.val {cur_tblname_short}} data has been removed from .GlobalEnv.")
+      )
     }
 
     rm(list = c("dd", "codelist", "cur_tblname_dd", "cur_tblname_short", "cur_tblname_full", "cur_tblname"))
@@ -249,7 +311,9 @@ if (DECODE_VALUE) {
   # Store the procedure summary in csv files
   coded_records_dir <- file.path("./data-raw", "coded_records")
   if (dir.exists(coded_records_dir)) {
-    warning(coded_records_dir, " directory over-written!")
+    cli_alert_warning(
+      text = paste0("{.val {coded_records_dir}} is over-written")
+    )
     unlink(x = coded_records_dir, recursive = FALSE)
   }
   dir.create(coded_records_dir)
@@ -260,3 +324,5 @@ if (DECODE_VALUE) {
 
   rm(list = c("UPDATED_DATADIC", "DATADIC", "dataset_data_dict", "coded_tblname", "tblname_list_dd"))
 }
+
+cli_alert_success(text = paste0("Completed de-coding values"))
