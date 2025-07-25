@@ -5,23 +5,42 @@ template:
 
 reference:
   - title: ADNI Raw Datasets
+    desc: > 
+       All Alzheimer’s Disease Neuroimaging Initiative (ADNI) study data as 
+       shared at <https://adni.loni.usc.edu/>.
+  - subtitle: Data Dictionary - DATADIC
+    contents:
+    - has_keyword("data_dict")
+    
   - subtitle: Subject Characteristics
+    desc: > 
+         Includes subject demographics, and family history 
     contents:
     - has_keyword("subject_characteristics")
     
   - subtitle: Enrollment
+    desc: > 
+          Includes amyloid status and amyloid disclosure results, and enrollment-related dataset
     contents:
     - has_keyword("enrollment")
     
-  - subtitle: Medical History, Initial Health History, Adverse Events
+  - subtitle: Medical History
+    desc: > 
+         Includes adverse events, concurrent medications (drugs), medical history/ 
+         initial health assessments, and phyiscal/neurological exams
     contents:
     - has_keyword("medical_history")
 
   - subtitle: Assessments
+    desc: > 
+         Includes clinical diagnostics summary, neuropsychological assessment results, and 
+         non-clinical assessments such as result from the Brain Health Registry (BHR)
     contents:
     - has_keyword("assessments")
   
   - subtitle: Imaging
+    desc: > 
+         Includes image acquisition, image analysis results, image quality for both MIR and PET
     contents:
     - has_keyword("imaging")   
     
@@ -29,15 +48,29 @@ reference:
     contents:
     - has_keyword("biospecimen")
 
+  - subtitle: Neuropathology Results
+    contents:
+    - has_keyword("neuropath")
+
+  - subtitle: Remotely Collected Datasets
+    desc: > 
+       Remotely collected data only avaliable in ADNI4 study phase
+    contents:
+    - has_keyword("remotely_collected_data")
+
   - subtitle: Other Raw Datasets
     contents:
     - has_keyword("other_raw_dataset")
     
   - title: ADNI Derived Datasets
+    desc: > 
+      Derived datasets that are grenerated based on the package vignettes.
     contents:
     - has_keyword("derived_dataset")
   
   - title: ADNI Specific Functions
+    desc: > 
+       Functions that are created specifically for the ADNI study data
   - subtitle: Enrollment
     contents:
     - has_keyword("adni_enroll_fun")
@@ -46,24 +79,34 @@ reference:
     contents:
     - has_keyword("adni_procotol_fun")
     
-  - subtitle: Data Dictionary - DATADIC
+  - subtitle: Data Dictionary
     contents:
     - has_keyword("adni_datadic_fun")
     - has_keyword("adni_replace_fun")
+    - has_keyword("adni_id_fun")
     
   - subtitle: Scoring Functions
     contents:
     - has_keyword("adni_scoring_fun")
   
   - title: Utility Functions
+    desc: > 
+      Functions that can be used for general purpose
     contents:
     - has_keyword("utils_fun")
 
 navbar:
   structure:
-    left:  [intro, reference, articles]
+    left:  [intro, reference, articles, news]
     right: [search, github, lightswitch]
   components:
+    intro:
+      text: Get Started
+      href: articles/ADNIMERGE2.html
+    news: 
+      one_page: true
+      text: Versions
+      href: news/index.html
     reference:
       text: Reference
       href: reference/index.html
@@ -78,18 +121,19 @@ navbar:
       - text: Building an R Package from Raw Dataset
         href: articles/ADNIMERGE2-Package-Building.html
       - text: -------
-      - text: Metadata Specs
-      - text: ADNIMERGE2 Analysis Metadata Specs
-        href: articles/ADNIMERGE2-Analysis-Meta-Specs.html
-      - text: -------
-      - text: Derived/Analysis Ready Data
+      - text: Derived Data
       - text: ADNIMERGE2 Derived Data
         href: articles/ADNIMERGE2-Derived-Data.html
-      - text: ADNIMERGE2 Analysis Ready Data
+      - text: ADNIMERGE2 Analysis Metadata Specs
+        href: articles/ADNIMERGE2-Analysis-Meta-Specs.html
+      - text: ADNIMERGE2 Analysis Data
         href: articles/ADNIMERGE2-Analysis-Data.html
       - text: -------
+      - text: ADNI Summaries
       - text: ADNI Enrollment
         href: articles/ADNI-Enrollment.html
+      - text: ADNI Longitudinal Summaries
+        href: articles/ADNI-Longitudinal.html
 footer:
   structure: 
     left: developed_by

@@ -17,8 +17,13 @@ This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (A
 
 ## Package Access
 
-The ADNI study R data package, `r pkgName`, will be available on the same data sharing platform at [LONI website](https://adni.loni.usc.edu/). To request access of the R package, required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement. Details of the Data Use Agreement can be found [here](https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf).
+The ADNI study R data package, `r pkgName`, will be available on the data sharing platform at [LONI website](https://adni.loni.usc.edu/). To request access of the R package, it is required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement [here](https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf).
 
 ## Installation 
 
 To install the package locally, run ``r paste0("install.packages(\"path/to/", pkgFilename, "\", repos = NULL, type = \"source\")")``.
+
+## Usage 
+
+Learn more about ``r pkgName`` at [`Get Started`](./articles/ADNIMERGE2.html) page
+

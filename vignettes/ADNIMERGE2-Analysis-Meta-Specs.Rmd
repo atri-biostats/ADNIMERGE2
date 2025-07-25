@@ -22,8 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-```{r internal-setup-function, echo = FALSE, include = FALSE}
+```{r utils, echo = FALSE, include = FALSE}
 # Data print function
 datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
   require(DT)
@@ -59,8 +58,8 @@ check_inconsistent_common <- function(metacore, show_mismatch = FALSE) {
   require(tibble)
   require(tidyr)
 
-  if (!is_metacore(metacore)) stop("metacore must be a R6-Wrapper object.")
-  if (!is.logical(show_mismatch)) stop("show_mismatch must be a boolen value.")
+  if (!is_metacore(metacore)) stop("`metacore` must be a R6-Wrapper object.")
+  if (!is.logical(show_mismatch)) stop("`show_mismatch` must be a boolen value.")
 
   # Common variable list
   common_var <- metacore$var_spec %>%
@@ -120,22 +119,23 @@ check_inconsistent_common <- function(metacore, show_mismatch = FALSE) {
       stop("Mismatch common variables, set `show_mismatch = TRUE`")
     }
   }
-  warning("No mismatch common variables")
+  message("No mismatch common variables")
   return(NULL)
 }
 ```
 
 # Introduction
 
-This document describes creating a metadata specification using [PHARMAVERSE](https://pharmaverse.org/) workflow. The matadata-specs can be used to generate analysis ready dataset (i.e., ADaM). The matadata-specs required standardized derived dataset, such as SDTM, as input. For illustration purpose, a metadata-specs for following selected analysis ready dataset will be created.
+This document describes creating a metadata specification using [PHARMAVERSE](https://pharmaverse.org/) workflow. The matadata-specs can be used to create analysis ready dataset (i.e., ADaM). The matadata-specs required standardized derived dataset, such as SDTM, as input. For illustration purpose, a metadata-specs for following selected analysis ready dataset will be created.
 
 * Subject-Level Analysis Dataset - ADSL
 * Adverse Events Analysis Dataset - ADAE
 * Analysis Dataset of Questionnaires - ADQS
+* Analysis Dataset of Clinical Classification - ADRS
 
-The metadata-specs is created using the [metacore](https://atorus-research.github.io/metacore/) R package.
+[metacore](https://atorus-research.github.io/metacore/) R package is used to create the metadata-specs.
  
-# Load required R packages {.unlisted}
+# Load Required R packages
 
 ```{r setup-libraries, class.source = NULL, echo = TRUE}
 library(tidyverse)
@@ -192,24 +192,112 @@ adsl_dic <- bind_rows(
   c(variable = "DTHDTF", type = "text", length = "1", label = "Date of Death Imputation Flag", origin = "Derived", derivation = "ADSL.DTHDT if days or month missing."),
   c(
     variable = "EDUC", type = "float", length = "2", label = "Education", sig_dig = 1, origin = "Derived",
-    derivation = "SC.SCSTRESN where SC.SCTESTCD=EDUCAT and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+    derivation = "SC.SCSTRESN where SC.SCTESTCD=EDUCAT and SCBLFL = 'Y'."
   ),
   c(
     variable = "MARISTAT", type = "text", length = "25", label = "Marital Status", origin = "Derived",
-    derivation = "SC.SCORRES where SC.SCTESTCD=PTMARRY and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+    derivation = "SC.SCORRES where SC.SCTESTCD=PTMARRY and SCBLFL = 'Y'."
   ),
   c(
     variable = "BMI", type = "float", length = "3", label = "Body Mass Index", sig_dig = 1, origin = "Derived",
-    derivation = "Compute from VS.VSSTRESN where VS.VSTESTCD=WEIGHT and VS.VSTESTCD=HEIGHT, and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+    derivation = "Compute from VS.VSSTRESN where VS.VSTESTCD=WEIGHT and VS.VSTESTCD=HEIGHT, and VSBLFL = 'Y'."
   ),
   c(variable = "BMIBLU", type = "text", length = "8", label = "Body Mass Index Unit", code_id = "BMIBLU", origin = "Assigned"),
   c(
     variable = "DX", type = "text", length = "40", label = "Baseline Diagnostics Status", common = TRUE, code_id = "DX", origin = "Derived",
-    derivation = "RS.RSSTRESC where RS.RSTESTCD=DX and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+    derivation = "RS.RSSTRESC where RS.RSTESTCD=DX and RSBLFL = 'Y'."
   ),
   c(
     variable = "AMYSTAT", type = "text", length = "20", label = "Baseline Amyloid Status", code_id = "AMYSTAT",
-    origin = "Predecessor", derivation = "NV.NVSTRESC where NV.NVTESTCD=AMYSTAT and VISITNUM maximum of 1 and/or before or on the enrollment date RFSTDTC."
+    origin = "Predecessor", derivation = "NV.NVSTRESC where NV.NVCAT=AMYLOIDPET, NV.NVSCAT=FBB-6MM, NV.NVTESTCD=AMYSTAT, and NVBLFL = 'Y'."
+  ),
+  c(
+    variable = "ADASTT11", type = "float", length = "2", label = "Baseline ADAS-Cog Item 11 Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=ADASTT11 and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "ADASTT13", type = "float", length = "2", label = "Baseline ADAS-Cog Item 13 Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=ADASTT13 and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "CDGLOBAL", type = "float", length = "1", label = "Baseline CDR Global Score", sig_dig = 1,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=CDGLOBAL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "CDRSB", type = "float", length = "2", label = "Baseline CDR Sum of Boxes Score", sig_dig = 1,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=CDRSB and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "ECOGPTTT", type = "float", length = "2", label = "Baseline Everyday Cognition - Pt Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=ECOGPTTT and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "ECOGSPTT", type = "float", length = "2", label = "Baseline Everyday Cognition - Sp Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=ECOGSPTT and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "FAQTOTAL", type = "float", length = "2", label = "Baseline FAQ Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=FAQTOTAL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "FCISCORE", type = "float", length = "1", label = "Baseline FCI Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=FCISCORE and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "GDTOTAL", type = "float", length = "2", label = "Baseline GDS Score", sig_dig = 0,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=GDTOTAL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "MMSCORE", type = "float", length = "2", label = "Baseline MMSE Score", sig_dig = 0,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MMSCORE and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "MOCA", type = "float", length = "2", label = "Baseline MOCA Score", sig_dig = 0,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MOCA and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "NPITOTAL", type = "float", length = "2", label = "Baseline NPI Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=NPITOTAL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "NPIQTOTL", type = "float", length = "1", label = "Baseline NPIQ Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=NPIQTOTL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "DIGITSCR", type = "float", length = "2", label = "Baseline DIGIT Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=DIGITSCR and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "LDELTOTL", type = "float", length = "2", label = "Baseline LDEL Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=LDELTOTL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "LIMMTOTL", type = "float", length = "2", label = "Baseline LIMM Total Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=LIMMTOTL and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "RAVLTFG", type = "integer", length = "2", label = "Baseline RAVLT Forgetting Score",
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=RAVLTFG and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "RAVLTFGP", type = "float", length = "2", label = "Baseline RAVLT Percent Forgetting Score", sig_dig = 2,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=RAVLTFG and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "RAVLTIMM", type = "integer", length = "2", label = "Baseline RVAL Immediate Score",
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=RAVLTIMM and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "RAVLTLRN", type = "integer", length = "2", label = "Baseline RVAL Learning Score",
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=RAVLTLRN and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "TRABSCOR", type = "integer", length = "3", label = "Baseline Trails B Score",
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=TRABSCOR and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "APOE", type = "text", length = "8", label = "APOE Genotype",
+    origin = "Predecessor", derivation = "GF.GFSTRESC"
   )
 ) %>%
   as_tibble() %>%
@@ -362,7 +450,6 @@ adae_dic <- bind_rows(
   )
 ```
 
-
 ```{r prep-adqs-spec, class.source = NULL}
 # ADQS Specs ----
 adqs_dic <- bind_rows(
@@ -391,20 +478,20 @@ adqs_dic <- bind_rows(
   c(variable = "AVISITN", type = "integer", length = "3", label = "Analysis Visit (N)", origin = "Derived"),
   c(variable = "VISIT", type = "text", length = "10", label = "Visit Name", origin = "Predecessor", derivation = "QS.VISIT"),
   c(variable = "VISITNUM", type = "integer", length = "3", label = "Visit Number", origin = "Predecessor", derivation = "QS.VISITNUM"),
-  c(variable = "ADY", type = "integer", length = "40", label = "Analysis Relative Day", origin = "Derived", derivation = "ADADAS.ENRLDT - ADADAS.ADT"),
+  c(variable = "ADY", type = "integer", length = "40", label = "Analysis Relative Day", origin = "Derived", derivation = "ADQS.ENRLDT - ADQS.ADT"),
   c(variable = "ADT", type = "date", length = "10", label = "Analysis Date", format = "DATE10.", origin = "Predecessor", derivation = "QS.QSDTC"),
   c(variable = "PARAM", type = "text", length = "200", label = "Parameter", origin = "Predecessor", derivation = "QS.QSTEST"),
   c(variable = "PARAMCD", type = "text", length = "40", label = "Parameter Code", code_id = "PARAMCD", origin = "Predecessor", derivation = "QS.QSTESTCD"),
   c(variable = "PARAMN", type = "integer", length = "10", label = "Parameter (N)", code_id = "PARAMN", origin = "Derived", derivation = "Derived from ADQS.PARAMCD"),
   c(variable = "AVAL", type = "float", length = "10", label = "Analysis Value", sig_dig = 5, origin = "Predecessor", derivation = "QS.QSSTRESN"),
   c(variable = "AVALC", type = "text", length = "40", label = "Analysis Value (C)", origin = "Predecessor", derivation = "QS.QSSTRESC"),
-  c(variable = "BASE", type = "float", length = "10", label = "Baseline Value", sig_dig = 5, origin = "Derived", derivation = "QS.QSSTRSEN if QS.QSBLFL is 'Y'"),
+  c(variable = "BASE", type = "float", length = "10", label = "Baseline Value", sig_dig = 5, origin = "Derived", derivation = "QS.QSORRES if QS.QSBLFL is 'Y'"),
   c(variable = "CHG", type = "float", length = "10", label = "Change from Baseline", sig_dig = 5, origin = "Derived", derivation = "ADQS.AVAL - ADQS.BASE"),
   c(
     variable = "PCHG", type = "float", length = "4", label = "Percent Change from Baseline", sig_dig = 2, origin = "Derived",
-    derivation = "(ADQS.AVAL - ADQS.BASE)/ADADAS.BASE. NULL if ADQS.BASE is missing."
+    derivation = "(ADQS.AVAL - ADQS.BASE)/ADQS.BASE. NULL if ADQS.BASE is missing."
   ),
-  c(variable = "ABLFL", type = "text", length = "3", label = "Baseline Record Flag", code_id = "YN", origin = "Predecessor", derivation = "QS.QSBLFL"),
+  c(variable = "ABLFL", type = "text", length = "3", label = "Baseline Record Flag", code_id = "Y_BLANK", origin = "Predecessor", derivation = "QS.QSBLFL"),
   c(variable = "QSSEQ", type = "integer", length = "8", label = "Sequence Number", origin = "Predecessor", derivation = "QS.QSSEQ")
 ) %>%
   as_tibble() %>%
@@ -435,9 +522,101 @@ adqs_dic <- bind_rows(
   )
 ```
 
+```{r prep-adrs-spec, class.source = NULL}
+# ADRS Specs ----
+# ADRS is created mainly as input for clinical progression summary Vignette
+adrs_dic <- bind_rows(
+  c(variable = "STUDYID", type = "text", length = "4", label = "Study Identifier", common = TRUE, origin = "Predecessor", derivation = "ADSL.STUDYID"),
+  c(variable = "USUBJID", type = "text", length = "20", label = "Unique Subject Identifier", common = TRUE, origin = "Predecessor", derivation = "ADSL.USUBJID"),
+  c(variable = "SUBJID", type = "text", length = "15", label = "Subject Identifier for the Study", common = TRUE, origin = "Predecessor", derivation = "ADSL.SUBJID"),
+  c(variable = "COLPROT", type = "text", length = "15", label = "Study Protocol of Data Collection", origin = "Predecessor", derivation = "RS.RSGRPID"),
+  c(
+    variable = "PARAMCD", type = "text", length = "40", label = "Parameter Code", code_id = "PARAMCD", origin = "Derived",
+    derivation = "RS.QSTESTCD = 'DX' and Death if ADSL.DTHFL = 'Yes'"
+  ),
+  c(
+    variable = "PARAM", type = "text", length = "200", label = "Parameter", origin = "Derived",
+    derivation = "QS.QSTEST and Death if ADSL.DTHFL = 'Yes'"
+  ),
+  c(
+    variable = "PARAMN", type = "integer", length = "10", label = "Parameter (N)", code_id = "PARAMN", origin = "Derived",
+    derivation = "Derived from ADRS.PARAMCD"
+  ),
+  c(variable = "AVISIT", type = "text", length = "10", label = "Analysis Visit", origin = "Derived"),
+  c(variable = "AVISITN", type = "integer", length = "3", label = "Analysis Visit (N)", origin = "Derived"),
+  c(variable = "VISIT", type = "text", length = "10", label = "Visit Name", origin = "Predecessor", derivation = "RS.VISIT"),
+  c(variable = "VISITNUM", type = "integer", length = "3", label = "Visit Number", origin = "Predecessor", derivation = "RS.VISITNUM"),
+  c(variable = "ADY", type = "integer", length = "40", label = "Analysis Relative Day", origin = "Derived"),
+  c(
+    variable = "ADT", type = "date", length = "10", label = "Analysis Date", format = "DATE10.", origin = "Derived",
+    derivation = "RS.RSDTC and ADSL.DTHDT with date imputation"
+  ),
+  c(
+    variable = "AVAL", type = "float", length = "10", label = "Analysis Value", sig_dig = 5, origin = "Derived",
+    derivation = "RS.RSORRES and 'DEATH' if ADSL.DTHDT is non-missing"
+  ),
+  c(variable = "AVALC", type = "text", length = "40", label = "Analysis Value (C)", origin = "Predecessor", derivation = "ADRS.AVAL"),
+  c(variable = "BASE", type = "float", length = "10", label = "Baseline Value", sig_dig = 5, origin = "Derived", derivation = "RS.RSORRES if RS.RSBLFL is 'Y'"),
+  c(variable = "ABLFL", type = "text", length = "3", label = "Baseline Record Flag", code_id = "Y_BLANK", origin = "Predecessor", derivation = "RS.RSBLFL"),
+  c(variable = "ENRLFL", type = "text", length = "3", label = "Enrolled Population Flag", common = TRUE, code_id = "YN", origin = "Predecessor", derivation = "ADSL.ENRLFL"),
+  c(variable = "ENRLDT", type = "date", length = "10", label = "Date of Enrollment", common = TRUE, format = "DATE10.", origin = "Predecessor", derivation = "ADSL.ENRLDT"),
+  c(variable = "EOSDT", type = "date", length = "10", label = "End of Study Date", common = TRUE, format = "DATE10.", origin = "Predecessor", derivation = "ADSL.EOSDT"),
+  c(variable = "EOSDTF", type = "text", length = "1", label = "End of Study Date Imputation Flag", common = TRUE, origin = "Predecessor", derivation = "ADSL.EOSDTF"),
+  # Additional flags used in the vignettes
+  c(
+    variable = "BLBFL", type = "text", length = "3", label = "Baseline Records Population Flag", code_id = "Y_BLANK", origin = "Derived",
+    derivation = "Subjects that have a baseline record"
+  ),
+  c(
+    variable = "FOLLOWPFL", type = "text", length = "3", label = "Follow-up Records Population Flag", origin = "Derived",
+    derivation = "Subjects that have at least one diagnostics summary after baseline visit or death records"
+  ),
+  c(
+    variable = "ANL01FL", type = "text", length = "3", label = "Analysis Flag", common = FALSE, code_id = "YN", origin = "Derived",
+    derivation = "Enrolled subjects that have baseline record, at least one diagnostics summary after baseline visit or death records"
+  ),
+  c(variable = "AGE", type = "float", length = "3", label = "Age (in Years)", common = TRUE, sig_dig = 1, origin = "Predecessor", derivation = "ADSL.AGE"),
+  c(variable = "AGEU", type = "text", length = "5", label = "Age Units", common = TRUE, code_id = "AGEU", origin = "Predecessor", derivation = "ADSL.AGEU"),
+  c(variable = "AGEGR1", type = "text", length = "8", label = "Pooled Age Group 1", code_id = "AGEGR1", origin = "Predecessor", derivation = "ADSL.AGEGR1"),
+  c(variable = "AGEGR1N", type = "integer", length = "1", label = "Pooled Age Group 1 (N)", code_id = "AGEGR1N", origin = "Predecessor", derivation = "ADSL.AGEGR1N"),
+  c(variable = "SEX", type = "text", length = "6", label = "Sex", common = TRUE, code_id = "SEX", origin = "Predecessor", derivation = "ADSL.SEX"),
+  c(variable = "RACE", type = "text", length = "45", label = "Race", common = TRUE, code_id = "RACE", origin = "Predecessor", derivation = "ADSL.RACE"),
+  c(variable = "BMI", type = "float", length = "3", label = "Body Mass Index", sig_dig = 2, origin = "Predecessor", derivation = "ADSL.BMI"),
+  c(variable = "BMIBLU", type = "text", length = "8", label = "Body Mass Index Unit", origin = "Predecessor", derivation = "ADSL.BMIBLU"),
+  c(variable = "DX", type = "text", length = "40", label = "Baseline Diagnostics Status", common = TRUE, code_id = "DX", origin = "Predecessor", derivation = "ADSL.DX"),
+  c(variable = "AMYSTAT", type = "text", length = "40", label = "Baseline Amyloid Status", code_id = "AMYSTAT", origin = "Predecessor", derivation = "ADSL.AMYSTAT")
+) %>%
+  as_tibble() %>%
+  mutate(
+    dataset = "ADRS",
+    dataset.label = "Response Analysis Dataset",
+    structure = "One record per subject per parameter per analysis visit per analysis date",
+    key_seq = case_when(
+      variable %in% "USUBJID" ~ 1,
+      variable %in% "PARAMCD" ~ 2,
+      variable %in% "AVISIT" ~ 3,
+      variable %in% "ADT" ~ 4
+    ),
+    order = row_number(),
+    keep = FALSE,
+    core = case_when(
+      variable %in% c("STUDYID", "USUBJID", "PARAM", "PARAMCD", "AVISIT") ~ "Required",
+      variable %in% c("AVAL", "AVALC") ~ "Conditionally Required",
+      TRUE ~ "Permissible"
+    ),
+    supp_flag = FALSE,
+    length = as.numeric(length),
+    common = as.logical(ifelse(is.na(common), FALSE, common)),
+    format = ifelse(is.na(format), NA_character_, format),
+    sig_dig = as.integer(ifelse(is.na(sig_dig), NA_real_, sig_dig)),
+    where = NA_character_,
+    derivation_id = paste0(dataset, ".", variable)
+  )
+```
+
 ```{r prep-dataset-spec, echo = TRUE}
 # Based on manual codes
-data_spec <- bind_rows(adsl_dic, adae_dic, adqs_dic)
+data_spec <- bind_rows(adsl_dic, adae_dic, adqs_dic, adrs_dic)
 ```
 
 ## Dataset-Level Information
@@ -499,7 +678,8 @@ var_spec_labels <- c(
 )
 var_spec <- data_spec %>%
   select(all_of(names(var_spec_labels))) %>%
-   assert_non_missing(!format) %>%
+  assert_non_missing(!format) %>%
+  mutate(type = toupper(type)) %>%
   labelled::set_variable_labels(.labels = var_spec_labels, .strict = TRUE)
 ```
 
@@ -512,6 +692,8 @@ datatable(
 ```
 
 ## Value-Level Information
+
+* Assumed value-level information are similar to variable level information. 
 
 ```{r value-spec, echo = TRUE}
 value_spec_labels <- c(
@@ -694,12 +876,12 @@ AESEV_CODEDLIST <- tibble(
 
 # Parameter code list ----
 QSTESTCD_LIST <- c(
-  "CDGLOBAL", "CDRSB", "DIGITSCOR", "ECOGPTTOTAL", "ECOGSPTOTAL", "FAQTOTAL",
-  "FCISCORE", "GDTOTAL", "LDELTOTAL", "LIMMTOTAL", "MMSCORE", "MOCA",
-  "NPIQTOTAL", "NPITOTAL", "RAVLTFORG", "RAVLTFORGOPERC", "RAVLTIM",
-  "RAVLTLEARN", "TOTAL11", "TOTALMOD", "TRABSCOR"
+  "CDGLOBAL", "CDRSB", "DIGITSCOR", "ECOGPTT", "ECOGSPTT", "FAQTOTAL",
+  "FCISCORE", "GDTOTAL", "LDELTOTL", "LIMMTOTL", "MMSCORE", "MOCA",
+  "NPIQTOTL", "NPITOTAL", "RAVLTFG", "RAVLTFGP", "RAVLTIMM",
+  "RAVLTLRN", "ADASTT11", "ADASTT13", "TRABSCOR"
 )
-# To apply with flows
+# To apply with data flow
 # QSTESTCD_LIST <- QS %>%
 #   select(QSTESTCD) %>%
 #   distinct() %>%
@@ -735,8 +917,8 @@ YN_CODEDLIST <- tibble(
 Y_BLANK_CODEDLIST <- tibble(
   code_id = "Y_BLANK", name = "Y_BLANK", type = "code_decode",
   tibble(
-    decode = c("Y"),
-    code = c("Yes")
+    code = c("Y"),
+    decode = c("Yes")
   )
 )
 
@@ -773,15 +955,16 @@ METACORES <- metacore(
 )
 # Checking for mismatch labels
 check_inconsistent_labels(METACORES) %>%
-  verify(nrow(.) == 0)
+  is.null()
 # Checking for mismatch format
 check_inconsistent_formats(METACORES) %>%
-  verify(nrow(.) == 0)
+  is.null()
 # Checking for mismatch type
 check_inconsistent_types(METACORES) %>%
-  verify(nrow(.) == 0)
+  is.null()
 
 # Checking for mismatch common variables: user defined function
+# Please see the source file for more information
 check_inconsistent_common(METACORES) %>%
-  verify(nrow(.) == 0)
+  is.null()
 ```

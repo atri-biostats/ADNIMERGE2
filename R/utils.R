@@ -19,9 +19,9 @@ adni_phase <- function() {
 ## Get Original ADNI Study Phase/Protocol -----
 #' @title ADNI Original Protocol Version
 #' @description
-#' This function is used to identify the original ADNI study phase of participant
-#'  (i.e. when participant newly enrolled in ADNI study) based on their RID.
-#' @param RID Participant RID
+#' This function is used to identify the original ADNI study phase of subject
+#'  (i.e. when subject enrolled in ADNI study as new-enrollee) based on their RID.
+#' @param RID Subject RID
 #' @return
 #'  A character vector with the same size as RID with original study
 #'  protocol (i.e. ADNI study phases).
@@ -92,25 +92,38 @@ adni_phase_order_num <- function(phase) {
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom dplyr case_when
+#' @importFrom cli cli_abort
 #' @export
 convert_adni_phase_order_num <- function(phase_num) {
   if (any(!phase_num[!is.na(phase_num)] %in% seq_along(adni_phase()))) {
-    stop("`phase_num` value must be either ", seq_along(adni_phase()), " or NULL")
+    cli_abort(
+      message = paste0(
+        "{.var {phase_num}} must be either {.val {seq_along(adni_phase())}}",
+        " or {.val {'NULL'}}"
+      )
+    )
   }
-  if (!is.numeric(phase_num)) stop("`phase_num` must be numeric.")
+  if (!is.numeric(phase_num)) {
+    cli_abort(
+      message = c(
+        "{.var phase_num} must be a numeric object",
+        "{.var phase_num} is a {.cls {class(phase_num)}} object."
+      )
+    )
+  }
   phase_num <- as.numeric(phase_num)
   phase_name <- adni_phase()[phase_num]
   return(phase_name)
 }
 
-## Participant Type (Study Track) ----
-#' @title Get Participant Type (ADNI Study Track)
+## Subject Type (Study Track) ----
+#' @title Get ADNI Study Track
 #' @description
-#'  This function is used to identify participant type (i.e. study track) based
+#'  This function is used to identify study track (i.e. subject type) based
 #'  on the provided ADNI phase.
 #' @param cur_study_phase Current ADNI study phase
 #' @param orig_study_phase
-#'  Original study protocol that a participant enrolled newly for the
+#'  Original study protocol that subject enrolled newly for the
 #'  first time in the ADNI study
 #' @return
 #'  A character vector with the same size as \emph{cur_study_phase} with study track.
@@ -121,60 +134,81 @@ convert_adni_phase_order_num <- function(phase_num) {
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate across case_when
 #' @importFrom assertr verify
+#' @importFrom cli cli_abort
 #' @export
 adni_study_track <- function(cur_study_phase, orig_study_phase) {
   cur_protocol <- orig_protocol <- NULL
 
   if (any(is.na(cur_study_phase) | is.na(orig_study_phase))) {
-    stop("Either `cur_study_phase` or `orig_study_phase` must not be empty")
+    cli_abort(
+      message = paste0("Either {.var cur_study_phase} or {.var orig_study_phase} must not be missing")
+    )
   }
 
   output_result <- tibble(
-    cur_protocol = cur_study_phase,
-    orig_protocol = orig_study_phase
+    cur_protocol = as.character(cur_study_phase),
+    orig_protocol = as.character(orig_study_phase)
   ) %>%
     mutate(across(c(cur_protocol, orig_protocol),
       ~ adni_phase_order_num(phase = .x),
       .names = "{col}_num"
     )) %>%
-    mutate(study_track = case_when(
-      cur_protocol_num > orig_protocol_num ~ "Rollover",
-      cur_protocol_num == orig_protocol_num ~ "New"
+    mutate(pttype = case_when(
+      cur_protocol_num > orig_protocol_num ~ adni_pttype()[1],
+      cur_protocol_num == orig_protocol_num ~ adni_pttype()[2]
     )) %>%
     verify(nrow(.) == length(cur_study_phase))
 
-  if (any(is.na(output_result$study_track))) stop("Check study protocol phase")
+  if (any(is.na(output_result$pttype))) {
+    cli_abort(
+      message = paste0("Check PTTYPE")
+    )
+  }
 
-  return(output_result$study_track)
+  return(output_result$pttype)
+}
+
+#' @title ADNI PTYPE
+#' @return A character vector of ADNI PTYPE.
+#' @examples
+#' \dontrun{
+#' adni_pttype()
+#' }
+#' @rdname adni_pttype
+#' @family ADNI study protocol/phase
+#' @keywords adni_procotol_fun
+#' @export
+adni_pttype <- function() {
+  return(c("Rollover", "New"))
 }
 
 ## Create ORIGPROT variable -----
 #' @title Create ORIGPROT Column
 #' @description
-#' This function is used to create ORIGPROT in the dataset based participant RID.
-#' @param data Data frame that contains \emph{RID} variable
+#' This function is used to create ORIGPROT in the dataset based subject RID.
+#' @param .data Data.frame that contains \emph{RID} variable
 #' @return
-#'  A data frame the same as \emph{data} with appended columns of \emph{ORIGPROT}.
+#'  A data frame the same as \emph{data} with appended column of \emph{ORIGPROT}.
 #' @examples
 #' \dontrun{
 #' example_data <- tibble(RID = c(1, 1000, 3500, 6645, 1000))
 #' create_orig_protocol(data = example_data)
 #' }
-#' @rdname create_orig_protocol
+#' @rdname original_study_protocol
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom dplyr relocate mutate
 #' @export
-create_orig_protocol <- function(data) {
+create_orig_protocol <- function(.data) {
   RID <- ORIGPROT <- NULL
-  check_colnames(data = data, col_names = "RID", strict = TRUE)
-  data <- data %>%
+  check_colnames(.data = .data, col_names = "RID", strict = TRUE)
+  .data <- .data %>%
     # Replaced if there is an existed ORGIPROT column
     mutate(ORIGPROT = original_study_protocol(RID = as.numeric(RID))) %>%
     relocate(ORIGPROT) %>%
     # mutate(ORIGPROT = factor(ORIGPROT, levels = adni_phase())) %>%
     assert_non_missing(ORIGPROT)
-  return(data)
+  return(.data)
 }
 
 ## Create COLPROT variable ----
@@ -182,7 +216,7 @@ create_orig_protocol <- function(data) {
 #' @description
 #' This function is used to create COLPROT column in the dataset by renaming any
 #' specified columns. It also checks whether the renamed columns contains only ADNI study phase.
-#' @param data Data frame
+#' @param .data Data.frame
 #' @param phaseVar Phase column
 #' @return A data.frame the same as \emph{data} with appended column of \emph{COLPROT}.
 #' @examples
@@ -192,21 +226,29 @@ create_orig_protocol <- function(data) {
 #' @rdname create_col_protocol
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
+#' @importFrom cli cli_abort
 #' @importFrom tidyselect all_of
 #' @importFrom dplyr rename_with relocate
 #' @importFrom assertr verify
 #' @export
-create_col_protocol <- function(data, phaseVar = NULL) {
+create_col_protocol <- function(.data, phaseVar = NULL) {
   COLPROT <- NULL
   if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE", "ProtocolID", "COLPROT")
-  existed_column <- get_cols_name(data = data, col_name = phaseVar)
-  if (length(existed_column) > 1) stop("Check number of column names of Phase/PHASE")
+  existed_column <- get_cols_name(.data = .data, col_name = phaseVar)
+  if (length(existed_column) > 1) {
+    cli_abort(
+      message = c(
+        "The provided Phase/PHASE columns must be length of one. \n",
+        "{.val {existed_column}} are presented in the data."
+      )
+    )
+  }
 
-  data <- data %>%
+  .data <- .data %>%
     {
       if (!is.na(existed_column)) {
         mutate(., across(all_of(existed_column), as.character)) %>%
-          rename_with(., ~ paste0("COLPROT"), .cols = all_of(existed_column)) %>%
+          rename_with(., ~ paste0("COLPROT"), all_of(existed_column)) %>%
           # mutate(., COLPROT = factor(COLPROT, levels = adni_phase())) %>%
           relocate(., COLPROT) %>%
           assert_non_missing(., COLPROT) %>%
@@ -215,7 +257,7 @@ create_col_protocol <- function(data, phaseVar = NULL) {
         (.)
       }
     }
-  return(data)
+  return(.data)
 }
 
 # Get Coded Values from DATADIC dataset ----
@@ -236,6 +278,7 @@ create_col_protocol <- function(data, phaseVar = NULL) {
 #' @family Split strings
 #' @keywords utils_fun
 #' @seealso \code{\link{get_factor_levels_datadict}()}
+#' @importFrom cli cli_abort
 #' @export
 split_strings <- function(input_string, spliter1, spliter2) {
   # Splitting the input_string with spliter1
@@ -258,18 +301,22 @@ split_strings <- function(input_string, spliter1, spliter2) {
     suffix <- NULL
   }
   if (length(prefix) != length(suffix)) {
-    stop("The length of prefix and suffix must be the same")
+    cli_abort(
+      message = c(
+        "The length of {.var prefix} and {.var suffix}  must be the same. \n",
+        "The length of {.var prefix} is {.cls {length(prefix)}}. \n",
+        "The length of {.var suffix} is {.cls {length(suffix)}}."
+      )
+    )
   }
-  # Removing whitespace at the beginning of the character value
+  # Remove whitespace at the beginning of the string value
   prefix <- trimws(as.character(prefix), which = "left")
   suffix <- trimws(as.character(suffix), which = "left")
   return(tibble(prefix, suffix))
 }
 
 ## Utils function for get_factor_levels_datadict
-create_string_split <- function(CODES,
-                                spliter1 = ";| ;| ; ",
-                                spliter2 = "=| =| = ") {
+create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| = ") {
   return(split_strings(
     input_string = CODES$CODE,
     spliter1 = spliter1,
@@ -283,7 +330,7 @@ create_string_split <- function(CODES,
 #'  This function is used to generate the coded levels of FLDNAME using
 #'  a data dictionary dataset \code{\link{DATADIC}()} downloaded from
 #'  <https://adni.loni.usc.edu/data-samples/adni-data/>.
-#' @param data_dict Data dictionary dataset (DATADIC from the package or loni website)
+#' @param .datadic Data dictionary dataset
 #' @param tbl_name
 #'  Table name, Default: NULL that generate for all available TBLNAMEs in the \emph{data_dict}
 #' @param spliter1 First split parameter/pattern, Default:";| ;| ; "
@@ -300,7 +347,7 @@ create_string_split <- function(CODES,
 #' @examples
 #' \dontrun{
 #' get_factor_levels_datadict(
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   tbl_name = NULL,
 #'   nested_value = TRUE
 #' )
@@ -314,25 +361,23 @@ create_string_split <- function(CODES,
 #' @importFrom purrr map
 #' @importFrom dplyr filter mutate case_when rowwise ungroup
 #' @export
-get_factor_levels_datadict <- function(data_dict,
+get_factor_levels_datadict <- function(.datadic,
                                        tbl_name = NULL,
                                        nested_value = FALSE,
                                        spliter1 = ";| ;| ; ",
                                        spliter2 = "=| =| = ") {
   TBLNAME <- CODE <- CODES <- NULL
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = c("PHASE", "TYPE", "TBLNAME", "FLDNAME", "CODE"),
     strict = TRUE
   )
-  if (is.null(tbl_name)) tbl_name <- unique(data_dict$TBLNAME)
+  if (is.null(tbl_name)) tbl_name <- unique(.datadic$TBLNAME)
   tbl_name <- tbl_name[!is.na(tbl_name)]
-  output_data <- extract_codelist_datadict(data_dict) %>%
+  output_data <- extract_codelist_datadict(.datadic) %>%
     as_tibble() %>%
     filter(TBLNAME %in% tbl_name) %>%
-    rowwise() %>%
     nest(CODES = CODE) %>%
-    ungroup() %>%
     mutate(CODES = map(CODES, ~ create_string_split(
       CODES = .x,
       spliter1 = spliter1,
@@ -347,6 +392,8 @@ get_factor_levels_datadict <- function(data_dict,
     } %>%
     mutate(class_type = "factor")
 
+  output_data <- set_datadict_tbl(output_data)
+
   return(output_data)
 }
 
@@ -354,11 +401,11 @@ get_factor_levels_datadict <- function(data_dict,
 #' @title Extract Codedlist from DATADIC
 #' @description
 #' This function is used to extract codelist from a data dictionary \code{\link{DATADIC}()}.
-#' @param data_dict Data dictionary dataset, DATADIC
-#' @return A data.frame the same as \emph{data_dict} with only coded list.
+#' @param .datadic Data dictionary dataset
+#' @return A data.frame the same as \emph{.datadic} with only coded list.
 #' @examples
 #' \dontrun{
-#' extract_codelist_datadict(data_dict = ADNIMERGE2::DATADIC)
+#' extract_codelist_datadict(.datadic = ADNIMERGE2::DATADIC)
 #' }
 #' @rdname extract_codelist_datadict
 #' @family data dictionary related functions
@@ -366,15 +413,16 @@ get_factor_levels_datadict <- function(data_dict,
 #' @importFrom dplyr mutate case_when filter
 #' @importFrom stringr str_detect
 #' @export
-extract_codelist_datadict <- function(data_dict) {
+extract_codelist_datadict <- function(.datadic) {
   CODE <- TYPE <- TBLNAME <- FLDNAME <- NULL
+
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = c("PHASE", "TYPE", "TBLNAME", "FLDNAME", "CODE"),
     strict = TRUE
   )
   # Convert -4 as missing values
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     convert_to_missing_value(col_name = "CODE", value = "-4", missing_char = NA)
   # Convert coded range values: i.e., 0...10 as missing values
   exc_range <- paste0(
@@ -384,14 +432,14 @@ extract_codelist_datadict <- function(data_dict) {
     ),
     collapse = "|"
   )
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(CODE = case_when(
       str_detect(CODE, exc_range) == TRUE ~ NA,
       TRUE ~ CODE
     ))
   # Convert text values as missing values
   exc_text <- c('crfname|\\"indexes\\"|\\<display\\>|\"Pass;|\"OTF Lumos;|\"a; b; c; d|select distinct ')
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(CODE = case_when(
       str_detect(CODE, exc_text) == TRUE ~ NA,
       TRUE ~ CODE
@@ -403,7 +451,7 @@ extract_codelist_datadict <- function(data_dict) {
     "-4=Insufficient sample", "-4 = Not Available", "NA = Not Available",
     "-4=Insufficient sample; -5=Sample quantity not sufficient"
   )
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(CODE = case_when(
       CODE %in% exc_add_text ~ NA,
       TRUE ~ CODE
@@ -414,7 +462,7 @@ extract_codelist_datadict <- function(data_dict) {
     "char", "date", "datetime", "decimal",
     "text", "time", "varchar", "d", "s"
   )
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(TYPE = tolower(TYPE)) %>%
     mutate(CODE = case_when(TYPE %in% exc_type ~ NA, TRUE ~ CODE))
 
@@ -443,7 +491,7 @@ extract_codelist_datadict <- function(data_dict) {
     "MAYOADIRL_MRI_MCH", "MAYOADIRL_MRI_TBMSYN"
   )
 
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(CODE = case_when(
       ((FLDNAME %in% exc_cdr & TBLNAME %in% "CDR") |
         (FLDNAME %in% exc_mri_infacts & TBLNAME %in% "MRI_INFARCTS") |
@@ -457,10 +505,10 @@ extract_codelist_datadict <- function(data_dict) {
     ))
 
   # Removing all missing values
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     filter(!is.na(CODE))
 
-  return(data_dict)
+  return(.datadic)
 }
 
 ## Gets Factor Field Name (FLDNAME) ----
@@ -469,7 +517,7 @@ extract_codelist_datadict <- function(data_dict) {
 #'   This function is used to identify factor field name (FLDNAME) based on a
 #'   data dictionary dataset \code{\link{DATADIC}()}
 #'   from <https://adni.loni.usc.edu/data-samples/adni-data/>.
-#' @param data_dict
+#' @param .datadic
 #'  Data dictionary dataset that generated using \code{\link{get_factor_levels_datadict}()}
 #' @param tbl_name Table name
 #' @param dd_fldnames Variable names in the actual dataset, Default = NULL.
@@ -477,20 +525,20 @@ extract_codelist_datadict <- function(data_dict) {
 #' @examples
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   tbl_name = NULL,
 #'   nested_value = TRUE
 #' )
 #' # List of available factor columns in data dictionary
 #' # \code{\link{DATADIC}()} for the \code{\link{ADAS_ADNIGO23}()} dataset
 #' get_factor_fldname(
-#'   data_dict = data_dict_dd,
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   dd_fldnames = NULL
 #' )
 #' # List of factor columns that available in \code{\link{ADAS_ADNIGO23}()} and data dictionary DATADIC
 #' get_factor_fldname(
-#'   data_dict = data_dict_dd,
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   dd_fldnames = colnames(ADNIMERGE2::ADAS_ADNIGO23)
 #' )
@@ -502,14 +550,15 @@ extract_codelist_datadict <- function(data_dict) {
 #' @importFrom dplyr select filter
 #' @importFrom tibble as_tibble
 #' @export
-get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
+get_factor_fldname <- function(.datadic, tbl_name, dd_fldnames = NULL) {
   TBLNAME <- FLDNAME <- class_type <- NULL
+  is_datadict_tbl(.datadic)
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = c("TBLNAME", "FLDNAME", "class_type"),
     strict = TRUE
   )
-  temp_output <- data_dict %>%
+  temp_output <- .datadic %>%
     as_tibble() %>%
     filter(TBLNAME %in% tbl_name & class_type %in% "factor") %>%
     {
@@ -532,8 +581,8 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
 #' @description
 #'  This function is used to collect the coded and decoded values for a given
 #'  variable based on a data dictionary \code{\link{DATADIC}()}.
-#' @param data_dict
-#' Data dictionary dataset that generated using \code{\link{get_factor_levels_datadict}()} function
+#' @param .datadic
+#'    Data dictionary dataset created using \code{\link{get_factor_levels_datadict}()} function
 #' @param tbl_name Dataset name
 #' @param fld_name Field/column name
 #' @return A list value:
@@ -544,43 +593,46 @@ get_factor_fldname <- function(data_dict, tbl_name, dd_fldnames = NULL) {
 #' @examples
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   tbl_name = "ADAS",
 #'   nested_value = TRUE
 #' )
-#' single_collect_values(
-#'   data_dict = data_dict_dd,
+#' collect_value_mapping_single_var(
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   fld_name = "COCOMND"
 #' )
 #' }
-#' @rdname single_collect_values
+#' @rdname collect_value_mapping_single_var
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
 #' @seealso \code{\link{get_factor_levels_datadict}()}
 #' @importFrom rlang arg_match
 #' @importFrom dplyr filter select
 #' @importFrom tidyr unnest
-single_collect_values <- function(data_dict, tbl_name, fld_name) {
+#' @importFrom tibble as_tibble
+collect_value_mapping_single_var <- function(.datadic, tbl_name, fld_name) {
   FLDNAME <- PHASE <- TBLNAME <- CODES <- NULL
+  is_datadict_tbl(.datadic)
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = c("PHASE", "TBLNAME", "FLDNAME", "CODES"),
     strict = TRUE,
     stop_message = TRUE
   )
   rlang::arg_match(
     arg = fld_name,
-    values = unique(data_dict$FLDNAME),
+    values = unique(.datadic$FLDNAME),
     multiple = TRUE
   )
   rlang::arg_match(
     arg = tbl_name,
-    values = unique(data_dict$TBLNAME),
+    values = unique(.datadic$TBLNAME),
     multiple = TRUE
   )
 
-  df <- data_dict %>%
+  df <- .datadic %>%
+    datadict_as_tibble() %>%
     filter(TBLNAME %in% tbl_name & FLDNAME %in% fld_name) %>%
     select(PHASE, TBLNAME, FLDNAME, CODES) %>%
     unnest(cols = CODES)
@@ -612,40 +664,39 @@ single_collect_values <- function(data_dict, tbl_name, fld_name) {
 ## Multiple Variable - Collecting Coded Values ----
 #' @title Collecting Coded Values for Multiple Variables
 #' @description This function is used to collect the coded values for a given set of variables.
-#' @param data_dict
-#'  Data dictionary dataset that generated using \code{\link{get_factor_levels_datadict}()} function.
-#' @param tbl_name Dataset name
+#' @inheritParams collect_value_mapping_single_var
 #' @param all_fld_name List of column names that contains re-coded values
 #' @return
 #'  List value that contains the \emph{coded} and \emph{decoded} values with corresponding
-#'  column names that obtained using \code{\link{single_collect_values}} function.
+#'  column names that obtained using \code{\link{collect_value_mapping_single_var}} function.
 #' @examples
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   tbl_name = "ADAS",
 #'   nested_value = TRUE
 #' )
 #' tbl_unique_fldname <- get_factor_fldname(
-#'   data_dict = data_dict_dd,
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   dd_fldnames = colnames(ADNIMERGE2::ADAS_ADNIGO23)
 #' )
-#' collect_values(
-#'   data_dict = data_dict_dd,
+#' collect_value_mapping(
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   all_fld_name = tbl_unique_fldname
 #' )
 #' }
-#' @rdname collect_values
+#' @rdname collect_value_mapping
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
 #' @seealso \code{\link{get_factor_levels_datadict}()} \code{\link{get_factor_fldname}()}
 #' @export
-collect_values <- function(data_dict, tbl_name, all_fld_name) {
+collect_value_mapping <- function(.datadic, tbl_name, all_fld_name) {
+  is_datadict_tbl(.datadic)
   output_list <- lapply(all_fld_name, function(fld_name) {
-    single_collect_values(
-      data_dict = data_dict,
+    collect_value_mapping_single_var(
+      .datadic = .datadic,
       tbl_name = tbl_name,
       fld_name = fld_name
     )
@@ -657,8 +708,9 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
 ## Convert List Collected Coded Values ----
 #' @title Convert List Collected Coded Values
 #' @description
-#'  This function is used to convert list coded values that obtained using \code{\link{collect_values}()} function.
-#' @param coded_values Coded values that generated using \code{\link{collect_values}()} function
+#'  This function is used to convert list coded values that is created using
+#'  \code{\link{collect_value_mapping}()} function.
+#' @param coded_values Variable name that contains coded values
 #' @param tbl_name Dataset name, Default: NULL
 #' @return A data frame that contains the following columns:
 #'  \item{TBLNAME }{Dataset name}
@@ -668,40 +720,41 @@ collect_values <- function(data_dict, tbl_name, all_fld_name) {
 #' @examples
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   tbl_name = "ADAS",
 #'   nested_value = TRUE
 #' )
 #' tbl_unique_fldname <- get_factor_fldname(
-#'   data_dict = data_dict_dd,
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   dd_fldnames = colnames(ADNIMERGE2::ADAS_ADNIGO23)
 #' )
-#' coded_value <- collect_values(
-#'   data_dict = data_dict_dd,
+#' coded_value <- collect_value_mapping(
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "ADAS",
 #'   all_fld_name = tbl_unique_fldname
 #' )
-#' convert_collect_values(coded_value = coded_value)
+#' convert_value_mapping(coded_value = coded_value)
 #' }
-#' @rdname convert_collect_values
+#' @rdname convert_value_mapping
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
 #' @importFrom purrr pluck
 #' @importFrom dplyr mutate relocate bind_rows
-convert_collect_values <- function(coded_values, tbl_name = NULL) {
+#' @importFrom cli cli_abort
+convert_value_mapping <- function(coded_values, tbl_name = NULL) {
   TBLNAME <- FLDNAME <- PHASE <- CODES <- NULL
-  if (!is.list(coded_values)) stop("`coded_values` must be a list object.")
+  if (!is.list(coded_values)) {
+    cli_abort(
+      message = c(
+        "{.var coded_values} must be a list object.",
+        "{.var coded_values} is a {.cls {class(coded_values)}} object."
+      )
+    )
+  }
 
-  output_data <- lapply(names(coded_values), function(fld) {
-    curt_coded_values <- coded_values %>%
-      pluck(., fld)
-    # Apply phase-specific function
-    phase_result <- convert_phase_specific(coded_values = curt_coded_values) %>%
-      mutate(FLDNAME = fld)
-    return(phase_result)
-  }) %>%
-    bind_rows() %>%
+  output_data <- lapply(coded_values, convert_value_mapping_phase_specific) %>%
+    bind_rows(., .id = "FLDNAME") %>%
     mutate(TBLNAME = tbl_name) %>%
     relocate(any_of(c("TBLNAME", "FLDNAME", "PHASE", "CODES")))
 
@@ -710,36 +763,34 @@ convert_collect_values <- function(coded_values, tbl_name = NULL) {
 
 #' @title Convert List Collected Coded Values - PHASE Levels
 #' @description This function is used to convert list coded values at phase levels.
-#' @param coded_values Collect coded values
-#' @return A data frame that contains the following columns:
+#' @param coded_values List object of coded values with study phase name
+#' @return A data.frame that contains the following columns:
 #' \itemize{
 #'   \item \emph{FLDNAME:} Variable name
 #'   \item \emph{PHASE:} ADNI study phase/protocol
 #'   \item \emph{CODED_VALUE:} Nested dataset that contains code and decode values
 #'  }
-#' @rdname convert_phase_specific
+#' @rdname convert_value_mapping_phase_specific
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
-#' @importFrom purrr pluck
-#' @importFrom dplyr mutate relocate bind_rows group_by ungroup
+#' @importFrom dplyr bind_rows group_by ungroup
 #' @importFrom tidyselect everything
-#' @importFrom tidyr nest
-convert_phase_specific <- function(coded_values) {
+#' @importFrom tidyr nest replace_na
+#' @importFrom cli cli_abort
+convert_value_mapping_phase_specific <- function(coded_values) {
   PHASE <- CODES <- NULL
-  if (!is.list(coded_values)) stop("`coded_values` must be a list object.")
-  output_data <- lapply(names(coded_values), function(phase_name) {
-    if (is.na(phase_name)) {
-      coded_values$`NA` %>%
-        bind_rows() %>%
-        mutate(PHASE = phase_name)
-    } else {
-      coded_values %>%
-        pluck(., phase_name) %>%
-        bind_rows() %>%
-        mutate(PHASE = phase_name)
-    }
-  }) %>%
-    bind_rows() %>%
+  if (!is.list(coded_values)) {
+    cli_abort(
+      message = c(
+        "{.var coded_values} must be a list object.",
+        "{.var coded_values} is a {.cls {class(coded_values)}} object."
+      )
+    )
+  }
+  names(coded_values) <- replace_na(names(coded_values), "NA")
+  output_data <- lapply(coded_values, bind_rows) %>%
+    bind_rows(., .id = "PHASE") %>%
+    mutate(PHASE = ifelse(PHASE == "NA", NA_character_, PHASE)) %>%
     group_by(PHASE) %>%
     nest(CODES = everything() & -PHASE) %>%
     ungroup()
@@ -751,8 +802,8 @@ convert_phase_specific <- function(coded_values) {
 #' @title Replace/Substitute Multiple Values
 #' @description This function is used to replace string values.
 #' @param input_string Input string
-#' @param code Old value
-#' @param decode New value
+#' @param code Coded values
+#' @param decode Actual string values
 #' @return
 #'  A character vector similar to \emph{input_string} with replaced values.
 #' @examples
@@ -777,7 +828,13 @@ convert_phase_specific <- function(coded_values) {
 replace_multiple_values <- function(input_string, code, decode) {
   # To ensure the same length of decode and code
   if (length(code) != length(decode)) {
-    stop("The length of decode and code must be the same.")
+    cli_abort(
+      message = c(
+        "The length of {.var code} and {.var decode}  must be the same. \n",
+        "The length of {.var code} is {.clas {length(code)}}. \n",
+        "The length of {.var decode} is {.clas {length(decode)}}."
+      )
+    )
   }
 
   # To make sure exact replacement
@@ -790,25 +847,25 @@ replace_multiple_values <- function(input_string, code, decode) {
     num_type = "negative",
     stop_message = FALSE
   )
-  
+
   if (negative_value == TRUE) {
     adjusted_code <- gsub(pattern = "-", x = code, replacement = "negative")
     output_string <- gsub("-", x = output_string, replacement = "negative")
   } else {
     adjusted_code <- code
   }
-  
-  # Checking for decimal places 
+
+  # Checking for decimal places
   decimal_value <- detect_decimal_value(value = code)
-  
+
   if (decimal_value == TRUE) {
     adjusted_code <- gsub(pattern = "\\.", x = adjusted_code, replacement = "decimal")
     output_string <- gsub("\\.", x = output_string, replacement = "decimal")
-  } 
-  
+  }
+
   # To ensure exact replacement
   adjusted_code <- paste0("\\b", adjusted_code, "\\b")
-  # Replace values with actual new values
+  # Replace values with actual string values
   for (i in seq_along(code)) {
     output_string <- gsub(
       pattern = adjusted_code[i],
@@ -817,7 +874,7 @@ replace_multiple_values <- function(input_string, code, decode) {
     )
   }
 
-  # Replace values with actual new values
+  # Replace values with actual string values
   unique_place_holder <- paste0("\\b", unique_place_holder, "\\b")
   for (i in seq_along(code)) {
     output_string <- gsub(
@@ -835,9 +892,9 @@ replace_multiple_values <- function(input_string, code, decode) {
 #' @param value Input string
 #' @param num_type Numeric value type: `any`, `positive` or `negative`, Default: 'any'
 #' @param stop_message
-#'  A boolean value to return a stop message when there is the specified numeric
+#'  A Boolean value to return a stop message when there is the specified numeric
 #'  value type `num_type`, Default: `FALSE`
-#' @return A boolean value or a stop message if \emph{stop_message=TRUE}:
+#' @return A Boolean value or a stop message if \emph{stop_message=TRUE}:
 #'   \item{TRUE }{If any of the specified numeric type value is presented.}
 #'   \item{FALSE }{Otherwise}
 #' @examples
@@ -851,13 +908,13 @@ replace_multiple_values <- function(input_string, code, decode) {
 #' }
 #' @rdname detect_numeric_value
 #' @importFrom rlang arg_match0
+#' @importFrom cli cli_abort
 #' @family checks function
 #' @keywords utils_fun
 #' @export
 detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) {
   rlang::arg_match0(arg = num_type, values = c("any", "positive", "negative"))
-  if (!is.logical(stop_message)) stop("`stop_message` must be a boolean value")
-
+  check_is_logical(stop_message)
   value <- suppressWarnings(as.numeric(value))
   if (all(is.na(value))) {
     result <- FALSE
@@ -879,7 +936,9 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
   }
 
   if (stop_message == TRUE & result == TRUE) {
-    stop(message_prefix, " value is found in the provided string!")
+    cli_abort(
+      message = paste0(message_prefix, " value is found in the provided string!")
+    )
   }
 
   return(result)
@@ -889,7 +948,7 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 #' @title Detect Decimal Values
 #' @description This function is used to detect decimal values.
 #' @param value Input string
-#' @return A boolean value
+#' @return A Boolean value
 #' @rdname detect_decimal_value
 #' @family checks function
 #' @keywords utils_fun
@@ -898,7 +957,8 @@ detect_decimal_value <- function(value) {
   if (all(is.na(value)) | is.null(value)) {
     return(FALSE)
   }
-  numeric_value <- suppressWarnings(as.numeric(value))
+  numeric_value <- as.numeric(value)
+  numeric_value <- numeric_value[!is.na(numeric_value)]
   contain_decimal <- FALSE
   if (any(is.numeric(numeric_value))) {
     contain_decimal <- any(grepl(pattern = "\\.", x = value, perl = FALSE, fixed = FALSE))
@@ -911,13 +971,13 @@ detect_decimal_value <- function(value) {
 #' @description
 #'  This function is used to recode/replace phase specific values of a
 #'  single variable in a dataset.
-#' @param data Data frame
+#' @param .data Data.frame
 #' @param fld_name Variable name
 #' @param phase ADNI study phase/protocol name
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param code Values that will be replaced
-#' @param decode Values that will replace the old values, 'code'
-#' @return A data frame with replaced values for the provided variable.
+#' @param decode Values that will replace coded value (`code`)
+#' @return A data.frame with replaced values for the provided variable.
 #' @examples
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
@@ -925,15 +985,15 @@ detect_decimal_value <- function(value) {
 #'   tbl_name = "REGISTRY", # NULL
 #'   nested_value = TRUE
 #' )
-#' input_values <- collect_values(
+#' input_values <- collect_value_mapping(
 #'   data_dict = data_dict_dd,
 #'   tbl_name = "REGISTRY",
 #'   all_fld_name = "VISTYPE"
 #' )
 #' decode <- input_values$VISTYPE$ADNI1$decode
 #' code <- input_values$VISTYPE$ADNI1$code
-#' result_dataset <- phase_specific_value_replacement(
-#'   data = ADNIMERGE2::REGISTRY,
+#' result_dataset <- replace_values_phase_specific(
+#'   .data = ADNIMERGE2::REGISTRY,
 #'   phaseVar = "COLPROT",
 #'   fld_name = "VISTYPE",
 #'   phase = "ADNI1",
@@ -941,17 +1001,34 @@ detect_decimal_value <- function(value) {
 #'   decode = decode
 #' )
 #' }
-#' @rdname phase_specific_value_replacement
+#' @rdname replace_values_phase_specific
 #' @family functions to replace values
 #' @keywords adni_replace_fun
 #' @importFrom rlang arg_match
-#' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with
+#' @importFrom cli cli_abort
+#' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with select
 #' @importFrom tidyselect all_of
 #' @importFrom stringr str_detect str_c str_extract str_remove_all
-phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
-                                             phaseVar = "PHASE", code, decode) {
+replace_values_phase_specific <- function(.data, fld_name, phase,
+                                          phaseVar = "PHASE", code, decode) {
   phase_var <- NULL
-  if (is.null(phase)) {
+  if (length(fld_name) != 1) {
+    cli_abort(
+      message = c(
+        "{.var fld_name} must be a single character vector.",
+        "The length of {.va fld_name} is {.code length(fld_name)}."
+      )
+    )
+  }
+  if (length(phase) != 1) {
+    cli_abort(
+      message = c(
+        "{.var phase} must be a single character vector.",
+        "The length of {.var phase} is {.code length(phase)}."
+      )
+    )
+  }
+  if (!is.na(phase)) {
     rlang::arg_match(
       arg = phase,
       values = adni_phase(),
@@ -959,24 +1036,26 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
     )
   }
 
-  rlang::arg_match(arg = phaseVar, values = names(data))
+  rlang::arg_match(arg = phaseVar, values = names(.data))
 
-  data <- data %>%
+  .data <- .data %>%
     rename_with(~ paste0("phase_var"), all_of(phaseVar)) %>%
-    mutate(across(all_of(fld_name), ~ as.character(.x)))
+    mutate(across(all_of(fld_name), as.character))
 
-  phase_data <- data %>%
+  phase_data <- .data %>%
     filter(phase_var %in% phase)
 
   phase_data[, fld_name] <- replace_multiple_values(
-    input_string = phase_data %>% pull(fld_name),
+    input_string = phase_data %>%
+      select(all_of(fld_name)) %>%
+      pull(),
     code = code,
     decode = decode
   )
 
-  # Checking for all phase-specific possible values are replaced correctly
-  # Only checks if there no concatenate values
-  data_values <- unique(phase_data %>% pull(fld_name))
+  # Checking for phase-specific possible values are replaced correctly
+  # Only checks for non-concatenated values
+  data_values <- unique(phase_data[, fld_name])
   data_values <- data_values[!is.na(data_values)]
   split_pattern <- c(";", "\\|", ":")
   check_split_pattern <- str_detect(
@@ -1012,7 +1091,7 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
   # Bind with previous dataset
   output_data <- bind_rows(
     phase_data,
-    data %>%
+    .data %>%
       filter(!phase_var %in% phase)
   ) %>%
     mutate(phase_var = factor(phase_var, levels = adni_phase())) %>%
@@ -1023,18 +1102,18 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
 }
 
 ## Single Variable - Multiple Phase Specific Value Replacement -----
-#' @title Value Replace for Single Column
+#' @title Replace Values for Single Variable Across Multiple Phase
 #' @description
 #'  This function is used to replace values for a single column in the dataset
 #'  across different ADNI study phases.
-#' @param data Data frame
+#' @param .data Data frame
 #' @param fld_name Variable name
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
 #'  A list value associated with each ADNI study phase and the format will be
 #'   \emph{[phase_name]$values}.
 #' \itemize{
-#'   \item \emph{code}: Value that will be replaced, see more \code{\link{single_collect_values}()}
+#'   \item \emph{code}: Value that will be replaced, see more \code{\link{collect_value_mapping_single_var}()}
 #'   \item \emph{decode}: Values that will replace the coded values, \code{code}
 #' }
 #' @return A data frame with replaced values.
@@ -1045,123 +1124,158 @@ phase_specific_value_replacement <- function(data, fld_name, phase = NULL,
 #'   tbl_name = NULL,
 #'   nested_value = TRUE
 #' )
-#' input_values <- collect_values(
+#' input_values <- collect_value_mapping(
 #'   data_dict = data_dict_dd,
 #'   tbl_name = "REGISTRY",
 #'   all_fld_name = "VISTYPE"
 #' )
 #' input_values <- input_values$VISTYPE
-#' result_dataset <- multiple_phase_value_replacement(
-#'   data = ADNIMERGE2::REGISTRY,
+#' result_dataset <- replace_values_single_var(
+#'   .data = ADNIMERGE2::REGISTRY,
 #'   phaseVar = "COLPROT",
 #'   fld_name = "VISTYPE",
 #'   input_values = input_values
 #' )
 #' }
-#' @rdname multiple_phase_value_replacement
+#' @rdname replace_values_single_var
 #' @family functions to replace values
 #' @keywords adni_replace_fun
-multiple_phase_value_replacement <- function(data, fld_name, phaseVar = "PHASE", input_values) {
-  if (!is.list(input_values)) stop("`input_values` must be a list object")
-
+#' @importFrom cli cli_abort cli_alert_warning
+replace_values_single_var <- function(.data, fld_name, phaseVar = "PHASE", input_values) {
+  if (!is.list(input_values)) {
+    cli_abort(
+      message = c(
+        "{.var input_values} must be a list object.",
+        "{.var input_values} is a {.cls {class(input_values)}} object."
+      )
+    )
+  }
   phase_name_list <- names(input_values)
   # Adjust for non-phase specific replacements
   phase_name_list_no_na <- phase_name_list[!is.na(phase_name_list)]
   if (all(is.na(phase_name_list))) {
-    warning("No ADNI phase specific list name used")
+    cli_alert_warning(
+      text = c(
+        "No ADNI phase specific list name used in {.var input_values} \n",
+        "{.var input_values} is a list object with names of {.val {names(input_values)}}"
+      )
+    )
   } else {
-    if (length(phase_name_list_no_na) != length(phase_name_list)) {
-      stop("the list name must contains only ADNI study phase")
-    }
     if (!any(phase_name_list_no_na %in% adni_phase())) {
-      stop("the list name must be ADNI study phase")
+      cli_abort(
+        message = c(
+          "The name of {.var input_values} must be one of {.val {adni_phase()}}."
+        )
+      )
     }
   }
 
-  for (phase_list in phase_name_list) {
-    if (is.na(phase_list)) {
-      adjust_phase_list <- 1
+  for (phase in phase_name_list) {
+    if (is.na(phase)) {
+      adjust_phase_list <- which(is.na(phase_name_list))
+      if (length(adjust_phase_list) > 1) {
+        cli_abort(
+          message = c("{.val {fld_name}} variable must contains only single missing value for the phase name.")
+        )
+      }
     } else {
-      adjust_phase_list <- phase_list
+      adjust_phase_list <- phase
     }
-    data <- phase_specific_value_replacement(
-      data = data,
+    .data <- replace_values_phase_specific(
+      .data = .data,
       fld_name = fld_name,
       phaseVar = phaseVar,
-      phase = phase_list,
+      phase = phase,
       decode = input_values[[adjust_phase_list]]$decode,
       code = input_values[[adjust_phase_list]]$code
     )
   }
 
-  return(data)
+  return(.data)
 }
 
 ## Multiple Variable - Value Replacement -----
-#' @title Wrapper to Replace Multiple Column Values
+#' @title Replace Values for Multiple Variable - Wrapper
 #' @description
 #'  This function is used to replace the value of multiple columns in the dataset
 #'  based on the provided corresponding input values.
-#' @param data Data frame
+#' @param .data Data.frame
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
 #'  A nested list values of each columns associated with corresponding ADNI
 #'  study phase and the format will be: [column_name][[phase_name]]$values
 #' \itemize{
 #'   \item \emph{code} Value that will be replaced
-#'   \item \emph{decode} Values that will replace the old values, \emph{code}
+#'   \item \emph{decode} Values that will replace coded value (\emph{code})
 #' }
 #' @return A data frame with replaced values
 #' @examples
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   tbl_name = NULL,
 #'   nested_value = TRUE
 #' )
 #' all_fld_name <- get_factor_fldname(
-#'   data_dict = data_dict_dd,
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "REGISTRY",
 #'   dd_fldnames = colnames(ADNIMERGE2::REGISTRY)
 #' )
-#' input_values <- collect_values(
-#'   data_dict = data_dict_dd,
+#' input_values <- collect_value_mapping(
+#'   .datadic = data_dict_dd,
 #'   tbl_name = "REGISTRY",
 #'   all_fld_name = all_fld_name
 #' )
-#' result_dataset <- data_value_replacement(
-#'   data = ADNIMERGE2::REGISTRY,
+#' result_dataset <- replace_values_dataset(
+#'   .data = ADNIMERGE2::REGISTRY,
 #'   phaseVar = "COLPROT",
 #'   input_values = input_values
 #' )
 #' }
-#' @rdname data_value_replacement
+#' @rdname replace_values_dataset
 #' @family functions to replace values
 #' @keywords adni_replace_fun
+#' @importFrom cli cli_abort
 #' @export
-data_value_replacement <- function(data, phaseVar = "PHASE", input_values) {
-  if (!is.list(input_values)) stop("`input_values` must be a list object.")
-
-  if (!any(names(input_values) %in% names(data))) stop("Check the list name")
-
+replace_values_dataset <- function(.data, phaseVar = "PHASE", input_values) {
+  if (!is.list(input_values)) {
+    arg_name <- rlang::call_args(input_values)
+    cli_abort(
+      message = c(
+        "{.arg {arg_name}} must be a list object",
+        "The input value is a {.cls {class(input_values)}} object."
+      )
+    )
+  }
+  check_colnames(
+    .data = .data,
+    col_names = phaseVar,
+    stop_message = TRUE,
+    strict = TRUE
+  )
+  check_colnames(
+    .data = .data,
+    col_names = names(input_values),
+    stop_message = TRUE,
+    strict = FALSE
+  )
   for (fld_name in names(input_values)) {
-    cur_input_values <- input_values[[fld_name]]
-    data <- multiple_phase_value_replacement(
-      data = data,
+    .data <- replace_values_single_var(
+      .data = .data,
       fld_name = fld_name,
       phaseVar = phaseVar,
-      input_values = cur_input_values
+      input_values = input_values[[fld_name]]
     )
   }
 
-  return(data)
+  return(.data)
 }
 
 ## Re-coding specific value (-4) as missing value ----
 #' @title Convert Value into Missing Values
 #' @description
 #'  This function is used to convert specific value into missing values.
-#' @param data Data frame
+#' @param .data Data.frame
 #' @param col_name Variable name
 #' @param value
 #'  Specific value that will be considered as missing value, Default: '-4'
@@ -1171,17 +1285,18 @@ data_value_replacement <- function(data, phaseVar = "PHASE", input_values) {
 #' @return A data frame with replaced value.
 #' @examples
 #' \dontrun{
-#' convert_to_missing_value(data = ADNIMERGE2::ADAS_ADNIGO23)
+#' convert_to_missing_value(.data = ADNIMERGE2::ADAS_ADNIGO23)
 #' }
 #' @rdname convert_to_missing_value
 #' @family functions to replace values
 #' @keywords adni_replace_fun utils_fun
+#' @importFrom cli cli_abort cli_alert_info
 #' @importFrom dplyr across filter if_all case_when
 #' @importFrom tibble as_tibble
-#' @importFrom rlang arg_match sym
+#' @importFrom rlang arg_match
 #' @importFrom tidyselect all_of
 #' @export
-convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
+convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
                                      missing_char = NA, phase = NULL) {
   if (is.null(phase)) {
     overall_replacement <- TRUE
@@ -1190,16 +1305,34 @@ convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
     overall_replacement <- FALSE
   }
   rlang::arg_match(arg = phase, values = adni_phase(), multiple = TRUE)
-  phase_var <- get_cols_name(data = data, col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID"))
-  if (length(phase_var) > 1) stop("`phase_var` must not be more than one length")
-  column_list <- get_cols_value(data = data, value = value, col_name = col_name)
+  phase_var <- get_cols_name(.data = .data, col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID"))
+  if (length(phase_var) > 1) {
+    cli_abort(
+      message = c(
+        "Phase column must be a length of single character vector.\n",
+        "There are more than one `PHASE` variables: {.val {phase_var}}."
+      )
+    )
+  }
+  column_list <- get_cols_value(.data = .data, value = value, col_name = col_name)
+
+  if (all(is.na(column_list))) {
+    cli_alert_info(
+      text = c("No variable that contains this value {.val {value}}.")
+    )
+  }
 
   # To make sure '-1' as missing values only in ADNI1 phases
   if (all(value %in% "-1" & "ADNI1" %in% phase & length(phase) > 1)) {
-    stop("`-1` must be replaced for ADNI1 phase dataset only")
+    cli_abort(
+      message = c(
+        "{.var {value}} must be converted to missing value for ADNI1 phase only. \n",
+        "The current study phase: {.val {phase}}"
+      )
+    )
   }
 
-  output_data <- data %>%
+  output_data <- .data %>%
     {
       if (all(is.na(column_list))) {
         (.)
@@ -1210,7 +1343,7 @@ convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
         )))
       } else if (overall_replacement == FALSE & !is.na(phase_var)) {
         mutate(., across(all_of(column_list), ~ case_when(
-          !!sym(phase_var) %in% c(phase) & .x %in% value ~ missing_char,
+          get(phase_var) %in% c(phase) & .x %in% value ~ missing_char,
           TRUE ~ .x
         )))
       } else {
@@ -1226,7 +1359,7 @@ convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
 #' @title Get Columns With Specific Values
 #' @description
 #'  This function is used to list columns that contains the provided specific value.
-#' @param data Data.frame
+#' @param .data Data.frame
 #' @param value Specific value
 #' @param col_name
 #'  Character vector of columns, Default: `NULL` to check for all available columns.
@@ -1240,12 +1373,13 @@ convert_to_missing_value <- function(data, col_name = NULL, value = "-4",
 #' @rdname get_cols_value
 #' @keywords utils_fun
 #' @importFrom dplyr mutate filter across if_all
-#' @importFrom tibble tibble
+#' @importFrom tibble as_tibble
 #' @export
-get_cols_value <- function(data, value, col_name = NULL) {
-  data <- tibble(data)
-  list_columns <- lapply(colnames(data), function(col_names) {
-    temp_data <- data %>%
+get_cols_value <- function(.data, value, col_name = NULL) {
+  .data <- .data %>%
+    as_tibble()
+  list_columns <- lapply(colnames(.data), function(col_names) {
+    temp_data <- .data %>%
       mutate(across(all_of(col_names), as.character)) %>%
       filter(if_all(all_of(col_names), ~ .x == value))
     if (nrow(temp_data) > 0) result <- col_names else result <- NA
@@ -1263,25 +1397,25 @@ get_cols_value <- function(data, value, col_name = NULL) {
 #' @title Checks Column Name Exist
 #' @description
 #'  This function is used to check if the provided column names are existed in the dataset.
-#' @param data Data frame
+#' @param .data Data.frame
 #' @param col_names Column names
-#' @param strict A boolean value to apply strict checking.
+#' @param strict A Boolean value to apply strict checking.
 #' @param stop_message
-#'  A boolean value to return a stop message if the criteria does not met.
+#'  A Boolean value to return a stop message if the criteria does not met.
 #' @return
 #' \itemize{
 #'  \item `TRUE` if the provided column names are existed in the dataset based on the `strict` argument.
-#'  \item Otherwise list of column names that are not existed in the dataset `data` or a stop message if `stop_message = TRUE`.
+#'  \item Otherwise list of column names that are not existed in the dataset or a stop message if `stop_message` is TRUE.
 #'  }
 #' @examples
 #' \dontrun{
 #' check_colnames(
-#'   dd = ADNIMERGE2::ADAS_ADNIGO23,
+#'   .data = ADNIMERGE2::ADAS_ADNIGO23,
 #'   col_names = c("Phase", "VISCODE"),
 #'   strict = FALSE
 #' )
 #' check_colnames(
-#'   dd = ADNIMERGE2::ADAS_ADNIGO23,
+#'   .data = ADNIMERGE2::ADAS_ADNIGO23,
 #'   col_names = c("RID", "VISCODE"),
 #'   strict = TRUE
 #' )
@@ -1289,20 +1423,26 @@ get_cols_value <- function(data, value, col_name = NULL) {
 #' @rdname check_colnames
 #' @family checks function
 #' @keywords utils_fun
-check_colnames <- function(data, col_names, strict = FALSE, stop_message = TRUE) {
-  if (strict == TRUE) status <- !all(col_names %in% colnames(data))
-  if (strict == FALSE) status <- !any(col_names %in% colnames(data))
+#' @importFrom cli cli_abort
+#' @export
+check_colnames <- function(.data, col_names, strict = FALSE, stop_message = TRUE) {
+  check_is_logical(strict)
+  check_is_logical(stop_message)
+  if (strict == TRUE) status <- !all(col_names %in% colnames(.data))
+  if (strict == FALSE) status <- !any(col_names %in% colnames(.data))
 
   if (status) {
-    col_not_existed <- col_names[!col_names %in% colnames(data)]
-    add_notes <- ifelse(length(col_not_existed) == 1,
+    non_existed_col <- col_names[!col_names %in% colnames(.data)]
+    add_notes <- ifelse(length(non_existed_col) == 1,
       " column is not found in the dataset",
       " columns are not found in the dataset"
     )
     if (stop_message) {
-      stop(paste0(toString(col_not_existed), add_notes))
+      cli_abort(
+        message = paste0(toString(non_existed_col), add_notes)
+      )
     } else {
-      return(paste0(col_not_existed, collapse = "; "))
+      return(paste0(non_existed_col, collapse = "; "))
     }
   } else {
     return(TRUE)
@@ -1314,23 +1454,23 @@ check_colnames <- function(data, col_names, strict = FALSE, stop_message = TRUE)
 #' @description
 #'   This function is used to get column names if the provided column name
 #'   is existed in the dataset.
-#' @param data Data.frame
+#' @param .data Data.frame
 #' @param col_name Column names
 #' @return
 #'  A character vector of column names that are existed in the dataset.
 #'  Otherwise return `NA`.
 #' @examples
 #' \dontrun{
-#' get_cols_name(data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("Phase", "VISCODE"))
-#' get_cols_name(data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("RID", "VISCODE"))
+#' get_cols_name(.data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("Phase", "VISCODE"))
+#' get_cols_name(.data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("RID", "VISCODE"))
 #' }
 #' @rdname get_cols_name
 #' @keywords utils_fun
 #' @export
-get_cols_name <- function(data, col_name) {
-  list_columns <- colnames(data)[colnames(data) %in% col_name]
-  if (length(list_columns) == 0) list_columns <- NA
-  return(list_columns)
+get_cols_name <- function(.data, col_name) {
+  columns_char <- colnames(.data)[colnames(.data) %in% col_name]
+  if (length(columns_char) == 0) columns_char <- NA
+  return(columns_char)
 }
 
 ## Value Matching Functions ----
@@ -1341,15 +1481,15 @@ get_cols_name <- function(data, col_name) {
 #' @param values Existed variable values
 #' @param check_list Vector of input values
 #' @param excluded.na
-#'  A boolean to skip \emph{NA} from the existed variable values \emph{values},
+#'  A Boolean to skip \emph{NA} from the existed variable values \emph{values},
 #'   Default: \emph{TRUE}
 #' @param stop_message
-#'  A boolean value to return a stop message if one of the existed values
+#'  A Boolean value to return a stop message if one of the existed values
 #'  does not match with the check list, Default: \emph{FALSE}
 #' @param add_stop_message
 #'  Additional text message that will be added in the stop message.
 #' @param value_split
-#'  A boolean value whether to split the values with specified split pattern \emph{split_pattern}
+#'  A Boolean value whether to split the values with specified split pattern \emph{split_pattern}
 #' @param split_pattern
 #' Split string pattern. Only applicable if \code{value_split = TRUE}
 #' @return
@@ -1372,6 +1512,7 @@ get_cols_name <- function(data, col_name) {
 #' @rdname check_value_match
 #' @family checks function
 #' @keywords internal
+#' @importFrom cli cli_abort
 check_value_match <- function(values,
                               check_list,
                               excluded.na = TRUE,
@@ -1379,8 +1520,8 @@ check_value_match <- function(values,
                               add_stop_message = NULL,
                               value_split = FALSE,
                               split_pattern = "\\||:|;") {
-  if (!is.logical(excluded.na)) stop("`excluded.na` must be a boolean value")
-  if (!is.logical(stop_message)) stop("`stop_message` must be a boolean value")
+  check_is_logical(excluded.na)
+  check_is_logical(stop_message)
   values <- as.character(values)
   check_list <- as.character(check_list)
   if (excluded.na == TRUE) {
@@ -1392,9 +1533,13 @@ check_value_match <- function(values,
   if (result == FALSE & stop_message == TRUE) {
     non_existed_values <- values[!values %in% check_list]
     if (length(non_existed_values) < 1) {
-      stop("The length of non existed values must be more than 1.")
+      cli_abort(
+        message = c("The length of non existed values must be more than 1.")
+      )
     }
-    stop("`", toString(non_existed_values), "` value(s) are not found ", add_stop_message)
+    cli_abort(
+      message = paste0("`", toString(non_existed_values), "` value(s) are not found ", add_stop_message)
+    )
   }
   return(result)
 }
@@ -1402,19 +1547,19 @@ check_value_match <- function(values,
 ## Duplicate Records Checks ----
 #' @title Checks Duplicated Records - Internal
 #' @description
-#'  This function is used to check if there are duplicated records in a data
-#'  based on the combination of the provided column names.
-#' @param data Data frame
+#'  This function is used to check for any duplicated records in a dataset
+#'  based on the combination of provided columns.
+#' @param .data Data.frame
 #' @param col_names Character vector of column names
 #' @param stop_message
-#'  A boolean value to return a stop message if there is any duplicated records, Default: `TRUE`
+#'  A Boolean value to return a stop message if there is any duplicated records, Default: `TRUE`
 #' @param return_duplicate_record
-#'  A boolean value to return any duplicated records, Default: `FALSE`
-#' @param add_cols
-#'  Additional columns that will be returned for `stop_message == FALSE`
+#'  A Boolean value to return any duplicated records, Default: `FALSE`
+#' @param extra_cols
+#'  Additional columns that will be returned if `stop_message` is `FALSE`
 #' @return
-#'  The same data frame `data` if there is not duplicated records.
-#'  Otherwise an assert stop message.
+#'  The same data.frame  as input dataset if there is not any duplicated records.
+#'  Otherwise either an assert stop message or duplicated records.
 #' @examples
 #' \dontrun{
 #' check_duplicate_records(
@@ -1427,77 +1572,110 @@ check_value_match <- function(values,
 #' @rdname check_duplicate_records
 #' @family checks function
 #' @keywords utils_fun
-#' @importFrom dplyr select mutate across n
-#' @importFrom stats na.omit
+#' @importFrom dplyr select mutate across n if_all
 #' @importFrom tidyr unite
 #' @importFrom tidyselect all_of any_of
+#' @importFrom cli cli_alert_info cli_abort
 #' @export
-check_duplicate_records <- function(data,
+check_duplicate_records <- function(.data,
                                     col_names,
                                     stop_message = TRUE,
                                     return_duplicate_record = FALSE,
-                                    add_cols = NULL) {
-  combined_id <- num_records <- NULL
-  if (!is.logical(stop_message)) {
-    stop("`stop_message` must be a boolean value.")
-  }
+                                    extra_cols = NULL) {
+  COMBINED_ID <- NUM_RECORDS <- NULL
+  check_is_logical(stop_message)
+  check_is_logical(return_duplicate_record)
+
   if (is.null(col_names)) {
-    stop("`col_names` must not be missing.")
+    cli_abort(
+      message = c("{.var {col_names}} must not be missing")
+    )
   }
   if (!is.character(col_names)) {
-    stop("`col_names` must be character vector of column names.")
+    cli_abort(
+      message = c(
+        "{.var {col_names}} a character vector of column names \n",
+        "{.var {col_names}} is a {.cls {class(col_names)}} object"
+      )
+    )
   }
 
-  check_records <- data %>%
-    select(any_of(c(col_names, add_cols))) %>%
-    na.omit() %>%
-    mutate(across(all_of(col_names), ~., .names = "id_{col}")) %>%
-    unite("combined_id", all_of(c(paste0("id_", col_names))), sep = "-/")
+  check_records <- .data %>%
+    select(all_of(col_names), any_of(extra_cols)) %>%
+    filter(if_all(all_of(col_names), ~ !is.na(.x))) %>%
+    mutate(across(all_of(col_names), ~., .names = "prefix_id_{col}")) %>%
+    unite("COMBINED_ID", all_of(c(paste0("prefix_id_", col_names))), sep = "-/")
 
+  if (return_duplicate_record) stop_message <- FALSE
   if (stop_message) {
     check_records <- check_records %>%
-      assert_uniq(combined_id)
-
-    output_data <- data
+      assert_uniq(COMBINED_ID)
+  }
+  if (return_duplicate_record) {
+    output_data <- check_records %>%
+      group_by(COMBINED_ID) %>%
+      mutate(NUM_RECORDS = n()) %>%
+      ungroup() %>%
+      filter(NUM_RECORDS > 1) %>%
+      relocate(COMBINED_ID, NUM_RECORDS)
   } else {
-    if (return_duplicate_record) {
-      output_data <- check_records %>%
-        group_by(combined_id) %>%
-        mutate(num_records = n()) %>%
-        ungroup() %>%
-        filter(num_records > 1)
-    } else {
-      warning("No duplicated records with the provided columns!")
-    }
+    cli_alert_info(
+      text = c("No duplicated records across {.val {col_names}} columns.")
+    )
+    output_data <- .data
   }
 
   return(output_data)
 }
 
 ## ID Format Functions ----
-#' @title Convert USUBJID into RID
-#' @description
-#'  This function is used to convert USUBJID format into RID format.
-#' @param x USUBJID variable
-#' @return A character vector of the same size as USUBJID.
-#' @rdname convert_usubjid_rid
-#' @family ID format functions
-#' @keywords utils_fun
-#' @export
-convert_usubjid_rid <- function(x) {
-  x <- gsub(pattern = "ADNI-", replacement = "", x = x)
-  return(x)
-}
-
-#' @title Create USUBJID from RID
-#' @description This function is used to create USUBJID from RID.
+#' @title Create USUBJID from RID and SITEID
+#' @description This function is used to create USUBJID from RID and SITEID.
 #' @param x RID variable
+#' @param y SITEID variable
 #' @return
-#'  A character vector of the same size as RID with `STUDYNAME-` prefix.
+#'  A character vector of the same size as the input args with `STUDYID-` prefix.
 #' @rdname create_usubjid
 #' @family ID format functions
-#' @keywords utils_fun
+#' @keywords adni_id_fun
+#' @importFrom stringr str_pad
 #' @export
-create_usubjid <- function(x) {
-  return(paste0("ADNI-", x))
+create_usubjid <- function(x, y) {
+  y <- stringr::str_pad(y, width = 3, pad = "0", side = "left")
+  x <- stringr::str_pad(x, width = 5, pad = "0", side = "left")
+  return(paste0("ADNI-", y, "-", x))
+}
+
+## datadict_tbl object type -----
+#' @title Convert `datadict_tbl` object into `tibble` object
+#' @param .data inpute value
+#' @return A tibble object
+#' @rdname datadict_as_tibble
+#' @keywords adni_datadic_fun
+#' @importFrom tibble as_tibble
+#' @export
+datadict_as_tibble <- function(.data) {
+  .data <- .data %>%
+    as_tibble()
+  return(.data)
+}
+
+#' @title Set object to `datadict_tbl` class
+#' @param .data Input value
+#' @return The same as the Input value with additional class type of `datadict_tbl`.
+#' @rdname set_datadict_tbl
+#' @keywords adni_datadic_fun
+#' @importFrom cli cli_abort
+#' @export
+set_datadict_tbl <- function(.data) {
+  if (!is.data.frame(.data)) {
+    cli::cli_abort(
+      message = c(
+        "{.var .data} must be data.frame object. \n",
+        "{.var .data} is a class of {.cls class(.data)} object."
+      )
+    )
+  }
+  .data <- structure(.data, class = c(class(.data), "datadict_tbl"))
+  return(.data)
 }

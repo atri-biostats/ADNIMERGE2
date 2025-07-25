@@ -1,16 +1,32 @@
 # Libraries ----
 library(tidyverse)
 library(assertr)
+library(cli)
 
 # Input args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 2) stop("Input argument must be size of 2.")
+if (length(args) != 2) {
+  cli::cli_abort(
+    message = c(
+      "Input argument {.val arg} must be size of 2. \n",
+      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+    )
+  )
+}
 DERIVED_DATASET_LIST <- str_remove_all(string = args[1], pattern = '[\\(\\)]|\\"|^c') %>%
   str_split(string = ., pattern = ",") %>%
   unlist() %>%
   str_trim(string = ., side = "both")
 if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
 USE_UPDATED_DATADIC <- as.logical(args[2])
+if (!is.logical(USE_UPDATED_DATADIC) | is.na(USE_UPDATED_DATADIC)) {
+  cli::cli_abort(
+    message = c(
+      "{.var USE_UPDATED_DATADIC} must be a Boolean value. \n",
+      "The value of {.var USE_UPDATED_DATADIC} is {.val {USE_UPDATED_DATADIC}}."
+    )
+  )
+}
 
 # Load all data from "./data" to .GlobalEnv ----
 data_dir <- "./data"
@@ -18,13 +34,21 @@ data_path <- list.files(
   path = data_dir, pattern = "\\.rda$", all.files = TRUE,
   full.names = TRUE, recursive = FALSE
 )
-derived_data_path <- file.path(data_dir, str_c(DERIVED_DATASET_LIST, ".rda"))
+derived_data_path <- file.path(data_dir, str_c(c(DERIVED_DATASET_LIST, "DERIVED_DATADIC"), ".rda"))
 data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
 metadata_specs_path <- file.path(data_dir, "METACORES.rda")
 data_dict_path <- file.path(data_dir, "DATADIC.rda")
+data_dic_path_remote <- file.path(data_dir, "REMOTE_DATADIC.rda")
+
 # Updated DATADIC file
-updated_data_dict_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATADIC.rda")
-dataset_date_stamped_file_path <- "./data-raw/date_stamped/dataset_list_date_stamped.csv"
+updated_data_dict_path <- file.path(
+  "./data-raw", "updated_datadic",
+  "UPDATED_DATADIC.rda"
+)
+dataset_date_stamped_file_path <- file.path(
+  "./data-raw", "date_stamped",
+  "dataset_list_date_stamped.csv"
+)
 
 if (file.exists(dataset_date_stamped_file_path)) {
   dataset_list_date_stamped <- readr::read_csv(
@@ -38,11 +62,7 @@ if (file.exists(dataset_date_stamped_file_path)) {
     ) %>%
     select(TBLNAME, STAMPED_DATE)
 } else {
-  dataset_list_date_stamped <- tibble(
-    STAMPED_DATE = NA_character_,
-    TBLNAME = NA_character_
-  ) %>%
-    na.omit()
+  dataset_list_date_stamped <- create_tibble0(c("STAMPED_DATE", "TBLNAME"))
 }
 
 if (USE_UPDATED_DATADIC) {
@@ -52,7 +72,14 @@ if (USE_UPDATED_DATADIC) {
   DATADIC <- UPDATED_DATADIC
 }
 
-## Exclude `DATA_DOWNLOADED_DATE`, `DATADIC`, `METACORES` data from the list
+if (file.exists(data_dic_path_remote)) load(data_dic_path_remote, .GlobalEnv)
+if (exists("REMOTE_DATADIC")) {
+  REMOTE_DATADIC <- REMOTE_DATADIC %>%
+    mutate(across(everything(), as.character))
+} else {
+  REMOTE_DATADIC <- create_tibble0("PHASE")
+}
+## Exclude `DATA_DOWNLOADED_DATE`, `DATADIC`, `DERIVED_DATADIC`, `METACORES` data from the list
 raw_data_path <- data_path[!data_path %in% c(
   data_downloaded_date_path,
   derived_data_path,
@@ -70,14 +97,16 @@ if (length(derived_data_path) > 0) {
   ))
 }
 rm(list = as.character(str_remove_all(
-  string = data_path[!data_path %in% data_dict_path],
+  string = data_path[!data_path %in% c(data_dict_path, data_dic_path_remote)],
   pattern = "\\.rda$|^.\\/data/"
 )))
 prefix_patterns <- "^adni\\_"
 string_removed_pattern <- str_c(c(prefix_patterns), collapse = "|")
 
 # Documentations for the raw datasets ----
-message("Generating documentations for raw datasets")
+cli::cli_alert_info(
+  text = "Generating documentations for raw datasets"
+)
 source(file.path(".", "tools", "data-prepare-utils.R"))
 source(file.path(".", "tools", "data-dictionary-utils.R"))
 source(file.path(".", "R", "checks-assert.R"))
@@ -96,6 +125,16 @@ authors <- paste0(
   "{adni-data@googlegroups.com}"
 )
 
+adjust_value_datadict <- function(.data, datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
+  col_names <- c("field_values", "field_notes")
+  .data <- .data %>%
+    mutate(across(any_of(col_names), ~ case_when(
+      dd_name %in% datadict_name ~ " ",
+      TRUE ~ .x
+    )))
+  return(.data)
+}
+
 ## Prepare data dictionary for raw dataset ----
 ### Generate data dictionary from actual raw dataset ----
 temp_data_dict <- lapply(names(raw_data_list), function(tb) {
@@ -106,25 +145,29 @@ temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   )
 }) %>%
   bind_rows() %>%
-  mutate(tblname = str_remove_all(
-    string = str_to_lower(dd_name),
-    pattern = string_removed_pattern
-  ))
+  adjust_value_datadict() %>%
+  mutate(tblname = str_remove_all(str_to_lower(dd_name), string_removed_pattern))
 
 unique_tblname <- unique(temp_data_dict$tblname)
 
 ### Get field code and labels from DATADIC dataset ----
 exc_code <- c('crfname|\\"indexes\\"|\\<display\\>|\"Pass;|\"OTF Lumos;|\"a; b; c; d|select distinct |^-4$')
 exc_code_text <- "\n|\\<br\\>|\\<br /\\>|\\<!--|--\\>$"
-temp_field_codetext <- DATADIC %>%
+temp_field_codetext <- bind_rows(DATADIC, REMOTE_DATADIC) %>%
+  filter(!TBLNAME %in% c("DATADIC", "REMOTE_DATADIC")) %>%
   as_tibble() %>%
   mutate(TBLNAME = str_to_lower(TBLNAME)) %>%
   filter(TBLNAME %in% unique_tblname) %>%
+  mutate(
+    CODE = str_replace_all(str_replace_all(CODE, "; ", ";"), ";", "; "),
+    CODE = str_replace_all(str_replace_all(CODE, " ;", ";"), ";", " ;")
+  ) %>%
+  mutate(across(c(CODE, TEXT), ~ ifelse(.x %in% "-4", NA_character_, as.character(.x)))) %>%
+  mutate(across(c(CODE, TEXT), ~ str_trim(.x))) %>%
   distinct(PHASE, TBLNAME, FLDNAME, TEXT, CODE) %>%
-  mutate(across(c(TEXT, CODE), ~ ifelse(.x %in% "-4", NA_character_, .x))) %>%
   mutate(removed_records = str_detect(CODE, exc_code)) %>%
   filter(removed_records == FALSE | is.na(removed_records)) %>%
-  mutate(across(c(TEXT, CODE), ~ str_remove_all(string = .x, pattern = exc_code_text))) %>%
+  mutate(across(c(TEXT, CODE), ~ str_remove_all(.x, exc_code_text))) %>%
   group_by(TBLNAME, FLDNAME) %>%
   nest() %>%
   ungroup() %>%
@@ -132,10 +175,12 @@ temp_field_codetext <- DATADIC %>%
   unnest(cols = adjust_fldcodes) %>%
   assert_uniq(TBLNAME, FLDNAME)
 
+common_data_names <- str_to_lower(c("DATADIC", "REMOTE_DATADIC", "VISITS", "ADNI2_VISITID"))
+
 temp_data_dict <- temp_data_dict %>%
   # Add dataset labels
   left_join(
-    DATADIC %>%
+    bind_rows(DATADIC, REMOTE_DATADIC) %>%
       distinct(CRFNAME, TBLNAME, STATUS) %>%
       group_by(TBLNAME) %>%
       filter(
@@ -181,8 +226,8 @@ temp_data_dict <- temp_data_dict %>%
     ),
     add_authors = authors,
     short_description = case_when(
-      !tblname %in% str_to_lower(c("DATADIC", "VISITS", "ADNI2_VISITID")) ~ str_c(CRFNAME, common_description, sep = " "),
-      tblname %in% str_to_lower(c("DATADIC", "VISITS", "ADNI2_VISITID")) ~ str_c(CRFNAME, str_remove(common_description, "^data"), sep = " ")
+      !tblname %in% common_data_names ~ str_c(CRFNAME, common_description, sep = " "),
+      tblname %in% common_data_names ~ str_c(CRFNAME, str_remove(common_description, "^data"), sep = " ")
     ),
     dataset_source_type = "raw",
     add_source = loni_url_link
@@ -210,7 +255,7 @@ temp_data_dict <- temp_data_dict %>%
   ) %>%
   mutate(across(c(field_label, field_notes, field_value), ~ str_replace_all(.x, "\\%", "\\\\%"))) %>%
   mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with")) %>%
-  mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")) %>%
+  mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with levels")) %>%
   select(
     dd_name, num_rows, num_cols, field_name, field_class, field_label,
     field_values, field_notes, dataset_label, add_authors, short_description,
@@ -228,16 +273,12 @@ if (file.exists(dataset_cat_path)) {
   ) %>%
     select(dir_cat, TBLNAME)
 } else {
-  dataset_cat <- tibble(
-    dir_cat = NA_character_,
-    TBLNAME = NA_character_
-  ) %>%
-    na.omit()
+  dataset_cat <- create_tibble0(c("dir_cat", "TBLNAME"))
 }
 
 temp_data_dict <- temp_data_dict %>%
   left_join(
-    tab <- dataset_cat %>%
+    dataset_cat %>%
       mutate(dir_cat = str_remove_all(string = dir_cat, ",")) %>%
       select(TBLNAME, dir_cat) %>%
       distinct(),
@@ -255,7 +296,7 @@ coded_records_path <- file.path(".", "data-raw", "coded_records", "coded_records
 if (file.exists(coded_records_path)) {
   coded_records <- readr::read_csv(
     file = coded_records_path,
-    show_col_types = FALSE, 
+    show_col_types = FALSE,
     guess_max = Inf
   ) %>%
     as_tibble() %>%
@@ -263,12 +304,7 @@ if (file.exists(coded_records_path)) {
     select(TBLNAME, FLDNAME, CODED = STATUS) %>%
     distinct()
 } else {
-  coded_records <- tibble(
-    TBLNAME = NA_character_,
-    FLDNAME = NA_character_,
-    CODED = NA_character_
-  ) %>%
-    na.omit()
+  coded_records <- create_tibble0(c("TBLNAME", "FLDNAME", "CODED"))
 }
 
 temp_data_dict <- temp_data_dict %>%
@@ -292,7 +328,9 @@ temp_data_dict <- temp_data_dict %>%
 
 ## Finalize documentations ------
 if (dir.exists(file.path(".", "R")) == FALSE) {
-  stop(file.path(".", "R"), " directory is not existed!")
+  cli::cli_abort(
+    message = "{.val {file.path('.', 'R')}} directory is not existed."
+  )
 }
 data_document_path <- file.path(".", "R", "data.R")
 if (file.exists(data_document_path) == TRUE) {
@@ -310,7 +348,7 @@ generate_roxygen_document(
 )
 
 # Documentation for DATA_DOWNLOADED_DATE data ----
-cat("#' ADNI data download date",
+cat("#' ADNI Study Data Downloaded Date",
   "#'",
   paste0(
     "#' The date when data in this package were downloaded from ",
@@ -330,7 +368,9 @@ cat("#' ADNI data download date",
   "NULL\n\n",
   file = data_document_path, sep = "\n", append = TRUE
 )
-message("Completed generating documentations for raw dataset")
+cli::cli_alert_success(
+  text = "Completed generating documentations for raw datasets"
+)
 
 # Documentations for the derived dataset ----
 ## Prepare data dictionary for derived dataset ----
@@ -357,13 +397,23 @@ if (exists("derived_data_list")) {
     return(output_link)
   }
 
-  derived_data_dict_path <- file.path(
-    "./data-raw/derived-datadic", "DERIVED_DATADIC.rda"
-  )
+  derived_data_dict_path <- file.path(data_dir, "DERIVED_DATADIC.rda")
   if (!file.exists(derived_data_dict_path)) {
-    stop(derived_data_dict_path, " is not existed!")
+    cli::cli_abort(
+      message = "{.val {derived_data_dict_path}} is not existed."
+    )
   }
   load(derived_data_dict_path, .GlobalEnv)
+
+  # Add description for `DERIVED_DATADIC`
+  DERIVED_DATADIC <- DERIVED_DATADIC %>%
+    bind_rows(
+      tibble(
+        TBLNAME = "DERIVED_DATADIC",
+        CRFNAME = "Data dictionary for derived dataset",
+        FLDNAME = colnames(DERIVED_DATADIC)
+      )
+    )
 
   derived_data_name <- names(derived_data_list)
   derived_data_name <- derived_data_name[!derived_data_name %in% "METACORES"]
@@ -376,10 +426,8 @@ if (exists("derived_data_list")) {
     )
   }) %>%
     bind_rows() %>%
-    mutate(tblname = str_remove_all(
-      string = dd_name,
-      pattern = string_removed_pattern
-    )) %>%
+    adjust_value_datadict() %>%
+    mutate(tblname = str_remove_all(dd_name, string_removed_pattern)) %>%
     left_join(
       DERIVED_DATADIC %>%
         select(TBLNAME, FLDNAME, TEXT, CRFNAME),
@@ -391,17 +439,14 @@ if (exists("derived_data_list")) {
       dataset_label = CRFNAME,
       add_authors = authors,
       short_description = str_c(
-        str_to_sentence(
-          string = str_remove_all(
-            string = CRFNAME,
-            pattern = "\\[ Derived \\]"
-          )
-        ),
-        "derived dataset.",
-        sep = " "
+        str_to_sentence(str_remove_all(CRFNAME, "\\[ Derived \\]")),
+        " derived dataset."
       ),
       dataset_source_type = "derived",
-      add_source = source_link(tblname = dd_name),
+      add_source = case_when(
+        dd_name %in% "DERIVED_DATADIC" ~ "For more details see the help vignettes",
+        TRUE ~ source_link(tblname = dd_name)
+      ),
       field_notes = case_when(
         TEXT %in% " " | is.na(TEXT) ~ field_notes,
         TRUE ~ paste0(TEXT, "; ", field_notes)
@@ -412,16 +457,11 @@ if (exists("derived_data_list")) {
       c(field_label, field_notes, field_values),
       ~ str_replace_all(.x, "\\%", "\\\\%")
     )) %>%
-    mutate(field_notes = str_replace_all(
-      string = field_notes,
-      pattern = "Character variable with",
-      replacement = ", with character"
-    )) %>%
-    mutate(field_notes = str_replace_all(
-      string = field_notes,
-      pattern = "Factor variable with levels",
-      replacement = ", with factor levels"
-    )) %>%
+    mutate(
+      field_label = ifelse(is.na(field_label), " ", field_label),
+      field_notes = str_replace_all(field_notes, "Character variable with", ", with character"),
+      field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")
+    ) %>%
     select(
       dd_name, dataset_label, num_rows, num_cols, field_name, field_class,
       field_label, field_values, field_notes, add_authors, short_description,
@@ -465,6 +505,7 @@ if (exists("derived_data_list")) {
     "NULL\n\n",
     file = data_document_path, sep = "\n", append = TRUE
   )
-
-  message("Completed generating documentations for derived dataset")
+  cli::cli_alert_success(
+    text = "Completed generating documentations for derived datasets"
+  )
 }
