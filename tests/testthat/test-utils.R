@@ -22,7 +22,6 @@ test_that("Check replace_multiple_values function", {
     "screen failed after randomization", "randomized - assigned a scan category",
     "randomized - assigned a scan category", "screen failed"
   )
-
   expect_identical(
     object = replaced_values1,
     expected = pre_values1,
@@ -31,9 +30,10 @@ test_that("Check replace_multiple_values function", {
 
   # Test 2 ----
   data_dict <- get_factor_levels_datadict(
-    data_dict = DATADIC,
+    .datadic = DATADIC,
     tbl_name = "ADAS"
   ) %>%
+    datadict_as_tibble() %>%
     filter(FLDNAME %in% "COT1LIST") %>%
     verify(nrow(.) == 10)
 
@@ -91,9 +91,10 @@ test_that("Check replace_multiple_values function", {
 
   # Test 5 ----
   data_dict2 <- get_factor_levels_datadict(
-    data_dict = DATADIC,
+    .datadic = DATADIC,
     tbl_name = "ADAS"
   ) %>%
+    datadict_as_tibble() %>%
     filter(FLDNAME %in% "Q9TASK") %>%
     filter(PHASE %in% "ADNIGO") %>%
     verify(nrow(.) == 6) %>%
@@ -118,5 +119,4 @@ test_that("Check replace_multiple_values function", {
     expected = pre_values5,
     info = "Check replace_multiple_values function: test-5"
   )
-  
 })

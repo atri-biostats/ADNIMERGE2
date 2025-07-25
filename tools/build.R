@@ -5,16 +5,14 @@ library(tidyverse)
 library(callr)
 
 ## Set working directory ----
-## To set the project directory as a working directory
-# cur_script_dir <- dirname(rstudioapi::getSourceEditorContext()$path)
-# cur_script_dir <- str_remove(string = cur_script_dir, pattern = "/tools$")
-# setwd(cur_script_dir)
+## To set active project directory as a working directory
+setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-04-10" # Data downloaded date
+DATA_DOWNLOADED_DATE <- "2025-07-10" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 513 in the `./data-raw/data_prep.R`
 callr::rscript(
-  script = "./data-raw/data_prep.R",
+  script = "./data-raw/data-prep.R",
   wd = ".",
   cmdargs = list(
     DATA_DOWNLOADED_DATE = DATA_DOWNLOADED_DATE,
@@ -27,7 +25,7 @@ DECODE_VALUE <- TRUE
 USE_UPDATED_DATADIC <- UPDATE_DATADIC
 if (DECODE_VALUE) {
   callr::rscript(
-    script = "./data-raw/data_prep_recode.R",
+    script = "./data-raw/data-prep-recode.R",
     wd = ".",
     cmdargs = list(USE_UPDATED_DATADIC = USE_UPDATED_DATADIC)
   )
@@ -39,11 +37,11 @@ INCLUDE_DERIVED_DATASET <- TRUE
 if (INCLUDE_DERIVED_DATASET) {
   # List of derived dataset
   DERIVED_DATASET_LIST <- c(
-    "DM", "AE", "QS", "SC", "RS", "NV", "BS", "VS",
-    "ADSL", "ADAE", "ADQS", "METACORES"
+    "DM", "AE", "QS", "SC", "RS", "NV", "LB", "VS", "GF",
+    "ADSL", "ADAE", "ADQS", "ADRS", "METACORES"
   )
   callr::rscript(
-    script = "./tools/generate_derived_data.R",
+    script = "./tools/generate-derived-data.R",
     wd = ".",
     cmdargs = list(DERIVED_DATASET_LIST = DERIVED_DATASET_LIST)
   )
@@ -61,12 +59,20 @@ callr::rscript(
   )
 )
 
+## Additional package related files ----
+# # run once: 
+# # Package License
+# usethis::use_mit_license()
+# # Package news
+# # Caution of overwrting any existing `NEWS.md` file
+# usethis::use_news_md()
+
 ## Finalize package building ----
 devtools::load_all("./")
 devtools::document()
 devtools::check(error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
 pkg_dir <- devtools::build(vignettes = INCLUDE_DERIVED_DATASET)
-install.packages(pkg_dir)
+install.packages(pkgs = pkg_dir, repos = NULL)
 
 # Build README.md ----
 devtools::build_readme()
@@ -75,13 +81,13 @@ devtools::build_readme()
 # # run once:
 # # To clean any existing site on local machine
 # pkgdown::clean_site()
-# # Caution about overwriting any existing `_pkgdown.yml` file
+# # Caution of overwriting any existing `_pkgdown.yml` file
 # usethis::use_pkgdown()
 # pkgdown::check_pkgdown()
 # pkgdown::build_site()
-# # Publish website online: ----
-# # To publish a site: PUBLISH_SITE = TRUE
-# PUBLISH_SITE <- FALSE
+# # Publish website online ----
+# # To publish a site online via GitHub repo: PUBLISH_SITE = TRUE
+# # PUBLISH_SITE <- FALSE
 # if (PUBLISH_SITE) {
 #   pkgdown::deploy_to_branch()
 # }

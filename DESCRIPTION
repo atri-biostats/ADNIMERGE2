@@ -7,7 +7,7 @@ Authors@R: person("ATRI Biostatistics", email = "biostat_request@atrihub.io",
   role = c("aut", "cre"))
 BugReports: https://github.com/atri-biostats/ADNIMERGE2/issues
 URL: https://atri-biostats.github.io/ADNIMERGE2
-License: https://ida.loni.usc.edu/collaboration/access/appLicense.jsp
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: bzip2
@@ -21,7 +21,8 @@ Imports:
   rmarkdown,
   tidyselect,
   purrr,
-  tidyr 
+  tidyr, 
+  cli
 Suggests:
   knitr,
   tidyverse,
@@ -35,7 +36,17 @@ Suggests:
   measurements, 
   gtsummary,
   testthat, 
-  htmltools
+  htmltools, 
+  sdtm.oak, 
+  sdtmchecks,
+  ggplot2,
+  see, 
+  lme4, 
+  marginaleffects, 
+  performance,
+  survival,
+  msm,
+  consort
 Depends: 
     R (>= 3.5)
 RoxygenNote: 7.3.2

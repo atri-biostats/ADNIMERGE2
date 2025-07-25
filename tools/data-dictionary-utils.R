@@ -41,7 +41,7 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = "factor")
-  check_logical(wider_format)
+  check_is_logical(wider_format)
   # Add description for roxygen document
   var_notes <- str_c(
     "Factor variable with levels: ",
@@ -52,7 +52,7 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
     field_values_order = seq_along(levels(var_values)),
     field_name = var_name,
     field_class = var_class_type,
-    field_label = replace_null_na(var_label),
+    field_label = convert_null_na(var_label),
     field_notes = var_notes
   ) %>%
     select(
@@ -119,7 +119,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = "character")
-  check_logical(wider_format)
+  check_is_logical(wider_format)
   # Warning message if number of item value is more than 10
   var_values <- unique(var_values)[!is.na(unique(var_values))]
   id_format_pattern <- "[0-9]{3}\\_s\\_d+|[0-9]{3}\\_S\\_d+|[0-9]{3}-s-d+|[0-9]{3}-S-d+"
@@ -145,7 +145,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
     field_values_order = seq_along(var_values),
     field_name = var_name,
     field_class = var_class_type,
-    field_label = replace_null_na(var_label),
+    field_label = convert_null_na(var_label),
     field_notes = var_notes
   ) %>%
     mutate(field_values_order = ifelse(is.na(field_values), NA_real_,
@@ -215,11 +215,10 @@ summarize_numeric_variable <- function(data, var_name, wider_format = FALSE) {
     arg = var_class_type,
     values = c("numeric", "double", "integer")
   )
-  check_logical(wider_format)
+  check_is_logical(wider_format)
   # Minimum and Maximum Values
   min_value <- min(var_values, na.rm = TRUE)
   max_value <- max(var_values, na.rm = TRUE)
-
   var_notes <- paste0("Range value: ", min_value, ", ..., ", max_value)
 
   summary_result <- tibble::tibble(
@@ -227,9 +226,13 @@ summarize_numeric_variable <- function(data, var_name, wider_format = FALSE) {
     summary_type = c("Min", "Max"),
     field_name = var_name,
     field_class = var_class_type,
-    field_label = replace_null_na(var_label),
+    field_label = convert_null_na(var_label),
     field_notes = var_notes
   ) %>%
+    mutate(field_values = case_when(
+      field_values %in% c("-Inf", "Inf") ~ NA_character_,
+      TRUE ~ field_values
+    )) %>%
     select(
       field_name, field_class, field_label, summary_type,
       field_values, field_notes
@@ -307,7 +310,7 @@ summarize_date_variable <- function(data, var_name) {
   summary_result <- tibble(
     field_name = var_name,
     field_class = var_class_type[1],
-    field_label = replace_null_na(var_label),
+    field_label = convert_null_na(var_label),
     field_notes = var_notes
   ) %>%
     select(field_name, field_class, field_label, field_notes) %>%
@@ -354,13 +357,13 @@ summarize_logical_variable <- function(data, var_name) {
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = c("logical"))
-  var_notes <- paste0("Boolean value: TRUE/ FALSE")
+  var_notes <- paste0("A Boolean value: TRUE/ FALSE")
   summary_result <- tibble(
     field_values = str_c("TRUE or FALSE"),
     field_values_order = NA_real_,
     field_name = var_name,
     field_class = var_class_type,
-    field_label = replace_null_na(var_label),
+    field_label = convert_null_na(var_label),
     field_notes = var_notes
   ) %>%
     select(
@@ -380,7 +383,7 @@ summarize_logical_variable <- function(data, var_name) {
 #' @param data Data frame
 #' @param var_name Variable name
 #' @param wider_format
-#'  A boolean value to generate the minimum and maximum values in a wide or
+#'  A Boolean value to generate the minimum and maximum values in a wide or
 #'  long format, Default: FALSE
 #' @return A data.frame that contains the at least the following variables:
 #'   \item{field_name}{Variable name}
@@ -414,7 +417,7 @@ summarize_variable <- function(data, var_name, wider_format = FALSE) {
     "Date", "POSIXct", "POSIXt", "hms", "difftime", "logical"
   )
   arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
-  check_logical(wider_format)
+  check_is_logical(wider_format)
   if (any(var_class_type %in% specified_class_type[1])) {
     summary_result <- summarize_factor_variable(data = data, var_name = var_name, wider_format = wider_format)
   }
@@ -493,7 +496,12 @@ summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
     }
 
   if (wider_format && nrow(data_dict_dd) != length(colnames(data))) {
-    stop("Check for the number of rows in data_dict_dd")
+    cli_abort(
+      message = c(
+        "Discrepancy between number of numbers in {.val data_dict_dd} and number of columns in {.val data}. \n",
+        "{.clas {nrow(data_dict_dd)}} rows; {.clas {length(colnames(data))}} columns."
+      )
+    )
   }
   return(data_dict_dd)
 }
@@ -519,7 +527,7 @@ summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
 #' @param add_rdname_prefix To add rdname prefix, Default: NULL. See more [@rdname](https://roxygen2.r-lib.org/reference/index.html)
 #' @param add_keywords To add key words, Default: NULL. See more [@keywords](https://roxygen2.r-lib.org/reference/index.html)
 #' @param output_file
-#'  A boolean value to return a string output or write the output in a local
+#'  A Boolean value to return a string output or write the output in a local
 #'  file (i.e. write in a file), Default: NULL
 #' @param output_file_name
 #'  Output file name. Should other than `NULL` if the interest is to store the
@@ -547,6 +555,7 @@ summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
 #' @importFrom dplyr select distinct
 #' @importFrom tibble tibble
 #' @importFrom readr write_lines
+#' @importFrom cli cli_abort
 generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, data = NULL, data_dict = NULL,
                                             dataset_source_type = "raw", short_description = NULL,
                                             field_nameVar = NULL, field_classVar = NULL, field_labelVar = NULL, field_notesVar = NULL,
@@ -567,7 +576,12 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
     str_c("[", dataset_source_type, "]")
   )
   if (is.null(data_dict) && is.null(dd)) {
-    stop("A dataframe of actual dataset or prepared data dictionary should be provide")
+    cli_abort(
+      message = paste0(
+        "Either a data.frame of actual data {.val dd} or prepared data",
+        " dictionary {.val data_dict} must be provided."
+      )
+    )
   }
 
   # To prepared a data dictionary if not provided
@@ -584,7 +598,7 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
 
     # Checking for a single dataset name
     if (length(unique(temp_summarized_dd$dd_name)) > 1) {
-      stop("Check the dataset name")
+      cli_abort(message = "At least one dataset name must be existed.")
     }
 
     temp_summarized_dd <- data_dict_column_names(
@@ -597,7 +611,9 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
   # Generate the document based on pre-specified data dictionary dataset
   if (is.null(data)) {
     if (any(!c("num_rows", "num_cols") %in% colnames(data_dict))) {
-      stop("num_rows and num_cols are noted included in the data_dict")
+      cli_abort(
+        message = "{.var num_rows} and {.var num_cols} are not included in the {.clas data_dict}"
+      )
     }
 
     temp_summarized_dd <- data_dict_column_names(
@@ -673,7 +689,9 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
   data_doc <- str_c(data_doc, str_c('"', dataset_name, '"\n'), "\n", collapse = "")
 
   if (is.na(data_doc)) {
-    stop("`data_doc` is missing and roxygen document is not prepared for ", dataset_name, " dataset")
+    cli_abort(
+      message = "{.val data_doc} must not be missing"
+    )
   }
   # To write in in A file
   if (is.null(output_file_name)) {
@@ -731,30 +749,41 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
 #' @importFrom stringr str_to_upper str_c str_remove_all
 #' @importFrom dplyr filter bind_rows select
 #' @importFrom readr write_lines
+#' @importFrom cli cli_abort
 generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "actual_dataset", data_list = NULL, data_dict = NULL,
                                       field_nameVar = NULL, field_classVar = NULL, field_labelVar = NULL, field_notesVar = NULL,
                                       output_file_name = NULL, existed_append = FALSE) {
   require(tidyverse)
   require(rlang)
   arg_match0(arg = roxygen_source_type, values = c("actual_dataset", "data_dictionary"))
-  check_logical(existed_append)
+  check_is_logical(existed_append)
   if (is.null(field_nameVar)) field_nameVar <- "field_name"
   if (is.null(field_classVar)) field_classVar <- "field_class"
   if (is.null(field_labelVar)) field_labelVar <- "field_label"
   if (is.null(field_notesVar)) field_notesVar <- "field_notes"
 
-
   # If actual dataset list data_list is provided
   if (roxygen_source_type %in% "actual_dataset") {
-    if (is.null(data_list)) stop("Check for the actual dataset")
-    if (!is.list(data_list)) stop("dd should be a list dataset with names")
+    if (is.null(data_list)) cli_abort(message = "{.val data_list} must not be missing")
+    if (!is.list(data_list)) {
+      cli_abort(
+        message = c(
+          "{.var data_list} must be a list object.",
+          "{.var data_list} is a {.cls {class(data_list)}} object."
+        )
+      )
+    }
     # Checking for listed dataset names
     check_list_names(data_list = data_list, list_names = dataset_name_list)
   }
 
   # If data dictionary data_dict is provided
   if (roxygen_source_type %in% "data_dictionary") {
-    if (is.null(data_dict)) stop("Check for data_dict dataset")
+    if (is.null(data_dict)) {
+      cli_abort(
+        message = c("{.var data_dict} must not be missing.")
+      )
+    }
     data_dict_col_names <- colnames(data_dict)
     arg_lst <- c("dd_name", field_nameVar, field_classVar, field_labelVar, field_notesVar)
     rlang::arg_match(
@@ -829,7 +858,7 @@ generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "
       if (existed_append == FALSE) readr::write_lines(x = "", output_file_name)
     }
     output_scripts <- paste0(output_result$data_doc, collapse = "\n")
-    if (is.na(output_scripts)) stop(output_file_name, " has not been updated.")
+    if (is.na(output_scripts)) cli_abort(message = "{.file output_file_name} has not been updated.")
     cat(output_scripts, file = output_file_name, append = TRUE)
   }
 }
@@ -848,8 +877,9 @@ generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "
 #' @rdname return_null_missing
 #' @keywords utils_fun
 #' @importFrom dplyr select pull
+#' @importFrom cli cli_abort
 return_null_missing <- function(data, var_name, single_value_check = TRUE) {
-  check_logical(single_value_check)
+  check_is_logical(single_value_check)
   # If the variable is existed
   if (var_name %in% colnames(data)) {
     var_value_list <- data %>%
@@ -865,13 +895,12 @@ return_null_missing <- function(data, var_name, single_value_check = TRUE) {
     return(NULL)
   } else {
     if (single_value_check == TRUE & length(unique_value_list) > 1) {
-      stop(paste0("There are more than one unique values ", var_name, " variable."))
+      cli_abort(message = c(
+        "{.var var_name} must be a single character vector. \n",
+        "There are {.val {unique_value_list}} values in {.var var_name}"
+      ))
     }
     return(unique_value_list)
-  }
-
-  if (any(is.na(unique_value_list)) == FALSE) {
-
   }
 }
 
@@ -886,10 +915,14 @@ return_null_missing <- function(data, var_name, single_value_check = TRUE) {
 #'  Otherwise returns `TRUE`.
 #' @rdname check_list_names
 #' @keywords utils_fun
+#' @importFrom cli cli_abort
 check_list_names <- function(data_list, list_names = NULL) {
   # If there are any unnamed lists
   if (any(is.null(names(data_list)) | is.na(names(data_list)))) {
-    stop("Check the unnamed lists of `listed_dd`")
+    cli_abort(message = c(
+      "{.var data_list} must be fully named list object. \n",
+      "{.var data_list} contains unnamed {.cls {class(data_list)}} values."
+    ))
   }
 
   # To check for any missed listed names
@@ -900,7 +933,10 @@ check_list_names <- function(data_list, list_names = NULL) {
   }
 
   if (length(missing_names) > 0) {
-    stop(paste0("Check for listed names of ", toString(missing_names)))
+    cli_abort(message = c(
+      "{.var data_list} contain unnamed list value. \n",
+      "Named list {.val {missing_names}}."
+    ))
   }
 
   return(TRUE)
@@ -989,6 +1025,7 @@ data_dict_column_names <- function(data_dict, field_nameVar = NULL,
 #' @rdname generate_variable_format
 #' @keywords utils_fun
 #' @importFrom dplyr filter
+#' @importFrom cli cli_abort
 generate_variable_format <- function(data_dict, var_name, field_nameVar = NULL, field_classVar = NULL,
                                      field_labelVar = NULL, field_notesVar = NULL) {
   require(tidyverse)
@@ -1004,8 +1041,12 @@ generate_variable_format <- function(data_dict, var_name, field_nameVar = NULL, 
 
   label_value <- ifelse(is.na(temp_dd$labelVar), " ", temp_dd$labelVar)
   note_value <- ifelse(is.na(temp_dd$notesVar), " ", temp_dd$notesVar)
-  if (is.na(temp_dd$classVar)) stop("Variable class of `", var_name, "` must not be missing.")
-  if (is.na(temp_dd$nameVar)) stop("Variable name of `", var_name, "` must not be missing.")
+  if (is.na(temp_dd$classVar)) {
+    cli_abort(message = "{.var classVar} must not be missing")
+  }
+  if (is.na(temp_dd$nameVar)) {
+    cli_abort(message = "{.var nameVar} must not be missing")
+  }
 
   return(
     paste0("#' \\item \\strong{", temp_dd$nameVar, "}",
@@ -1015,27 +1056,15 @@ generate_variable_format <- function(data_dict, var_name, field_nameVar = NULL, 
   )
 }
 
-# Checks Logical Value ----
-#' @title Checks Logical Value
+# Convert `NULL` as Missing Value ----
+#' @title Convert `NULL` as Missing Value
 #' @description
-#'  This function is used to check if the provided value is a boolean.
-#' @param x Input value
-#' @return A stop message if the input value is not a boolean.
-#' @rdname check_logical
-#' @keywords utils_fun
-check_logical <- function(x) {
-  if (!is.logical(x)) stop(x, " must be a boolean value.")
-  return(TRUE)
-}
-
-# Adjust Labels  ----
-#' @title Adjust Labels
-#' @description This function is used to adjust for missing labels.
+#'  Convert `NULL` as missing value character 'NA'.
 #' @param x Input value
 #' @return A character vector with updated values.
-#' @rdname replace_null_na
+#' @rdname convert_null_na
 #' @keywords utils_fun
-replace_null_na <- function(x) {
+convert_null_na <- function(x) {
   x <- ifelse(is.null(x), NA_character_, x)
   return(x)
 }

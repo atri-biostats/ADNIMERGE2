@@ -11,12 +11,12 @@
 #' @param add_text
 #'  Additional text that will appended in the script, Default: NULL
 #' @param include_pipe
-#'  A boolean to include a pipe after the first line of the script, Default: FALSE
+#'  A Boolean to include a pipe after the first line of the script, Default: FALSE
 #' @param clean If TRUE, remove script file
 #' @return
 #'  \itemize{
-#'    \item A file path if the script is not compiled for \code{\emph{run_script == FALSE}}
-#'    \item Otherwise \emph{TRUE} boolean values
+#'    \item A file path if the script is not compiled for \code{\emph{run_script = FALSE}}
+#'    \item Otherwise \emph{TRUE} Boolean value
 #'  }
 #' @examples
 #' \dontrun{
@@ -34,21 +34,19 @@
 #' @importFrom rlang arg_match0
 #' @importFrom usethis use_data_raw use_data
 #' @importFrom readr read_lines write_lines
+#' @importFrom cli cli_abort cli_alert_info
 #' @export
-use_data_modified <- function(dataset_name,
-                              dataset,
-                              edit_type = "create",
-                              run_script = TRUE,
-                              add_text = NULL,
-                              include_pipe = FALSE,
-                              clean = TRUE) {
+use_data_modified <- function(dataset_name, dataset, edit_type = "create",
+                              run_script = TRUE, add_text = NULL,
+                              include_pipe = FALSE, clean = TRUE) {
   require(usethis)
   require(readr)
   require(rlang)
 
   arg_match0(edit_type, values = c("create", "modify"))
-  if (!is.logical(run_script)) stop("`run_script` must be a boolean value.")
-
+  check_is_logical(run_script)
+  check_is_logical(include_pipe)
+  check_is_logical(clean)
   added_script <- paste0(dataset_name, " <- ", dataset_name)
 
   # Create data-preparation script in 'data-raw/dataset_name.R'
@@ -62,9 +60,16 @@ use_data_modified <- function(dataset_name,
   }
 
   if (edit_type %in% "modify") {
+    cli::cli_alert_info(
+      text = "{.path {data_script_path}} script will be modified."
+    )
     existed_script <- readr::read_lines(file = data_script_path)
-    last_lines <- existed_script[str_detect(existed_script, "usethis::use") == TRUE]
-    if (length(last_lines) == 0) stop("Check the usethis::use_data line")
+    last_lines <- existed_script[str_detect(existed_script, "usethis::use")]
+    if (length(last_lines) == 0) {
+      cli::cli_abort(
+        message = "{.path {data_script_path}} script does not include {.var usethis::use_data}."
+      )
+    }
     last_row_index <- seq_along(existed_script)[existed_script == last_lines]
     last_two_row_index <- c(last_row_index - 1, last_row_index)
     prefix_lines <- existed_script[!seq_along(existed_script) %in% last_two_row_index]
@@ -80,7 +85,14 @@ use_data_modified <- function(dataset_name,
   }
 
   if (!is.null(add_text)) {
-    if (any(is.na(add_text))) stop("added text must not contains missing value")
+    if (any(is.na(add_text))) {
+      cli::cli_abort(
+        message = c(
+          "{.var add_text} must not contains missing value. \n",
+          "{.var add_text} contains {.val {add_text}}."
+        )
+      )
+    }
     added_script <- c(added_script, add_text)
   }
   added_script <- added_script[!is.na(added_script)]
@@ -101,7 +113,7 @@ use_data_modified <- function(dataset_name,
     append = FALSE
   )
 
-  if (run_script == TRUE) {
+  if (run_script) {
     new_env <- new.env()
     new_env[[dataset_name]] <- dataset_name
     new_env$dataset <- dataset
@@ -111,7 +123,7 @@ use_data_modified <- function(dataset_name,
     return(TRUE)
   }
 
-  if (run_script == FALSE) {
+  if (!run_script) {
     return(data_script_path)
   }
 }
@@ -129,6 +141,7 @@ use_data_modified <- function(dataset_name,
 #' @rdname get_unzip_file
 #' @keywords utils_fun
 #' @importFrom utils unzip
+#' @importFrom cli cli_abort
 #' @export
 get_unzip_file <- function(input_dir,
                            file_name,
@@ -136,15 +149,14 @@ get_unzip_file <- function(input_dir,
                            overwrite = TRUE) {
   require(utils)
   if (output_dir %in% ".") output_dir <- input_dir
-  if (!output_dir %in% ".") {
-    if (dir.exists(output_dir) == FALSE) stop(output_dir, " is not existed.")
-  }
   lapply(c(input_dir, output_dir), check_dir_path)
   output_dir <- file.path(output_dir, gsub(pattern = "\\.zip$", replacement = "", x = file_name))
-  if (dir.exists(output_dir) == FALSE) dir.create(output_dir)
+  if (!dir.exists(output_dir)) dir.create(output_dir)
   file_path <- file.path(input_dir, file_name)
-  if (file.exists(file_path) == FALSE) {
-    stop(file_name, " zip file is not found in the ", input_dir)
+  if (!file.exists(file_path)) {
+    cli::cli_abort(
+      message = "{.path {file.path(file_name, input_dir)}} file is not existed."
+    )
   }
   utils::unzip(
     zipfile = file_path, exdir = output_dir,
@@ -184,9 +196,7 @@ file_action <- function(input_dir,
   if (!is.null(remove_name_pattern)) {
     new_file_name <- str_remove_all(old_file_name, pattern = remove_name_pattern)
   }
-
   if (output_dir %in% ".") output_dir <- input_dir
-
   lapply(c(input_dir, output_dir), check_dir_path)
 
   if (action %in% "copy") {
@@ -225,6 +235,7 @@ file_action <- function(input_dir,
 #' @importFrom readr read_csv
 #' @importFrom stringr str_c str_remove_all
 #' @importFrom rlang arg_match0
+#' @importFrom cli cli_alert_info cli_status cli_status_update
 using_use_data <- function(input_dir, file_extension = ".csv") {
   require(stringr)
   require(readr)
@@ -238,15 +249,15 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
     all.files = TRUE
   )
   if (is.null(file_list)) {
-    return("no file is found")
+    return("No file is found!")
   }
-
   csv_data_list <- lapply(file_list, function(x) {
-    message("Importing ", x, " dataset")
+    cli::cli_alert_info(text = "Importing {x} data")
     readr::read_csv(
       file = file.path(input_dir, x),
       col_names = TRUE,
-      show_col_types = FALSE
+      show_col_types = FALSE,
+      guess_max = Inf
     )
   })
   names(csv_data_list) <- str_remove_all(file_list, pattern = file_extension)
@@ -254,7 +265,9 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
   # Load all the dataset in .GlobalEnv
   list2env(csv_data_list, .GlobalEnv)
   for (dd_name in names(csv_data_list)) {
-    message("Applying use_data() for ", dd_name)
+    cli::cli_alert_info(
+      text = "Applying {.var use_data()} for {.val {dd_name}} data"
+    )
     # Using usethis::use_data function
     use_data_modified(
       dataset_name = dd_name,
@@ -287,13 +300,8 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 #' @importFrom dplyr mutate rename_with across pull row_number
 #' @importFrom tidyselect where all_of
 #' @importFrom rlang arg_match0
-adjust_code_labels <- function(data_dict,
-                               phaseVar = "PHASE",
-                               codeVar = "CODE",
-                               textVar = "TEXT") {
+adjust_code_labels <- function(data_dict, phaseVar = "PHASE", codeVar = "CODE", textVar = "TEXT") {
   require(tidyverse)
-  require(rlang)
-  require(tibble)
   arg_match0(arg = phaseVar, values = colnames(data_dict))
   arg_match0(arg = codeVar, values = colnames(data_dict))
   arg_match0(arg = textVar, values = colnames(data_dict))
@@ -304,12 +312,13 @@ adjust_code_labels <- function(data_dict,
   )
 
   data_dict <- data_dict %>%
-    mutate(across(all_of(column_list_dd$specified_name_list) &
-      where(is.factor), as.character)) %>%
+    mutate(across(all_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
     rename_with(
-      ~ paste0(column_list_dd %>%
-        filter(specified_name_list == .x) %>%
-        pull(renamed_list)),
+      ~ paste0(
+        column_list_dd %>%
+          filter(specified_name_list == .x) %>%
+          pull(renamed_list)
+      ),
       all_of(column_list_dd$specified_name_list)
     )
 
@@ -318,7 +327,8 @@ adjust_code_labels <- function(data_dict,
       distinct(code_var) %>%
       nrow()
     if (unique_rows == 1) {
-      data_dict <- data_dict %>% filter(row_number() %in% n())
+      data_dict <- data_dict %>%
+        filter(row_number() %in% n())
       temp_code <- data_dict$code_var
       temp_text <- data_dict$text_var
       output_data <- tibble::tibble(
@@ -328,23 +338,25 @@ adjust_code_labels <- function(data_dict,
     }
 
     if (unique_rows > 1) {
-      data_dict <- data_dict %>%
+      # Last row records for variable description
+      temp_text <- data_dict %>%
+        distinct(phase_var, text_var) %>%
+        filter(row_number() %in% n()) %>%
+        pull(text_var)
+
+      # Coded values
+      temp_code_list <- data_dict %>%
         group_by(code_var) %>%
         mutate(phase_var = toString(phase_var)) %>%
         ungroup() %>%
-        distinct(phase_var, code_var, text_var) %>%
+        distinct(phase_var, code_var) %>%
         mutate(phase_code_var = case_when(
           !is.na(code_var) ~ paste0("\n#' \\item \\emph{", phase_var, ":} ", code_var, "\n"),
           is.na(code_var) ~ paste0("\n#' \\item \\emph{", phase_var, "} \n")
         ))
 
-      temp_code <- paste0(
-        "\n#' \\itemize{",
-        paste0(data_dict$phase_code_var, collapse = ""), "#' }"
-      )
-      temp_text <- data_dict %>%
-        filter(row_number() %in% n()) %>%
-        pull(text_var)
+      temp_code <- paste0("\n#' \\itemize{", paste0(temp_code_list$phase_code_var, collapse = ""), "#' }")
+
       output_data <- tibble::tibble(
         field_value = temp_code,
         field_label = temp_text
@@ -370,15 +382,15 @@ adjust_code_labels <- function(data_dict,
 #' @description
 #'  This function is used to add description text for common columns in the DATADIC.
 #' @param tblname Dataset name (TBNAME)
-#' @param data_dict Data dictionary dataset
+#' @param .datadic Data dictionary dataset
 #' @param fldname Common column names (usually "ORIGPROT" or "CORPORT")
 #' @param description Description text
-#' @return A data frame the same as `data_dict`  with appended rows.
+#' @return A data frame the same as `.datadic`  with appended rows.
 #' @examples
 #' \dontrun{
 #' common_cols_description_datadic(
 #'   tblname = "ADAS_ADNIGO123",
-#'   data_dict = ADNIMERGE2::DATADIC,
+#'   .datadic = ADNIMERGE2::DATADIC,
 #'   fldname = "CORPORT",
 #'   description = "Study protocol of data collection"
 #' )
@@ -389,61 +401,73 @@ adjust_code_labels <- function(data_dict,
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across filter bind_rows
 #' @importFrom assertr verify
+#' @importFrom cli cli_abort
 #' @export
-common_cols_description_datadic <- function(data_dict, tblname, fldname, description) {
+common_cols_description_datadic <- function(.datadic, tblname, fldname, description) {
   PHASE <- TBLNAME <- CRFNAME <- FLDNAME <- NULL
 
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = c("PHASE", "TBLNAME", "CRFNAME", "FLDNAME"),
     strict = TRUE,
     stop_message = TRUE
   )
 
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ tolower(.x)))
   tblname <- tolower(tblname)
   fldname <- tolower(fldname)
 
   rlang::arg_match(
     arg = tblname,
-    values = unique(data_dict$TBLNAME),
+    values = unique(.datadic$TBLNAME),
     multiple = TRUE
   )
 
-  if (!is.vector(fldname)) stop("fldname must be a vector character")
-  if (!is.vector(description)) stop("description must be a vector character")
+  arg_names <- c("fldname", "description")
+  checks <- lapply(arg_names, function(i) {
+    if (!is.vector(get(i))) {
+      cli_abort(
+        message = c(
+          "{.var {get(i)}} must be a vector character. \n ",
+          "{.var {get(i)}} is a {.val {class({get(i)})}} object."
+        )
+      )
+    }
+  })
+
   if (length(description) != length(fldname)) {
-    stop("The length of description and FLDNAME must be the same")
+    cli_abort(
+      message = c(
+        "The length of {.var description} and {.var fldname}  must be the same. \n",
+        "The length of {.var description} is {.val {length(description)}}. \n",
+        "The length of {.var fldname} is {.val {length(fldname)}}."
+      )
+    )
   }
   description <- as.list(description)
   names(description) <- fldname
-
-  temp_data_dict <- data_dict %>%
+  temp_data_dict <- .datadic %>%
     filter(TBLNAME %in% tblname) %>%
     verify(nrow(.) > 0)
 
-  tblname_data_dict <- lapply(
-    fldname,
-    function(cur_fldname) {
-      fldname_data_dict <- temp_data_dict %>%
-        filter(!FLDNAME %in% cur_fldname) %>%
-        distinct(PHASE, TBLNAME, CRFNAME) %>%
-        mutate(
-          FLDNAME = cur_fldname,
-          TEXT = description[[cur_fldname]]
-        ) %>%
-        bind_rows(
-          temp_data_dict %>%
-            filter(!FLDNAME %in% cur_fldname)
-        )
-
-      return(fldname_data_dict)
-    }
-  ) %>%
+  tblname_data_dict <- lapply(fldname, function(cur_fldname) {
+    fldname_data_dict <- temp_data_dict %>%
+      filter(!FLDNAME %in% cur_fldname) %>%
+      distinct(PHASE, TBLNAME, CRFNAME) %>%
+      mutate(
+        FLDNAME = cur_fldname,
+        TEXT = description[[cur_fldname]]
+      ) %>%
+      bind_rows(
+        temp_data_dict %>%
+          filter(!FLDNAME %in% cur_fldname)
+      )
+    return(fldname_data_dict)
+  }) %>%
     bind_rows()
 
-  result_data_dict <- data_dict %>%
+  result_data_dict <- .datadic %>%
     filter(!TBLNAME %in% tblname) %>%
     bind_rows(tblname_data_dict) %>%
     mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ toupper(.x)))
@@ -462,12 +486,17 @@ common_cols_description_datadic <- function(data_dict, tblname, fldname, descrip
 #' @rdname check_dir_path
 #' @keywords utils_fun
 #' @family checks function
+#' @importFrom cli cli_abort
 check_dir_path <- function(dir_path) {
   if (all(grepl(pattern = "/$", x = dir_path, perl = TRUE))) {
-    stop("The last `/` character must be removed from ", dir_path, ".")
+    cli_abort(
+      message = c("The last `/` character must be removed from {.path {dir_path}}.")
+    )
   }
-  if (all(dir.exists(dir_path) == FALSE)) {
-    stop(dir_path, " directory is not existed!")
+  if (all(!dir.exists(dir_path))) {
+    cli_abort(
+      message = c("{.path {dir_path}} is not existed.")
+    )
   }
   return(TRUE)
 }
@@ -477,7 +506,7 @@ check_dir_path <- function(dir_path) {
 #' @description
 #'  This function is used expand the data dictionary dataset by possible ADNI
 #'   study phase if the dataset contains combined study phases.
-#' @param data_dict Data Dictionary Dataset
+#' @param .datadic Data Dictionary Dataset
 #' @param concat_phase
 #'  A character vector that contains study phase that concatenated with
 #'  \emph{concat_char} character.
@@ -491,13 +520,14 @@ check_dir_path <- function(dir_path) {
 #' @importFrom dplyr filter select bind_rows
 #' @importFrom assertr verify
 #' @importFrom tidyr expand_grid
-expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
+#' @importFrom cli cli_abort
+expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
   require(tidyverse)
   require(stringr)
   require(assertr)
   PHASE <- NULL
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = "PHASE",
     strict = TRUE,
     stop_message = TRUE
@@ -506,7 +536,9 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
     return(data_dict)
   }
   if (any(!str_detect(string = concat_phase, pattern = concat_char))) {
-    stop(concat_char, " must be presented.")
+    cli::cli_abort(
+      message = "{.val {concat_char} must be presented."
+    )
   }
   concat_phase_list <- str_split(
     string = concat_phase,
@@ -518,10 +550,15 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
   output_data_dict <- lapply(names(concat_phase_list), function(i) {
     split_phase <- as.character(unlist(concat_phase_list[i]))
     if (!any(str_detect(split_phase, "ADNI"))) {
-      stop("At least one `ADNI` prefix is not presented.")
+      cli::cli_abort(
+        message = c(
+          "At least one `ADNI` prefix is not presented. \n",
+          "There are only {.val {split_phase}} values."
+        )
+      )
     }
     split_phase[!str_detect(split_phase, "ADNI")] <- str_c("ADNI", split_phase[!str_detect(split_phase, "ADNI")])
-    return(data_dict %>%
+    return(.datadic %>%
       filter(PHASE %in% i) %>%
       select(-PHASE) %>%
       expand_grid(., PHASE = split_phase) %>%
@@ -529,7 +566,7 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
   }) %>%
     bind_rows()
 
-  output_data_dict <- data_dict %>%
+  output_data_dict <- .datadic %>%
     filter(!PHASE %in% names(concat_phase_list)) %>%
     bind_rows(output_data_dict)
   return(output_data_dict)
@@ -541,13 +578,13 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
 #' @description
 #'  This function is used to add prefix on the data dictionary (`DATADIC`)
 #'  coded values to match values in the actual data.
-#' @param data_dict
-#'  Data dictionary dataset that prepared using
+#' @param .datadic
+#'  Data dictionary dataset created using
 #'  `get_factor_levels_datadict` function.
 #' @param prefix_char Prefix character, Default: "0"
 #' @param nested_value
-#'  A boolean value to indicate the code and decode values are
-#'  nested in the `data_dict`. Defualt: TRUE
+#'  A Boolean value to indicate the code and decode values are
+#'  nested in the `data_dict`. Default: TRUE
 #' @param position Either in the beginning (first) or in the end (last), Default: "first"
 #' @param add_char
 #'  Character that will be concatenated with `prefix_char` character based on
@@ -562,40 +599,42 @@ expand_data_dict <- function(data_dict, concat_phase, concat_char = ",") {
 #' @importFrom dplyr filter select bind_rows
 #' @importFrom assertr verify
 #' @importFrom tidyr expand_grid
-add_code_prefix <- function(data_dict, prefix_char = "0",
+add_code_prefix <- function(.datadic, prefix_char = "0",
                             nested_value = TRUE, position = "first",
                             add_char = NULL) {
   require(tidyverse)
-  require(stringr)
   require(assertr)
   CODES <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- NULL
   prefix_char <- as.character(prefix_char)
-  if (!is.logical(nested_value)) stop("`run_script` must be a boolean value.")
+  check_is_logical(nested_value)
+  is_datadict_tbl(.datadic)
   if (nested_value) add_cols <- "CODES" else add_cols <- c("prefix", "suffix")
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = c("PHASE", "CRFNAME", "TBLNAME", "FLDNAME", add_cols),
     strict = TRUE,
     stop_message = TRUE
   )
 
-  initial_nrow <- nrow(data_dict)
+  initial_nrow <- nrow(.datadic)
 
-  output_data_dict <- data_dict %>%
+  output_data_dict <- .datadic %>%
+    datadict_as_tibble() %>%
     {
       if (nested_value) {
-        unnest(., CODES)
+        unnest(., all_of("CODES"))
       } else {
         (.)
       }
     } %>%
-    as_tibble() %>%
+    set_datadict_tbl() %>%
     update_code_prefix_char(
-      data_dict = .,
+      .datadic = .,
       prefix_char = prefix_char,
       position = position,
       add_char = add_char
     ) %>%
+    datadict_as_tibble() %>%
     group_by(CRFNAME, TBLNAME, FLDNAME, PHASE) %>%
     {
       if (nested_value) {
@@ -607,16 +646,18 @@ add_code_prefix <- function(data_dict, prefix_char = "0",
       }
     }
 
+  output_data_dict <- set_datadict_tbl(output_data_dict)
+
   return(output_data_dict)
 }
 
-#' @title Checks Specific Character in Coded Values (Prefix)
+#' @title Update Specific Character in Coded Values (Prefix)
 #' @description
 #'  This function is used to add prefix on the data dictionary (`DATADIC`)
 #'  coded values to match values in the actual data.
-#' @param data_dict
-#'  Data dictionary dataset that prepared using
-#'  `get_factor_levels_datadict` function, not in nested format.
+#' @param .datadic
+#'  Data dictionary dataset created using
+#'  `get_factor_levels_datadict` function in long format (i.e. not in nested format).
 #' @param prefix_char Prefix character that will be concatenated with `prefix` or `CODED` values
 #' @param position Either in the beginning (first) or in the end (last), Default: "first"
 #' @param add_char
@@ -629,22 +670,23 @@ add_code_prefix <- function(data_dict, prefix_char = "0",
 #' @importFrom dplyr mutate case_when bind_rows
 #' @importFrom tibble as_tibble
 #' @importFrom assertr assert not_na
-update_code_prefix_char <- function(data_dict, prefix_char, position, add_char = NULL) {
+#' @importFrom rlang arg_match0
+update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = NULL) {
   require(tidyverse)
   require(assertr)
   require(rlang)
   status <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- overall_status <- prefix <- NULL
-  arg_match(arg = position, values = c("first", "last"))
+  arg_match0(arg = position, values = c("first", "last"))
   cols_list <- c("PHASE", "CRFNAME", "TBLNAME", "FLDNAME", "prefix", "suffix")
   check_colnames(
-    data = data_dict,
+    .data = .datadic,
     col_names = cols_list,
     strict = TRUE,
     stop_message = TRUE
   )
   # Identify records that contains `char` in prefix
-  data_dict <- data_dict %>%
-    as_tibble() %>%
+  .datadic <- .datadic %>%
+    datadict_as_tibble() %>%
     mutate(status = case_when(
       prefix %in% prefix_char ~ TRUE,
       !prefix %in% prefix_char ~ FALSE
@@ -660,7 +702,7 @@ update_code_prefix_char <- function(data_dict, prefix_char, position, add_char =
   }
 
   # Group by Phase, CFRNAME, TBLNAME, FLDNAME,
-  data_dict_update <- data_dict %>%
+  data_dict_update <- .datadic %>%
     group_by(CRFNAME, TBLNAME, FLDNAME, PHASE) %>%
     mutate(overall_status = any(status)) %>%
     ungroup() %>%
@@ -678,7 +720,7 @@ update_code_prefix_char <- function(data_dict, prefix_char, position, add_char =
       select(-any_of("overall_status"))
   }
 
-  result_data_dict <- data_dict %>%
+  result_data_dict <- .datadic %>%
     {
       if (nrow(data_dict_update) > 0) {
         bind_rows(., data_dict_update)
@@ -697,7 +739,8 @@ update_code_prefix_char <- function(data_dict, prefix_char, position, add_char =
 #'  This function is used to categorize dataset based on the corresponding
 #'  directory location.
 #' @param dir.path Directory path
-#' @param extension_pattern File extension patterns, Default: '\.csv$'
+#' @param file_extension_pattern File extension pattern, Default: '\\.csv$'
+#' @param recursive \code{\link[base]{list.files}}
 #' @return A data.frame that contains the following columns:
 #' @examples
 #' \dontrun{
@@ -712,65 +755,82 @@ update_code_prefix_char <- function(data_dict, prefix_char, position, add_char =
 #' @importFrom stringr str_remove_all str_detect str_to_lower
 #' @importFrom tibble tibble
 #' @importFrom dplyr bind_rows mutate case_when select
+#' @importFrom assertr assert within_bounds
 #' @export
-get_dataset_cat <- function(dir.path, extension_pattern = "\\.csv$") {
+get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
+                            recursive = TRUE) {
   require(tidyverse)
-  dir <- file_list <- dir_cat <- NULL
-  # Function to extract all `*.csv$` files within a single directory
-  get_file_list <- function(dir.path, extension_pattern) {
-    check_dir_path(dir.path)
-    file_list <- list.files(
-      path = dir.path,
-      pattern = extension_pattern,
-      all.files = TRUE
-    )
-    if (all(!is.na(file_list))) {
-      file_list <- str_remove_all(
-        string = file_list,
-        pattern = extension_pattern
-      )
-    }
-    output_data <- tibble(dir = dir.path, file_list = file_list)
-    return(output_data)
-  }
+  dir <- main_dir <- dir_cat <- NULL
+  full_file_path <- file_list <- file_list_temp <- num_dash_char <- NULL
   check_dir_path(dir.path)
-  # Get directories list
-  dir_list <- list.dirs(
-    path = dir.path,
-    full.names = TRUE,
-    recursive = FALSE
-  )
-  if (all(!is.na(dir_list))) {
-    dir_list <- dir_list[str_detect(
-      string = dir_list,
-      pattern = "/\\_|/Tables\\_"
-    )]
-  } else {
-    dir_list <- NA_character_
-  }
-  dir_list <- c(dir.path, dir_list)
-  dir_list <- dir_list[!is.na(dir_list)]
-  dir_list <- unique(dir_list)
 
-  output_data <- lapply(dir_list, function(i) {
-    get_file_list(dir.path = i, extension_pattern = extension_pattern)
-  }) %>%
-    bind_rows() %>%
-    mutate(dir_cat = str_remove_all(
-      string = dir,
-      pattern = str_c(dir.path, "/")
-    )) %>%
-    mutate(dir_cat = str_remove_all(
-      string = dir_cat,
-      pattern = "^\\_"
-    )) %>%
-    mutate(dir_cat = str_to_lower(dir_cat)) %>%
-    mutate(dir_cat = case_when(
-      str_detect(string = dir_cat, pattern = "^table") |
-        dir_cat %in% dir.path ~ "other_raw_dataset",
-      TRUE ~ dir_cat
-    )) %>%
-    select(dir, file_list, dir_cat)
+  file_list <- list.files(
+    path = dir.path,
+    pattern = file_extension_pattern,
+    all.files = TRUE,
+    recursive = recursive,
+    full.names = FALSE
+  )
+  if (all(!is.na(file_list))) {
+    file_list <- str_remove_all(
+      string = file_list,
+      pattern = file_extension_pattern
+    )
+  }
+
+  output_data <- tibble(dir = dir.path, file_list = file_list) %>%
+    mutate(file_list_temp = file_list) %>%
+    mutate(num_dash_char = str_count(string = file_list, pattern = "/")) %>%
+    {
+      if (nrow(.) > 0) {
+        assertr::assert(., assertr::within_bounds(0, 1), num_dash_char)
+      } else {
+        (.)
+      }
+    } %>%
+    separate(file_list_temp, into = c("dir_cat", "file_name"), sep = "/") %>%
+    mutate(main_dir = case_when(is.na(file_name) & !is.na(dir_cat) ~ "Yes")) %>%
+    mutate(
+      file_name = ifelse(!is.na(main_dir), dir_cat, file_name),
+      dir_cat = ifelse(!is.na(main_dir), NA_character_, dir_cat),
+      dir_cat = str_to_lower(str_remove_all(string = dir_cat, pattern = "^\\_"))
+    ) %>%
+    mutate(across(all_of(c("file_name", "dir_cat")), basename)) %>%
+    mutate(
+      dir_cat = case_when(
+        str_detect(string = dir_cat, pattern = "^table") | is.na(dir_cat) ~ "other_raw_dataset",
+        TRUE ~ dir_cat
+      ),
+      dir_cat = case_when(
+        tolower(file_name) %in% tolower(c("DATADIC", "UPDATED_DATADIC")) ~ "data_dict",
+        tolower(file_name) %in% tolower("REMOTE_DATADIC") ~ "data_dict, remotely_collected_data",
+        TRUE ~ dir_cat
+      ),
+      full_file_path = file.path(dir, file_list)
+    ) %>%
+    select(dir, full_file_path, file_list = file_name, dir_cat)
 
   return(output_data)
+}
+
+#' @title Create data.frame with no rows/records
+#' @param col_names Character vector of column names
+#' @return A data.frame with the provided columns with no rows/records.
+#' @examples
+#' \dontrun{
+#' create_tibble0(col_names = c("SEX", "AGE"))
+#' }
+#' @rdname create_tibble0
+#' @export
+#' @importFrom tibble tibble
+#' @importFrom tidyr pivot_wider
+create_tibble0 <- function(col_names) {
+  return(
+    tibble::tibble(
+    var = col_names,
+    value = NA_character_
+  ) %>%
+    tidyr::pivot_wider(names_from = var, values_from = value) %>%
+    na.omit()
+  )
 }
