@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 269243 observations and 36 variables.</p>
+    <p>A data frame with 276387 observations and 36 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,42 +74,42 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><strong>STUDYID</strong> <em>character</em> Study Identifier</p></li>
+<ul><li><p><strong>STUDYID</strong> <em>character</em> Study Identifier , with character options: ADNI</p></li>
 <li><p><strong>USUBJID</strong> <em>character</em> Unique Subject Identifier</p></li>
 <li><p><strong>SUBJID</strong> <em>character</em> Subject Identifier for the Study</p></li>
-<li><p><strong>SITEID</strong> <em>character</em> Study Site Identifier</p></li>
-<li><p><strong>AGE</strong> <em>numeric</em> Age (in Years) Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>AGEU</strong> <em>character</em> Age Units</p></li>
-<li><p><strong>AGEGR1</strong> <em>character</em> Pooled Age Group 1</p></li>
-<li><p><strong>AGEGR1N</strong> <em>numeric</em> Pooled Age Group 1 (N) Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>SEX</strong> <em>character</em> Sex</p></li>
+<li><p><strong>SITEID</strong> <em>numeric</em> Study Site Identifier Range value: 1, ..., 941</p></li>
+<li><p><strong>AGE</strong> <em>numeric</em> Age (in Years) Range value: 50.5, ..., 91.4</p></li>
+<li><p><strong>AGEU</strong> <em>character</em> Age Units , with character options: Years</p></li>
+<li><p><strong>AGEGR1</strong> <em>character</em> Pooled Age Group 1 , with character options: &gt;=65, &lt;65</p></li>
+<li><p><strong>AGEGR1N</strong> <em>numeric</em> Pooled Age Group 1 (N) Range value: 1, ..., 2</p></li>
+<li><p><strong>SEX</strong> <em>character</em> Sex , with character options: Male, Female</p></li>
 <li><p><strong>RACE</strong> <em>factor</em> Race , with factor levels: American Indian or Alaskan Native, Asian, Black or African American, Native Hawaiian or Other Pacific Islander, Other Pacific Islander, White, More than one race, Unknown</p></li>
-<li><p><strong>BMI</strong> <em>numeric</em> Body Mass Index Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>BMIBLU</strong> <em>character</em> Body Mass Index Unit</p></li>
+<li><p><strong>BMI</strong> <em>numeric</em> Body Mass Index Range value: 18.64, ..., 47.87</p></li>
+<li><p><strong>BMIBLU</strong> <em>character</em> Body Mass Index Unit , with character options: kg/m^2</p></li>
 <li><p><strong>DX</strong> <em>factor</em> Baseline Diagnostics Status , with factor levels: CN, MCI, DEM</p></li>
 <li><p><strong>AMYSTAT</strong> <em>character</em> Baseline Amyloid Status</p></li>
-<li><p><strong>ENRLFL</strong> <em>character</em> Enrolled Population Flag</p></li>
+<li><p><strong>ENRLFL</strong> <em>character</em> Enrolled Population Flag , with character options: Y</p></li>
 <li><p><strong>ENRLDT</strong> <em>Date</em> Date of Enrollment Date: YYY-MM-DD</p></li>
 <li><p><strong>EOSDT</strong> <em>Date</em> End of Study Date Date: YYY-MM-DD</p></li>
-<li><p><strong>EOSDTF</strong> <em>character</em> End of Study Date Imputation Flag</p></li>
+<li><p><strong>EOSDTF</strong> <em>character</em> End of Study Date Imputation Flag , with character options: M</p></li>
 <li><p><strong>TRTA</strong> <em>character</em> Actual Arm</p></li>
 <li><p><strong>TRTP</strong> <em>character</em> Planned Arm</p></li>
 <li><p><strong>AVISIT</strong> <em>character</em> Analysis Visit</p></li>
-<li><p><strong>AVISITN</strong> <em>numeric</em> Analysis Visit (N) Range value: Inf, ..., -Inf</p></li>
+<li><p><strong>AVISITN</strong> <em>numeric</em> Analysis Visit (N) Range value: 0, ..., 35075</p></li>
 <li><p><strong>VISIT</strong> <em>character</em> Visit Name</p></li>
-<li><p><strong>VISITNUM</strong> <em>numeric</em> Visit Number Range value: -2, ..., 999</p></li>
-<li><p><strong>ADY</strong> <em>numeric</em> Analysis Relative Day Range value: Inf, ..., -Inf</p></li>
+<li><p><strong>VISITNUM</strong> <em>numeric</em> Visit Number Range value: -2, ..., 47</p></li>
+<li><p><strong>ADY</strong> <em>numeric</em> Analysis Relative Day Range value: -365625, ..., 35075</p></li>
 <li><p><strong>ADT</strong> <em>Date</em> Analysis Date Date: YYY-MM-DD</p></li>
 <li><p><strong>PARAM</strong> <em>character</em> Parameter</p></li>
 <li><p><strong>PARAMCD</strong> <em>character</em> Parameter Code</p></li>
 <li><p><strong>PARAMN</strong> <em>numeric</em> Parameter (N) Range value: 1, ..., 21</p></li>
 <li><p><strong>AVAL</strong> <em>numeric</em> Analysis Value Range value: -500, ..., 996</p></li>
 <li><p><strong>AVALC</strong> <em>character</em> Analysis Value (C)</p></li>
-<li><p><strong>BASE</strong> <em>numeric</em> Baseline Value Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>CHG</strong> <em>numeric</em> Change from Baseline Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>PCHG</strong> <em>numeric</em> Percent Change from Baseline Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>ABLFL</strong> <em>character</em> Baseline Record Flag , with character options: Yes</p></li>
-<li><p><strong>QSSEQ</strong> <em>integer</em> Sequence Number Range value: 1, ..., 368</p></li>
+<li><p><strong>BASE</strong> <em>numeric</em> Baseline Value Range value: -100, ..., 321</p></li>
+<li><p><strong>CHG</strong> <em>numeric</em> Change from Baseline Range value: -525, ..., 754</p></li>
+<li><p><strong>PCHG</strong> <em>numeric</em> Percent Change from Baseline Range value: -3598.95031490553, ..., 7800</p></li>
+<li><p><strong>ABLFL</strong> <em>character</em> Baseline Record Flag , with character options: Y</p></li>
+<li><p><strong>QSSEQ</strong> <em>integer</em> Sequence Number Range value: 1, ..., 372</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

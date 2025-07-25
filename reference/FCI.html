@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 2624 observations and 70 variables.</p>
+    <p>A data frame with 2626 observations and 70 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,7 +74,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em>   Range value: 2, ..., 7125</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em>   , with options: init, bl, y1, y2, y4, y3, y5</p></li>
@@ -87,101 +89,101 @@
 <li><p><strong>BANKSTATSCORE</strong> <em>numeric</em> Bank Statement Management Score (Items 31-37): 0..14</p></li>
 <li><p><strong>TOTCOMPTIME</strong> <em>numeric</em> TOTAL Composite Time (Items 4, 5, 7-16, 17-30): 0..720</p></li>
 <li><p><strong>FCISCORE</strong> <em>numeric</em> TOTAL FCI-SF SCORE: 0..74</p></li>
-<li><p><strong>DONE</strong> <em>character</em> Was assessment/procedure done? 0=No;1=Yes
+<li><p><strong>DONE</strong> <em>character</em> Was assessment/procedure done? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NDREASON</strong> <em>character</em> If No, reason not done 1=Participant Unable for Cognitive Reasons;2=Participant Unable for Other Reasons (Physical, auditory, etc.);3=Participant/Study Partner Refused;4=Equipment related issue;7=Site Error;8=Other Reason;9=Unknown
+<li><p><strong>NDREASON</strong> <em>character</em> If No, reason not done 1=Participant Unable for Cognitive Reasons ; 2=Participant Unable for Other Reasons (Physical, auditory, etc.) ; 3=Participant/Study Partner Refused ; 4=Equipment related issue ; 7=Site Error ; 8=Other Reason ; 9=Unknown
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NICKELS</strong> <em>character</em> 1.  Nickels 0=0;2=2;99=OT
+<li><p><strong>NICKELS</strong> <em>character</em> 1.  Nickels 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>QUARTERS</strong> <em>character</em> 2.  Quarters 0=0;2=2;99=OT
+<li><p><strong>QUARTERS</strong> <em>character</em> 2.  Quarters 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BUDGET</strong> <em>character</em> 3. Budget 0=0;1=1;2=2;99=OT
+<li><p><strong>BUDGET</strong> <em>character</em> 3. Budget 0=0 ; 1=1 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXPMEDINS</strong> <em>character</em> Experience with Medical Insurance Plan? 0=No;1=Yes
+<li><p><strong>EXPMEDINS</strong> <em>character</em> Experience with Medical Insurance Plan? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INSURANCE</strong> <em>character</em> 4. Health Care Insurance Problem 0=0;2=2;99=OT
+<li><p><strong>INSURANCE</strong> <em>character</em> 4. Health Care Insurance Problem 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MEDINSTIME</strong> <em>numeric</em> Time to complete Item 4 Range value: 0, ..., 90</p></li>
-<li><p><strong>EXPINCTAX</strong> <em>character</em> Experience with Income Taxes? 0=No;1=Yes
+<li><p><strong>EXPINCTAX</strong> <em>character</em> Experience with Income Taxes? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>TAXCREDA</strong> <em>character</em> 5. a. Tax Credit 0=0;2=2;99=OT
+<li><p><strong>TAXCREDA</strong> <em>character</em> 5. a. Tax Credit 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>QUES5TIME</strong> <em>numeric</em> Time to complete Item 5.a. Range value: 0, ..., 40</p></li>
-<li><p><strong>TAXCREDB</strong> <em>character</em> 5. b. Tax Credit 0=0;1=1;99=OT
+<li><p><strong>TAXCREDB</strong> <em>character</em> 5. b. Tax Credit 0=0 ; 1=1 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXPCHECKREG</strong> <em>character</em> Experience with Checkbook/Check Register? 0=No;1=Yes
+<li><p><strong>EXPCHECKREG</strong> <em>character</em> Experience with Checkbook/Check Register? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PAYEE</strong> <em>character</em> 6. Payee 0=0;1=1;2=2;99=OT
+<li><p><strong>PAYEE</strong> <em>character</em> 6. Payee 0=0 ; 1=1 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK7</strong> <em>character</em> 7. Payee section 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK7</strong> <em>character</em> 7. Payee section 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK8</strong> <em>character</em> 8.  $ amount section (numerical) 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK8</strong> <em>character</em> 8.  $ amount section (numerical) 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK9</strong> <em>character</em> 9.  $ amount section (written) 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK9</strong> <em>character</em> 9.  $ amount section (written) 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK10</strong> <em>character</em> 10. Signature of payer 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK10</strong> <em>character</em> 10. Signature of payer 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK11</strong> <em>character</em> 11. Date properly written 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK11</strong> <em>character</em> 11. Date properly written 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK12</strong> <em>character</em> 12. Number of check 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK12</strong> <em>character</em> 12. Number of check 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK13</strong> <em>character</em> 13. Date properly entered 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK13</strong> <em>character</em> 13. Date properly entered 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK14</strong> <em>character</em> 14. Payee section 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK14</strong> <em>character</em> 14. Payee section 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK15</strong> <em>character</em> 15. Amount of check 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK15</strong> <em>character</em> 15. Amount of check 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SNGLCHK16</strong> <em>character</em> 16. New account balance 0=0;2=2;99=OT
+<li><p><strong>SNGLCHK16</strong> <em>character</em> 16. New account balance 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>SNGLCHKTIME</strong> <em>numeric</em> Time to complete items 7-16 Range value: 1, ..., 240</p></li>
-<li><p><strong>COMPLXCHK17</strong> <em>character</em> 17. Number of check 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK17</strong> <em>character</em> 17. Number of check 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK18</strong> <em>character</em> 18. Date properly entered 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK18</strong> <em>character</em> 18. Date properly entered 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK19</strong> <em>character</em> 19. Payee section 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK19</strong> <em>character</em> 19. Payee section 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK20</strong> <em>character</em> 20. Amount of check 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK20</strong> <em>character</em> 20. Amount of check 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK21</strong> <em>character</em> 21. New Account Balance 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK21</strong> <em>character</em> 21. New Account Balance 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK22</strong> <em>character</em> 22. Number of check 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK22</strong> <em>character</em> 22. Number of check 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK23</strong> <em>character</em> 23. Date properly entered 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK23</strong> <em>character</em> 23. Date properly entered 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK24</strong> <em>character</em> 24. Payee section 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK24</strong> <em>character</em> 24. Payee section 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK25</strong> <em>character</em> 25. Amount of check 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK25</strong> <em>character</em> 25. Amount of check 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK26</strong> <em>character</em> 26. New Account Balance 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK26</strong> <em>character</em> 26. New Account Balance 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK27</strong> <em>character</em> 27. Date properly entered 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK27</strong> <em>character</em> 27. Date properly entered 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK28</strong> <em>character</em> 28. Description of Transaction 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK28</strong> <em>character</em> 28. Description of Transaction 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK29</strong> <em>character</em> 29. Amount of deposit 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK29</strong> <em>character</em> 29. Amount of deposit 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>COMPLXCHK30</strong> <em>character</em> 30. New account balance 0=0;2=2;99=OT
+<li><p><strong>COMPLXCHK30</strong> <em>character</em> 30. New account balance 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>COMPLXCHKTIME</strong> <em>numeric</em> Time to complete Items 17-30 Range value: 1, ..., 300</p></li>
-<li><p><strong>BANKSTATA</strong> <em>character</em> 31. a. Bank Statement 0=0;2=2;99=OT
+<li><p><strong>BANKSTATA</strong> <em>character</em> 31. a. Bank Statement 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTATB</strong> <em>character</em> 31. b. Bank Statement 0=0;1=1;99=OT
+<li><p><strong>BANKSTATB</strong> <em>character</em> 31. b. Bank Statement 0=0 ; 1=1 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXPBANKSTATE</strong> <em>character</em> Experience with Bank Statement? 0=No;1=Yes
+<li><p><strong>EXPBANKSTATE</strong> <em>character</em> Experience with Bank Statement? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTAT32</strong> <em>character</em> 32. Interest Rate 0=0;2=2;99=OT
+<li><p><strong>BANKSTAT32</strong> <em>character</em> 32. Interest Rate 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTAT33</strong> <em>character</em> 33. Time Period 0=0;2=2;99=OT
+<li><p><strong>BANKSTAT33</strong> <em>character</em> 33. Time Period 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTAT34</strong> <em>character</em> 34. Checks Cleared 0=0;2=2;99=OT
+<li><p><strong>BANKSTAT34</strong> <em>character</em> 34. Checks Cleared 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTAT35</strong> <em>character</em> 35. Quarterly Interest 0=0;2=2;99=OT
+<li><p><strong>BANKSTAT35</strong> <em>character</em> 35. Quarterly Interest 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTAT36</strong> <em>character</em> 36. Gaps in Check Sequence 0=0;2=2;99=OT
+<li><p><strong>BANKSTAT36</strong> <em>character</em> 36. Gaps in Check Sequence 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>BANKSTAT37</strong> <em>character</em> 37. Date of the Withdrawal Payment 0=0;2=2;99=OT
+<li><p><strong>BANKSTAT37</strong> <em>character</em> 37. Date of the Withdrawal Payment 0=0 ; 2=2 ; 99=OT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ID</strong> <em>numeric</em>   Range value: 12, ..., 186217</p></li>
+<li><p><strong>ID</strong> <em>numeric</em>   Range value: 12, ..., 187106</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em>   Range value: 1, ..., 63</p></li>
 <li><p><strong>USERDATE</strong> <em> </em>   Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em>   Date: YYY-MM-DD</p></li>

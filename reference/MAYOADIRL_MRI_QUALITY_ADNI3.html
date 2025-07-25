@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 27882 observations and 29 variables.</p>
+    <p>A data frame with 28055 observations and 29 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -78,9 +80,9 @@
 <li><p><strong>STUDYINSTANCEUID</strong> <em>character</em></p></li>
 <li><p><strong>STUDY_OVERALLPASS</strong> <em>numeric</em>   Range value: 1, ..., 1</p></li>
 <li><p><strong>STUDY_COMMENTS</strong> <em>character</em></p></li>
-<li><p><strong>STUDY_PROTOCOL_STATUS</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
+<li><p><strong>STUDY_PROTOCOL_STATUS</strong> <em>numeric</em>   Range value: -1, ..., 4</p></li>
 <li><p><strong>STUDY_PROTOCOL_COMMENT</strong> <em>character</em></p></li>
-<li><p><strong>STUDY_RESCAN_REQUESTED</strong> <em>logical</em>   Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>STUDY_RESCAN_REQUESTED</strong> <em>logical</em>   A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>SERIESINSTANCEUID</strong> <em>character</em></p></li>
 <li><p><strong>SERIES_DESCRIPTION</strong> <em>character</em></p></li>
 <li><p><strong>SERIES_TYPE</strong> <em>character</em></p></li>
@@ -88,10 +90,10 @@
 <li><p><strong>SERIES_COMMENTS</strong> <em>character</em></p></li>
 <li><p><strong>PROTOCOL_STATUS</strong> <em>numeric</em>   Range value: -1, ..., 4</p></li>
 <li><p><strong>PROTOCOL_COMMENTS</strong> <em>character</em></p></li>
-<li><p><strong>SERIES_SELECTED</strong> <em>logical</em>   Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>LONI_STUDY</strong> <em>numeric</em>   Range value: 107097, ..., 343840</p></li>
-<li><p><strong>LONI_SERIES</strong> <em>numeric</em>   Range value: 527282, ..., 5890429</p></li>
-<li><p><strong>LONI_IMAGE</strong> <em>numeric</em>   Range value: 808811, ..., 11141460</p></li>
+<li><p><strong>SERIES_SELECTED</strong> <em>logical</em>   A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>LONI_STUDY</strong> <em>numeric</em>   Range value: 107097, ..., 361422</p></li>
+<li><p><strong>LONI_SERIES</strong> <em>numeric</em>   Range value: 527282, ..., 5994485</p></li>
+<li><p><strong>LONI_IMAGE</strong> <em>numeric</em>   Range value: 808811, ..., 11295064</p></li>
 <li><p><strong>STUDY_MEDICAL_ABNORMALITIES</strong> <em>numeric</em>   Range value: -1, ..., 1</p></li>
 <li><p><strong>SERIAL</strong> <em>numeric</em>   Range value: -1, ..., 3</p></li>
 <li><p><strong>MEDICAL_EXCLUSION</strong> <em>numeric</em>   Range value: 0, ..., 0</p></li>

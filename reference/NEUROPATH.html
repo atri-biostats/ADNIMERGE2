@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 110 observations and 165 variables.</p>
+    <p>A data frame with 121 observations and 165 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -71,170 +73,170 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI2, ADNI1, ADNIGO, ADNI3</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 8, ..., 6573</p></li>
+<ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI2, ADNI1, ADNI3, ADNIGO</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 8, ..., 6891</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code , with options: AUT</p></li>
 <li><p><strong>NPFORMMO</strong> <em>numeric</em>   Range value: 1, ..., 12</p></li>
 <li><p><strong>NPFORMDY</strong> <em>numeric</em> Date Form Completed - Day Range value: 1, ..., 31</p></li>
-<li><p><strong>NPFORMYR</strong> <em>numeric</em> Date Form Completed - Year Range value: 2008, ..., 2023</p></li>
+<li><p><strong>NPFORMYR</strong> <em>numeric</em> Date Form Completed - Year Range value: 2008, ..., 2025</p></li>
 <li><p><strong>NPFORMDATE_DRVD</strong> <em> </em> 2. Date Form Completed (Derived from NPFORMMO,NPFORMDY,NPFORMYR) Date: YYY-MM-DD</p></li>
 <li><p><strong>NPDAGE</strong> <em>numeric</em> Age at death (years) Range value: 59, ..., 97</p></li>
-<li><p><strong>NPDODYR</strong> <em>numeric</em> Date of Death - Year Range value: 2007, ..., 2022</p></li>
+<li><p><strong>NPDODYR</strong> <em>numeric</em> Date of Death - Year Range value: 2007, ..., 2023</p></li>
 <li><p><strong>NPPMIH</strong> <em>numeric</em> Postmortem interval (PMI) (hours) Range value: 2, ..., 9999</p></li>
-<li><p><strong>NPFIX</strong> <em>numeric</em> 8. Fixative 1=1 Formalin; 2=2 Paraformaldehyde; 7=7 Other (Specify)</p></li>
+<li><p><strong>NPFIX</strong> <em>numeric</em> 8. Fixative 1=1 Formalin ; 2=2 Paraformaldehyde ; 7=7 Other (Specify)</p></li>
 <li><p><strong>NPFIXX</strong> <em>character</em> Specify: , with options: First Paraform, then Formalin</p></li>
 <li><p><strong>NPWBRWT</strong> <em>numeric</em> a. Whole brain weight (if half brain, multiply weight by two) (9999=unknown) Range value: 850, ..., 9999</p></li>
-<li><p><strong>NPWBRF</strong> <em>numeric</em> b. Does the value in Question 9a represent fresh or fixed weight? (Check One) 1=1 Fresh; 2=2 Fixed; 8=8 Not applicable</p></li>
-<li><p><strong>NPGRCCA</strong> <em>numeric</em> c1. Cerebral cortex atrophy 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPGRLA</strong> <em>numeric</em> c2. Lobar atrophy (significant frontal and/or temporal atrophy) 0=0 None; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPGRHA</strong> <em>numeric</em> c3. Hippocampus atrophy 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPGRSNH</strong> <em>numeric</em> c4. Substantia nigra hypopigmentation 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPGRLCH</strong> <em>numeric</em> c5. L. ceruleus hypopigmentation 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPAVAS</strong> <em>numeric</em> c6. Atherosclerosis (of the circle of Willis) 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPTAN</strong> <em>numeric</em> a. Tau antibody (Check One) 1=1 Non-phospho specific; 2=2 PHF1; 3=3 CP13; 4=4 AT8; 7=7 Other (Specify); 8=8 Not assessed</p></li>
-<li><p><strong>NPTANX</strong> <em>logical</em> Specify: Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPABAN</strong> <em>numeric</em> b. Amyloid beta antibody (Check One) 1=1 4G8; 2=2 10D5; 7=7 Other (Specify); 8=8 Not assessed</p></li>
-<li><p><strong>NPABANX</strong> <em>logical</em> Specify: Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPASAN</strong> <em>numeric</em> c. Alpha synuclein antibody 1=1 Non-phospho specific (e.g. LB509); 2=2 Phospho-specific (e.g. pSYN#64); 7=7 Other (Specify); 8=8 Not assessed</p></li>
-<li><p><strong>NPASANX</strong> <em>logical</em> Specify: Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPTDPAN</strong> <em>numeric</em> d. TDP-43 antibody (Check One) 1=1 Non-phospho specific; 2=2 Phospho-specific; 7=7 Other (Specify); 8=8 Not assessed</p></li>
-<li><p><strong>NPTDPANX</strong> <em>logical</em> Specify: Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPHISMB</strong> <em>numeric</em> e1. Modified Bielschowsky 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPHISG</strong> <em>numeric</em> e2. Gallyas 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPHISSS</strong> <em>numeric</em> e3. Other Silver stain 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPHIST</strong> <em>numeric</em> e4. Thioflavin 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPHISO</strong> <em>numeric</em> e5. Other 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPHISOX</strong> <em>character</em> Specify: , with options: Neurofilament IHC, Double IHC, AT8 + H31L21, LFB/PAS, p62, Neurofilament IHC</p></li>
-<li><p><strong>NPTHAL</strong> <em>numeric</em> a. Thal phase for amyloid plaques by immunohisto-chemistry (IHC) (A score - Check One) 0=0 Phase 0 (A0); 1=1 Phase 1 (A1); 2=2 Phase 2 (A1); 3=3 Phase 3 (A2); 4=4 Phase 4 (A3); 5=5 Phase 5 (A3); 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBRAAK</strong> <em>numeric</em> b. Braak stage for neurofibrillary degeneration (B score - Check One) 0=0 Sage 0: AD-type neurofibrillary degeneration not present (B0); 1=1 Stage I (B1); 2=2 Stage II (B1); 3=3 Stage III (B2); 4=4 Stage IV (B2); 5=5 Stage V (B3); 6=6 Stage VI (B3); 7=7 The presence of a tauopathy (other than aging/AD) precludes Braak staging; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPNEUR</strong> <em>numeric</em> c. CERAD score for density of neocortical neuritic plaque (plaques with argrophilic dystrophic neurities, with or without dense amyloid cores). Score without respect to age or diagnosis. (C score - Check One) 0=0 No neuritic plaques (C0); 1=1 Sparse neuritic plaques (C1); 2=2 Moderate neuritic plaques (C2); 3=3 Frequent neuritic plaques (C3); 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPADNC</strong> <em>numeric</em> d. NIA-AA Alzheimer's disease neuropathologic change (ADNC) (Check One) 0=0 Not AD; 1=1 Low ADNC; 2=2 Intermediate ADNC; 3=3 High ADNC; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPDIFF</strong> <em>numeric</em> e1. CERAD semi-quantitative score for diffuse plaques (plaques with non-compact amyloid and no apparent dystrophic neurites). Score from the neocortical field with the highest plaque density and without respect to age or diagnosis. (Check One) 0=0 No diffuse plaques; 1=1 Sparse diffuse plaques; 2=2 Moderate diffuse plaques; 3=3 Frequent diffuse plaques; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPAMY</strong> <em>numeric</em> e2. Cerebral amyloid angiopathy (Check One) 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPINF</strong> <em>numeric</em> a. Old infarcts observed grossly, including lacunes? (Check One) 0=0 No (SKIP TO QUESTION 12b); 1=1 Yes (COMPLETE QUESTIONS 12a1-12a4); 8=8 Not assessed (SKIP TO QUESTION 12b); 9=9 Missing/unknown (SKIP TO QUESTION 12b)</p></li>
-<li><p><strong>NPINF1A</strong> <em>character</em> Number of infarcts – Cerebral cortex , with options: ., 1, 5, 0</p></li>
+<li><p><strong>NPWBRF</strong> <em>numeric</em> b. Does the value in Question 9a represent fresh or fixed weight? (Check One) 1=1 Fresh ; 2=2 Fixed ; 8=8 Not applicable</p></li>
+<li><p><strong>NPGRCCA</strong> <em>numeric</em> c1. Cerebral cortex atrophy 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPGRLA</strong> <em>numeric</em> c2. Lobar atrophy (significant frontal and/or temporal atrophy) 0=0 None ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPGRHA</strong> <em>numeric</em> c3. Hippocampus atrophy 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPGRSNH</strong> <em>numeric</em> c4. Substantia nigra hypopigmentation 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPGRLCH</strong> <em>numeric</em> c5. L. ceruleus hypopigmentation 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPAVAS</strong> <em>numeric</em> c6. Atherosclerosis (of the circle of Willis) 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPTAN</strong> <em>numeric</em> a. Tau antibody (Check One) 1=1 Non-phospho specific ; 2=2 PHF1 ; 3=3 CP13 ; 4=4 AT8 ; 7=7 Other (Specify) ; 8=8 Not assessed</p></li>
+<li><p><strong>NPTANX</strong> <em>logical</em> Specify: A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPABAN</strong> <em>numeric</em> b. Amyloid beta antibody (Check One) 1=1 4G8 ; 2=2 10D5 ; 7=7 Other (Specify) ; 8=8 Not assessed</p></li>
+<li><p><strong>NPABANX</strong> <em>logical</em> Specify: A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPASAN</strong> <em>numeric</em> c. Alpha synuclein antibody 1=1 Non-phospho specific (e.g. LB509) ; 2=2 Phospho-specific (e.g. pSYN#64) ; 7=7 Other (Specify) ; 8=8 Not assessed</p></li>
+<li><p><strong>NPASANX</strong> <em>logical</em> Specify: A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPTDPAN</strong> <em>numeric</em> d. TDP-43 antibody (Check One) 1=1 Non-phospho specific ; 2=2 Phospho-specific ; 7=7 Other (Specify) ; 8=8 Not assessed</p></li>
+<li><p><strong>NPTDPANX</strong> <em>logical</em> Specify: A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPHISMB</strong> <em>numeric</em> e1. Modified Bielschowsky 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPHISG</strong> <em>numeric</em> e2. Gallyas 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPHISSS</strong> <em>numeric</em> e3. Other Silver stain 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPHIST</strong> <em>numeric</em> e4. Thioflavin 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPHISO</strong> <em>numeric</em> e5. Other 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPHISOX</strong> <em>character</em> Specify: , with options: Double IHC, AT8 + H31L21, Neurofilament IHC, Dual IHC Aß (H31L21) + Tau (AT8), LFB/PAS, p62, Neurofilament IHC</p></li>
+<li><p><strong>NPTHAL</strong> <em>numeric</em> a. Thal phase for amyloid plaques by immunohisto-chemistry (IHC) (A score - Check One) 0=0 Phase 0 (A0) ; 1=1 Phase 1 (A1) ; 2=2 Phase 2 (A1) ; 3=3 Phase 3 (A2) ; 4=4 Phase 4 (A3) ; 5=5 Phase 5 (A3) ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBRAAK</strong> <em>numeric</em> b. Braak stage for neurofibrillary degeneration (B score - Check One) 0=0 Sage 0: AD-type neurofibrillary degeneration not present (B0) ; 1=1 Stage I (B1) ; 2=2 Stage II (B1) ; 3=3 Stage III (B2) ; 4=4 Stage IV (B2) ; 5=5 Stage V (B3) ; 6=6 Stage VI (B3) ; 7=7 The presence of a tauopathy (other than aging/AD) precludes Braak staging ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPNEUR</strong> <em>numeric</em> c. CERAD score for density of neocortical neuritic plaque (plaques with argrophilic dystrophic neurities, with or without dense amyloid cores). Score without respect to age or diagnosis. (C score - Check One) 0=0 No neuritic plaques (C0) ; 1=1 Sparse neuritic plaques (C1) ; 2=2 Moderate neuritic plaques (C2) ; 3=3 Frequent neuritic plaques (C3) ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPADNC</strong> <em>numeric</em> d. NIA-AA Alzheimer's disease neuropathologic change (ADNC) (Check One) 0=0 Not AD ; 1=1 Low ADNC ; 2=2 Intermediate ADNC ; 3=3 High ADNC ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPDIFF</strong> <em>numeric</em> e1. CERAD semi-quantitative score for diffuse plaques (plaques with non-compact amyloid and no apparent dystrophic neurites). Score from the neocortical field with the highest plaque density and without respect to age or diagnosis. (Check One) 0=0 No diffuse plaques ; 1=1 Sparse diffuse plaques ; 2=2 Moderate diffuse plaques ; 3=3 Frequent diffuse plaques ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPAMY</strong> <em>numeric</em> e2. Cerebral amyloid angiopathy (Check One) 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPINF</strong> <em>numeric</em> a. Old infarcts observed grossly, including lacunes? (Check One) 0=0 No (SKIP TO QUESTION 12b) ; 1=1 Yes (COMPLETE QUESTIONS 12a1-12a4) ; 8=8 Not assessed (SKIP TO QUESTION 12b) ; 9=9 Missing/unknown (SKIP TO QUESTION 12b)</p></li>
+<li><p><strong>NPINF1A</strong> <em>character</em> Number of infarcts – Cerebral cortex , with options: ., 0, 1, 5</p></li>
 <li><p><strong>NPINF1B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 4, 4.5, 1</p></li>
 <li><p><strong>NPINF1D</strong> <em>character</em> Size of next (greatest dimension in cm) , with options: ., 4</p></li>
 <li><p><strong>NPINF1F</strong> <em>character</em> Size of next (greatest dimension in cm) , with options: ., 3</p></li>
-<li><p><strong>NPINF2A</strong> <em>character</em> Number of infarcts – Subcortical cerebral white matter and peri-ventricular white matter , with options: ., 0, 1</p></li>
-<li><p><strong>NPINF2B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 0.3</p></li>
-<li><p><strong>NPINF2D</strong> <em>logical</em> Size of next (greatest dimension in cm) Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPINF2F</strong> <em>logical</em> Size of next (greatest dimension in cm) Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPINF2A</strong> <em>character</em> Number of infarcts – Subcortical cerebral white matter and peri-ventricular white matter , with options: ., 1, 0</p></li>
+<li><p><strong>NPINF2B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 1.2, 0.3</p></li>
+<li><p><strong>NPINF2D</strong> <em>logical</em> Size of next (greatest dimension in cm) A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPINF2F</strong> <em>logical</em> Size of next (greatest dimension in cm) A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>NPINF3A</strong> <em>character</em> Number of infarcts – Deep cerebral gray matter or internal capsule , with options: ., 0, 1, 2</p></li>
-<li><p><strong>NPINF3B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 1.5, 1, 0.3, 2</p></li>
+<li><p><strong>NPINF3B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 2, 1.5, 1, 0.3</p></li>
 <li><p><strong>NPINF3D</strong> <em>character</em> Size of next (greatest dimension in cm) , with options: ., 0.5</p></li>
-<li><p><strong>NPINF3F</strong> <em>logical</em> Size of next (greatest dimension in cm) Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPINF3F</strong> <em>logical</em> Size of next (greatest dimension in cm) A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>NPINF4A</strong> <em>character</em> Number of infarcts – Brainstem or cerebellum , with options: ., 0, 1</p></li>
-<li><p><strong>NPINF4B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 0.5</p></li>
-<li><p><strong>NPINF4D</strong> <em>logical</em> Size of next (greatest dimension in cm) Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPINF4F</strong> <em>logical</em> Size of next (greatest dimension in cm) Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>NPHEMO</strong> <em>numeric</em> b. Were single or multiple old hemorrhages observed grossly? 0=0 No (SKIP TO QUESTION 12c); 1=1 Yes (COMPLETE QUESTIONS 12b1-12b3); 8=8 Not assessed (SKIP TO QUESTION 12c); 9=9 Missing/unknown (SKIP TO QUESTION 12c)</p></li>
-<li><p><strong>NPHEMO1</strong> <em>character</em> b1. Subdural or epidural hemorrhage 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPHEMO2</strong> <em>character</em> b2. Primary parenchymal hemorrhage Include those &gt;5mm. If ?5mm, include as microbleed; see Question 12d. 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPHEMO3</strong> <em>character</em> b3. Secondary parenchymal hemorrhage (e.g., tumor, vascular malformation) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLD</strong> <em>numeric</em> c. Old microinfarcts (not observed grossly)? (Check One) 0=0 No (SKIP TO QUESTION 12d); 1=1 Yes (COMPLETE QUESTIONS 12c1-12c4); 8=8 Not assessed (SKIP TO QUESTION 12d); 9=9 Missing/unknown (SKIP TO QUESTION 12d)</p></li>
-<li><p><strong>NPOLD1</strong> <em>character</em> c1. Number in screening sections of cerebral cortex (gray matter of cerebral cortex) 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLD2</strong> <em>character</em> c2. Number in screening sections of subcortical white matter and periventricular white matter 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLD3</strong> <em>character</em> c3. Number in screening sections of subcortical gray matter 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLD4</strong> <em>character</em> c4. Number in brainstem and cerebellum 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLDD</strong> <em>numeric</em> d. Old cerebral microbleeds? (Check One) Include old hemorrahages that are greater than or equal to 5mn. 0=0 No (SKIP TO QUESTION 12e); 1=1 Yes (COMPLETE QUESTIONS 12d1-12d4); 8=8 Not assessed (SKIP TO QUESTION 12e); 9=9 Missing/unknown (SKIP TO QUESTION 12e)</p></li>
-<li><p><strong>NPOLDD1</strong> <em>logical</em> d1. Number in screening sections of cerebral cortex 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLDD2</strong> <em>logical</em> d2. Number in screening sections of subcortical white matter and periventricular white matter 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLDD3</strong> <em>logical</em> d3. Number in screening sections of subcortical gray matter 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOLDD4</strong> <em>logical</em> d4. Number in brainstem and cerebellum 0=0; 1=1; 2=2; 3=3 or more; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPARTER</strong> <em>numeric</em> e. Arteriolosclerosis? (Check One) (Assessed in subcortical white or gray matter) 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPWMR</strong> <em>numeric</em> f. White matter rarefaction? (Check One) (H&amp;E or myelin stain may be used) 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 Severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH</strong> <em>numeric</em> g. Other pathologic changes related to ischemic or vascular disease not previously specified? 0=0 No (SKIP TO QUESTION 13); 1=1 Yes (COMPLETE QUESTIONS 12g1-12g12); 8=8 Not assessed (SKIP TO QUESTION 13); 9=9 Missing/unknown (SKIP TO QUESTION 13)</p></li>
-<li><p><strong>NPNEC</strong> <em>character</em> g1. Laminar necrosis 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH2</strong> <em>character</em> g2. Acute neuronal necrosis 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH3</strong> <em>character</em> g3. Acute/subacute gross infarcts 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH4</strong> <em>character</em> g4. Acute/subacute microinfarcts 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH5</strong> <em>character</em> g5. Acute/subacute gross hemorrhage 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH6</strong> <em>character</em> g6. Acute/subacute microhemorrhage 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH7</strong> <em>character</em> g7. Vascular malformation of any type 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH8</strong> <em>character</em> g8. Aneurysm of any type 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH9</strong> <em>character</em> g9. Vasculitis of any type 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH10</strong> <em>character</em> g10. CADASIL 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATH11</strong> <em>character</em> g11. Mineralization of blood vessels 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPATHO</strong> <em>character</em> g12. Other 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPPATHOX</strong> <em>character</em> Specify: , with options: Coxiella Burnetii, Remote ischemic foci in CA1, FOCAL SUBACUTE THROMBOSIS, R PRECENTRAL GYRUS</p></li>
-<li><p><strong>NPLBOD</strong> <em>numeric</em> Is there evidence of Lewy body pathology? (Check One) 0=0 No; 1=1 Brainstem predominant; 2=2 Limbic (transitional); 3=3 Neocortical (diffuse); 4=4 Amygdala predominant; 5=5 Olfactory bulb; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPNLOSS</strong> <em>numeric</em> Neuron loss in the substantia nigra 0=0 None; 1=1 Mild; 2=2 Moderate; 3=3 severe; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPHIPSCL</strong> <em>numeric</em> Hippocampal sclerosis (CA1 and/or subiculum) 0=0 None; 1=1 Unilateral; 2=2 Bilateral; 3=3 Present but laterality not assessed; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPTDPA</strong> <em>numeric</em> a. Spinal cord 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPTDPB</strong> <em>numeric</em> b. Amygdala 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPTDPC</strong> <em>numeric</em> c. Hippocampus 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPTDPD</strong> <em>numeric</em> d. Entorhinal/inferior temporal cortex 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPTDPE</strong> <em>numeric</em> e. Neocortex 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDTAU</strong> <em>numeric</em> a. FTLD with tau pathology (FTLD-tau) or other tauopathy (Check One) 0=0 No (SKIP TO QUESTION 17c); 1=1 Yes (COMPLETE QUESTIONS 17b1-17b10); 8=8 Not assessed (SKIP TO QUESTION 17c); 9=9 Missing/unknown (SKIP TO QUESTION 17c)</p></li>
-<li><p><strong>NPPICK</strong> <em>character</em> b1. FTLD-tau (PiD) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT2</strong> <em>character</em> b2. Other 3R tauopathy (Includes MAPT mutation tauopathy) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPCORT</strong> <em>character</em> b3. FTLD-tau (CBD) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPROG</strong> <em>character</em> b4. FTLD-tau (PSP) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT5</strong> <em>character</em> b5. Argyrophilic grains 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT6</strong> <em>character</em> b6. Other 4R tauopathy (Includes sporadic multiple systems tauopathy, globular glial tauopathy, MAPT mutation tauopathy) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT7</strong> <em>character</em> b7. Chronic traumatic encephalopathy 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT8</strong> <em>character</em> b8. Amyotrophic lateral sclerosis (ALS)/Parkinsonism-dementia complex of Guam 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT9</strong> <em>character</em> b9. Tangle dominant disease 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDT10</strong> <em>character</em> b10. Other 3R + 4F tauopathy (Includes unclassifiable, focal, glial only, MAPT mutation tauopathy, NOS) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFTDTDP</strong> <em>numeric</em> c. FTLD with TDP-43 pathology (FTLD-TDP)? (Check One) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPALSMND</strong> <em>numeric</em> d. ALS/motor neuron disease (MND) present? (Check One) 0=0 No; 1=1 Yes, with TDP-43 inclusions in motor neurons; 2=2 Yes, with FUS inclusions in motor neurons; 3=3 Yes, with SOD1 inclusions in motor neurons; 4=4 Yes, with other inclusions; 5=5 Yes, with no specific inclusions; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOFTD</strong> <em>numeric</em> e. Other FTLD? (Check One) 0=0 No (SKIP TO QUESTION 18a); 1=1 Yes (COMPLETE QUESTIONS 17f1 - 17f5); 8=8 Not assessed (SKIP TO QUESTION 18a); 9=9 Missing/unknown (SKIP TO QUESTION 18a)</p></li>
-<li><p><strong>NPOFTD1</strong> <em>logical</em> f1. Atypical FTLD-U (aFTLD-U) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOFTD2</strong> <em>logical</em> f2. NIFID (neuronal intermediate filament inclusions disease) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOFTD3</strong> <em>logical</em> f3. BIBD (basophilic inclusion body disease) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOFTD4</strong> <em>logical</em> f4. FTLD-UPS (ubiquitin-proteasome system [ubiquitin or p62 positive, tau/TDP-43/FUS negative inclusions]) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPOFTD5</strong> <em>logical</em> f5. FTLD-NOS (includes dementia lacking distinctive histology (DLDH) and FTLD with no inclusions (FTLD-NI) detected by tau, TDP-43, or ubiquitin/p62 IHC) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPARTAG</strong> <em>character</em>   0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPATGSEV</strong> <em>character</em>   1=Mild; 2=Moderate; 3=Severe; 8=Not assesed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGAMY</strong> <em>character</em>   0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPATGAM1</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGAM2</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGAM3</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGAM4</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGAM5</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGFRN</strong> <em>character</em>   0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPATGFR1</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGFR2</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGFR3</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPATGFR4</strong> <em>character</em>   0=None; 1=Focal; 2=Widespread; 8=Not assessed; 9=Missing/unknown</p></li>
-<li><p><strong>NPPDXA</strong> <em>numeric</em> a. Pigment-spheroid degeneration/NBIA 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXB</strong> <em>numeric</em> b. Multiple system atrophy 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXC</strong> <em>numeric</em> c. Prion disease 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXD</strong> <em>numeric</em> d. Trinucleotide disease (Huntington disease, SCA, other) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXE</strong> <em>numeric</em> e. Malformation of cortical development 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXF</strong> <em>numeric</em> f. Metabolic/storage disorder of any type 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXG</strong> <em>numeric</em> g. WM disease, leukodystrophy 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXH</strong> <em>numeric</em> h. WM disease, multiple sclerosis or other demyelinating disease 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXI</strong> <em>numeric</em> i. Contusion/traumatic brain injury of any type, acute 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXJ</strong> <em>numeric</em> j. Contusion/traumatic brain injury of any type, chronic 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXK</strong> <em>numeric</em> k. Neoplasm, primary 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXL</strong> <em>numeric</em> l. Neoplasm, metastatic 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXM</strong> <em>numeric</em> m. Infectious process of any type (encephalitis, abscess, etc.) 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXN</strong> <em>numeric</em> n. Herniation, any site 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXO</strong> <em>numeric</em> o. Trisomy 21/Down syndrome 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXP</strong> <em>numeric</em> p. AD-related genes (dominantly inherited); do not include APOE or other polymorphisms or genetic risk factors. 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXQ</strong> <em>numeric</em> q. FTLD-related genes (dominantly inherited); do not include polymorphisms or genetic risk factors. 0=0 No; 1=1 Yes; 8=8 Not assessed; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPPDXR</strong> <em>numeric</em> r. Other (Specify) 0=0 No; 1=1 Yes</p></li>
+<li><p><strong>NPINF4B</strong> <em>character</em> Size of largest (greatest dimension in cm) , with options: ., 0.5, 0.6</p></li>
+<li><p><strong>NPINF4D</strong> <em>logical</em> Size of next (greatest dimension in cm) A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPINF4F</strong> <em>logical</em> Size of next (greatest dimension in cm) A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>NPHEMO</strong> <em>numeric</em> b. Were single or multiple old hemorrhages observed grossly? 0=0 No (SKIP TO QUESTION 12c) ; 1=1 Yes (COMPLETE QUESTIONS 12b1-12b3) ; 8=8 Not assessed (SKIP TO QUESTION 12c) ; 9=9 Missing/unknown (SKIP TO QUESTION 12c)</p></li>
+<li><p><strong>NPHEMO1</strong> <em>character</em> b1. Subdural or epidural hemorrhage 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPHEMO2</strong> <em>character</em> b2. Primary parenchymal hemorrhage Include those &gt;5mm. If ?5mm, include as microbleed; see Question 12d. 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPHEMO3</strong> <em>character</em> b3. Secondary parenchymal hemorrhage (e.g., tumor, vascular malformation) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLD</strong> <em>numeric</em> c. Old microinfarcts (not observed grossly)? (Check One) 0=0 No (SKIP TO QUESTION 12d) ; 1=1 Yes (COMPLETE QUESTIONS 12c1-12c4) ; 8=8 Not assessed (SKIP TO QUESTION 12d) ; 9=9 Missing/unknown (SKIP TO QUESTION 12d)</p></li>
+<li><p><strong>NPOLD1</strong> <em>character</em> c1. Number in screening sections of cerebral cortex (gray matter of cerebral cortex) 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLD2</strong> <em>character</em> c2. Number in screening sections of subcortical white matter and periventricular white matter 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLD3</strong> <em>character</em> c3. Number in screening sections of subcortical gray matter 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLD4</strong> <em>character</em> c4. Number in brainstem and cerebellum 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLDD</strong> <em>numeric</em> d. Old cerebral microbleeds? (Check One) Include old hemorrahages that are greater than or equal to 5mn. 0=0 No (SKIP TO QUESTION 12e) ; 1=1 Yes (COMPLETE QUESTIONS 12d1-12d4) ; 8=8 Not assessed (SKIP TO QUESTION 12e) ; 9=9 Missing/unknown (SKIP TO QUESTION 12e)</p></li>
+<li><p><strong>NPOLDD1</strong> <em>character</em> d1. Number in screening sections of cerebral cortex 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLDD2</strong> <em>character</em> d2. Number in screening sections of subcortical white matter and periventricular white matter 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLDD3</strong> <em>character</em> d3. Number in screening sections of subcortical gray matter 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOLDD4</strong> <em>character</em> d4. Number in brainstem and cerebellum 0=0 ; 1=1 ; 2=2 ; 3=3 or more ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPARTER</strong> <em>numeric</em> e. Arteriolosclerosis? (Check One) (Assessed in subcortical white or gray matter) 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPWMR</strong> <em>numeric</em> f. White matter rarefaction? (Check One) (H&amp;E or myelin stain may be used) 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 Severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH</strong> <em>numeric</em> g. Other pathologic changes related to ischemic or vascular disease not previously specified? 0=0 No (SKIP TO QUESTION 13) ; 1=1 Yes (COMPLETE QUESTIONS 12g1-12g12) ; 8=8 Not assessed (SKIP TO QUESTION 13) ; 9=9 Missing/unknown (SKIP TO QUESTION 13)</p></li>
+<li><p><strong>NPNEC</strong> <em>character</em> g1. Laminar necrosis 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH2</strong> <em>character</em> g2. Acute neuronal necrosis 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH3</strong> <em>character</em> g3. Acute/subacute gross infarcts 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH4</strong> <em>character</em> g4. Acute/subacute microinfarcts 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH5</strong> <em>character</em> g5. Acute/subacute gross hemorrhage 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH6</strong> <em>character</em> g6. Acute/subacute microhemorrhage 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH7</strong> <em>character</em> g7. Vascular malformation of any type 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH8</strong> <em>character</em> g8. Aneurysm of any type 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH9</strong> <em>character</em> g9. Vasculitis of any type 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH10</strong> <em>character</em> g10. CADASIL 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATH11</strong> <em>character</em> g11. Mineralization of blood vessels 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPATHO</strong> <em>character</em> g12. Other 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPPATHOX</strong> <em>character</em> Specify: , with options: Mural/Luminal protein deposits, Coxiella Burnetii, Remote ischemic foci in CA1, subacute corticospinal tract degeneration, FOCAL SUBACUTE THROMBOSIS, R PRECENTRAL GYRUS</p></li>
+<li><p><strong>NPLBOD</strong> <em>numeric</em> Is there evidence of Lewy body pathology? (Check One) 0=0 No ; 1=1 Brainstem predominant ; 2=2 Limbic (transitional) ; 3=3 Neocortical (diffuse) ; 4=4 Amygdala predominant ; 5=5 Olfactory bulb ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPNLOSS</strong> <em>numeric</em> Neuron loss in the substantia nigra 0=0 None ; 1=1 Mild ; 2=2 Moderate ; 3=3 severe ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPHIPSCL</strong> <em>numeric</em> Hippocampal sclerosis (CA1 and/or subiculum) 0=0 None ; 1=1 Unilateral ; 2=2 Bilateral ; 3=3 Present but laterality not assessed ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPTDPA</strong> <em>numeric</em> a. Spinal cord 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPTDPB</strong> <em>numeric</em> b. Amygdala 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPTDPC</strong> <em>numeric</em> c. Hippocampus 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPTDPD</strong> <em>numeric</em> d. Entorhinal/inferior temporal cortex 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPTDPE</strong> <em>numeric</em> e. Neocortex 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDTAU</strong> <em>numeric</em> a. FTLD with tau pathology (FTLD-tau) or other tauopathy (Check One) 0=0 No (SKIP TO QUESTION 17c) ; 1=1 Yes (COMPLETE QUESTIONS 17b1-17b10) ; 8=8 Not assessed (SKIP TO QUESTION 17c) ; 9=9 Missing/unknown (SKIP TO QUESTION 17c)</p></li>
+<li><p><strong>NPPICK</strong> <em>character</em> b1. FTLD-tau (PiD) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT2</strong> <em>character</em> b2. Other 3R tauopathy (Includes MAPT mutation tauopathy) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPCORT</strong> <em>character</em> b3. FTLD-tau (CBD) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPROG</strong> <em>character</em> b4. FTLD-tau (PSP) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT5</strong> <em>character</em> b5. Argyrophilic grains 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT6</strong> <em>character</em> b6. Other 4R tauopathy (Includes sporadic multiple systems tauopathy, globular glial tauopathy, MAPT mutation tauopathy) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT7</strong> <em>character</em> b7. Chronic traumatic encephalopathy 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT8</strong> <em>character</em> b8. Amyotrophic lateral sclerosis (ALS)/Parkinsonism-dementia complex of Guam 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT9</strong> <em>character</em> b9. Tangle dominant disease 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDT10</strong> <em>character</em> b10. Other 3R + 4F tauopathy (Includes unclassifiable, focal, glial only, MAPT mutation tauopathy, NOS) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFTDTDP</strong> <em>numeric</em> c. FTLD with TDP-43 pathology (FTLD-TDP)? (Check One) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPALSMND</strong> <em>numeric</em> d. ALS/motor neuron disease (MND) present? (Check One) 0=0 No ; 1=1 Yes, with TDP-43 inclusions in motor neurons ; 2=2 Yes, with FUS inclusions in motor neurons ; 3=3 Yes, with SOD1 inclusions in motor neurons ; 4=4 Yes, with other inclusions ; 5=5 Yes, with no specific inclusions ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOFTD</strong> <em>numeric</em> e. Other FTLD? (Check One) 0=0 No (SKIP TO QUESTION 18a) ; 1=1 Yes (COMPLETE QUESTIONS 17f1 - 17f5) ; 8=8 Not assessed (SKIP TO QUESTION 18a) ; 9=9 Missing/unknown (SKIP TO QUESTION 18a)</p></li>
+<li><p><strong>NPOFTD1</strong> <em>logical</em> f1. Atypical FTLD-U (aFTLD-U) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOFTD2</strong> <em>logical</em> f2. NIFID (neuronal intermediate filament inclusions disease) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOFTD3</strong> <em>logical</em> f3. BIBD (basophilic inclusion body disease) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOFTD4</strong> <em>logical</em> f4. FTLD-UPS (ubiquitin-proteasome system [ubiquitin or p62 positive, tau/TDP-43/FUS negative inclusions]) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPOFTD5</strong> <em>logical</em> f5. FTLD-NOS (includes dementia lacking distinctive histology (DLDH) and FTLD with no inclusions (FTLD-NI) detected by tau, TDP-43, or ubiquitin/p62 IHC) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXA</strong> <em>numeric</em> a. Pigment-spheroid degeneration/NBIA 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXB</strong> <em>numeric</em> b. Multiple system atrophy 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXC</strong> <em>numeric</em> c. Prion disease 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXD</strong> <em>numeric</em> d. Trinucleotide disease (Huntington disease, SCA, other) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXE</strong> <em>numeric</em> e. Malformation of cortical development 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXF</strong> <em>numeric</em> f. Metabolic/storage disorder of any type 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXG</strong> <em>numeric</em> g. WM disease, leukodystrophy 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXH</strong> <em>numeric</em> h. WM disease, multiple sclerosis or other demyelinating disease 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXI</strong> <em>numeric</em> i. Contusion/traumatic brain injury of any type, acute 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXJ</strong> <em>numeric</em> j. Contusion/traumatic brain injury of any type, chronic 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXK</strong> <em>numeric</em> k. Neoplasm, primary 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXL</strong> <em>numeric</em> l. Neoplasm, metastatic 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXM</strong> <em>numeric</em> m. Infectious process of any type (encephalitis, abscess, etc.) 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXN</strong> <em>numeric</em> n. Herniation, any site 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXO</strong> <em>numeric</em> o. Trisomy 21/Down syndrome 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXP</strong> <em>numeric</em> p. AD-related genes (dominantly inherited); do not include APOE or other polymorphisms or genetic risk factors. 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXQ</strong> <em>numeric</em> q. FTLD-related genes (dominantly inherited); do not include polymorphisms or genetic risk factors. 0=0 No ; 1=1 Yes ; 8=8 Not assessed ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXR</strong> <em>numeric</em> r. Other (Specify) 0=0 No ; 1=1 Yes</p></li>
 <li><p><strong>NPPDXRX</strong> <em>character</em> Specify:</p></li>
-<li><p><strong>NPPDXS</strong> <em>numeric</em> s. Other (Specify) 0=0 No; 1=1 Yes</p></li>
+<li><p><strong>NPPDXS</strong> <em>numeric</em> s. Other (Specify) 0=0 No ; 1=1 Yes</p></li>
 <li><p><strong>NPPDXSX</strong> <em>character</em> Specify:</p></li>
-<li><p><strong>NPPDXT</strong> <em>numeric</em> t. Other (Specify) 0=0 No; 1=1 Yes</p></li>
-<li><p><strong>NPPDXTX</strong> <em>character</em> Specify: , with options: LATE-NC, ARTAG, Moderate, Widespread, Leptomeningeal hemosiderin bilateral anterior temporal lobes, TDP-43 Proteinopathy, Joseph's Stage 3, LATE-NC Stage 2, ARTAG, Mild, Amygdala, Basal Forebrain, Olfactory Cortex, Parietal White Matter</p></li>
-<li><p><strong>NPBNKA</strong> <em>numeric</em> a. Banked frozen brain or half brain 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBNKB</strong> <em>numeric</em> b. Banked frozen wedge of cerebellum or other sample for future DNA prep 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBNKC</strong> <em>numeric</em> c. Formalin- or paraformaldehyde-fixed brain 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBNKD</strong> <em>numeric</em> d. Paraffin-embedded blocks of brain regions 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBNKE</strong> <em>numeric</em> e. Banked postmortem CSF 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBNKF</strong> <em>numeric</em> f. Banked postmortem blood or serum 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPBNKG</strong> <em>numeric</em> g. Banked DNA 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
-<li><p><strong>NPFAUT</strong> <em>numeric</em> h. Full autopsy performed? 0=0 No; 1=1 Yes; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPPDXT</strong> <em>numeric</em> t. Other (Specify) 0=0 No ; 1=1 Yes</p></li>
+<li><p><strong>NPPDXTX</strong> <em>character</em> Specify: , with options: Vascular mineralization, mild, hippo, pallidum, LATE-NC, ARTAG, Moderate, Widespread, Leptomeningeal hemosiderin bilateral anterior temporal lobes, Meningioma, transitional, WHO grade 1, 0.5cm, TDP-43 Proteinopathy, Joseph's Stage 3, LATE-NC Stage 2, ARTAG, Mild, Amygdala, Basal Forebrain, Olfactory Cortex, Parietal White Matter, LBD, very mild, substantia nigra only</p></li>
+<li><p><strong>NPBNKA</strong> <em>numeric</em> a. Banked frozen brain or half brain 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBNKB</strong> <em>numeric</em> b. Banked frozen wedge of cerebellum or other sample for future DNA prep 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBNKC</strong> <em>numeric</em> c. Formalin- or paraformaldehyde-fixed brain 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBNKD</strong> <em>numeric</em> d. Paraffin-embedded blocks of brain regions 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBNKE</strong> <em>numeric</em> e. Banked postmortem CSF 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBNKF</strong> <em>numeric</em> f. Banked postmortem blood or serum 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPBNKG</strong> <em>numeric</em> g. Banked DNA 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPFAUT</strong> <em>numeric</em> h. Full autopsy performed? 0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
 <li><p><strong>NPFAUT1</strong> <em>character</em> If full autopsy, first major finding , with options: Leukemia, Acute and Chronic Congestive Heart Failure</p></li>
 <li><p><strong>NPFAUT2</strong> <em>character</em> If full autopsy, second major finding , with options: AD, Severe Atherosclerosis - Coronary, Aorta</p></li>
 <li><p><strong>NPFAUT3</strong> <em>character</em> If full autopsy, third major finding , with options: 0, Erythroid Hyperplasia with megaloblastic changes</p></li>
 <li><p><strong>NPFAUT4</strong> <em>character</em> If full autopsy, fourth major finding , with options: 0, .</p></li>
 <li><p><strong>FORMVER</strong> <em>numeric</em>   Range value: 10, ..., 11</p></li>
+<li><p><strong>NPARTAG</strong> <em>character</em>   0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPATGSEV</strong> <em>character</em>   1=Mild ; 2=Moderate ; 3=Severe ; 8=Not assesed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGAMY</strong> <em>character</em>   0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPATGAM1</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGAM2</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGAM3</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGAM4</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGAM5</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGFRN</strong> <em>character</em>   0=0 No ; 1=1 Yes ; 9=9 Missing/unknown</p></li>
+<li><p><strong>NPATGFR1</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGFR2</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGFR3</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
+<li><p><strong>NPATGFR4</strong> <em>character</em>   0=None ; 1=Focal ; 2=Widespread ; 8=Not assessed ; 9=Missing/unknown</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>
     <div class="section level2">

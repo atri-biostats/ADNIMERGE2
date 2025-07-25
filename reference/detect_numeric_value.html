@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -73,13 +75,13 @@
 
 
 <dt id="arg-stop-message">stop_message<a class="anchor" aria-label="anchor" href="#arg-stop-message"></a></dt>
-<dd><p>A boolean value to return a stop message when there is the specified numeric
+<dd><p>A Boolean value to return a stop message when there is the specified numeric
 value type `num_type`, Default: `FALSE`</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A boolean value or a stop message if <em>stop_message=TRUE</em>:</p>
+    <p>A Boolean value or a stop message if <em>stop_message=TRUE</em>:</p>
 <dl><dt>TRUE </dt>
 <dd><p>If any of the specified numeric type value is presented.</p></dd>
 
@@ -92,8 +94,10 @@ value type `num_type`, Default: `FALSE`</p></dd>
     <div class="dont-index"><p>Other checks function:
 <code><a href="check_colnames.html">check_colnames</a>()</code>,
 <code><a href="check_duplicate_records.html">check_duplicate_records</a>()</code>,
+<code><a href="check_is_logical.html">check_is_logical</a>()</code>,
 <code><a href="check_value_match.html">check_value_match</a>()</code>,
-<code><a href="detect_decimal_value.html">detect_decimal_value</a>()</code></p></div>
+<code><a href="detect_decimal_value.html">detect_decimal_value</a>()</code>,
+<code><a href="is_datadict_tbl.html">is_datadict_tbl</a>()</code></p></div>
     </div>
 
     <div class="section level2">

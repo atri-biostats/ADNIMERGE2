@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -52,13 +54,36 @@
     <div class="section level2">
       <h2 id="adni-raw-datasets">ADNI Raw Datasets<a class="anchor" aria-label="anchor" href="#adni-raw-datasets"></a></h2>
 
+      <div class="section-desc"><p>All Alzheimer’s Disease Neuroimaging Initiative (ADNI) study data as shared at <a href="https://adni.loni.usc.edu/" class="external-link uri">https://adni.loni.usc.edu/</a>.</p></div>
+
+
+    </div><div class="section level2">
+
+      <h3 id="data-dictionary-datadic">Data Dictionary - DATADIC<a class="anchor" aria-label="anchor" href="#data-dictionary-datadic"></a></h3>
 
 
 
     </div><div class="section level2">
 
-      <h3 id="subject-characteristics">Subject Characteristics<a class="anchor" aria-label="anchor" href="#subject-characteristics"></a></h3>
 
+
+
+      <dl><dt>
+
+          <code><a href="DATADIC.html">DATADIC</a></code>
+
+        </dt>
+        <dd>Data Dictionary Dataset - Updated</dd>
+      </dl><dl><dt>
+
+          <code><a href="REMOTE_DATADIC.html">REMOTE_DATADIC</a></code>
+
+        </dt>
+        <dd>Remote Collected Data Dictionary Dataset</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="subject-characteristics">Subject Characteristics<a class="anchor" aria-label="anchor" href="#subject-characteristics"></a></h3>
+      <div class="section-desc"><p>Includes subject demographics, and family history</p></div>
 
 
     </div><div class="section level2">
@@ -117,7 +142,7 @@
       </dl></div><div class="section level2">
 
       <h3 id="enrollment">Enrollment<a class="anchor" aria-label="anchor" href="#enrollment"></a></h3>
-
+      <div class="section-desc"><p>Includes amyloid status and amyloid disclosure results, and enrollment-related dataset</p></div>
 
 
     </div><div class="section level2">
@@ -241,8 +266,8 @@
         <dd>VISITS</dd>
       </dl></div><div class="section level2">
 
-      <h3 id="medical-history-initial-health-history-adverse-events">Medical History, Initial Health History, Adverse Events<a class="anchor" aria-label="anchor" href="#medical-history-initial-health-history-adverse-events"></a></h3>
-
+      <h3 id="medical-history">Medical History<a class="anchor" aria-label="anchor" href="#medical-history"></a></h3>
+      <div class="section-desc"><p>Includes adverse events, concurrent medications (drugs), medical history/ initial health assessments, and phyiscal/neurological exams</p></div>
 
 
     </div><div class="section level2">
@@ -349,7 +374,7 @@
       </dl></div><div class="section level2">
 
       <h3 id="assessments">Assessments<a class="anchor" aria-label="anchor" href="#assessments"></a></h3>
-
+      <div class="section-desc"><p>Includes clinical diagnostics summary, neuropsychological assessment results, and non-clinical assessments such as result from the Brain Health Registry (BHR)</p></div>
 
 
     </div><div class="section level2">
@@ -359,19 +384,7 @@
 
       <dl><dt>
 
-          <code><a href="ADASSCORES.html">ADASSCORES</a></code>
-
-        </dt>
-        <dd>ADAS Sub-Scores and Total Scores</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADAS_ADNI1.html">ADAS_ADNI1</a></code>
-
-        </dt>
-        <dd>ADAS-Cognitive Behavior</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADAS_ADNIGO23.html">ADAS_ADNIGO23</a></code>
+          <code><a href="ADAS.html">ADAS</a></code>
 
         </dt>
         <dd>ADAS-Cognitive Behavior</dd>
@@ -392,73 +405,73 @@
           <code><a href="BHR.html">BHR</a></code>
 
         </dt>
-        <dd>Brain Health Registry</dd>
+        <dd>Brain Health Registry (BHR)</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_BASELINE_QUESTIONNAIRE.html">BHR_BASELINE_QUESTIONNAIRE</a></code>
 
         </dt>
-        <dd>Brain Health Registry BASELINE QUESTIONNAIRE</dd>
+        <dd>Brain Health Registry (BHR) BASELINE QUESTIONNAIRE</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_EVERYDAY_COGNITION.html">BHR_EVERYDAY_COGNITION</a></code>
 
         </dt>
-        <dd>Brain Health Registry EVERYDAY COGNITION</dd>
+        <dd>Brain Health Registry (BHR) EVERYDAY COGNITION</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_LONGITUDINAL_QUESTIONNAIRE.html">BHR_LONGITUDINAL_QUESTIONNAIRE</a></code>
 
         </dt>
-        <dd>Brain Health Registry LONGITUDINAL QUESTIONNAIRE</dd>
+        <dd>Brain Health Registry (BHR) LONGITUDINAL QUESTIONNAIRE</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_MEMTRAX.html">BHR_MEMTRAX</a></code>
 
         </dt>
-        <dd>Brain Health Registry MEMTRAX</dd>
+        <dd>Brain Health Registry (BHR) MEMTRAX</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_ADL.html">BHR_SP_ADL</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP ADL</dd>
+        <dd>Brain Health Registry (BHR) SP ADL</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_CAREGIVER_BURDEN.html">BHR_SP_CAREGIVER_BURDEN</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP CAREGIVER BURDEN</dd>
+        <dd>Brain Health Registry (BHR) SP CAREGIVER BURDEN</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_EVERYDAY_COGNITION.html">BHR_SP_EVERYDAY_COGNITION</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP EVERYDAY COGNITION</dd>
+        <dd>Brain Health Registry (BHR) SP EVERYDAY COGNITION</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_FAQ.html">BHR_SP_FAQ</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP FAQ</dd>
+        <dd>Brain Health Registry (BHR) SP FAQ</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_INITIAL.html">BHR_SP_INITIAL</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP INITIAL</dd>
+        <dd>Brain Health Registry (BHR) SP INITIAL</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_RELATIONSHIP.html">BHR_SP_RELATIONSHIP</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP RELATIONSHIP</dd>
+        <dd>Brain Health Registry (BHR) SP RELATIONSHIP</dd>
       </dl><dl><dt>
 
           <code><a href="BHR_SP_STUDY_CONFIRMATION.html">BHR_SP_STUDY_CONFIRMATION</a></code>
 
         </dt>
-        <dd>Brain Health Registry SP STUDY CONFIRMATION</dd>
+        <dd>Brain Health Registry (BHR) SP STUDY CONFIRMATION</dd>
       </dl><dl><dt>
 
           <code><a href="BLCHANGE.html">BLCHANGE</a></code>
@@ -642,7 +655,7 @@
       </dl></div><div class="section level2">
 
       <h3 id="imaging">Imaging<a class="anchor" aria-label="anchor" href="#imaging"></a></h3>
-
+      <div class="section-desc"><p>Includes image acquisition, image analysis results, image quality for both MIR and PET</p></div>
 
 
     </div><div class="section level2">
@@ -685,37 +698,37 @@
           <code><a href="BAIMRINMRC.html">BAIMRINMRC</a></code>
 
         </dt>
-        <dd>Banner Alzheimer's Institute MRI NMRC Summaries: 2016-09-12</dd>
+        <dd>BAI - MRI NMRC Summaries: 2016-09-12</dd>
       </dl><dl><dt>
 
           <code><a href="BAINMRC.html">BAINMRC</a></code>
 
         </dt>
-        <dd>Banner Alzheimer's Institute NMRC Summaries</dd>
+        <dd>BAI - NMRC Summaries</dd>
       </dl><dl><dt>
 
           <code><a href="BAIPETNMRC.html">BAIPETNMRC</a></code>
 
         </dt>
-        <dd>Banner Alzheimer's Institute PET NMRC Summaries: 2018-04-12</dd>
+        <dd>BAI - PET NMRC Summaries: 2018-04-12</dd>
       </dl><dl><dt>
 
           <code><a href="BAIPETNMRCAV45.html">BAIPETNMRCAV45</a></code>
 
         </dt>
-        <dd>Banner Alzheimer's Institute PET NMRC AV45 Summaries: 2020-10-23</dd>
+        <dd>BAI - PET NMRC AV45 Summaries: 2020-10-23</dd>
       </dl><dl><dt>
 
           <code><a href="BAIPETNMRCFDG.html">BAIPETNMRCFDG</a></code>
 
         </dt>
-        <dd>Banner Alzheimer's Institute PET NMRC FDG Summaries: 2020-12-11</dd>
+        <dd>BAI - PET NMRC FDG Summaries: 2020-12-11</dd>
       </dl><dl><dt>
 
           <code><a href="BAIPETNMRCFTP.html">BAIPETNMRCFTP</a></code>
 
         </dt>
-        <dd>Banner Alzheimer's Institute PET NMRC Flortaucipir (F-AV1451) Summaries: 2022-08-17</dd>
+        <dd>BAI - PET NMRC Flortaucipir (F-AV1451) Summaries: 2022-08-17</dd>
       </dl><dl><dt>
 
           <code><a href="BSI.html">BSI</a></code>
@@ -724,28 +737,40 @@
         <dd>Boundary Shift Integral Summaries (Nick Fox's lab)</dd>
       </dl><dl><dt>
 
+          <code><a href="CROSSVAL.html">CROSSVAL</a></code>
+
+        </dt>
+        <dd>CROSSVAL</dd>
+      </dl><dl><dt>
+
           <code><a href="Changed_Study_ID_Listing.html">Changed_Study_ID_Listing</a></code>
 
         </dt>
         <dd>CHANGED_STUDY_ID_LISTING</dd>
       </dl><dl><dt>
 
-          <code><a href="DTIROI_MEAN_V2.html">DTIROI_MEAN_V2</a></code>
+          <code><a href="DTIROI_MEAN.html">DTIROI_MEAN</a></code>
 
         </dt>
-        <dd>USC - DTI ROI Summary Measures v2 (Mean)</dd>
+        <dd>USC - DTI ROI Summary Measures v2 + v3 (Mean)</dd>
       </dl><dl><dt>
 
-          <code><a href="DTIROI_ROBUSTMEAN_V2.html">DTIROI_ROBUSTMEAN_V2</a></code>
+          <code><a href="DTIROI_ROBUSTMEAN.html">DTIROI_ROBUSTMEAN</a></code>
 
         </dt>
-        <dd>USC - DTI ROI Summary Measures v2 (Robust Mean)</dd>
+        <dd>USC - DTI ROI Summary Measures v2 + v3 (Robust Mean)</dd>
       </dl><dl><dt>
 
           <code><a href="DTIROI_V1.html">DTIROI_V1</a></code>
 
         </dt>
         <dd>USC - DTI ROI Summary Measures v1</dd>
+      </dl><dl><dt>
+
+          <code><a href="FOXLABBSI.html">FOXLABBSI</a></code>
+
+        </dt>
+        <dd>Fox Lab BSI measures</dd>
       </dl><dl><dt>
 
           <code><a href="MAYOADIRL_MRI_FMRI.html">MAYOADIRL_MRI_FMRI</a></code>
@@ -758,12 +783,6 @@
 
         </dt>
         <dd>Jack Lab - fMRI Network Failure Quotient (NFQ)</dd>
-      </dl><dl><dt>
-
-          <code><a href="MAYOADIRL_MRI_IMAGEQC.html">MAYOADIRL_MRI_IMAGEQC</a></code>
-
-        </dt>
-        <dd>Jack Lab - ADNI GO/2 MRI QC: 2015-12-08</dd>
       </dl><dl><dt>
 
           <code><a href="MAYOADIRL_MRI_MCH.html">MAYOADIRL_MRI_MCH</a></code>
@@ -826,16 +845,28 @@
         <dd>MRI Subject Inclusion</dd>
       </dl><dl><dt>
 
+          <code><a href="MRINFQ.html">MRINFQ</a></code>
+
+        </dt>
+        <dd>MAYO ADIR LAB MRI Network Failure Quotient</dd>
+      </dl><dl><dt>
+
           <code><a href="MRIPROT.html">MRIPROT</a></code>
 
         </dt>
         <dd>MRI Protocol</dd>
       </dl><dl><dt>
 
-          <code><a href="MRIQUALITY.html">MRIQUALITY</a></code>
+          <code><a href="MRIQC.html">MRIQC</a></code>
 
         </dt>
-        <dd>MRI Quality</dd>
+        <dd>MAYO ADIR LAB MRI Quality</dd>
+      </dl><dl><dt>
+
+          <code><a href="MRIQSM.html">MRIQSM</a></code>
+
+        </dt>
+        <dd>MAYO ADIR LAB MRI Quantitative Susceptibility Mapping</dd>
       </dl><dl><dt>
 
           <code><a href="MRIREAD.html">MRIREAD</a></code>
@@ -910,6 +941,12 @@
         <dd>PIB QC Tracking</dd>
       </dl><dl><dt>
 
+          <code><a href="PICSLASHS.html">PICSLASHS</a></code>
+
+        </dt>
+        <dd>ASHS volume data</dd>
+      </dl><dl><dt>
+
           <code><a href="SPAP_AVID_FLORBETAPIR.html">SPAP_AVID_FLORBETAPIR</a></code>
 
         </dt>
@@ -932,6 +969,12 @@
 
         </dt>
         <dd>Paul Thompson's Lab, Imaging Genetics Center (IGC), University of Southern California - Cross-sectional and longitudinal tensor-based morphometry Versions 2.0 and 2.1: 2020-03-17</dd>
+      </dl><dl><dt>
+
+          <code><a href="TCV.html">TCV</a></code>
+
+        </dt>
+        <dd>Total Cranial Vault Segmentation</dd>
       </dl><dl><dt>
 
           <code><a href="UASPMVBM.html">UASPMVBM</a></code>
@@ -970,16 +1013,10 @@
         <dd>Univerity of California Davis White Matter Hyperintensity Volumes (ADNI1)</dd>
       </dl><dl><dt>
 
-          <code><a href="UCD_WMH_V1.html">UCD_WMH_V1</a></code>
+          <code><a href="UCD_WMH.html">UCD_WMH</a></code>
 
         </dt>
-        <dd>UCD - White Matter Hyperintensity Volumes: 2019-04-30</dd>
-      </dl><dl><dt>
-
-          <code><a href="UCD_WMH_V2.html">UCD_WMH_V2</a></code>
-
-        </dt>
-        <dd>UCD - White Matter Hyperintensity Volumes: 2022-05-02</dd>
+        <dd>UCD - White Matter Hyperintensity Volumes</dd>
       </dl><dl><dt>
 
           <code><a href="UCSDVOL.html">UCSDVOL</a></code>
@@ -1105,90 +1142,12 @@
 
 
 
-
-    </div><div class="section level2">
-
-      <h3 id="other-raw-datasets">Other Raw Datasets<a class="anchor" aria-label="anchor" href="#other-raw-datasets"></a></h3>
-
-
-
-    </div><div class="section level2">
-
-
-
-
       <dl><dt>
 
-          <code><a href="ADASSCORES.html">ADASSCORES</a></code>
+          <code><a href="ALIQUOT_COUNT.html">ALIQUOT_COUNT</a></code>
 
         </dt>
-        <dd>ADAS Sub-Scores and Total Scores</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADAS_ADNI1.html">ADAS_ADNI1</a></code>
-
-        </dt>
-        <dd>ADAS-Cognitive Behavior</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADAS_ADNIGO23.html">ADAS_ADNIGO23</a></code>
-
-        </dt>
-        <dd>ADAS-Cognitive Behavior</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADDCOMM.html">ADDCOMM</a></code>
-
-        </dt>
-        <dd>Additional Comments</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADI.html">ADI</a></code>
-
-        </dt>
-        <dd>Area Deprivation Index Score</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADSXLIST.html">ADSXLIST</a></code>
-
-        </dt>
-        <dd>Diagnosis and Symptoms Checklist</dd>
-      </dl><dl><dt>
-
-          <code><a href="ADVERSE.html">ADVERSE</a></code>
-
-        </dt>
-        <dd>Adverse Events Log</dd>
-      </dl><dl><dt>
-
-          <code><a href="AMAS.html">AMAS</a></code>
-
-        </dt>
-        <dd>Abbreviated Multidimensional Acculturation Scale</dd>
-      </dl><dl><dt>
-
-          <code><a href="AMNART.html">AMNART</a></code>
-
-        </dt>
-        <dd>American National Adult Reading Test</dd>
-      </dl><dl><dt>
-
-          <code><a href="AMYDISC.html">AMYDISC</a></code>
-
-        </dt>
-        <dd>Amyloid Disclosure Visit</dd>
-      </dl><dl><dt>
-
-          <code><a href="AMYREAD.html">AMYREAD</a></code>
-
-        </dt>
-        <dd>Amyloid PET Read</dd>
-      </dl><dl><dt>
-
-          <code><a href="ANTIAMYTX.html">ANTIAMYTX</a></code>
-
-        </dt>
-        <dd>Anti-Amyloid Treatment Information</dd>
+        <dd>Aliquot Count Table</dd>
       </dl><dl><dt>
 
           <code><a href="APOERES.html">APOERES</a></code>
@@ -1197,40 +1156,28 @@
         <dd>ApoE Genotyping - Results</dd>
       </dl><dl><dt>
 
-          <code><a href="ARM.html">ARM</a></code>
-
-        </dt>
-        <dd>ARM</dd>
-      </dl><dl><dt>
-
-          <code><a href="BACKMEDS.html">BACKMEDS</a></code>
-
-        </dt>
-        <dd>Key Background Medications</dd>
-      </dl><dl><dt>
-
-          <code><a href="BHR.html">BHR</a></code>
-
-        </dt>
-        <dd>Brain Health Registry</dd>
-      </dl><dl><dt>
-
           <code><a href="BIOMARK.html">BIOMARK</a></code>
 
         </dt>
         <dd>Biomarker Samples</dd>
       </dl><dl><dt>
 
-          <code><a href="BLCHANGE.html">BLCHANGE</a></code>
+          <code><a href="BLENNOWPLASMANFL.html">BLENNOWPLASMANFL</a></code>
 
         </dt>
-        <dd>Diagnostic Summary - Baseline Changes</dd>
+        <dd>Blennow Lab ADNI1 Plasma neurofilament light (NFL): 2018-10-03</dd>
       </dl><dl><dt>
 
-          <code><a href="BLSCHECK.html">BLSCHECK</a></code>
+          <code><a href="BLENNOWPLASMANFLLONG.html">BLENNOWPLASMANFLLONG</a></code>
 
         </dt>
-        <dd>Baseline Symptoms Checklist</dd>
+        <dd>Blennow Lab ADNI1-2 Plasma neurofilament light (NFL) longitudinal: 2018-10-03</dd>
+      </dl><dl><dt>
+
+          <code><a href="BLENNOW_LAB_CSF_GAP_21.html">BLENNOW_LAB_CSF_GAP_21</a></code>
+
+        </dt>
+        <dd>BLENNOW_LAB_CSF_GAP_21</dd>
       </dl><dl><dt>
 
           <code><a href="C2N_PRECIVITYAD2_PLASMA.html">C2N_PRECIVITYAD2_PLASMA</a></code>
@@ -1239,310 +1186,70 @@
         <dd>C2N Diagnostics - PrecivityAD2 Blood Test Results for Aβ42/40 and p-tau217/np-tau217 ratios ADNI4</dd>
       </dl><dl><dt>
 
-          <code><a href="CBBCOMP.html">CBBCOMP</a></code>
-
-        </dt>
-        <dd>Cogstate Brief Battery</dd>
-      </dl><dl><dt>
-
-          <code><a href="CCI.html">CCI</a></code>
-
-        </dt>
-        <dd>Cognitive Change Index</dd>
-      </dl><dl><dt>
-
-          <code><a href="CDR.html">CDR</a></code>
-
-        </dt>
-        <dd>Clinical Dementia Rating</dd>
-      </dl><dl><dt>
-
-          <code><a href="CLIELG.html">CLIELG</a></code>
-
-        </dt>
-        <dd>Clinician Verification</dd>
-      </dl><dl><dt>
-
-          <code><a href="CONSENTS.html">CONSENTS</a></code>
-
-        </dt>
-        <dd>Consent Tracking</dd>
-      </dl><dl><dt>
-
-          <code><a href="CSFMETH.html">CSFMETH</a></code>
-
-        </dt>
-        <dd>Method of CSF Collection</dd>
-      </dl><dl><dt>
-
-          <code><a href="CSSRSAD.html">CSSRSAD</a></code>
-
-        </dt>
-        <dd>Columbia- Suicide Severity Rating Scale (C-SSRS) + AD Specific Suicide</dd>
-      </dl><dl><dt>
-
-          <code><a href="DATADIC.html">DATADIC</a></code>
-
-        </dt>
-        <dd>Data Dictionary Dataset</dd>
-      </dl><dl><dt>
-
-          <code><a href="DATA_DOWNLOADED_DATE.html">DATA_DOWNLOADED_DATE</a></code>
-
-        </dt>
-        <dd>ADNI data download date</dd>
-      </dl><dl><dt>
-
-          <code><a href="DXSUM.html">DXSUM</a></code>
-
-        </dt>
-        <dd>Diagnostic Summary</dd>
-      </dl><dl><dt>
-
-          <code><a href="EBISU.html">EBISU</a></code>
-
-        </dt>
-        <dd>Ebisu (ADNI ONLINE) ID</dd>
-      </dl><dl><dt>
-
-          <code><a href="ECOG12PT.html">ECOG12PT</a></code>
-
-        </dt>
-        <dd>Everyday Cognition 12 Item - Participant Self-Report</dd>
-      </dl><dl><dt>
-
-          <code><a href="ECOG12SP.html">ECOG12SP</a></code>
-
-        </dt>
-        <dd>Everyday Cognition 12 Item - Study Partner Report</dd>
-      </dl><dl><dt>
-
-          <code><a href="ECOGPT.html">ECOGPT</a></code>
-
-        </dt>
-        <dd>Everyday Cognition - Participant Self-Report</dd>
-      </dl><dl><dt>
-
-          <code><a href="ECOGSP.html">ECOGSP</a></code>
-
-        </dt>
-        <dd>Everyday Cognition - Study Partner Report</dd>
-      </dl><dl><dt>
-
-          <code><a href="EXCLUSIO.html">EXCLUSIO</a></code>
-
-        </dt>
-        <dd>Exclusion Criteria</dd>
-      </dl><dl><dt>
-
-          <code><a href="FAMHXPAR.html">FAMHXPAR</a></code>
-
-        </dt>
-        <dd>Family History - Parents</dd>
-      </dl><dl><dt>
-
-          <code><a href="FAMHXSIB.html">FAMHXSIB</a></code>
-
-        </dt>
-        <dd>Family History - Sibling Log</dd>
-      </dl><dl><dt>
-
-          <code><a href="FAQ.html">FAQ</a></code>
-
-        </dt>
-        <dd>Functional Assessment Questionnaire</dd>
-      </dl><dl><dt>
-
-          <code><a href="FCI.html">FCI</a></code>
-
-        </dt>
-        <dd>Financial Capacity Instrument Short Form (FCI-SF)</dd>
-      </dl><dl><dt>
-
-          <code><a href="FHQ.html">FHQ</a></code>
-
-        </dt>
-        <dd>Family History Questionnaire</dd>
-      </dl><dl><dt>
-
           <code><a href="FNIHBC_BLOOD_BIOMARKER_TRAJECTORIES.html">FNIHBC_BLOOD_BIOMARKER_TRAJECTORIES</a></code>
 
         </dt>
         <dd>Clinical Utility of Blood Biomarker Trajectories Study</dd>
       </dl><dl><dt>
 
-          <code><a href="GDSCALE.html">GDSCALE</a></code>
+          <code><a href="FUJIREBIOABETA.html">FUJIREBIOABETA</a></code>
 
         </dt>
-        <dd>Geriatric Depression Scale</dd>
+        <dd>Fujirebio Beta-Amyloid Ratio</dd>
       </dl><dl><dt>
 
-          <code><a href="IES.html">IES</a></code>
+          <code><a href="FUJIREBIOABETAPLASMA.html">FUJIREBIOABETAPLASMA</a></code>
 
         </dt>
-        <dd>Impact of Events Scale</dd>
+        <dd>Plasma Amyloid Beta (1-42/1-40) Ratio Biomarker Feasibility Study - Fujirebio Lumipulse</dd>
       </dl><dl><dt>
 
-          <code><a href="INCLUSIO.html">INCLUSIO</a></code>
+          <code><a href="GENETIC.html">GENETIC</a></code>
 
         </dt>
-        <dd>Inclusion Criteria</dd>
+        <dd>ApoE Genotyping - Draw Data</dd>
       </dl><dl><dt>
 
-          <code><a href="INITHEALTH.html">INITHEALTH</a></code>
+          <code><a href="JANSSEN_PLASMA_P217_TAU.html">JANSSEN_PLASMA_P217_TAU</a></code>
 
         </dt>
-        <dd>Initial Health Assessment</dd>
+        <dd>ADNI 2_3 pilot_Janssen plasma p217+tau Simoa</dd>
       </dl><dl><dt>
 
-          <code><a href="MEDHIST.html">MEDHIST</a></code>
+          <code><a href="LABDATA.html">LABDATA</a></code>
 
         </dt>
-        <dd>Medical History</dd>
+        <dd>Laboratory Data</dd>
       </dl><dl><dt>
 
-          <code><a href="MMSE.html">MMSE</a></code>
+          <code><a href="LABTESTS.html">LABTESTS</a></code>
 
         </dt>
-        <dd>Mini Mental State Exam</dd>
+        <dd>Clinical Laboratory Tests</dd>
       </dl><dl><dt>
 
-          <code><a href="MOCA.html">MOCA</a></code>
+          <code><a href="LOCLAB.html">LOCLAB</a></code>
 
         </dt>
-        <dd>MoCA</dd>
+        <dd>CSF - Local Lab Results</dd>
       </dl><dl><dt>
 
-          <code><a href="MODHACH.html">MODHACH</a></code>
+          <code><a href="PLASMAABETA.html">PLASMAABETA</a></code>
 
         </dt>
-        <dd>Modified Hachinski</dd>
+        <dd>Araclon Biotech S.L. ABtest40 and 42 Plasma Analysis</dd>
       </dl><dl><dt>
 
-          <code><a href="NEUROBAT.html">NEUROBAT</a></code>
+          <code><a href="UGOTPTAU181.html">UGOTPTAU181</a></code>
 
         </dt>
-        <dd>Neuropsychological Battery</dd>
+        <dd>University of Gothenburg Longitudinal plasma P-tau181: 2020-06-18</dd>
       </dl><dl><dt>
 
-          <code><a href="NEUROEXM.html">NEUROEXM</a></code>
+          <code><a href="UPENNBIOMKADNIDIAN2017.html">UPENNBIOMKADNIDIAN2017</a></code>
 
         </dt>
-        <dd>Neurological Exam</dd>
-      </dl><dl><dt>
-
-          <code><a href="NEUROPATH.html">NEUROPATH</a></code>
-
-        </dt>
-        <dd>NACC Neuropathology Data Form (Version 11)</dd>
-      </dl><dl><dt>
-
-          <code><a href="NPI.html">NPI</a></code>
-
-        </dt>
-        <dd>Neuropsychiatric Inventory</dd>
-      </dl><dl><dt>
-
-          <code><a href="NPIQ.html">NPIQ</a></code>
-
-        </dt>
-        <dd>Neuropsychiatric Inventory Q</dd>
-      </dl><dl><dt>
-
-          <code><a href="NPSTATUS.html">NPSTATUS</a></code>
-
-        </dt>
-        <dd>Neuropathology Status</dd>
-      </dl><dl><dt>
-
-          <code><a href="PEDQCV.html">PEDQCV</a></code>
-
-        </dt>
-        <dd>Brief Perceived Ethnic Discrimination Questionnaire-Community Version</dd>
-      </dl><dl><dt>
-
-          <code><a href="PHYSICAL.html">PHYSICAL</a></code>
-
-        </dt>
-        <dd>Physical Exam</dd>
-      </dl><dl><dt>
-
-          <code><a href="POSAMYDISC.html">POSAMYDISC</a></code>
-
-        </dt>
-        <dd>Post-Amyloid PET Disclosure</dd>
-      </dl><dl><dt>
-
-          <code><a href="PREAMYDISC.html">PREAMYDISC</a></code>
-
-        </dt>
-        <dd>Pre-Amyloid PET Disclosure</dd>
-      </dl><dl><dt>
-
-          <code><a href="PSS.html">PSS</a></code>
-
-        </dt>
-        <dd>Perceived Stress Scale 10 Item</dd>
-      </dl><dl><dt>
-
-          <code><a href="PTDEMOG.html">PTDEMOG</a></code>
-
-        </dt>
-        <dd>Participant Demographic Information</dd>
-      </dl><dl><dt>
-
-          <code><a href="PUBLICITY.html">PUBLICITY</a></code>
-
-        </dt>
-        <dd>Recruitment Tracking</dd>
-      </dl><dl><dt>
-
-          <code><a href="RECADV.html">RECADV</a></code>
-
-        </dt>
-        <dd>Adverse Events/Hospitalizations - Log</dd>
-      </dl><dl><dt>
-
-          <code><a href="RECBLLOG.html">RECBLLOG</a></code>
-
-        </dt>
-        <dd>Documentation of Baseline Symptoms Log</dd>
-      </dl><dl><dt>
-
-          <code><a href="RECCMEDS.html">RECCMEDS</a></code>
-
-        </dt>
-        <dd>Concurrent Medications Log</dd>
-      </dl><dl><dt>
-
-          <code><a href="RECFHQ.html">RECFHQ</a></code>
-
-        </dt>
-        <dd>Family History Questionnaire Subtable</dd>
-      </dl><dl><dt>
-
-          <code><a href="RECMHIST.html">RECMHIST</a></code>
-
-        </dt>
-        <dd>Medical History</dd>
-      </dl><dl><dt>
-
-          <code><a href="RURALITY.html">RURALITY</a></code>
-
-        </dt>
-        <dd>Rurality – RUCA &amp; RUCC</dd>
-      </dl><dl><dt>
-
-          <code><a href="RYFF.html">RYFF</a></code>
-
-        </dt>
-        <dd>RYFF Psychological Well-Being Purpose in Life</dd>
-      </dl><dl><dt>
-
-          <code><a href="STAIAD.html">STAIAD</a></code>
-
-        </dt>
-        <dd>Mini-State Trait Anxiety Inventory (STAI) for Adults™</dd>
+        <dd>UPENNBIOMKADNIDIAN2017</dd>
       </dl><dl><dt>
 
           <code><a href="UPENNBIOMK_MASTER.html">UPENNBIOMK_MASTER</a></code>
@@ -1563,20 +1270,113 @@
         <dd>UPENN - Plasma Biomarkers (Aβ42, Aβ40, ptau217, NfL, GFAP) measured by Fujirebio &amp; Quanterix ADNI1,GO,2,3,4</dd>
       </dl><dl><dt>
 
-          <code><a href="VITALS.html">VITALS</a></code>
+          <code><a href="URMC_LABDATA.html">URMC_LABDATA</a></code>
 
         </dt>
-        <dd>Vital Signs</dd>
+        <dd>ADNI3 URMC Lab Data</dd>
       </dl><dl><dt>
 
-          <code><a href="WATC.html">WATC</a></code>
+          <code><a href="YASSINE_CSF.html">YASSINE_CSF</a></code>
 
         </dt>
-        <dd>Word Accentuation Test - Chicago</dd>
+        <dd>APOE glycosylation in ADNI CSF</dd>
+      </dl><dl><dt>
+
+          <code><a href="batemanlab_20221118.html">batemanlab_20221118</a></code>
+
+        </dt>
+        <dd>BATEMANLAB_20221118</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="neuropathology-results">Neuropathology Results<a class="anchor" aria-label="anchor" href="#neuropathology-results"></a></h3>
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="NEUROPATH.html">NEUROPATH</a></code>
+
+        </dt>
+        <dd>NACC Neuropathology Data Form (Version 11)</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="remotely-collected-datasets">Remotely Collected Datasets<a class="anchor" aria-label="anchor" href="#remotely-collected-datasets"></a></h3>
+      <div class="section-desc"><p>Remotely collected data only avaliable in ADNI4 study phase</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="REMOTE_DATADIC.html">REMOTE_DATADIC</a></code>
+
+        </dt>
+        <dd>Remote Collected Data Dictionary Dataset</dd>
+      </dl><dl><dt>
+
+          <code><a href="RMT_APOERES.html">RMT_APOERES</a></code>
+
+        </dt>
+        <dd>ApoE Genotyping - Results</dd>
+      </dl><dl><dt>
+
+          <code><a href="RMT_ECOG12PT.html">RMT_ECOG12PT</a></code>
+
+        </dt>
+        <dd>DIG Remotely administered Assessment of Everyday Cognition (Ecog) Questionnaire – Participant-Report Version</dd>
+      </dl><dl><dt>
+
+          <code><a href="RMT_ECOG12SP.html">RMT_ECOG12SP</a></code>
+
+        </dt>
+        <dd>DIG Remotely administered Assessment of Everyday Cognition (Ecog) Questionnaire – Informant-Report Version</dd>
+      </dl><dl><dt>
+
+          <code><a href="RMT_PTDEMOG.html">RMT_PTDEMOG</a></code>
+
+        </dt>
+        <dd>DIG Remotely administered participant demographics questionnaire</dd>
+      </dl><dl><dt>
+
+          <code><a href="RMT_STORYTELLER.html">RMT_STORYTELLER</a></code>
+
+        </dt>
+        <dd>Novoic Storyteller Data</dd>
+      </dl><dl><dt>
+
+          <code><a href="RMT_Screening.html">RMT_Screening</a></code>
+
+        </dt>
+        <dd>DIG Remotely administered screening questionnaire</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="other-raw-datasets">Other Raw Datasets<a class="anchor" aria-label="anchor" href="#other-raw-datasets"></a></h3>
+
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="DATA_DOWNLOADED_DATE.html">DATA_DOWNLOADED_DATE</a></code>
+
+        </dt>
+        <dd>ADNI Study Data Downloaded Date</dd>
       </dl></div><div class="section level2">
       <h2 id="adni-derived-datasets">ADNI Derived Datasets<a class="anchor" aria-label="anchor" href="#adni-derived-datasets"></a></h2>
 
-
+      <div class="section-desc"><p>Derived datasets that are grenerated based on the package vignettes.</p></div>
 
 
     </div><div class="section level2">
@@ -1598,6 +1398,12 @@
         <dd>[DERIVED] Analysis Dataset of Questionnaires</dd>
       </dl><dl><dt>
 
+          <code><a href="ADRS.html">ADRS</a></code>
+
+        </dt>
+        <dd>[DERIVED] Response Analysis Dataset</dd>
+      </dl><dl><dt>
+
           <code><a href="ADSL.html">ADSL</a></code>
 
         </dt>
@@ -1610,16 +1416,28 @@
         <dd>[DERIVED] Derived Adverse Events</dd>
       </dl><dl><dt>
 
-          <code><a href="BS.html">BS</a></code>
+          <code><a href="DERIVED_DATADIC.html">DERIVED_DATADIC</a></code>
 
         </dt>
-        <dd>[DERIVED] Derived Biospecimen Findings</dd>
+        <dd>[DERIVED] Data dictionary for derived dataset</dd>
       </dl><dl><dt>
 
           <code><a href="DM.html">DM</a></code>
 
         </dt>
         <dd>[DERIVED] Derived Demographic Characteristics</dd>
+      </dl><dl><dt>
+
+          <code><a href="GF.html">GF</a></code>
+
+        </dt>
+        <dd>[DERIVED] Derived Genomics Findings</dd>
+      </dl><dl><dt>
+
+          <code><a href="LB.html">LB</a></code>
+
+        </dt>
+        <dd>[DERIVED] Derived Laboratory Test Results</dd>
       </dl><dl><dt>
 
           <code><a href="METACORES.html">METACORES</a></code>
@@ -1659,7 +1477,7 @@
       </dl></div><div class="section level2">
       <h2 id="adni-specific-functions">ADNI Specific Functions<a class="anchor" aria-label="anchor" href="#adni-specific-functions"></a></h2>
 
-
+      <div class="section-desc"><p>Functions that are created specifically for the ADNI study data</p></div>
 
 
     </div><div class="section level2">
@@ -1675,19 +1493,19 @@
 
       <dl><dt>
 
-          <code><a href="adni_blscreen_dxsum.html">adni_blscreen_dxsum()</a></code>
+          <code><a href="get_adni_blscreen_dxsum.html">get_adni_blscreen_dxsum()</a></code>
 
         </dt>
         <dd>Gets ADNI Baseline/Screening Diagnostics Summary</dd>
       </dl><dl><dt>
 
-          <code><a href="adni_enrollment.html">adni_enrollment()</a></code>
+          <code><a href="get_adni_enrollment.html">get_adni_enrollment()</a></code>
 
         </dt>
         <dd>ADNI Enrollment Date (Baseline Visit Date)</dd>
       </dl><dl><dt>
 
-          <code><a href="adni_screen_date.html">adni_screen_date()</a></code>
+          <code><a href="get_adni_screen_date.html">get_adni_screen_date()</a></code>
 
         </dt>
         <dd>Gets ADNI Screening Date</dd>
@@ -1697,6 +1515,12 @@
 
         </dt>
         <dd>Death Flag</dd>
+      </dl><dl><dt>
+
+          <code><a href="get_disposition_flag.html">get_disposition_flag()</a></code>
+
+        </dt>
+        <dd>Study Discontinuation Flag</dd>
       </dl></div><div class="section level2">
 
       <h3 id="study-protocol-phase">Study Protocol/Phase<a class="anchor" aria-label="anchor" href="#study-protocol-phase"></a></h3>
@@ -1722,10 +1546,16 @@
         <dd>ADNI Study Protocol Order</dd>
       </dl><dl><dt>
 
+          <code><a href="adni_pttype.html">adni_pttype()</a></code>
+
+        </dt>
+        <dd>ADNI PTYPE</dd>
+      </dl><dl><dt>
+
           <code><a href="adni_study_track.html">adni_study_track()</a></code>
 
         </dt>
-        <dd>Get Participant Type (ADNI Study Track)</dd>
+        <dd>Get ADNI Study Track</dd>
       </dl><dl><dt>
 
           <code><a href="convert_adni_phase_order_num.html">convert_adni_phase_order_num()</a></code>
@@ -1740,19 +1570,13 @@
         <dd>Create COLPROT Column</dd>
       </dl><dl><dt>
 
-          <code><a href="create_orig_protocol.html">create_orig_protocol()</a></code>
-
-        </dt>
-        <dd>Create ORIGPROT Column</dd>
-      </dl><dl><dt>
-
-          <code><a href="original_study_protocol.html">original_study_protocol()</a></code>
+          <code><a href="original_study_protocol.html">original_study_protocol()</a></code> <code><a href="original_study_protocol.html">create_orig_protocol()</a></code>
 
         </dt>
         <dd>ADNI Original Protocol Version</dd>
       </dl></div><div class="section level2">
 
-      <h3 id="data-dictionary-datadic">Data Dictionary - DATADIC<a class="anchor" aria-label="anchor" href="#data-dictionary-datadic"></a></h3>
+      <h3 id="data-dictionary">Data Dictionary<a class="anchor" aria-label="anchor" href="#data-dictionary"></a></h3>
 
 
 
@@ -1763,22 +1587,34 @@
 
       <dl><dt>
 
-          <code><a href="collect_values.html">collect_values()</a></code>
+          <code><a href="collect_value_mapping.html">collect_value_mapping()</a></code>
 
         </dt>
         <dd>Collecting Coded Values for Multiple Variables</dd>
       </dl><dl><dt>
 
-          <code><a href="convert_collect_values.html">convert_collect_values()</a></code>
+          <code><a href="collect_value_mapping_single_var.html">collect_value_mapping_single_var()</a></code>
+
+        </dt>
+        <dd>Collecting Variable Coded Values</dd>
+      </dl><dl><dt>
+
+          <code><a href="convert_value_mapping.html">convert_value_mapping()</a></code>
 
         </dt>
         <dd>Convert List Collected Coded Values</dd>
       </dl><dl><dt>
 
-          <code><a href="convert_phase_specific.html">convert_phase_specific()</a></code>
+          <code><a href="convert_value_mapping_phase_specific.html">convert_value_mapping_phase_specific()</a></code>
 
         </dt>
         <dd>Convert List Collected Coded Values - PHASE Levels</dd>
+      </dl><dl><dt>
+
+          <code><a href="datadict_as_tibble.html">datadict_as_tibble()</a></code>
+
+        </dt>
+        <dd>Convert `datadict_tbl` object into `tibble` object</dd>
       </dl><dl><dt>
 
           <code><a href="extract_codelist_datadict.html">extract_codelist_datadict()</a></code>
@@ -1799,10 +1635,16 @@
         <dd>Gets Factor Levels from DATADIC Dataset</dd>
       </dl><dl><dt>
 
-          <code><a href="single_collect_values.html">single_collect_values()</a></code>
+          <code><a href="is_datadict_tbl.html">is_datadict_tbl()</a></code>
 
         </dt>
-        <dd>Collecting Variable Coded Values</dd>
+        <dd>Check `is_datadict_tbl` Object Class Type</dd>
+      </dl><dl><dt>
+
+          <code><a href="set_datadict_tbl.html">set_datadict_tbl()</a></code>
+
+        </dt>
+        <dd>Set object to `datadict_tbl` class</dd>
       </dl><dl><dt>
 
           <code><a href="convert_to_missing_value.html">convert_to_missing_value()</a></code>
@@ -1811,22 +1653,28 @@
         <dd>Convert Value into Missing Values</dd>
       </dl><dl><dt>
 
-          <code><a href="data_value_replacement.html">data_value_replacement()</a></code>
+          <code><a href="replace_values_dataset.html">replace_values_dataset()</a></code>
 
         </dt>
-        <dd>Wrapper to Replace Multiple Column Values</dd>
+        <dd>Replace Values for Multiple Variable - Wrapper</dd>
       </dl><dl><dt>
 
-          <code><a href="multiple_phase_value_replacement.html">multiple_phase_value_replacement()</a></code>
-
-        </dt>
-        <dd>Value Replace for Single Column</dd>
-      </dl><dl><dt>
-
-          <code><a href="phase_specific_value_replacement.html">phase_specific_value_replacement()</a></code>
+          <code><a href="replace_values_phase_specific.html">replace_values_phase_specific()</a></code>
 
         </dt>
         <dd>Replace Phase Specific Values for Single Variable</dd>
+      </dl><dl><dt>
+
+          <code><a href="replace_values_single_var.html">replace_values_single_var()</a></code>
+
+        </dt>
+        <dd>Replace Values for Single Variable Across Multiple Phase</dd>
+      </dl><dl><dt>
+
+          <code><a href="create_usubjid.html">create_usubjid()</a></code>
+
+        </dt>
+        <dd>Create USUBJID from RID and SITEID</dd>
       </dl></div><div class="section level2">
 
       <h3 id="scoring-functions">Scoring Functions<a class="anchor" aria-label="anchor" href="#scoring-functions"></a></h3>
@@ -1847,7 +1695,7 @@
       </dl></div><div class="section level2">
       <h2 id="utility-functions">Utility Functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a></h2>
 
-
+      <div class="section-desc"><p>Functions that can be used for general purpose</p></div>
 
 
     </div><div class="section level2">
@@ -1881,22 +1729,22 @@
         <dd>Checks Duplicated Records - Internal</dd>
       </dl><dl><dt>
 
+          <code><a href="check_is_logical.html">check_is_logical()</a></code>
+
+        </dt>
+        <dd>Check A Boolean Value</dd>
+      </dl><dl><dt>
+
+          <code><a href="convert_number_days.html">convert_number_days()</a></code>
+
+        </dt>
+        <dd>Convert Number of Days</dd>
+      </dl><dl><dt>
+
           <code><a href="convert_to_missing_value.html">convert_to_missing_value()</a></code>
 
         </dt>
         <dd>Convert Value into Missing Values</dd>
-      </dl><dl><dt>
-
-          <code><a href="convert_usubjid_rid.html">convert_usubjid_rid()</a></code>
-
-        </dt>
-        <dd>Convert USUBJID into RID</dd>
-      </dl><dl><dt>
-
-          <code><a href="create_usubjid.html">create_usubjid()</a></code>
-
-        </dt>
-        <dd>Create USUBJID from RID</dd>
       </dl><dl><dt>
 
           <code><a href="detect_baseline_score.html">detect_baseline_score()</a></code>

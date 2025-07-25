@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 873 observations and 19 variables.</p>
+    <p>A data frame with 1135 observations and 19 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,26 +74,26 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI3, ADNI4, ADNI2, ADNIGO, ADNI1</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10618</p></li>
-<li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: 4_init, 4_bl, 4_m12</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10819</p></li>
+<li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: 4_init, 4_bl, 4_m12, 4_m24</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>ADIDATE</strong> <em> </em> Date of collection: Date: YYY-MM-DD</p></li>
-<li><p><strong>STATE</strong> <em>character</em> State: 1=Alabama; 10=Georgia; 11=Hawaii; 12=Idaho; 13=Illinois; 14=Indiana; 15=Iowa; 16=Kansas; 17=Kentucky; 18=Louisiana; 19=Maine; 2=Alaska; 20=Maryland; 21=Massachusetts; 22=Michigan; 23=Minnesota; 24=Mississippi; 25=Missouri; 26=Montana; 27=Nebraska; 28=Nevada; 29=New Hampshire; 3=Arizona; 30=New Jersey; 31=New Mexico; 32=New York; 33=North Carolina; 34=North Dakota; 35=Ohio; 36=Oklahoma; 37=Oregon; 38=Pennsylvania; 39=Rhode Island; 4=Arkansas; 40=South Carolina; 41=South Dakota; 42=Tennessee; 43=Texas; 44=Utah; 45=Vermont; 46=Virginia; 47=Washington; 48=West Virginia; 49=Wisconsin; 5=California; 50=Wyoming; 51=District of Columbia; 6=Colorado; 7=Connecticut; 8=Delaware; 9=Florida
+<li><p><strong>STATE</strong> <em>character</em> State: 1=Alabama ; 10=Georgia ; 11=Hawaii ; 12=Idaho ; 13=Illinois ; 14=Indiana ; 15=Iowa ; 16=Kansas ; 17=Kentucky ; 18=Louisiana ; 19=Maine ; 2=Alaska ; 20=Maryland ; 21=Massachusetts ; 22=Michigan ; 23=Minnesota ; 24=Mississippi ; 25=Missouri ; 26=Montana ; 27=Nebraska ; 28=Nevada ; 29=New Hampshire ; 3=Arizona ; 30=New Jersey ; 31=New Mexico ; 32=New York ; 33=North Carolina ; 34=North Dakota ; 35=Ohio ; 36=Oklahoma ; 37=Oregon ; 38=Pennsylvania ; 39=Rhode Island ; 4=Arkansas ; 40=South Carolina ; 41=South Dakota ; 42=Tennessee ; 43=Texas ; 44=Utah ; 45=Vermont ; 46=Virginia ; 47=Washington ; 48=West Virginia ; 49=Wisconsin ; 5=California ; 50=Wyoming ; 51=District of Columbia ; 6=Colorado ; 7=Connecticut ; 8=Delaware ; 9=Florida
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ADISTATE</strong> <em>numeric</em> State Decile Score: Range value: 0, ..., 10</p></li>
 <li><p><strong>ADINATIONAL</strong> <em>character</em> National Percentile:</p></li>
-<li><p><strong>ADIREV</strong> <em>character</em> Has the participant moved since their last visit? 0=No; 1=Yes; 2=Not applicable
+<li><p><strong>ADIREV</strong> <em>character</em> Has the participant moved since their last visit? 0=No ; 1=Yes ; 2=Not applicable
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 49, ..., 82167</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 49, ..., 106676</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 2, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1, v2</p></li>
 <li><p><strong>LANGUAGE_CODE</strong> <em>character</em> Language Code e=English
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved; 1=Has QC error
+<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

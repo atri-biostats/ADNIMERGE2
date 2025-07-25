@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 731 observations and 68 variables.</p>
+    <p>A data frame with 925 observations and 68 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,126 +74,126 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI3, ADNI4, ADNI2, ADNIGO, ADNI1</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10618</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10819</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: 4_init, 4_bl, 4_m12</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
-<li><p><strong>DONE</strong> <em>character</em> Was assessment/procedure done? 0=No; 1=Yes
+<li><p><strong>DONE</strong> <em>character</em> Was assessment/procedure done? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NDREASON</strong> <em>character</em> If No, reason not done 1=Participant Unable for Cognitive Reasons; 10=Not called for by protocol; 11=Participant in a non-USA Site; 12=Not an English-speaking participant; 2=Participant Unable for Other Reasons (Physical, auditory, etc.); 3=Participant/Study Partner Refused; 7=Site Error; 8=Other Reason; 9=Unknown
+<li><p><strong>NDREASON</strong> <em>character</em> If No, reason not done 1=Participant Unable for Cognitive Reasons ; 10=Not called for by protocol ; 11=Participant in a non-USA Site ; 12=Not an English-speaking participant ; 2=Participant Unable for Other Reasons (Physical, auditory, etc.) ; 3=Participant/Study Partner Refused ; 7=Site Error ; 8=Other Reason ; 9=Unknown
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Examination Date Date: YYY-MM-DD</p></li>
-<li><p><strong>SOURCE</strong> <em>character</em> Information Source 1=Participant Visit; 2=Telephone Call/Video Call
+<li><p><strong>SOURCE</strong> <em>character</em> Information Source 1=Participant Visit ; 2=Telephone Call/Video Call
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART1</strong> <em>character</em> 1. ache 1=Correct; 2=Incorrect
+<li><p><strong>AMNART1</strong> <em>character</em> 1. ache 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART2</strong> <em>character</em> 2. debt 1=Correct; 2=Incorrect
+<li><p><strong>AMNART2</strong> <em>character</em> 2. debt 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART3</strong> <em>character</em> 3. pint 1=Correct; 2=Incorrect
+<li><p><strong>AMNART3</strong> <em>character</em> 3. pint 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART4</strong> <em>character</em> 4. depot 1=Correct; 2=Incorrect
+<li><p><strong>AMNART4</strong> <em>character</em> 4. depot 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART5</strong> <em>character</em> 5. chord 1=Correct; 2=Incorrect
+<li><p><strong>AMNART5</strong> <em>character</em> 5. chord 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART6</strong> <em>character</em> 6. bouquet 1=Correct; 2=Incorrect
+<li><p><strong>AMNART6</strong> <em>character</em> 6. bouquet 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART7</strong> <em>character</em> 7. deny 1=Correct; 2=Incorrect
+<li><p><strong>AMNART7</strong> <em>character</em> 7. deny 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART8</strong> <em>character</em> 8. capon 1=Correct; 2=Incorrect
+<li><p><strong>AMNART8</strong> <em>character</em> 8. capon 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART9</strong> <em>character</em> 9. heir 1=Correct; 2=Incorrect
+<li><p><strong>AMNART9</strong> <em>character</em> 9. heir 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART10</strong> <em>character</em> 10. aisle 1=Correct; 2=Incorrect
+<li><p><strong>AMNART10</strong> <em>character</em> 10. aisle 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART11</strong> <em>character</em> 11. subtle 1=Correct; 2=Incorrect
+<li><p><strong>AMNART11</strong> <em>character</em> 11. subtle 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART12</strong> <em>character</em> 12. nausea 1=Correct; 2=Incorrect
+<li><p><strong>AMNART12</strong> <em>character</em> 12. nausea 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART13</strong> <em>character</em> 13. gauge 1=Correct; 2=Incorrect
+<li><p><strong>AMNART13</strong> <em>character</em> 13. gauge 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART14</strong> <em>character</em> 14. naive 1=Correct; 2=Incorrect
+<li><p><strong>AMNART14</strong> <em>character</em> 14. naive 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART15</strong> <em>character</em> 15. thyme 1=Correct; 2=Incorrect
+<li><p><strong>AMNART15</strong> <em>character</em> 15. thyme 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART16</strong> <em>character</em> 16. courteous 1=Correct; 2=Incorrect
+<li><p><strong>AMNART16</strong> <em>character</em> 16. courteous 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART17</strong> <em>character</em> 17. algae 1=Correct; 2=Incorrect
+<li><p><strong>AMNART17</strong> <em>character</em> 17. algae 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART18</strong> <em>character</em> 18. fetal 1=Correct; 2=Incorrect
+<li><p><strong>AMNART18</strong> <em>character</em> 18. fetal 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART19</strong> <em>character</em> 19. quadruped 1=Correct; 2=Incorrect
+<li><p><strong>AMNART19</strong> <em>character</em> 19. quadruped 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART20</strong> <em>character</em> 20. epitome 1=Correct; 2=Incorrect
+<li><p><strong>AMNART20</strong> <em>character</em> 20. epitome 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART21</strong> <em>character</em> 21. superfluous 1=Correct; 2=Incorrect
+<li><p><strong>AMNART21</strong> <em>character</em> 21. superfluous 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART22</strong> <em>character</em> 22. chamois 1=Correct; 2=Incorrect
+<li><p><strong>AMNART22</strong> <em>character</em> 22. chamois 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART23</strong> <em>character</em> 23. papyrus 1=Correct; 2=Incorrect
+<li><p><strong>AMNART23</strong> <em>character</em> 23. papyrus 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART24</strong> <em>character</em> 24. asthma 1=Correct; 2=Incorrect
+<li><p><strong>AMNART24</strong> <em>character</em> 24. asthma 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART25</strong> <em>character</em> 25. hiatus 1=Correct; 2=Incorrect
+<li><p><strong>AMNART25</strong> <em>character</em> 25. hiatus 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART26</strong> <em>character</em> 26. simile 1=Correct; 2=Incorrect
+<li><p><strong>AMNART26</strong> <em>character</em> 26. simile 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART27</strong> <em>character</em> 27. blatant 1=Correct; 2=Incorrect
+<li><p><strong>AMNART27</strong> <em>character</em> 27. blatant 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART28</strong> <em>character</em> 28. cellist 1=Correct; 2=Incorrect
+<li><p><strong>AMNART28</strong> <em>character</em> 28. cellist 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART29</strong> <em>character</em> 29. zealot 1=Correct; 2=Incorrect
+<li><p><strong>AMNART29</strong> <em>character</em> 29. zealot 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART30</strong> <em>character</em> 30. abstemious 1=Correct; 2=Incorrect
+<li><p><strong>AMNART30</strong> <em>character</em> 30. abstemious 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART31</strong> <em>character</em> 31. meringue 1=Correct; 2=Incorrect
+<li><p><strong>AMNART31</strong> <em>character</em> 31. meringue 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART32</strong> <em>character</em> 32. placebo 1=Correct; 2=Incorrect
+<li><p><strong>AMNART32</strong> <em>character</em> 32. placebo 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART33</strong> <em>character</em> 33. facade 1=Correct; 2=Incorrect
+<li><p><strong>AMNART33</strong> <em>character</em> 33. facade 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART34</strong> <em>character</em> 34. pugilist 1=Correct; 2=Incorrect
+<li><p><strong>AMNART34</strong> <em>character</em> 34. pugilist 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART35</strong> <em>character</em> 35. virulent 1=Correct; 2=Incorrect
+<li><p><strong>AMNART35</strong> <em>character</em> 35. virulent 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART36</strong> <em>character</em> 36. worsted 1=Correct; 2=Incorrect
+<li><p><strong>AMNART36</strong> <em>character</em> 36. worsted 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART37</strong> <em>character</em> 37. detente 1=Correct; 2=Incorrect
+<li><p><strong>AMNART37</strong> <em>character</em> 37. detente 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART38</strong> <em>character</em> 38. anise 1=Correct; 2=Incorrect
+<li><p><strong>AMNART38</strong> <em>character</em> 38. anise 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART39</strong> <em>character</em> 39. sieve 1=Correct; 2=Incorrect
+<li><p><strong>AMNART39</strong> <em>character</em> 39. sieve 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART40</strong> <em>character</em> 40. chassis 1=Correct; 2=Incorrect
+<li><p><strong>AMNART40</strong> <em>character</em> 40. chassis 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART41</strong> <em>character</em> 41. beatify 1=Correct; 2=Incorrect
+<li><p><strong>AMNART41</strong> <em>character</em> 41. beatify 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART42</strong> <em>character</em> 42. scion 1=Correct; 2=Incorrect
+<li><p><strong>AMNART42</strong> <em>character</em> 42. scion 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART43</strong> <em>character</em> 43. cabal 1=Correct; 2=Incorrect
+<li><p><strong>AMNART43</strong> <em>character</em> 43. cabal 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART44</strong> <em>character</em> 44. apropos 1=Correct; 2=Incorrect
+<li><p><strong>AMNART44</strong> <em>character</em> 44. apropos 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART45</strong> <em>character</em> 45. caprice 1=Correct; 2=Incorrect
+<li><p><strong>AMNART45</strong> <em>character</em> 45. caprice 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART46</strong> <em>character</em> 46. demesne 1=Correct; 2=Incorrect
+<li><p><strong>AMNART46</strong> <em>character</em> 46. demesne 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART47</strong> <em>character</em> 47. imbroglio 1=Correct; 2=Incorrect
+<li><p><strong>AMNART47</strong> <em>character</em> 47. imbroglio 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART48</strong> <em>character</em> 48. hyperbole 1=Correct; 2=Incorrect
+<li><p><strong>AMNART48</strong> <em>character</em> 48. hyperbole 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART49</strong> <em>character</em> 49. syncope 1=Correct; 2=Incorrect
+<li><p><strong>AMNART49</strong> <em>character</em> 49. syncope 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AMNART50</strong> <em>character</em> 50. prelate 1=Correct; 2=Incorrect
+<li><p><strong>AMNART50</strong> <em>character</em> 50. prelate 1=Correct ; 2=Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 95, ..., 81946</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 95, ..., 106621</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 2, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1</p></li>
 <li><p><strong>LANGUAGE_CODE</strong> <em>character</em> Language Code e=English
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved; 1=Has QC error
+<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -78,16 +80,16 @@
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: m12, bl, m24, m36, m48</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> Date record created Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> Date record last updated Date: YYY-MM-DD</p></li>
-<li><p><strong>PBCONDCT</strong> <em>numeric</em> Was the scan conducted? 1=Yes;0=No</p></li>
-<li><p><strong>PBREASON</strong> <em>numeric</em> Reason why the scan was not conducted: 1=Illness;2=Participant unavailable;3=Participant unwilling;4=Administrative problems;5=Withdrawn consent;6=Other (specify)</p></li>
+<li><p><strong>PBCONDCT</strong> <em>numeric</em> Was the scan conducted? 1=Yes ; 0=No</p></li>
+<li><p><strong>PBREASON</strong> <em>numeric</em> Reason why the scan was not conducted: 1=Illness ; 2=Participant unavailable ; 3=Participant unwilling ; 4=Administrative problems ; 5=Withdrawn consent ; 6=Other (specify)</p></li>
 <li><p><strong>PBOTHSPE</strong> <em>character</em> If Other, specify:</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Scan Date Date: YYY-MM-DD</p></li>
 <li><p><strong>PBGE</strong> <em>numeric</em> GE 1=check here</p></li>
-<li><p><strong>PBGEMODEL</strong> <em>numeric</em> If GE, Scanner Model: 1=Advance;2=Discovery LS;3=Discovery ST;4=Discovery RX;5=Discovery STE</p></li>
+<li><p><strong>PBGEMODEL</strong> <em>numeric</em> If GE, Scanner Model: 1=Advance ; 2=Discovery LS ; 3=Discovery ST ; 4=Discovery RX ; 5=Discovery STE</p></li>
 <li><p><strong>PBSIEMENS</strong> <em>numeric</em> Siemens/CTI 1=check here</p></li>
-<li><p><strong>PBSIEMODEL</strong> <em>numeric</em> If Siemens/CTI, Scanner Model: 1=ACCEL;2=Biograph;3=BioGraph BGO;4=BioGraph HiRez;5=EXACT;6=HR+;7=HRRT</p></li>
+<li><p><strong>PBSIEMODEL</strong> <em>numeric</em> If Siemens/CTI, Scanner Model: 1=ACCEL ; 2=Biograph ; 3=BioGraph BGO ; 4=BioGraph HiRez ; 5=EXACT ; 6=HR+ ; 7=HRRT</p></li>
 <li><p><strong>PBPHILLIPS</strong> <em>numeric</em> Phillips 1=check here</p></li>
-<li><p><strong>PBPHMODEL</strong> <em>numeric</em> If Phillips, Scanner Model: 1=Allegro;2=Allegro-Neuro;3=Gemini;4=Gemini GLX;5=Gemini-TF</p></li>
+<li><p><strong>PBPHMODEL</strong> <em>numeric</em> If Phillips, Scanner Model: 1=Allegro ; 2=Allegro-Neuro ; 3=Gemini ; 4=Gemini GLX ; 5=Gemini-TF</p></li>
 <li><p><strong>PBQCTIME</strong> <em>character</em> Time of today's Scanner QC</p></li>
 <li><p><strong>PBPIBTIME</strong> <em>character</em> Time of PIB dose assay</p></li>
 <li><p><strong>PBPIBDOS</strong> <em>numeric</em> PIB dose assay Range value: 5.8, ..., 29.8</p></li>
@@ -98,10 +100,10 @@
 <li><p><strong>PBINJTIME</strong> <em>character</em> Time of PIB injection</p></li>
 <li><p><strong>PBSCTIME</strong> <em>character</em> Time scan started (emission)</p></li>
 <li><p><strong>PBSCANCOM</strong> <em>character</em> Provide an explanation if start time is not within the allowable window</p></li>
-<li><p><strong>PBVARIAT</strong> <em>numeric</em> Any variations from protocol during PIB uptake? 1=Yes; 0=No</p></li>
+<li><p><strong>PBVARIAT</strong> <em>numeric</em> Any variations from protocol during PIB uptake? 1=Yes ; 0=No</p></li>
 <li><p><strong>PBVARSP</strong> <em>character</em> If Yes, describe: , with options: 9.4 mCi injected, Subject had to go to bathroom, Patient ate at 11:30, LOW PIB DOSE SYNTHESIZED, Participant fell asleep, scan not started in window., dose&lt;15+/-1.5 mci due to Qc time of isotope and increased time setting upsubject in scanner.</p></li>
 <li><p><strong>PBPROTID</strong> <em>character</em> Predefined acquisition protocol ID</p></li>
-<li><p><strong>PBSTATDYN</strong> <em>numeric</em> Indicate whether scan was static or dynamic: 1=Static (1 x 20 min);2=Standard Dynamic (4 x 5 min);3=Dynamic (specify)</p></li>
+<li><p><strong>PBSTATDYN</strong> <em>numeric</em> Indicate whether scan was static or dynamic: 1=Static (1 x 20 min) ; 2=Standard Dynamic (4 x 5 min) ; 3=Dynamic (specify)</p></li>
 <li><p><strong>PBNMFRAM1</strong> <em>numeric</em> 1. No. of Frames Range value: 4, ..., 8</p></li>
 <li><p><strong>PBDURATN1</strong> <em>numeric</em> Duration: Range value: 4, ..., 300</p></li>
 <li><p><strong>PBNMFRAM2</strong> <em>numeric</em> 2. No. of Frames: Range value: 0, ..., 12</p></li>
@@ -122,28 +124,28 @@
 <li><p><strong>PBDURATN9</strong> <em>numeric</em> Duration: Range value: 0, ..., 0</p></li>
 <li><p><strong>PBNMFRAM10</strong> <em>numeric</em> 10. No. of Frames: Range value: 0, ..., 0</p></li>
 <li><p><strong>PBDURATN10</strong> <em>numeric</em> Duration: Range value: 0, ..., 0</p></li>
-<li><p><strong>PBMOTION</strong> <em>numeric</em> Subject motion problems: 1=Yes;0=No</p></li>
+<li><p><strong>PBMOTION</strong> <em>numeric</em> Subject motion problems: 1=Yes ; 0=No</p></li>
 <li><p><strong>PBMOTSP</strong> <em>character</em> If yes, describe:</p></li>
-<li><p><strong>PBMALFUN</strong> <em>numeric</em> Scanner malfunction 1=Yes;0=No</p></li>
+<li><p><strong>PBMALFUN</strong> <em>numeric</em> Scanner malfunction 1=Yes ; 0=No</p></li>
 <li><p><strong>PBMALSP</strong> <em>character</em> If yes, describe: , with options: error with ACS creating and reading file</p></li>
-<li><p><strong>PBOTHER</strong> <em>numeric</em> Other protocol variations: 1=Yes;0=No</p></li>
+<li><p><strong>PBOTHER</strong> <em>numeric</em> Other protocol variations: 1=Yes ; 0=No</p></li>
 <li><p><strong>PBOTHSP</strong> <em>character</em> If yes, describe: , with options: Only 2 five minute frames were performed, only 2 5 minute frames were done according to the ADNI PIB protocol, A transmission scan was not performed therefore the scan was attenuation corrected using drawn (eliptical) regions of interest over the entire head (outside the skull)., The injected dose of C-11 PIB was 8.2 mCi instead of recommended dose of &gt;10 mCi., MCH 60 min multiframe acquisition used.  Tech advised to use PIB ADNI acquisition protocol, Wrong Imaging Parameters were used, subject injected with only 13.1 mCi because of delay due to scanner error, Placed a lot of towels under the neck, to make patient comfortablt, at 70min into scan - subject put hand into scanner, less than +/-1.5mci of desired dose injected</p></li>
-<li><p><strong>PBRECON</strong> <em>numeric</em> Check which of the following reconstructions was used: 2=FORE/2D-OSEM;4=OSEM3D-OP;1=3D-Ramla;3=3D Back-projection</p></li>
-<li><p><strong>PBSUBSET</strong> <em>numeric</em> # subsets: 14=14;16=16;98=N/A;99=Other</p></li>
+<li><p><strong>PBRECON</strong> <em>numeric</em> Check which of the following reconstructions was used: 2=FORE/2D-OSEM ; 4=OSEM3D-OP ; 1=3D-Ramla ; 3=3D Back-projection</p></li>
+<li><p><strong>PBSUBSET</strong> <em>numeric</em> # subsets: 14=14 ; 16=16 ; 98=N/A ; 99=Other</p></li>
 <li><p><strong>PBSUBSPE</strong> <em>numeric</em> If Other, specify Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>PBITERAT</strong> <em>numeric</em> # iterations: 2=2;4=4;6=6;99=Other</p></li>
+<li><p><strong>PBITERAT</strong> <em>numeric</em> # iterations: 2=2 ; 4=4 ; 6=6 ; 99=Other</p></li>
 <li><p><strong>PBITERSPE</strong> <em>numeric</em> If Other, specify: Range value: Inf, ..., -Inf</p></li>
 <li><p><strong>PBRAMLA</strong> <em>numeric</em> If Ramla, Lambda=0.016? 1=Check here to confirm</p></li>
 <li><p><strong>PBFILTER</strong> <em>numeric</em> If Back Projection, Ramp filter? 1=Check here to confirm</p></li>
 <li><p><strong>PBMODEON</strong> <em>numeric</em> If FORE/2D-OSEM, Brain Mode "ON" for PET only scanners or TRIM "ON" for PET/CT scanners? 1=Check here to confirm</p></li>
 <li><p><strong>PBSMOOTH</strong> <em>numeric</em> No post-process smoothing: 1=Check here to confirm</p></li>
-<li><p><strong>PBDECAY</strong> <em>numeric</em> Decay Correction 1=Yes; 0=No</p></li>
-<li><p><strong>PBSCATTR</strong> <em>numeric</em> Scatter Correction: 1=Yes; 0=No</p></li>
-<li><p><strong>PBMATTEN</strong> <em>numeric</em> Attenuation Correction: 1=CT; 2=Ge-68+Segmentation;3=Cs-137+Segmentation</p></li>
-<li><p><strong>PBTRSNFR</strong> <em>numeric</em> Was data transferred to LONI within 24 hours of scan? 1=Yes;0=No</p></li>
+<li><p><strong>PBDECAY</strong> <em>numeric</em> Decay Correction 1=Yes ; 0=No</p></li>
+<li><p><strong>PBSCATTR</strong> <em>numeric</em> Scatter Correction: 1=Yes ; 0=No</p></li>
+<li><p><strong>PBMATTEN</strong> <em>numeric</em> Attenuation Correction: 1=CT ; 2=Ge-68+Segmentation ; 3=Cs-137+Segmentation</p></li>
+<li><p><strong>PBTRSNFR</strong> <em>numeric</em> Was data transferred to LONI within 24 hours of scan? 1=Yes ; 0=No</p></li>
 <li><p><strong>PBTRNDATE</strong> <em>character</em> Transfer Date</p></li>
 <li><p><strong>PBTRNCOM</strong> <em>character</em> Comments</p></li>
-<li><p><strong>PBARCHIVE</strong> <em>numeric</em> Data Archived Locally 1=Yes;0=No</p></li>
+<li><p><strong>PBARCHIVE</strong> <em>numeric</em> Data Archived Locally 1=Yes ; 0=No</p></li>
 <li><p><strong>PBARCMED</strong> <em>character</em> Archive Medium</p></li>
 <li><p><strong>PBARCCOM</strong> <em>character</em> Comments</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>

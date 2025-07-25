@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,7 +74,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 2, ..., 3958</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 1435</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
@@ -82,26 +84,26 @@
 <li><p><strong>USERDATE</strong> <em> </em> Date record created Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> Date record last updated Date: YYY-MM-DD</p></li>
 <li><p><strong>RECNO</strong> <em>numeric</em>   Range value: 1, ..., 2</p></li>
-<li><p><strong>PMCONDCT</strong> <em>character</em> Was the scan conducted? 1=Yes;0=No
+<li><p><strong>PMCONDCT</strong> <em>character</em> Was the scan conducted? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMREASON</strong> <em>character</em> Reason why the scan was not conducted: 1=Illness;2=Participant unavailable;3=Participant unwilling;4=Administrative problems;5=Withdrawn consent;6=Other (specify)
+<li><p><strong>PMREASON</strong> <em>character</em> Reason why the scan was not conducted: 1=Illness ; 2=Participant unavailable ; 3=Participant unwilling ; 4=Administrative problems ; 5=Withdrawn consent ; 6=Other (specify)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMCONSENT</strong> <em>character</em> Did the participant consent to quantitative scan? 1=Yes;0=No
+<li><p><strong>PMCONSENT</strong> <em>character</em> Did the participant consent to quantitative scan? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMTYPE</strong> <em>character</em> Type of scan conducted 1=Qualitative;2=Quantitative
+<li><p><strong>PMTYPE</strong> <em>character</em> Type of scan conducted 1=Qualitative ; 2=Quantitative
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Scan Date Date: YYY-MM-DD</p></li>
 <li><p><strong>PMSCANNER</strong> <em>character</em> GE 1=check here
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMGEMODEL</strong> <em>character</em> If GE, Scanner Model: 1=Advance;2=Discovery LS;3=Discovery ST;4=Discovery RX;5=Discovery STE
+<li><p><strong>PMGEMODEL</strong> <em>character</em> If GE, Scanner Model: 1=Advance ; 2=Discovery LS ; 3=Discovery ST ; 4=Discovery RX ; 5=Discovery STE
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMSIEMENS</strong> <em>character</em> Siemens/CTI 1=check here
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMSIEMODEL</strong> <em>character</em> If Siemens/CTI, Scanner Model: 1=ACCEL;2=Biograph;3=BioGraph BGO;4=BioGraph HiRez;5=EXACT;6=HR+;7=HRRT
+<li><p><strong>PMSIEMODEL</strong> <em>character</em> If Siemens/CTI, Scanner Model: 1=ACCEL ; 2=Biograph ; 3=BioGraph BGO ; 4=BioGraph HiRez ; 5=EXACT ; 6=HR+ ; 7=HRRT
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMPHILLIPS</strong> <em>character</em> Phillips 1=check here
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMPHMODEL</strong> <em>character</em> If Phillips, Scanner Model: 1=Allegro;2=Allegro-Neuro;3=Gemini;4=Gemini GLX;5=Gemini-TF
+<li><p><strong>PMPHMODEL</strong> <em>character</em> If Phillips, Scanner Model: 1=Allegro ; 2=Allegro-Neuro ; 3=Gemini ; 4=Gemini GLX ; 5=Gemini-TF
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMQCTIME</strong> <em>character</em> Time of today's Scanner QC</p></li>
 <li><p><strong>PMBLTIME</strong> <em>character</em> Time of blood glucose measurement</p></li>
@@ -111,23 +113,23 @@
 <li><p><strong>PMFDGVOL</strong> <em>numeric</em> FDG Volume Range value: 0.1, ..., 10</p></li>
 <li><p><strong>PMINJTIME</strong> <em>character</em> Time of FDG injection</p></li>
 <li><p><strong>PMSCTIME</strong> <em>character</em> Time scan started (emission)</p></li>
-<li><p><strong>PMVARIAT</strong> <em>character</em> Any variations from protocol during FDG uptake? 1=Yes; 0=No
+<li><p><strong>PMVARIAT</strong> <em>character</em> Any variations from protocol during FDG uptake? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMPROTID</strong> <em>character</em> Predefined acquisition protocol ID</p></li>
-<li><p><strong>PMFRAME</strong> <em>character</em> Which framing rate was used? 1=6 frames, 5 min/frame (6x300s);2=1 frame, 30 min (1x1800s);3=Quantitative
+<li><p><strong>PMFRAME</strong> <em>character</em> Which framing rate was used? 1=6 frames, 5 min/frame (6x300s) ; 2=1 frame, 30 min (1x1800s) ; 3=Quantitative
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMMOTION</strong> <em>character</em> Subject motion problems: 1=Yes;0=No
+<li><p><strong>PMMOTION</strong> <em>character</em> Subject motion problems: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMMALFUN</strong> <em>character</em> Scanner malfunction 1=Yes;0=No
+<li><p><strong>PMMALFUN</strong> <em>character</em> Scanner malfunction 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMOTHER</strong> <em>character</em> Other protocol variations: 1=Yes;0=No
+<li><p><strong>PMOTHER</strong> <em>character</em> Other protocol variations: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMRECON</strong> <em>character</em> Check which of the following reconstructions was used: 2=FORE/2D-OSEM;4=OSEM3D-OP;1=3D-Ramla;3=3D Back-projection
+<li><p><strong>PMRECON</strong> <em>character</em> Check which of the following reconstructions was used: 2=FORE/2D-OSEM ; 4=OSEM3D-OP ; 1=3D-Ramla ; 3=3D Back-projection
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMSUBSET</strong> <em>character</em> # subsets: 14=14;16=16;98=N/A;99=Other
+<li><p><strong>PMSUBSET</strong> <em>character</em> # subsets: 14=14 ; 16=16 ; 98=N/A ; 99=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMSUBSPE</strong> <em>numeric</em> If Other, specify Range value: 0, ..., 92</p></li>
-<li><p><strong>PMITERAT</strong> <em>character</em> # iterations: 2=2;4=4;6=6;99=Other
+<li><p><strong>PMITERAT</strong> <em>character</em> # iterations: 2=2 ; 4=4 ; 6=6 ; 99=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMITERSPE</strong> <em>numeric</em> If Other, specify: Range value: 0, ..., 16</p></li>
 <li><p><strong>PMRAMLA</strong> <em>character</em> If Ramla, Lambda=0.016? 1=Check here to confirm
@@ -138,18 +140,18 @@
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMSMOOTH</strong> <em>character</em> No post-process smoothing: 1=Check here to confirm
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMDECAY</strong> <em>character</em> Decay Correction 1=Yes; 0=No
+<li><p><strong>PMDECAY</strong> <em>character</em> Decay Correction 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMSCATTR</strong> <em>character</em> Scatter Correction: 1=Yes; 0=No
+<li><p><strong>PMSCATTR</strong> <em>character</em> Scatter Correction: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMATTEN</strong> <em>character</em> Attenuation Correction: 1=CT; 2=Ge-68+Segmentation;3=Cs-137+Segmentation
+<li><p><strong>PMATTEN</strong> <em>character</em> Attenuation Correction: 1=CT ; 2=Ge-68+Segmentation ; 3=Cs-137+Segmentation
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMWITHDRAW</strong> <em>character</em> Clock for blood sample withdrawal time 1=Yes;0=No
+<li><p><strong>PMWITHDRAW</strong> <em>character</em> Clock for blood sample withdrawal time 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMWITHTIME</strong> <em>numeric</em> If No, provide the time difference Range value: Inf, ..., -Inf</p></li>
-<li><p><strong>PMCOUNT</strong> <em>character</em> Clock for blood sample count time 1=Yes;0=No
+<li><p><strong>PMWITHTIME</strong> <em>character</em> If No, provide the time difference , with options: offset seems to be 44 sec (16:01:11 vs 16:01:55), 39 seconds, ~50 sec off, Subject was a hard stick, Nurse had trouble drawing blood</p></li>
+<li><p><strong>PMCOUNT</strong> <em>character</em> Clock for blood sample count time 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMCOUNTIME</strong> <em>numeric</em> If No, provide the time difference Range value: Inf, ..., -Inf</p></li>
+<li><p><strong>PMCOUNTIME</strong> <em>character</em> If No, provide the time difference , with options: 39 seconds, ~50 sec off</p></li>
 <li><p><strong>PMBG1TIME</strong> <em>character</em> Sample Count Time (24h) Background #1</p></li>
 <li><p><strong>PMBG1VOL</strong> <em>numeric</em> Sample Plasma Volume Counted Background #1 Range value: 200, ..., 250</p></li>
 <li><p><strong>PMBG1DUR</strong> <em>numeric</em> Sample Count Duration Background #1 Range value: 60, ..., 300</p></li>
@@ -188,25 +190,25 @@
 <li><p><strong>PMBG2VOL</strong> <em>numeric</em> Sample Plasma Volume Counted Background 2 Range value: 200, ..., 250</p></li>
 <li><p><strong>PMBG2DUR</strong> <em>numeric</em> Sample Count Duration Background 2 Range value: 1, ..., 300</p></li>
 <li><p><strong>PMBG2COUNT</strong> <em>numeric</em> Sample Count Rate Background 2 Range value: 1, ..., 283</p></li>
-<li><p><strong>PMPIPVOL</strong> <em>character</em> Was the pipetted plasma volume 200 uL? 1=Yes;0=No
+<li><p><strong>PMPIPVOL</strong> <em>character</em> Was the pipetted plasma volume 200 uL? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMPIPVOLSP</strong> <em>character</em> If No, denote volume used: , with options: 250 microL -  have only fixed vol. pipettes, 250 uL fixed volume pipette, 250 micro liter (fixed volume pipette), 250 microliters, 250 microL fixed volume pipette, 250 microliter fixed volume pipette, 250 ul fixed volume pipette, 250;  fixed volume pipette, 250 uL fixed volume  pipette, 250 uL  fixed volume pipette</p></li>
-<li><p><strong>PMCTIME</strong> <em>character</em> Was the plasma sample count time 1 minute? 1=Yes;0=No
+<li><p><strong>PMCTIME</strong> <em>character</em> Was the plasma sample count time 1 minute? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMCTIMESP</strong> <em>numeric</em> If No, denote count time used Range value: Inf, ..., -Inf</p></li>
+<li><p><strong>PMCTIMESP</strong> <em>character</em> If No, denote count time used , with options: fixed counts 10000: 25-39 sec</p></li>
 <li><p><strong>PMPHACT</strong> <em>numeric</em> Phantom Activity at Time of Scan Range value: 0.25, ..., 3</p></li>
 <li><p><strong>PMPHVOL</strong> <em>numeric</em> Phantom Volume Range value: 5969, ..., 8538</p></li>
 <li><p><strong>PMPHCOUNT</strong> <em>numeric</em> Average Counts from Phantom Image ROI Range value: 5.7e-05, ..., 11264</p></li>
 <li><p><strong>PMALIQVOL</strong> <em>numeric</em> Aliquot Volume Range value: 50, ..., 1500</p></li>
 <li><p><strong>PMALIQACT</strong> <em>numeric</em> Aliquot Count Rate Range value: 137, ..., 6138</p></li>
-<li><p><strong>PMTRNSFR</strong> <em>character</em> Was data transferred to LONI within 24 hours of scan? 1=Yes;0=No
+<li><p><strong>PMTRNSFR</strong> <em>character</em> Was data transferred to LONI within 24 hours of scan? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PMTRNDATE</strong> <em> </em> Transfer Date Date: YYY-MM-DD</p></li>
-<li><p><strong>PMARCHIVE</strong> <em>character</em> Data Archived Locally 1=Yes;0=No
+<li><p><strong>PMARCHIVE</strong> <em>character</em> Data Archived Locally 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMLPDONE</strong> <em>character</em> Was a Lumbar Puncture completed prior to the PET scan? 1=Yes;0=No
+<li><p><strong>PMLPDONE</strong> <em>character</em> Was a Lumbar Puncture completed prior to the PET scan? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PMLPINTER</strong> <em>character</em> If Yes, What was the interval between LP and PET? 1=less than 6 hours;2=6-12 hours;3=13-24 hours;4=25-48 hours;5=49-72 hours;6=more than 72 hours
+<li><p><strong>PMLPINTER</strong> <em>character</em> If Yes, What was the interval between LP and PET? 1=less than 6 hours ; 2=6-12 hours ; 3=13-24 hours ; 4=25-48 hours ; 5=49-72 hours ; 6=more than 72 hours
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

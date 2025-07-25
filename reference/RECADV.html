@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,7 +74,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 5296</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
@@ -85,45 +87,45 @@
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>AEHONSDT</strong> <em>character</em> Onset Date</p></li>
 <li><p><strong>AEHONSHR</strong> <em>numeric</em> Estimated Onset Time: Range value: 0, ..., 2359</p></li>
-<li><p><strong>AEHONGNG</strong> <em>character</em> Is the event ongoing?</p><ul><li><p><em>ADNI1, ADNIGO:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI2:</em> 1=Yes, event is ongoing;0=No, event resolved;2=Resolved with Sequelae</p></li>
+<li><p><strong>AEHONGNG</strong> <em>character</em> Is the event ongoing?</p><ul><li><p><em>ADNI1, ADNIGO:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI2:</em> 1=Yes, event is ongoing ; 0=No, event resolved ; 2=Resolved with Sequelae</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>AEHCSDT</strong> <em>character</em> Cease Date</p></li>
 <li><p><strong>AEHCSHR</strong> <em>numeric</em> Estimated Cease Time: Range value: 0, ..., 2359</p></li>
-<li><p><strong>AEHCHRON</strong> <em>character</em> Chronicity 1= Single Occurrence; 2= Intermittent; 3= Persistent
+<li><p><strong>AEHCHRON</strong> <em>character</em> Chronicity 1= Single Occurrence ; 2= Intermittent ; 3= Persistent
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHSEVR</strong> <em>character</em> Severity 1= Mild; 2= Moderate; 3= Severe
+<li><p><strong>AEHSEVR</strong> <em>character</em> Severity 1= Mild ; 2= Moderate ; 3= Severe
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHSERIO</strong> <em>character</em> Serious? 1=Yes; 0=No
+<li><p><strong>AEHSERIO</strong> <em>character</em> Serious? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>AEHSAE</strong> <em>character</em> Check here if: 1=SAE prior to Baseline Visit
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>AEHREASN</strong> <em>character</em> Reason for Qualifying as Serious Adverse Event:</p><ul><li><p><em>ADNI1, ADNIGO</em></p></li>
-<li><p><em>ADNI2:</em> 1=Life-Threatening;2=Prolongation of hospitalization;3=Hospitalization;4=Death;5=Congenital anomaly or birth defect;6=Persistent or significant disability/incapacity;7=Other medically important conditions</p></li>
+<li><p><em>ADNI2:</em> 1=Life-Threatening ; 2=Prolongation of hospitalization ; 3=Hospitalization ; 4=Death ; 5=Congenital anomaly or birth defect ; 6=Persistent or significant disability/incapacity ; 7=Other medically important conditions</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHLIFE</strong> <em>character</em> Life-Threatening? 1=Yes; 0=No
+<li><p><strong>AEHLIFE</strong> <em>character</em> Life-Threatening? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHIMG</strong> <em>character</em> Related to Imaging 1= Definitely; 2= Possibly; 3= Not Related
+<li><p><strong>AEHIMG</strong> <em>character</em> Related to Imaging 1= Definitely ; 2= Possibly ; 3= Not Related
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHLUMB</strong> <em>character</em> Related to Lumbar Puncture 1= Definitely; 2= Possibly; 3= Not Related
+<li><p><strong>AEHLUMB</strong> <em>character</em> Related to Lumbar Puncture 1= Definitely ; 2= Possibly ; 3= Not Related
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHAV45</strong> <em>character</em> Investigator Judgment of Relatedness to Florbetapir F18 1= Definitely; 2= Possibly; 3= Not Related
+<li><p><strong>AEHAV45</strong> <em>character</em> Investigator Judgment of Relatedness to Florbetapir F18 1= Definitely ; 2= Possibly ; 3= Not Related
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHCMEDS</strong> <em>character</em> Was treatment required? 1=Yes; 0=No
+<li><p><strong>AEHCMEDS</strong> <em>character</em> Was treatment required? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHINHOS</strong> <em>character</em> Did this event occur while the participant was being hospitalized for another event? 1=Yes; 0=No
+<li><p><strong>AEHINHOS</strong> <em>character</em> Did this event occur while the participant was being hospitalized for another event? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHPRO</strong> <em>character</em> If Yes, did this event prolong hospitalization? 1=Yes; 0=No
+<li><p><strong>AEHPRO</strong> <em>character</em> If Yes, did this event prolong hospitalization? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>AEHHOSP</strong> <em>character</em> If No, did this event require hospitalization? 3=No; 2=Yes - Outpatient; 1=Yes - Inpatient
+<li><p><strong>AEHHOSP</strong> <em>character</em> If No, did this event require hospitalization? 3=No ; 2=Yes - Outpatient ; 1=Yes - Inpatient
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>AEHOUTDT</strong> <em>character</em> If Outpatient, provide the date of visit</p></li>
 <li><p><strong>AEHADMDT</strong> <em>character</em> If hospitalized, provide Admission Date</p></li>
 <li><p><strong>AEHDISDT</strong> <em>character</em> Discharge Date</p></li>
-<li><p><strong>AEHDEATH</strong> <em>character</em> Did this event result in death? 1=Yes; 0=No
+<li><p><strong>AEHDEATH</strong> <em>character</em> Did this event result in death? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>AEHDTHDT</strong> <em>numeric</em> If death, date of death Range value: 2006, ..., 2018</p></li>
-<li><p><strong>AEHALZHI</strong> <em>character</em> Was diagnosis of Alzheimer's confirmed at autopsy? 0=No; 1=Yes; 2=No postmortem brain exam
+<li><p><strong>AEHALZHI</strong> <em>character</em> Was diagnosis of Alzheimer's confirmed at autopsy? 0=No ; 1=Yes ; 2=No postmortem brain exam
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 4, ..., 22528</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 127</p></li>

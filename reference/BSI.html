@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -86,8 +88,8 @@
 <li><p><strong>BRAINVOL</strong> <em>numeric</em> Segmented brain volume. Not to be used as a measure of intracranial volume. Range value: 680.31, ..., 1400.91</p></li>
 <li><p><strong>VENTVOL</strong> <em>numeric</em> Segmented ventricular volume Range value: 6.715, ..., 179.123</p></li>
 <li><p><strong>REGCOMMENT</strong> <em>character</em></p></li>
-<li><p><strong>REGRATING</strong> <em>numeric</em>   1=OK; 2=less reliable, still a reasonable measure; 3=Borderline / unreliable, measure affected to some degree, still of some value; 4=Rejected &lt;ef&gt;&lt;bf&gt;&lt;bd&gt; measure not reliable at all.  Suggest is not used for analysis; 5=Non disease related pathology affecting measure, suggest is removed from analysis</p></li>
-<li><p><strong>VENTACCEPT</strong> <em>numeric</em> A boolean to indicate whether or not we have confidence in the VBSI value. Similar purpose to the REGRATING. 0=Vent not accepted; 1=Vent accepted</p></li>
+<li><p><strong>REGRATING</strong> <em>numeric</em>   1=OK ; 2=less reliable, still a reasonable measure ; 3=Borderline / unreliable, measure affected to some degree, still of some value ; 4=Rejected &lt;ef&gt;&lt;bf&gt;&lt;bd&gt; measure not reliable at all.  Suggest is not used for analysis ; 5=Non disease related pathology affecting measure, suggest is removed from analysis</p></li>
+<li><p><strong>VENTACCEPT</strong> <em>numeric</em> A boolean to indicate whether or not we have confidence in the VBSI value. Similar purpose to the REGRATING. 0=Vent not accepted ; 1=Vent accepted</p></li>
 <li><p><strong>KMNDBCBBSI</strong> <em>numeric</em> An improved version of the Differential Bias Corrected Boundary Shift Integral from baseline, which: a) Has a new intensity normalisation step that normalises scan intensity by matching the intensities by tissue type (cerebrospinal fluid, grey matter, white mater) instead of being just based on the average whole brain intensity. This helps reduce artefactual change in the BSI that might be caused by change in contrasts between scans (e.g scanner changes) b) Automatically calculates the BSI window based on k-means clustering of tissue intensities for each scan pair Range value: -24.785, ..., 83.473</p></li>
 <li><p><strong>KMNREGCOMMENT</strong> <em>character</em></p></li>
 <li><p><strong>KMNREGRATING</strong> <em>numeric</em>   Range value: 1, ..., 8</p></li>

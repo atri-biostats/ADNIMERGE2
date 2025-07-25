@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 6411 observations and 347 variables.</p>
+    <p>A data frame with 11394 observations and 348 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -74,10 +76,11 @@
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI2, ADNIGO, ADNI3, ADNI4, ADNI1</p></li>
 <li><p><strong>COLPROT</strong> <em>character</em> Study protocol of data collection , with options: ADNI3, ADNI2, ADNI4, ADNIGO, ADNI1</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant Identifier for the in-clinic ADNI study</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant Identifier for the in-clinic ADNI study Range value: 21, ..., 10389</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant Identifier for the in-clinic ADNI study Range value: 2, ..., 10649</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> VISCODE of the Image</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em></p></li>
-<li><p><strong>IMAGEUID</strong> <em>numeric</em> Image UID of image that was processed. Range value: 32762, ..., 11081247</p></li>
+<li><p><strong>IMAGEUID</strong> <em>numeric</em> Image UID of image that was processed. Range value: 31863, ..., 11193011</p></li>
+<li><p><strong>FIELD_STRENGTH</strong> <em>character</em> the field strength (tesla) of the image , with options: 3T, 1.5T</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> When the image was collected. Date: YYY-MM-DD</p></li>
 <li><p><strong>RUNDATE</strong> <em> </em> When the image was processed. Date: YYY-MM-DD</p></li>
 <li><p><strong>STATUS</strong> <em>character</em> partial = No QC, not final. Complete = QC and finalized. , with options: partial, complete</p></li>
@@ -93,330 +96,330 @@
 <li><p><strong>VENTQC</strong> <em>character</em> QC rating of the ventricles. Fail affects the following regions: LeftLateralVentricle (ST37); RightLateralVentricle (ST96); LeftInferiorLateralVentricle (ST30); RightInferiorLateralVentricle (ST89); ThirdVentricle (ST127); FourthVentricle (ST9); FifthVentrical (ST8); LeftChoroidPlexus (ST21); RightChoroidPlexus (ST80) , with options: Pass, Fail</p></li>
 <li><p><strong>HIPPOQC</strong> <em>character</em> QC rating of the hippocampus. Fail affects the following regions: LeftFusiform (ST26); RightFusiform (ST85); LeftEntorhinal (ST24); RightEntorhinal (ST83); LeftParahippocampal (ST44); RightParahippocampal (ST103); LeftAmygdala (ST12); RightAmygdala (ST71) , with options: Pass, Fail</p></li>
 <li><p><strong>ST101SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightPallidum Range value: 881.8, ..., 3097.5</p></li>
-<li><p><strong>ST102CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParacentral Range value: 2095, ..., 9285</p></li>
+<li><p><strong>ST102CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParacentral Range value: 1589, ..., 9285</p></li>
 <li><p><strong>ST102SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParacentral Range value: 903, ..., 4241</p></li>
-<li><p><strong>ST102TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParacentral Range value: 1.725, ..., 3.162</p></li>
-<li><p><strong>ST102TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParacentral Range value: 0.368, ..., 1.006</p></li>
-<li><p><strong>ST103CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParahippocampal Range value: 630, ..., 4818</p></li>
-<li><p><strong>ST103SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParahippocampal Range value: 382, ..., 3128</p></li>
-<li><p><strong>ST103TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParahippocampal Range value: 1.382, ..., 3.36</p></li>
-<li><p><strong>ST103TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParahippocampal Range value: 0.376, ..., 1.171</p></li>
-<li><p><strong>ST104CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParsOpercularis Range value: 1703, ..., 7417</p></li>
-<li><p><strong>ST104SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParsOpercularis Range value: 771, ..., 2512</p></li>
-<li><p><strong>ST104TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParsOpercularis Range value: 1.654, ..., 2.895</p></li>
+<li><p><strong>ST102TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParacentral Range value: 1.263, ..., 3.162</p></li>
+<li><p><strong>ST102TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParacentral Range value: 0.361, ..., 1.006</p></li>
+<li><p><strong>ST103CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParahippocampal Range value: 491, ..., 4818</p></li>
+<li><p><strong>ST103SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParahippocampal Range value: 262, ..., 3128</p></li>
+<li><p><strong>ST103TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParahippocampal Range value: 1.334, ..., 3.36</p></li>
+<li><p><strong>ST103TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParahippocampal Range value: 0.339, ..., 1.194</p></li>
+<li><p><strong>ST104CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParsOpercularis Range value: 944, ..., 7417</p></li>
+<li><p><strong>ST104SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParsOpercularis Range value: 755, ..., 2512</p></li>
+<li><p><strong>ST104TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParsOpercularis Range value: 1.265, ..., 2.938</p></li>
 <li><p><strong>ST104TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParsOpercularis Range value: 0.281, ..., 1.01</p></li>
 <li><p><strong>ST105CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParsOrbitalis Range value: 878, ..., 4667</p></li>
 <li><p><strong>ST105SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParsOrbitalis Range value: 320, ..., 1501</p></li>
-<li><p><strong>ST105TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParsOrbitalis Range value: 1.715, ..., 3.419</p></li>
+<li><p><strong>ST105TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParsOrbitalis Range value: 1.698, ..., 3.419</p></li>
 <li><p><strong>ST105TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParsOrbitalis Range value: 0.359, ..., 1.072</p></li>
-<li><p><strong>ST106CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParsTriangularis Range value: 2141, ..., 8028</p></li>
+<li><p><strong>ST106CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightParsTriangularis Range value: 1100, ..., 8028</p></li>
 <li><p><strong>ST106SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightParsTriangularis Range value: 781, ..., 2615</p></li>
-<li><p><strong>ST106TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParsTriangularis Range value: 1.747, ..., 2.815</p></li>
+<li><p><strong>ST106TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightParsTriangularis Range value: 1.35, ..., 2.852</p></li>
 <li><p><strong>ST106TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightParsTriangularis Range value: 0.297, ..., 0.939</p></li>
 <li><p><strong>ST107CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPericalcarine Range value: 753, ..., 4579</p></li>
 <li><p><strong>ST107SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPericalcarine Range value: 508, ..., 3017</p></li>
-<li><p><strong>ST107TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPericalcarine Range value: 1.199, ..., 2.195</p></li>
-<li><p><strong>ST107TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPericalcarine Range value: 0.209, ..., 0.924</p></li>
-<li><p><strong>ST108CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPostcentral Range value: 4703, ..., 16246</p></li>
-<li><p><strong>ST108SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPostcentral Range value: 2154, ..., 6069</p></li>
-<li><p><strong>ST108TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPostcentral Range value: 1.463, ..., 2.595</p></li>
-<li><p><strong>ST108TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPostcentral Range value: 0.364, ..., 1</p></li>
+<li><p><strong>ST107TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPericalcarine Range value: 1.116, ..., 2.195</p></li>
+<li><p><strong>ST107TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPericalcarine Range value: 0.169, ..., 0.945</p></li>
+<li><p><strong>ST108CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPostcentral Range value: 3990, ..., 16246</p></li>
+<li><p><strong>ST108SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPostcentral Range value: 2054, ..., 8042</p></li>
+<li><p><strong>ST108TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPostcentral Range value: 1.356, ..., 2.595</p></li>
+<li><p><strong>ST108TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPostcentral Range value: 0.332, ..., 1</p></li>
 <li><p><strong>ST109CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPosteriorCingulate Range value: 241, ..., 5261</p></li>
 <li><p><strong>ST109SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPosteriorCingulate Range value: 207, ..., 3192</p></li>
-<li><p><strong>ST109TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPosteriorCingulate Range value: 1.083, ..., 2.834</p></li>
+<li><p><strong>ST109TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPosteriorCingulate Range value: 1.043, ..., 3.086</p></li>
 <li><p><strong>ST109TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPosteriorCingulate Range value: 0.297, ..., 1.111</p></li>
 <li><p><strong>ST10CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of Icv Range value: 427249.652055, ..., 4675071.63814</p></li>
-<li><p><strong>ST110CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPrecentral Range value: 6128, ..., 19409</p></li>
-<li><p><strong>ST110SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPrecentral Range value: 2973, ..., 7536</p></li>
-<li><p><strong>ST110TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPrecentral Range value: 1.504, ..., 2.918</p></li>
-<li><p><strong>ST110TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPrecentral Range value: 0.396, ..., 1.054</p></li>
-<li><p><strong>ST111CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPrecuneus Range value: 4850, ..., 15103</p></li>
+<li><p><strong>ST110CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPrecentral Range value: 5810, ..., 19409</p></li>
+<li><p><strong>ST110SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPrecentral Range value: 2884, ..., 7536</p></li>
+<li><p><strong>ST110TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPrecentral Range value: 1.411, ..., 2.918</p></li>
+<li><p><strong>ST110TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPrecentral Range value: 0.377, ..., 1.054</p></li>
+<li><p><strong>ST111CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightPrecuneus Range value: 4555, ..., 15103</p></li>
 <li><p><strong>ST111SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightPrecuneus Range value: 2257, ..., 6311</p></li>
-<li><p><strong>ST111TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPrecuneus Range value: 1.52, ..., 2.676</p></li>
+<li><p><strong>ST111TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightPrecuneus Range value: 1.458, ..., 2.682</p></li>
 <li><p><strong>ST111TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightPrecuneus Range value: 0.365, ..., 0.919</p></li>
 <li><p><strong>ST112SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightPutamen Range value: 1759.3, ..., 8524.3</p></li>
 <li><p><strong>ST113CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightRostralAnteriorCingulate Range value: 135, ..., 3227</p></li>
 <li><p><strong>ST113SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightRostralAnteriorCingulate Range value: 60, ..., 1101</p></li>
-<li><p><strong>ST113TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightRostralAnteriorCingulate Range value: 1.701, ..., 3.725</p></li>
+<li><p><strong>ST113TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightRostralAnteriorCingulate Range value: 1.31, ..., 3.725</p></li>
 <li><p><strong>ST113TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightRostralAnteriorCingulate Range value: 0.349, ..., 1.438</p></li>
-<li><p><strong>ST114CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightRostralMiddleFrontal Range value: 6159, ..., 26342</p></li>
+<li><p><strong>ST114CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightRostralMiddleFrontal Range value: 4051, ..., 26342</p></li>
 <li><p><strong>ST114SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightRostralMiddleFrontal Range value: 2189, ..., 9294</p></li>
-<li><p><strong>ST114TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightRostralMiddleFrontal Range value: 1.673, ..., 2.975</p></li>
+<li><p><strong>ST114TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightRostralMiddleFrontal Range value: 1.584, ..., 2.975</p></li>
 <li><p><strong>ST114TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightRostralMiddleFrontal Range value: 0.362, ..., 0.966</p></li>
-<li><p><strong>ST115CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSuperiorFrontal Range value: 10419, ..., 35844</p></li>
-<li><p><strong>ST115SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightSuperiorFrontal Range value: 4328, ..., 13580</p></li>
-<li><p><strong>ST115TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSuperiorFrontal Range value: 1.835, ..., 3.019</p></li>
-<li><p><strong>ST115TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSuperiorFrontal Range value: 0.402, ..., 0.972</p></li>
-<li><p><strong>ST116CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSuperiorParietal Range value: 5962, ..., 20409</p></li>
+<li><p><strong>ST115CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSuperiorFrontal Range value: 7714, ..., 35844</p></li>
+<li><p><strong>ST115SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightSuperiorFrontal Range value: 3520, ..., 13580</p></li>
+<li><p><strong>ST115TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSuperiorFrontal Range value: 1.492, ..., 3.019</p></li>
+<li><p><strong>ST115TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSuperiorFrontal Range value: 0.388, ..., 1.03</p></li>
+<li><p><strong>ST116CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSuperiorParietal Range value: 5730, ..., 20409</p></li>
 <li><p><strong>ST116SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightSuperiorParietal Range value: 2752, ..., 7597</p></li>
-<li><p><strong>ST116TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSuperiorParietal Range value: 1.378, ..., 2.84</p></li>
-<li><p><strong>ST116TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSuperiorParietal Range value: 0.29, ..., 1.192</p></li>
-<li><p><strong>ST117CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSuperiorTemporal Range value: 5253, ..., 15796</p></li>
-<li><p><strong>ST117SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightSuperiorTemporal Range value: 2131, ..., 5465</p></li>
-<li><p><strong>ST117TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSuperiorTemporal Range value: 1.644, ..., 3.173</p></li>
-<li><p><strong>ST117TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSuperiorTemporal Range value: 0.416, ..., 1.012</p></li>
-<li><p><strong>ST118CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSupramarginal Range value: 4576, ..., 14536</p></li>
+<li><p><strong>ST116TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSuperiorParietal Range value: 1.339, ..., 2.84</p></li>
+<li><p><strong>ST116TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSuperiorParietal Range value: 0.255, ..., 1.192</p></li>
+<li><p><strong>ST117CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSuperiorTemporal Range value: 4315, ..., 15796</p></li>
+<li><p><strong>ST117SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightSuperiorTemporal Range value: 2131, ..., 5518</p></li>
+<li><p><strong>ST117TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSuperiorTemporal Range value: 1.449, ..., 3.173</p></li>
+<li><p><strong>ST117TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSuperiorTemporal Range value: 0.309, ..., 1.012</p></li>
+<li><p><strong>ST118CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightSupramarginal Range value: 4192, ..., 14536</p></li>
 <li><p><strong>ST118SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightSupramarginal Range value: 1967, ..., 5867</p></li>
-<li><p><strong>ST118TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSupramarginal Range value: 1.716, ..., 2.751</p></li>
-<li><p><strong>ST118TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSupramarginal Range value: 0.352, ..., 1.006</p></li>
-<li><p><strong>ST119CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightTemporalPole Range value: 575, ..., 4290</p></li>
-<li><p><strong>ST119SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightTemporalPole Range value: 227, ..., 862</p></li>
-<li><p><strong>ST119TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightTemporalPole Range value: 1.407, ..., 4.499</p></li>
-<li><p><strong>ST119TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightTemporalPole Range value: 0.246, ..., 1.317</p></li>
+<li><p><strong>ST118TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightSupramarginal Range value: 1.501, ..., 2.83</p></li>
+<li><p><strong>ST118TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightSupramarginal Range value: 0.352, ..., 1.149</p></li>
+<li><p><strong>ST119CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightTemporalPole Range value: 192, ..., 4290</p></li>
+<li><p><strong>ST119SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightTemporalPole Range value: 180, ..., 862</p></li>
+<li><p><strong>ST119TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightTemporalPole Range value: 1.107, ..., 4.499</p></li>
+<li><p><strong>ST119TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightTemporalPole Range value: 0.224, ..., 1.317</p></li>
 <li><p><strong>ST11SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftAccumbensArea Range value: 47.6, ..., 843.2</p></li>
 <li><p><strong>ST120SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightThalamus Range value: 2546, ..., 11218</p></li>
-<li><p><strong>ST121CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightTransverseTemporal Range value: 323, ..., 1551</p></li>
+<li><p><strong>ST121CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightTransverseTemporal Range value: 197, ..., 1578</p></li>
 <li><p><strong>ST121SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightTransverseTemporal Range value: 138, ..., 613</p></li>
-<li><p><strong>ST121TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightTransverseTemporal Range value: 1.413, ..., 3.046</p></li>
-<li><p><strong>ST121TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightTransverseTemporal Range value: 0.194, ..., 0.775</p></li>
-<li><p><strong>ST124SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightVentralDC Range value: 1845.3, ..., 5427.7</p></li>
-<li><p><strong>ST125SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightVessel Range value: 1, ..., 341.6</p></li>
-<li><p><strong>ST127SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of ThirdVentricle Range value: 538.1, ..., 4646.2</p></li>
+<li><p><strong>ST121TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightTransverseTemporal Range value: 1.179, ..., 3.046</p></li>
+<li><p><strong>ST121TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightTransverseTemporal Range value: 0.194, ..., 0.98</p></li>
+<li><p><strong>ST124SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightVentralDC Range value: 1845.3, ..., 5456.7</p></li>
+<li><p><strong>ST125SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightVessel Range value: 1, ..., 434.9</p></li>
+<li><p><strong>ST127SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of ThirdVentricle Range value: 515.1, ..., 4938.1</p></li>
 <li><p><strong>ST128SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of WMHypoIntensities Range value: 222.9, ..., 74594.5</p></li>
-<li><p><strong>ST129CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftInsula Range value: 3939, ..., 9955</p></li>
-<li><p><strong>ST129SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftInsula Range value: 1296, ..., 3521</p></li>
-<li><p><strong>ST129TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftInsula Range value: 2.074, ..., 3.491</p></li>
-<li><p><strong>ST129TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftInsula Range value: 0.546, ..., 1.222</p></li>
+<li><p><strong>ST129CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftInsula Range value: 2302, ..., 9955</p></li>
+<li><p><strong>ST129SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftInsula Range value: 1296, ..., 4289</p></li>
+<li><p><strong>ST129TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftInsula Range value: 1.452, ..., 3.491</p></li>
+<li><p><strong>ST129TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftInsula Range value: 0.484, ..., 1.222</p></li>
 <li><p><strong>ST12SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftAmygdala Range value: 289.1, ..., 2455.5</p></li>
-<li><p><strong>ST130CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightInsula Range value: 3028, ..., 9732</p></li>
+<li><p><strong>ST130CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightInsula Range value: 2567, ..., 9732</p></li>
 <li><p><strong>ST130SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightInsula Range value: 1134, ..., 4409</p></li>
-<li><p><strong>ST130TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightInsula Range value: 1.935, ..., 3.38</p></li>
-<li><p><strong>ST130TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightInsula Range value: 0.532, ..., 1.151</p></li>
-<li><p><strong>ST13CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftBankssts Range value: 934, ..., 4095</p></li>
-<li><p><strong>ST13SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftBankssts Range value: 399, ..., 1739</p></li>
-<li><p><strong>ST13TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftBankssts Range value: 1.542, ..., 2.846</p></li>
-<li><p><strong>ST13TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftBankssts Range value: 0.257, ..., 0.811</p></li>
-<li><p><strong>ST14CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 420, ..., 3404</p></li>
-<li><p><strong>ST14SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 236, ..., 2205</p></li>
-<li><p><strong>ST14TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 1.255, ..., 3.517</p></li>
+<li><p><strong>ST130TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightInsula Range value: 1.549, ..., 3.38</p></li>
+<li><p><strong>ST130TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightInsula Range value: 0.532, ..., 1.184</p></li>
+<li><p><strong>ST13CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftBankssts Range value: 726, ..., 5078</p></li>
+<li><p><strong>ST13SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftBankssts Range value: 399, ..., 1896</p></li>
+<li><p><strong>ST13TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftBankssts Range value: 1.289, ..., 2.913</p></li>
+<li><p><strong>ST13TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftBankssts Range value: 0.257, ..., 0.847</p></li>
+<li><p><strong>ST14CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 160, ..., 3774</p></li>
+<li><p><strong>ST14SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 120, ..., 2205</p></li>
+<li><p><strong>ST14TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 1.214, ..., 3.517</p></li>
 <li><p><strong>ST14TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftCaudalAnteriorCingulate Range value: 0.259, ..., 1.403</p></li>
-<li><p><strong>ST15CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftCaudalMiddleFrontal Range value: 2641, ..., 10257</p></li>
+<li><p><strong>ST15CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftCaudalMiddleFrontal Range value: 1830, ..., 10257</p></li>
 <li><p><strong>ST15SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftCaudalMiddleFrontal Range value: 1066, ..., 3929</p></li>
-<li><p><strong>ST15TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftCaudalMiddleFrontal Range value: 1.614, ..., 2.984</p></li>
-<li><p><strong>ST15TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftCaudalMiddleFrontal Range value: 0.314, ..., 0.822</p></li>
-<li><p><strong>ST16SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCaudate Range value: 863.6, ..., 6686.3</p></li>
+<li><p><strong>ST15TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftCaudalMiddleFrontal Range value: 1.408, ..., 2.984</p></li>
+<li><p><strong>ST15TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftCaudalMiddleFrontal Range value: 0.23, ..., 0.822</p></li>
+<li><p><strong>ST16SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCaudate Range value: 863.6, ..., 7711.2</p></li>
 <li><p><strong>ST17SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCerebellumCortex Range value: 27119.6, ..., 69956.6</p></li>
-<li><p><strong>ST18SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCerebellumWM Range value: 7821.9, ..., 30930.1</p></li>
-<li><p><strong>ST1SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of Brainstem Range value: 13601.7, ..., 31677.3</p></li>
-<li><p><strong>ST21SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftChoroidPlexus Range value: 107.6, ..., 2059.4</p></li>
-<li><p><strong>ST23CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftCuneus Range value: 1374, ..., 5243</p></li>
-<li><p><strong>ST23SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftCuneus Range value: 664, ..., 2380</p></li>
-<li><p><strong>ST23TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftCuneus Range value: 1.34, ..., 2.412</p></li>
-<li><p><strong>ST23TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftCuneus Range value: 0.271, ..., 0.97</p></li>
-<li><p><strong>ST24CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftEntorhinal Range value: 2, ..., 3880</p></li>
-<li><p><strong>ST24SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftEntorhinal Range value: 3, ..., 1041</p></li>
+<li><p><strong>ST18SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCerebellumWM Range value: 7715.7, ..., 30930.1</p></li>
+<li><p><strong>ST1SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of Brainstem Range value: 13601.7, ..., 35152</p></li>
+<li><p><strong>ST21SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftChoroidPlexus Range value: 107.6, ..., 2091.4</p></li>
+<li><p><strong>ST23CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftCuneus Range value: 1130, ..., 5243</p></li>
+<li><p><strong>ST23SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftCuneus Range value: 405, ..., 2513</p></li>
+<li><p><strong>ST23TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftCuneus Range value: 1.284, ..., 2.484</p></li>
+<li><p><strong>ST23TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftCuneus Range value: 0.183, ..., 0.97</p></li>
+<li><p><strong>ST24CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftEntorhinal Range value: 2, ..., 4404</p></li>
+<li><p><strong>ST24SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftEntorhinal Range value: 3, ..., 1212</p></li>
 <li><p><strong>ST24TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftEntorhinal Range value: 1.068, ..., 4.048</p></li>
 <li><p><strong>ST24TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftEntorhinal Range value: 0.168, ..., 1.168</p></li>
 <li><p><strong>ST25CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftFrontalPole Range value: 156, ..., 2727</p></li>
 <li><p><strong>ST25SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftFrontalPole Range value: 72, ..., 553</p></li>
 <li><p><strong>ST25TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftFrontalPole Range value: 1.324, ..., 3.905</p></li>
-<li><p><strong>ST25TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftFrontalPole Range value: 0.212, ..., 1.205</p></li>
+<li><p><strong>ST25TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftFrontalPole Range value: 0.212, ..., 1.287</p></li>
 <li><p><strong>ST26CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftFusiform Range value: 2532, ..., 14289</p></li>
 <li><p><strong>ST26SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftFusiform Range value: 1073, ..., 4512</p></li>
-<li><p><strong>ST26TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftFusiform Range value: 1.463, ..., 3.139</p></li>
+<li><p><strong>ST26TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftFusiform Range value: 1.421, ..., 3.139</p></li>
 <li><p><strong>ST26TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftFusiform Range value: 0.423, ..., 0.988</p></li>
 <li><p><strong>ST28SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftHemisphereWM Range value: 48668.9, ..., 110776</p></li>
 <li><p><strong>ST29SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftHippocampus Range value: 1188.7, ..., 5684.6</p></li>
-<li><p><strong>ST2SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumAnterior Range value: 36.6, ..., 1685.9</p></li>
-<li><p><strong>ST30SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftInferiorLateralVentricle Range value: 63.7, ..., 8766.3</p></li>
-<li><p><strong>ST31CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftInferiorParietal Range value: 4512, ..., 17089</p></li>
+<li><p><strong>ST2SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumAnterior Range value: 32.9, ..., 1685.9</p></li>
+<li><p><strong>ST30SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftInferiorLateralVentricle Range value: 54.5, ..., 9047.8</p></li>
+<li><p><strong>ST31CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftInferiorParietal Range value: 4278, ..., 17194</p></li>
 <li><p><strong>ST31SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftInferiorParietal Range value: 2088, ..., 6500</p></li>
-<li><p><strong>ST31TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftInferiorParietal Range value: 1.525, ..., 2.7</p></li>
+<li><p><strong>ST31TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftInferiorParietal Range value: 1.345, ..., 2.732</p></li>
 <li><p><strong>ST31TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftInferiorParietal Range value: 0.314, ..., 0.979</p></li>
-<li><p><strong>ST32CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftInferiorTemporal Range value: 4123, ..., 17181</p></li>
-<li><p><strong>ST32SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftInferiorTemporal Range value: 1175, ..., 5134</p></li>
-<li><p><strong>ST32TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftInferiorTemporal Range value: 1.729, ..., 3.197</p></li>
-<li><p><strong>ST32TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftInferiorTemporal Range value: 0.445, ..., 1.006</p></li>
+<li><p><strong>ST32CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftInferiorTemporal Range value: 3405, ..., 17181</p></li>
+<li><p><strong>ST32SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftInferiorTemporal Range value: 1175, ..., 5398</p></li>
+<li><p><strong>ST32TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftInferiorTemporal Range value: 1.542, ..., 3.197</p></li>
+<li><p><strong>ST32TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftInferiorTemporal Range value: 0.445, ..., 1.117</p></li>
 <li><p><strong>ST34CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftIsthmusCingulate Range value: 61, ..., 6312</p></li>
 <li><p><strong>ST34SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftIsthmusCingulate Range value: 39, ..., 4276</p></li>
 <li><p><strong>ST34TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftIsthmusCingulate Range value: 1.045, ..., 2.88</p></li>
-<li><p><strong>ST34TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftIsthmusCingulate Range value: 0.486, ..., 1.211</p></li>
+<li><p><strong>ST34TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftIsthmusCingulate Range value: 0.426, ..., 1.211</p></li>
 <li><p><strong>ST35CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftLateralOccipital Range value: 3323, ..., 18127</p></li>
-<li><p><strong>ST35SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftLateralOccipital Range value: 2900, ..., 7118</p></li>
+<li><p><strong>ST35SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftLateralOccipital Range value: 2701, ..., 7415</p></li>
 <li><p><strong>ST35TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftLateralOccipital Range value: 1.243, ..., 2.62</p></li>
-<li><p><strong>ST35TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftLateralOccipital Range value: 0.323, ..., 0.9</p></li>
-<li><p><strong>ST36CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftLateralOrbitofrontal Range value: 3711, ..., 10531</p></li>
-<li><p><strong>ST36SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftLateralOrbitofrontal Range value: 1153, ..., 3835</p></li>
-<li><p><strong>ST36TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftLateralOrbitofrontal Range value: 1.911, ..., 3.089</p></li>
+<li><p><strong>ST35TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftLateralOccipital Range value: 0.296, ..., 1.065</p></li>
+<li><p><strong>ST36CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftLateralOrbitofrontal Range value: 2600, ..., 10531</p></li>
+<li><p><strong>ST36SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftLateralOrbitofrontal Range value: 1129, ..., 3835</p></li>
+<li><p><strong>ST36TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftLateralOrbitofrontal Range value: 1.545, ..., 3.107</p></li>
 <li><p><strong>ST36TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftLateralOrbitofrontal Range value: 0.421, ..., 0.977</p></li>
-<li><p><strong>ST37SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftLateralVentricle Range value: 3395.1, ..., 82976</p></li>
-<li><p><strong>ST38CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftLingual Range value: 2331, ..., 10465</p></li>
-<li><p><strong>ST38SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftLingual Range value: 898, ..., 4621</p></li>
-<li><p><strong>ST38TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftLingual Range value: 1.375, ..., 2.494</p></li>
-<li><p><strong>ST38TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftLingual Range value: 0.315, ..., 0.864</p></li>
+<li><p><strong>ST37SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftLateralVentricle Range value: 3381.6, ..., 93245.4</p></li>
+<li><p><strong>ST38CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftLingual Range value: 1107, ..., 10465</p></li>
+<li><p><strong>ST38SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftLingual Range value: 613, ..., 4861</p></li>
+<li><p><strong>ST38TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftLingual Range value: 1.088, ..., 2.494</p></li>
+<li><p><strong>ST38TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftLingual Range value: 0.315, ..., 0.89</p></li>
 <li><p><strong>ST39CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftMedialOrbitofrontal Range value: 2147, ..., 8093</p></li>
 <li><p><strong>ST39SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftMedialOrbitofrontal Range value: 1080, ..., 2918</p></li>
-<li><p><strong>ST39TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftMedialOrbitofrontal Range value: 1.689, ..., 3.017</p></li>
-<li><p><strong>ST39TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftMedialOrbitofrontal Range value: 0.422, ..., 1.181</p></li>
+<li><p><strong>ST39TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftMedialOrbitofrontal Range value: 1.337, ..., 3.017</p></li>
+<li><p><strong>ST39TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftMedialOrbitofrontal Range value: 0.396, ..., 1.181</p></li>
 <li><p><strong>ST3SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumCentral Range value: 123.4, ..., 1316.6</p></li>
-<li><p><strong>ST40CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftMiddleTemporal Range value: 3758, ..., 15598</p></li>
+<li><p><strong>ST40CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftMiddleTemporal Range value: 3093, ..., 15598</p></li>
 <li><p><strong>ST40SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftMiddleTemporal Range value: 1244, ..., 4722</p></li>
-<li><p><strong>ST40TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftMiddleTemporal Range value: 1.688, ..., 3.147</p></li>
-<li><p><strong>ST40TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftMiddleTemporal Range value: 0.425, ..., 0.991</p></li>
+<li><p><strong>ST40TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftMiddleTemporal Range value: 1.526, ..., 3.147</p></li>
+<li><p><strong>ST40TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftMiddleTemporal Range value: 0.406, ..., 0.991</p></li>
 <li><p><strong>ST42SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftPallidum Range value: 775.3, ..., 3525.5</p></li>
-<li><p><strong>ST43CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParacentral Range value: 1782, ..., 7498</p></li>
+<li><p><strong>ST43CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParacentral Range value: 1633, ..., 7498</p></li>
 <li><p><strong>ST43SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParacentral Range value: 823, ..., 4298</p></li>
-<li><p><strong>ST43TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParacentral Range value: 1.656, ..., 2.877</p></li>
+<li><p><strong>ST43TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParacentral Range value: 1.359, ..., 2.877</p></li>
 <li><p><strong>ST43TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParacentral Range value: 0.367, ..., 0.982</p></li>
 <li><p><strong>ST44CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParahippocampal Range value: 21, ..., 7224</p></li>
 <li><p><strong>ST44SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParahippocampal Range value: 17, ..., 4381</p></li>
-<li><p><strong>ST44TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParahippocampal Range value: 0.96, ..., 3.541</p></li>
-<li><p><strong>ST44TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParahippocampal Range value: 0.175, ..., 1.148</p></li>
-<li><p><strong>ST45CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParsOpercularis Range value: 2237, ..., 8539</p></li>
-<li><p><strong>ST45SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParsOpercularis Range value: 856, ..., 2827</p></li>
-<li><p><strong>ST45TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParsOpercularis Range value: 1.783, ..., 2.904</p></li>
-<li><p><strong>ST45TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParsOpercularis Range value: 0.305, ..., 0.922</p></li>
-<li><p><strong>ST46CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParsOrbitalis Range value: 886, ..., 3810</p></li>
-<li><p><strong>ST46SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParsOrbitalis Range value: 271, ..., 1122</p></li>
-<li><p><strong>ST46TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParsOrbitalis Range value: 1.64, ..., 3.505</p></li>
-<li><p><strong>ST46TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParsOrbitalis Range value: 0.335, ..., 1.052</p></li>
+<li><p><strong>ST44TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParahippocampal Range value: 0.96, ..., 3.564</p></li>
+<li><p><strong>ST44TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParahippocampal Range value: 0.175, ..., 1.192</p></li>
+<li><p><strong>ST45CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParsOpercularis Range value: 1377, ..., 8539</p></li>
+<li><p><strong>ST45SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParsOpercularis Range value: 856, ..., 3410</p></li>
+<li><p><strong>ST45TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParsOpercularis Range value: 1.461, ..., 2.904</p></li>
+<li><p><strong>ST45TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParsOpercularis Range value: 0.305, ..., 0.985</p></li>
+<li><p><strong>ST46CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParsOrbitalis Range value: 414, ..., 3810</p></li>
+<li><p><strong>ST46SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParsOrbitalis Range value: 161, ..., 1122</p></li>
+<li><p><strong>ST46TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParsOrbitalis Range value: 1.613, ..., 3.555</p></li>
+<li><p><strong>ST46TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParsOrbitalis Range value: 0.335, ..., 1.14</p></li>
 <li><p><strong>ST47CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftParsTriangularis Range value: 800, ..., 5781</p></li>
 <li><p><strong>ST47SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftParsTriangularis Range value: 402, ..., 2105</p></li>
-<li><p><strong>ST47TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParsTriangularis Range value: 1.661, ..., 2.841</p></li>
-<li><p><strong>ST47TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParsTriangularis Range value: 0.282, ..., 0.84</p></li>
-<li><p><strong>ST48CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPericalcarine Range value: 667, ..., 4009</p></li>
-<li><p><strong>ST48SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPericalcarine Range value: 567, ..., 2405</p></li>
-<li><p><strong>ST48TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPericalcarine Range value: 1.173, ..., 2.422</p></li>
-<li><p><strong>ST48TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPericalcarine Range value: 0.187, ..., 1.036</p></li>
-<li><p><strong>ST49CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPostcentral Range value: 5092, ..., 14158</p></li>
-<li><p><strong>ST49SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPostcentral Range value: 2278, ..., 6447</p></li>
-<li><p><strong>ST49TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPostcentral Range value: 1.476, ..., 2.819</p></li>
-<li><p><strong>ST49TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPostcentral Range value: 0.381, ..., 1.07</p></li>
-<li><p><strong>ST4SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumMidAnterior Range value: 136, ..., 1251.2</p></li>
-<li><p><strong>ST50CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPosteriorCingulate Range value: 901, ..., 11302</p></li>
-<li><p><strong>ST50SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPosteriorCingulate Range value: 406, ..., 6909</p></li>
+<li><p><strong>ST47TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftParsTriangularis Range value: 1.505, ..., 2.923</p></li>
+<li><p><strong>ST47TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftParsTriangularis Range value: 0.282, ..., 1.051</p></li>
+<li><p><strong>ST48CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPericalcarine Range value: 595, ..., 4778</p></li>
+<li><p><strong>ST48SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPericalcarine Range value: 355, ..., 4098</p></li>
+<li><p><strong>ST48TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPericalcarine Range value: 1.123, ..., 2.422</p></li>
+<li><p><strong>ST48TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPericalcarine Range value: 0.164, ..., 1.061</p></li>
+<li><p><strong>ST49CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPostcentral Range value: 4205, ..., 16949</p></li>
+<li><p><strong>ST49SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPostcentral Range value: 2145, ..., 10232</p></li>
+<li><p><strong>ST49TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPostcentral Range value: 1.429, ..., 2.819</p></li>
+<li><p><strong>ST49TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPostcentral Range value: 0.362, ..., 1.07</p></li>
+<li><p><strong>ST4SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumMidAnterior Range value: 77.5, ..., 1251.2</p></li>
+<li><p><strong>ST50CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPosteriorCingulate Range value: 725, ..., 11302</p></li>
+<li><p><strong>ST50SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPosteriorCingulate Range value: 333, ..., 6909</p></li>
 <li><p><strong>ST50TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPosteriorCingulate Range value: 0.594, ..., 2.8</p></li>
 <li><p><strong>ST50TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPosteriorCingulate Range value: 0.352, ..., 1.033</p></li>
-<li><p><strong>ST51CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPrecentral Range value: 6878, ..., 19063</p></li>
-<li><p><strong>ST51SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPrecentral Range value: 2892, ..., 7387</p></li>
-<li><p><strong>ST51TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPrecentral Range value: 1.618, ..., 2.832</p></li>
-<li><p><strong>ST51TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPrecentral Range value: 0.401, ..., 0.836</p></li>
-<li><p><strong>ST52CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPrecuneus Range value: 4161, ..., 12975</p></li>
+<li><p><strong>ST51CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPrecentral Range value: 4510, ..., 19063</p></li>
+<li><p><strong>ST51SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPrecentral Range value: 2823, ..., 8718</p></li>
+<li><p><strong>ST51TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPrecentral Range value: 1.497, ..., 2.855</p></li>
+<li><p><strong>ST51TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPrecentral Range value: 0.401, ..., 0.866</p></li>
+<li><p><strong>ST52CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftPrecuneus Range value: 3677, ..., 12975</p></li>
 <li><p><strong>ST52SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftPrecuneus Range value: 1662, ..., 7490</p></li>
-<li><p><strong>ST52TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPrecuneus Range value: 1.539, ..., 2.71</p></li>
-<li><p><strong>ST52TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPrecuneus Range value: 0.374, ..., 1.168</p></li>
-<li><p><strong>ST53SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftPutamen Range value: 1907.6, ..., 8618.8</p></li>
-<li><p><strong>ST54CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftRostralAnteriorCingulate Range value: 632, ..., 4563</p></li>
-<li><p><strong>ST54SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftRostralAnteriorCingulate Range value: 251, ..., 1488</p></li>
-<li><p><strong>ST54TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftRostralAnteriorCingulate Range value: 1.362, ..., 3.803</p></li>
-<li><p><strong>ST54TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftRostralAnteriorCingulate Range value: 0.379, ..., 1.496</p></li>
-<li><p><strong>ST55CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftRostralMiddleFrontal Range value: 6402, ..., 23950</p></li>
+<li><p><strong>ST52TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftPrecuneus Range value: 1.442, ..., 2.71</p></li>
+<li><p><strong>ST52TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftPrecuneus Range value: 0.349, ..., 1.168</p></li>
+<li><p><strong>ST53SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftPutamen Range value: 1532, ..., 8618.8</p></li>
+<li><p><strong>ST54CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftRostralAnteriorCingulate Range value: 177, ..., 4563</p></li>
+<li><p><strong>ST54SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftRostralAnteriorCingulate Range value: 154, ..., 1597</p></li>
+<li><p><strong>ST54TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftRostralAnteriorCingulate Range value: 1.347, ..., 3.803</p></li>
+<li><p><strong>ST54TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftRostralAnteriorCingulate Range value: 0.379, ..., 1.622</p></li>
+<li><p><strong>ST55CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftRostralMiddleFrontal Range value: 4340, ..., 23950</p></li>
 <li><p><strong>ST55SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftRostralMiddleFrontal Range value: 2019, ..., 8778</p></li>
-<li><p><strong>ST55TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftRostralMiddleFrontal Range value: 1.592, ..., 2.756</p></li>
+<li><p><strong>ST55TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftRostralMiddleFrontal Range value: 1.459, ..., 2.756</p></li>
 <li><p><strong>ST55TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftRostralMiddleFrontal Range value: 0.342, ..., 0.941</p></li>
-<li><p><strong>ST56CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSuperiorFrontal Range value: 10597, ..., 30508</p></li>
-<li><p><strong>ST56SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSuperiorFrontal Range value: 4099, ..., 13626</p></li>
-<li><p><strong>ST56TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSuperiorFrontal Range value: 1.76, ..., 2.981</p></li>
+<li><p><strong>ST56CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSuperiorFrontal Range value: 8943, ..., 30508</p></li>
+<li><p><strong>ST56SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSuperiorFrontal Range value: 3982, ..., 13626</p></li>
+<li><p><strong>ST56TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSuperiorFrontal Range value: 1.442, ..., 2.981</p></li>
 <li><p><strong>ST56TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftSuperiorFrontal Range value: 0.389, ..., 1.004</p></li>
 <li><p><strong>ST57CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSuperiorParietal Range value: 5459, ..., 19053</p></li>
-<li><p><strong>ST57SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSuperiorParietal Range value: 3034, ..., 7613</p></li>
-<li><p><strong>ST57TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSuperiorParietal Range value: 1.508, ..., 2.673</p></li>
-<li><p><strong>ST57TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftSuperiorParietal Range value: 0.333, ..., 0.941</p></li>
-<li><p><strong>ST58CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSuperiorTemporal Range value: 4986, ..., 17437</p></li>
-<li><p><strong>ST58SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSuperiorTemporal Range value: 1896, ..., 5506</p></li>
-<li><p><strong>ST58TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSuperiorTemporal Range value: 1.723, ..., 3.085</p></li>
-<li><p><strong>ST58TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftSuperiorTemporal Range value: 0.429, ..., 0.869</p></li>
-<li><p><strong>ST59CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSupramarginal Range value: 5262, ..., 19102</p></li>
+<li><p><strong>ST57SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSuperiorParietal Range value: 2931, ..., 7613</p></li>
+<li><p><strong>ST57TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSuperiorParietal Range value: 1.285, ..., 2.673</p></li>
+<li><p><strong>ST57TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftSuperiorParietal Range value: 0.227, ..., 0.941</p></li>
+<li><p><strong>ST58CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSuperiorTemporal Range value: 4465, ..., 17437</p></li>
+<li><p><strong>ST58SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSuperiorTemporal Range value: 1896, ..., 5544</p></li>
+<li><p><strong>ST58TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSuperiorTemporal Range value: 1.544, ..., 3.085</p></li>
+<li><p><strong>ST58TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftSuperiorTemporal Range value: 0.429, ..., 0.901</p></li>
+<li><p><strong>ST59CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftSupramarginal Range value: 3983, ..., 19102</p></li>
 <li><p><strong>ST59SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftSupramarginal Range value: 2172, ..., 6822</p></li>
-<li><p><strong>ST59TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSupramarginal Range value: 1.659, ..., 2.828</p></li>
+<li><p><strong>ST59TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftSupramarginal Range value: 1.34, ..., 2.828</p></li>
 <li><p><strong>ST59TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftSupramarginal Range value: 0.331, ..., 1.046</p></li>
 <li><p><strong>ST5SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumMidPosterior Range value: 50.9, ..., 1863.5</p></li>
-<li><p><strong>ST60CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftTemporalPole Range value: 455, ..., 4879</p></li>
-<li><p><strong>ST60SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftTemporalPole Range value: 155, ..., 827</p></li>
-<li><p><strong>ST60TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftTemporalPole Range value: 1.374, ..., 4.31</p></li>
+<li><p><strong>ST60CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftTemporalPole Range value: 225, ..., 4879</p></li>
+<li><p><strong>ST60SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftTemporalPole Range value: 80, ..., 827</p></li>
+<li><p><strong>ST60TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftTemporalPole Range value: 1.374, ..., 4.366</p></li>
 <li><p><strong>ST60TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftTemporalPole Range value: 0.289, ..., 1.3</p></li>
 <li><p><strong>ST61SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftThalamus Range value: 3028, ..., 11089.4</p></li>
-<li><p><strong>ST62CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftTransverseTemporal Range value: 518, ..., 2215</p></li>
-<li><p><strong>ST62SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftTransverseTemporal Range value: 244, ..., 777</p></li>
-<li><p><strong>ST62TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftTransverseTemporal Range value: 1.396, ..., 2.916</p></li>
-<li><p><strong>ST62TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftTransverseTemporal Range value: 0.237, ..., 0.775</p></li>
-<li><p><strong>ST65SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftVentralDC Range value: 1530.2, ..., 5582.6</p></li>
-<li><p><strong>ST66SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftVessel Range value: 1, ..., 401.2</p></li>
+<li><p><strong>ST62CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of LeftTransverseTemporal Range value: 432, ..., 2215</p></li>
+<li><p><strong>ST62SA</strong> <em>numeric</em> Surface Area (aparc.stats) of LeftTransverseTemporal Range value: 244, ..., 781</p></li>
+<li><p><strong>ST62TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of LeftTransverseTemporal Range value: 1.26, ..., 3.003</p></li>
+<li><p><strong>ST62TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of LeftTransverseTemporal Range value: 0.167, ..., 0.789</p></li>
+<li><p><strong>ST65SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftVentralDC Range value: 1530.2, ..., 5666.2</p></li>
+<li><p><strong>ST66SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftVessel Range value: 0.8, ..., 550.1</p></li>
 <li><p><strong>ST68SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of NonWMHypoIntensities Range value: 0.9, ..., 269.6</p></li>
-<li><p><strong>ST69SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of OpticChiasm Range value: 15.3, ..., 358.8</p></li>
-<li><p><strong>ST6SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumPosterior Range value: 54.3, ..., 1959.4</p></li>
+<li><p><strong>ST69SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of OpticChiasm Range value: 15.3, ..., 437.2</p></li>
+<li><p><strong>ST6SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorpusCallosumPosterior Range value: 54.3, ..., 2127.3</p></li>
 <li><p><strong>ST70SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightAccumbensArea Range value: 21.6, ..., 865.5</p></li>
-<li><p><strong>ST71SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightAmygdala Range value: 390.7, ..., 2593.6</p></li>
-<li><p><strong>ST72CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightBankssts Range value: 900, ..., 3535</p></li>
-<li><p><strong>ST72SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightBankssts Range value: 409, ..., 1438</p></li>
-<li><p><strong>ST72TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightBankssts Range value: 1.706, ..., 3.019</p></li>
+<li><p><strong>ST71SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightAmygdala Range value: 328.7, ..., 2593.6</p></li>
+<li><p><strong>ST72CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightBankssts Range value: 584, ..., 3535</p></li>
+<li><p><strong>ST72SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightBankssts Range value: 409, ..., 1496</p></li>
+<li><p><strong>ST72TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightBankssts Range value: 1.025, ..., 3.019</p></li>
 <li><p><strong>ST72TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightBankssts Range value: 0.234, ..., 0.937</p></li>
-<li><p><strong>ST73CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightCaudalAnteriorCingulate Range value: 229, ..., 3790</p></li>
-<li><p><strong>ST73SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightCaudalAnteriorCingulate Range value: 139, ..., 2262</p></li>
-<li><p><strong>ST73TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightCaudalAnteriorCingulate Range value: 1.498, ..., 3.639</p></li>
+<li><p><strong>ST73CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightCaudalAnteriorCingulate Range value: 117, ..., 3790</p></li>
+<li><p><strong>ST73SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightCaudalAnteriorCingulate Range value: 119, ..., 2262</p></li>
+<li><p><strong>ST73TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightCaudalAnteriorCingulate Range value: 1.161, ..., 3.639</p></li>
 <li><p><strong>ST73TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightCaudalAnteriorCingulate Range value: 0.269, ..., 1.362</p></li>
-<li><p><strong>ST74CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightCaudalMiddleFrontal Range value: 2364, ..., 9490</p></li>
-<li><p><strong>ST74SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightCaudalMiddleFrontal Range value: 1049, ..., 3684</p></li>
-<li><p><strong>ST74TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightCaudalMiddleFrontal Range value: 1.639, ..., 2.939</p></li>
-<li><p><strong>ST74TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightCaudalMiddleFrontal Range value: 0.287, ..., 0.818</p></li>
-<li><p><strong>ST75SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCaudate Range value: 732, ..., 6834.9</p></li>
-<li><p><strong>ST76SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCerebellumCortex Range value: 33754.9, ..., 72743</p></li>
-<li><p><strong>ST77SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCerebellumWM Range value: 7699.2, ..., 27391.7</p></li>
+<li><p><strong>ST74CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightCaudalMiddleFrontal Range value: 1463, ..., 9490</p></li>
+<li><p><strong>ST74SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightCaudalMiddleFrontal Range value: 1046, ..., 3684</p></li>
+<li><p><strong>ST74TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightCaudalMiddleFrontal Range value: 1.469, ..., 2.939</p></li>
+<li><p><strong>ST74TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightCaudalMiddleFrontal Range value: 0.287, ..., 0.867</p></li>
+<li><p><strong>ST75SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCaudate Range value: 732, ..., 8166.3</p></li>
+<li><p><strong>ST76SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCerebellumCortex Range value: 31755.3, ..., 72743</p></li>
+<li><p><strong>ST77SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCerebellumWM Range value: 7088.2, ..., 27391.7</p></li>
 <li><p><strong>ST7SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of Csf Range value: 267.4, ..., 6037.4</p></li>
 <li><p><strong>ST80SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightChoroidPlexus Range value: 99.3, ..., 2491.6</p></li>
 <li><p><strong>ST82CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightCuneus Range value: 1327, ..., 6143</p></li>
 <li><p><strong>ST82SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightCuneus Range value: 626, ..., 2588</p></li>
-<li><p><strong>ST82TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightCuneus Range value: 1.431, ..., 2.54</p></li>
-<li><p><strong>ST82TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightCuneus Range value: 0.278, ..., 0.892</p></li>
-<li><p><strong>ST83CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightEntorhinal Range value: 308, ..., 3736</p></li>
-<li><p><strong>ST83SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightEntorhinal Range value: 184, ..., 920</p></li>
+<li><p><strong>ST82TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightCuneus Range value: 1.3, ..., 2.54</p></li>
+<li><p><strong>ST82TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightCuneus Range value: 0.244, ..., 0.892</p></li>
+<li><p><strong>ST83CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightEntorhinal Range value: 308, ..., 4322</p></li>
+<li><p><strong>ST83SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightEntorhinal Range value: 177, ..., 1031</p></li>
 <li><p><strong>ST83TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightEntorhinal Range value: 1.316, ..., 4.312</p></li>
 <li><p><strong>ST83TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightEntorhinal Range value: 0.409, ..., 1.211</p></li>
-<li><p><strong>ST84CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightFrontalPole Range value: 320, ..., 2261</p></li>
+<li><p><strong>ST84CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightFrontalPole Range value: 320, ..., 2355</p></li>
 <li><p><strong>ST84SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightFrontalPole Range value: 122, ..., 545</p></li>
-<li><p><strong>ST84TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightFrontalPole Range value: 1.48, ..., 3.996</p></li>
+<li><p><strong>ST84TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightFrontalPole Range value: 1.433, ..., 3.996</p></li>
 <li><p><strong>ST84TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightFrontalPole Range value: 0.287, ..., 1.219</p></li>
-<li><p><strong>ST85CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightFusiform Range value: 3728, ..., 13323</p></li>
+<li><p><strong>ST85CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightFusiform Range value: 3498, ..., 13323</p></li>
 <li><p><strong>ST85SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightFusiform Range value: 1539, ..., 4285</p></li>
-<li><p><strong>ST85TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightFusiform Range value: 1.639, ..., 3.086</p></li>
+<li><p><strong>ST85TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightFusiform Range value: 1.409, ..., 3.086</p></li>
 <li><p><strong>ST85TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightFusiform Range value: 0.425, ..., 1.021</p></li>
-<li><p><strong>ST87sa</strong> <em>numeric</em>   Range value: 55809.2, ..., 109909</p></li>
+<li><p><strong>ST87sa</strong> <em>numeric</em>   Range value: 55054.4, ..., 109909</p></li>
 <li><p><strong>ST88SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightHippocampus Range value: 1047.6, ..., 5567.9</p></li>
-<li><p><strong>ST89SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightInferiorLateralVentricle Range value: 34.4, ..., 7408.9</p></li>
+<li><p><strong>ST89SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightInferiorLateralVentricle Range value: 34.4, ..., 12740.1</p></li>
 <li><p><strong>ST8SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of FifthVentricle Range value: 1, ..., 25.1</p></li>
-<li><p><strong>ST90CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightInferiorParietal Range value: 5694, ..., 21947</p></li>
+<li><p><strong>ST90CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightInferiorParietal Range value: 4606, ..., 21947</p></li>
 <li><p><strong>ST90SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightInferiorParietal Range value: 2609, ..., 8456</p></li>
-<li><p><strong>ST90TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightInferiorParietal Range value: 1.505, ..., 2.702</p></li>
+<li><p><strong>ST90TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightInferiorParietal Range value: 1.451, ..., 2.702</p></li>
 <li><p><strong>ST90TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightInferiorParietal Range value: 0.31, ..., 1.058</p></li>
 <li><p><strong>ST91CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightInferiorTemporal Range value: 3045, ..., 15789</p></li>
 <li><p><strong>ST91SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightInferiorTemporal Range value: 1447, ..., 4958</p></li>
-<li><p><strong>ST91TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightInferiorTemporal Range value: 1.747, ..., 3.195</p></li>
+<li><p><strong>ST91TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightInferiorTemporal Range value: 1.669, ..., 3.195</p></li>
 <li><p><strong>ST91TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightInferiorTemporal Range value: 0.459, ..., 1.009</p></li>
 <li><p><strong>ST93CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightIsthmusCingulate Range value: 358, ..., 4857</p></li>
-<li><p><strong>ST93SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightIsthmusCingulate Range value: 380, ..., 3613</p></li>
+<li><p><strong>ST93SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightIsthmusCingulate Range value: 380, ..., 3816</p></li>
 <li><p><strong>ST93TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightIsthmusCingulate Range value: 1.049, ..., 2.847</p></li>
-<li><p><strong>ST93TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightIsthmusCingulate Range value: 0.411, ..., 1.138</p></li>
-<li><p><strong>ST94CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightLateralOccipital Range value: 4952, ..., 19294</p></li>
-<li><p><strong>ST94SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightLateralOccipital Range value: 2678, ..., 7517</p></li>
+<li><p><strong>ST93TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightIsthmusCingulate Range value: 0.365, ..., 1.138</p></li>
+<li><p><strong>ST94CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightLateralOccipital Range value: 5232, ..., 19294</p></li>
+<li><p><strong>ST94SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightLateralOccipital Range value: 2791, ..., 7788</p></li>
 <li><p><strong>ST94TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightLateralOccipital Range value: 1.381, ..., 2.624</p></li>
-<li><p><strong>ST94TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightLateralOccipital Range value: 0.334, ..., 0.863</p></li>
-<li><p><strong>ST95CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightLateralOrbitofrontal Range value: 3854, ..., 9996</p></li>
+<li><p><strong>ST94TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightLateralOccipital Range value: 0.333, ..., 0.863</p></li>
+<li><p><strong>ST95CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightLateralOrbitofrontal Range value: 2332, ..., 9996</p></li>
 <li><p><strong>ST95SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightLateralOrbitofrontal Range value: 1160, ..., 4069</p></li>
-<li><p><strong>ST95TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightLateralOrbitofrontal Range value: 1.998, ..., 3.146</p></li>
+<li><p><strong>ST95TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightLateralOrbitofrontal Range value: 1.572, ..., 3.146</p></li>
 <li><p><strong>ST95TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightLateralOrbitofrontal Range value: 0.455, ..., 0.986</p></li>
-<li><p><strong>ST96SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightLateralVentricle Range value: 1834.5, ..., 72711.9</p></li>
-<li><p><strong>ST97CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightLingual Range value: 3287, ..., 10445</p></li>
-<li><p><strong>ST97SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightLingual Range value: 1789, ..., 4881</p></li>
-<li><p><strong>ST97TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightLingual Range value: 1.452, ..., 2.455</p></li>
-<li><p><strong>ST97TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightLingual Range value: 0.429, ..., 0.788</p></li>
+<li><p><strong>ST96SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightLateralVentricle Range value: 1834.5, ..., 77644.3</p></li>
+<li><p><strong>ST97CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightLingual Range value: 2820, ..., 10445</p></li>
+<li><p><strong>ST97SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightLingual Range value: 1766, ..., 4881</p></li>
+<li><p><strong>ST97TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightLingual Range value: 1.211, ..., 2.455</p></li>
+<li><p><strong>ST97TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightLingual Range value: 0.366, ..., 0.789</p></li>
 <li><p><strong>ST98CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightMedialOrbitofrontal Range value: 560, ..., 8237</p></li>
 <li><p><strong>ST98SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightMedialOrbitofrontal Range value: 233, ..., 3072</p></li>
-<li><p><strong>ST98TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightMedialOrbitofrontal Range value: 1.687, ..., 3.259</p></li>
+<li><p><strong>ST98TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightMedialOrbitofrontal Range value: 1.399, ..., 3.259</p></li>
 <li><p><strong>ST98TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightMedialOrbitofrontal Range value: 0.412, ..., 1.225</p></li>
-<li><p><strong>ST99CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightMiddleTemporal Range value: 4467, ..., 17074</p></li>
+<li><p><strong>ST99CV</strong> <em>numeric</em> Cortical Volume (aparc.stats) of RightMiddleTemporal Range value: 3468, ..., 17074</p></li>
 <li><p><strong>ST99SA</strong> <em>numeric</em> Surface Area (aparc.stats) of RightMiddleTemporal Range value: 1674, ..., 5222</p></li>
-<li><p><strong>ST99TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightMiddleTemporal Range value: 1.661, ..., 3.168</p></li>
-<li><p><strong>ST99TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightMiddleTemporal Range value: 0.418, ..., 0.958</p></li>
-<li><p><strong>ST9SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of FourthVentricle Range value: 638.3, ..., 5832.3</p></li>
-<li><p><strong>ST147SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCorticalGM Range value: 134562.847194, ..., 295642.067545</p></li>
-<li><p><strong>ST148SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCorticalGM Range value: 141249.034013, ..., 298304.664373</p></li>
-<li><p><strong>ST149SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorticalGM Range value: 285585.486329, ..., 593946.731918</p></li>
-<li><p><strong>ST150SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCorticalWM Range value: 27674.5, ..., 339771.5</p></li>
+<li><p><strong>ST99TA</strong> <em>numeric</em> Thickness Average (aparc.stats) of RightMiddleTemporal Range value: 1.479, ..., 3.168</p></li>
+<li><p><strong>ST99TS</strong> <em>numeric</em> Thickness Stardard Deviation (aparc.stats) of RightMiddleTemporal Range value: 0.35, ..., 0.958</p></li>
+<li><p><strong>ST9SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of FourthVentricle Range value: 638.3, ..., 6263.4</p></li>
+<li><p><strong>ST147SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCorticalGM Range value: 89121.5507, ..., 295642.067545</p></li>
+<li><p><strong>ST148SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCorticalGM Range value: 91190.472591, ..., 298304.664373</p></li>
+<li><p><strong>ST149SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorticalGM Range value: 180312.023292, ..., 593946.731918</p></li>
+<li><p><strong>ST150SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of LeftCorticalWM Range value: 27674.5, ..., 342862</p></li>
 <li><p><strong>ST151SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of RightCorticalWM Range value: 127182.5, ..., 352466.5</p></li>
 <li><p><strong>ST152SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of CorticalWM Range value: 184555, ..., 692238</p></li>
 <li><p><strong>ST153SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of SubcorticalGM Range value: 28737, ..., 72446</p></li>
-<li><p><strong>ST154SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of TotalGM Range value: 393158.486329, ..., 782888.731918</p></li>
-<li><p><strong>ST155SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of SupraTentorial Range value: 537204, ..., 1335911</p></li>
+<li><p><strong>ST154SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of TotalGM Range value: 307855.023292, ..., 782888.731918</p></li>
+<li><p><strong>ST155SV</strong> <em>numeric</em> Subcortical Volume (aseg.stats) of SupraTentorial Range value: 537204, ..., 1337155</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>
     <div class="section level2">

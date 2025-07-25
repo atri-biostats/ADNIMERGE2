@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -57,15 +59,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_colnames</span><span class="op">(</span><span class="va">data</span>, <span class="va">col_names</span>, strict <span class="op">=</span> <span class="cn">FALSE</span>, stop_message <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">check_colnames</span><span class="op">(</span><span class="va">.data</span>, <span class="va">col_names</span>, strict <span class="op">=</span> <span class="cn">FALSE</span>, stop_message <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>Data frame</p></dd>
+<dl><dt id="arg--data">.data<a class="anchor" aria-label="anchor" href="#arg--data"></a></dt>
+<dd><p>Data.frame</p></dd>
 
 
 <dt id="arg-col-names">col_names<a class="anchor" aria-label="anchor" href="#arg-col-names"></a></dt>
@@ -73,38 +75,40 @@
 
 
 <dt id="arg-strict">strict<a class="anchor" aria-label="anchor" href="#arg-strict"></a></dt>
-<dd><p>A boolean value to apply strict checking.</p></dd>
+<dd><p>A Boolean value to apply strict checking.</p></dd>
 
 
 <dt id="arg-stop-message">stop_message<a class="anchor" aria-label="anchor" href="#arg-stop-message"></a></dt>
-<dd><p>A boolean value to return a stop message if the criteria does not met.</p></dd>
+<dd><p>A Boolean value to return a stop message if the criteria does not met.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
 
 <ul><li><p>`TRUE` if the provided column names are existed in the dataset based on the `strict` argument.</p></li>
-<li><p>Otherwise list of column names that are not existed in the dataset `data` or a stop message if `stop_message = TRUE`.</p></li>
+<li><p>Otherwise list of column names that are not existed in the dataset or a stop message if `stop_message` is TRUE.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other checks function:
 <code><a href="check_duplicate_records.html">check_duplicate_records</a>()</code>,
+<code><a href="check_is_logical.html">check_is_logical</a>()</code>,
 <code><a href="check_value_match.html">check_value_match</a>()</code>,
 <code><a href="detect_decimal_value.html">detect_decimal_value</a>()</code>,
-<code><a href="detect_numeric_value.html">detect_numeric_value</a>()</code></p></div>
+<code><a href="detect_numeric_value.html">detect_numeric_value</a>()</code>,
+<code><a href="is_datadict_tbl.html">is_datadict_tbl</a>()</code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu">check_colnames</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dd <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="ADAS_ADNIGO23.html">ADAS_ADNIGO23</a></span>,</span></span>
+<span class="r-in"><span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span>,</span></span>
 <span class="r-in"><span>  col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Phase"</span>, <span class="st">"VISCODE"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  strict <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">check_colnames</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dd <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="ADAS_ADNIGO23.html">ADAS_ADNIGO23</a></span>,</span></span>
+<span class="r-in"><span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span>,</span></span>
 <span class="r-in"><span>  col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RID"</span>, <span class="st">"VISCODE"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  strict <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

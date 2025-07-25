@@ -35,6 +35,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -42,16 +43,17 @@
 <li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -80,7 +82,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNI-Enrollment</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: April 17,
+            <h4 data-toc-skip class="date">Last Updated: July 25,
 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNI-Enrollment.Rmd" class="external-link"><code>vignettes/ADNI-Enrollment.Rmd</code></a></small>
@@ -90,7 +92,7 @@
     
     
 <div class="section level2">
-<h2 id="adni-enrollment-summaries">ADNI Enrollment Summaries<a class="anchor" aria-label="anchor" href="#adni-enrollment-summaries"></a>
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>This article demonstrate how to use the <code>ADNIMERGE2</code> R
 package to generate simple enrollment summaries.</p>
@@ -99,39 +101,86 @@ package to generate simple enrollment summaries.</p>
 <h2 id="load-required-r-packages">Load Required R Packages<a class="anchor" aria-label="anchor" href="#load-required-r-packages"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ddsjoberg/gtsummary" class="external-link">gtsummary</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/" class="external-link">cowplot</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggforce.data-imaginist.com" class="external-link">ggforce</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/see/" class="external-link">see</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://atri-biostats.github.io/ADNIMERGE2">ADNIMERGE2</a></span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Abbreviation list</span></span>
+<span><span class="va">abbrev_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; "</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"SD: Standard Deviation; Q1: the 25th percentile; Q3: the 75th percentile"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">conts_statistic_label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mean (SD)"</span>, <span class="st">"Median (Q1, Q3)"</span>, <span class="st">"Range"</span><span class="op">)</span></span>
+<span><span class="co"># Adjust BMI variable labels</span></span>
+<span><span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">var_label</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">BMI</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Baseline "</span>, <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">)</span><span class="op">$</span><span class="va">BMI</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="demographic-summaries-by-study-phase">Demographic Summaries: By Study Phase<a class="anchor" aria-label="anchor" href="#demographic-summaries-by-study-phase"></a>
+<h2 id="adni-enrollment-summaries">ADNI Enrollment Summaries<a class="anchor" aria-label="anchor" href="#adni-enrollment-summaries"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Yes"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_summary.html" class="external-link">tbl_summary</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">.</span>,</span>
-<span>    by <span class="op">=</span> <span class="va">ORIGPROT</span>,</span>
-<span>    include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">AGE</span>, <span class="va">SEX</span>, <span class="va">EDUC</span>, <span class="va">RACE</span>, <span class="va">ETHNIC</span>, <span class="va">MARISTAT</span>, <span class="va">BMI</span>, <span class="va">DX</span><span class="op">)</span>,</span>
-<span>    type <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"continuous2"</span>,</span>
-<span>    statistic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"{mean} ({sd})"</span>,</span>
-<span>        <span class="st">"{median} ({p25}, {p75})"</span>,</span>
-<span>        <span class="st">"{min}, {max}"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_categorical</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"{n} ({p}%)"</span></span>
+<div class="section level3">
+<h3 id="enrollment-overtime">Enrollment Overtime<a class="anchor" aria-label="anchor" href="#enrollment-overtime"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">enroll_summary_data</span> <span class="op">&lt;-</span> <span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Y"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ENRLDT <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/round_date.html" class="external-link">floor_date</a></span><span class="op">(</span><span class="va">ENRLDT</span>, unit <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ENRLDT</span>, <span class="va">ORIGPROT</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>num_enroll <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>ORIGPROT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ORIGPROT</span>, levels <span class="op">=</span> <span class="fu"><a href="../reference/adni_phase.html">adni_phase</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">ENRLDT</span>, <span class="va">ORIGPROT</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cum_num_enroll <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">num_enroll</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">enroll_summary_plot</span> <span class="op">&lt;-</span> <span class="va">enroll_summary_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ENRLDT</span>, y <span class="op">=</span> <span class="va">cum_num_enroll</span>, color <span class="op">=</span> <span class="va">ORIGPROT</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_minor_breaks <span class="op">=</span> <span class="st">"2 years"</span>,</span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">enroll_summary_data</span><span class="op">$</span><span class="va">ENRLDT</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Timeline Calendar"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Cumulative Enrollment Per Month"</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"ADNI Study Phase"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.3</span>, vjust <span class="op">=</span> <span class="fl">0</span>, angle <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">enroll_summary_plot</span></span></code></pre></div>
+<p><img src="ADNI-Enrollment_files/figure-html/enrollment-plot-1.png" alt="Enrollment overtime by study phase" width="768"></p>
+</div>
+<div class="section level3">
+<h3 id="demographic-summaries-by-study-phase">Demographic Summaries: By Study Phase<a class="anchor" aria-label="anchor" href="#demographic-summaries-by-study-phase"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_summary.html" class="external-link">tbl_summary</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Y"</span><span class="op">)</span>,</span>
+<span>  by <span class="op">=</span> <span class="va">ORIGPROT</span>,</span>
+<span>  include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="va">AGE</span>, <span class="va">SEX</span>, <span class="va">EDUC</span>, <span class="va">RACE</span>, <span class="va">ETHNIC</span>, <span class="va">MARISTAT</span>, <span class="va">BMI</span>, <span class="va">DX</span>, <span class="va">APOE</span>,</span>
+<span>    <span class="va">ADASTT13</span>, <span class="va">CDGLOBAL</span>, <span class="va">CDRSB</span>, <span class="va">MMSCORE</span>, <span class="va">FAQTOTAL</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"continuous2"</span>,</span>
+<span>  statistic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"{mean} ({sd})"</span>,</span>
+<span>      <span class="st">"{median} ({p25}, {p75})"</span>,</span>
+<span>      <span class="st">"{min}, {max}"</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    digits <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
-<span>    percent <span class="op">=</span> <span class="st">"column"</span>,</span>
-<span>    missing_text <span class="op">=</span> <span class="st">"(Missing)"</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_categorical</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"{n} ({p}%)"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>  percent <span class="op">=</span> <span class="st">"column"</span>,</span>
+<span>  missing_text <span class="op">=</span> <span class="st">"(Missing)"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/add_overall.html" class="external-link">add_overall</a></span><span class="op">(</span>last <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/add_stat_label.html" class="external-link">add_stat_label</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous2</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mean (SD)"</span>, <span class="st">"Median (Q1, Q3)"</span>, <span class="st">"Range"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/add_stat_label.html" class="external-link">add_stat_label</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous2</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="va">conts_statistic_label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/modify_footnote2.html" class="external-link">modify_footnote_header</a></span><span class="op">(</span></span>
 <span>    footnote <span class="op">=</span> <span class="st">"Column-wise percentage; n (%)"</span>,</span>
 <span>    columns <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_stat_cols</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -139,7 +188,7 @@ package to generate simple enrollment summaries.</p>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/modify_abbreviation.html" class="external-link">modify_abbreviation</a></span><span class="op">(</span>abbreviation <span class="op">=</span> <span class="va">abbrev_list</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/modify_caption.html" class="external-link">modify_caption</a></span><span class="op">(</span></span>
-<span>    caption <span class="op">=</span> <span class="st">"Table 1. ADNI - Participant Characteristics: By Study Phase"</span></span>
+<span>    caption <span class="op">=</span> <span class="st">"Table 1. ADNI - Subject Characteristics: By Study Phase"</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/bold_italicize_labels_levels.html" class="external-link">bold_labels</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div id="mwlefoodfi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -592,7 +641,7 @@ package to generate simple enrollment summaries.</p>
 }
 </style>
 <table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<caption><span class="gt_from_md">Table 1. ADNI - Participant Characteristics: By Study Phase</span></caption>
+<caption><span class="gt_from_md">Table 1. ADNI - Subject Characteristics: By Study Phase</span></caption>
   <thead><tr class="gt_col_headings">
 <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_1">
@@ -609,15 +658,15 @@ N = 790</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_4">
 <span class="gt_from_md"><strong>ADNI3</strong><br>
-N = 695</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+N = 696</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_5">
 <span class="gt_from_md"><strong>ADNI4</strong><br>
-N = 336</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+N = 477</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_0">
 <span class="gt_from_md"><strong>Overall</strong><br>
-N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+N = 2,913</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
     </tr></thead>
 <tbody class="gt_table_body">
@@ -636,8 +685,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">71.6 (7.9)</td>
 <td headers="stat_3" class="gt_row gt_center">72.7 (7.2)</td>
 <td headers="stat_4" class="gt_row gt_center">70.7 (7.4)</td>
-<td headers="stat_5" class="gt_row gt_center">69.3 (7.7)</td>
-<td headers="stat_0" class="gt_row gt_center">72.5 (7.5)</td>
+<td headers="stat_5" class="gt_row gt_center">68.7 (7.4)</td>
+<td headers="stat_0" class="gt_row gt_center">72.2 (7.6)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
@@ -645,8 +694,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">71.1 (65.8, 77.4)</td>
 <td headers="stat_3" class="gt_row gt_center">72.8 (67.8, 77.6)</td>
 <td headers="stat_4" class="gt_row gt_center">70.0 (65.9, 75.8)</td>
-<td headers="stat_5" class="gt_row gt_center">69.9 (63.0, 74.9)</td>
-<td headers="stat_0" class="gt_row gt_center">72.6 (67.2, 77.8)</td>
+<td headers="stat_5" class="gt_row gt_center">68.6 (62.9, 74.0)</td>
+<td headers="stat_0" class="gt_row gt_center">72.3 (66.9, 77.6)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Range</td>
@@ -654,7 +703,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">55.6, 88.3</td>
 <td headers="stat_3" class="gt_row gt_center">55.0, 91.4</td>
 <td headers="stat_4" class="gt_row gt_center">50.5, 90.7</td>
-<td headers="stat_5" class="gt_row gt_center">55.3, 88.1</td>
+<td headers="stat_5" class="gt_row gt_center">55.0, 88.1</td>
 <td headers="stat_0" class="gt_row gt_center">50.5, 91.4</td>
 </tr>
 <tr>
@@ -672,17 +721,17 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">60 (46%)</td>
 <td headers="stat_3" class="gt_row gt_center">379 (48%)</td>
 <td headers="stat_4" class="gt_row gt_center">381 (55%)</td>
-<td headers="stat_5" class="gt_row gt_center">216 (64%)</td>
-<td headers="stat_0" class="gt_row gt_center">1,378 (50%)</td>
+<td headers="stat_5" class="gt_row gt_center">307 (64%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,469 (50%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Male</td>
 <td headers="stat_1" class="gt_row gt_center">477 (58%)</td>
 <td headers="stat_2" class="gt_row gt_center">71 (54%)</td>
 <td headers="stat_3" class="gt_row gt_center">411 (52%)</td>
-<td headers="stat_4" class="gt_row gt_center">314 (45%)</td>
-<td headers="stat_5" class="gt_row gt_center">120 (36%)</td>
-<td headers="stat_0" class="gt_row gt_center">1,393 (50%)</td>
+<td headers="stat_4" class="gt_row gt_center">315 (45%)</td>
+<td headers="stat_5" class="gt_row gt_center">170 (36%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,444 (50%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Education</td>
@@ -699,8 +748,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">15.8 (2.7)</td>
 <td headers="stat_3" class="gt_row gt_center">16.3 (2.6)</td>
 <td headers="stat_4" class="gt_row gt_center">16.4 (2.3)</td>
-<td headers="stat_5" class="gt_row gt_center">16.3 (2.7)</td>
-<td headers="stat_0" class="gt_row gt_center">16.1 (2.7)</td>
+<td headers="stat_5" class="gt_row gt_center">16.0 (2.8)</td>
+<td headers="stat_0" class="gt_row gt_center">16.0 (2.7)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
@@ -722,12 +771,12 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">0</td>
+<td headers="stat_1" class="gt_row gt_center">1</td>
 <td headers="stat_2" class="gt_row gt_center">0</td>
 <td headers="stat_3" class="gt_row gt_center">0</td>
 <td headers="stat_4" class="gt_row gt_center">0</td>
 <td headers="stat_5" class="gt_row gt_center">1</td>
-<td headers="stat_0" class="gt_row gt_center">1</td>
+<td headers="stat_0" class="gt_row gt_center">2</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Race, n (%)</td>
@@ -744,8 +793,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">1 (0.8%)</td>
 <td headers="stat_3" class="gt_row gt_center">1 (0.1%)</td>
 <td headers="stat_4" class="gt_row gt_center">2 (0.3%)</td>
-<td headers="stat_5" class="gt_row gt_center">2 (0.6%)</td>
-<td headers="stat_0" class="gt_row gt_center">7 (0.3%)</td>
+<td headers="stat_5" class="gt_row gt_center">3 (0.6%)</td>
+<td headers="stat_0" class="gt_row gt_center">8 (0.3%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Asian</td>
@@ -753,8 +802,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">1 (0.8%)</td>
 <td headers="stat_3" class="gt_row gt_center">14 (1.8%)</td>
 <td headers="stat_4" class="gt_row gt_center">29 (4.2%)</td>
-<td headers="stat_5" class="gt_row gt_center">35 (11%)</td>
-<td headers="stat_0" class="gt_row gt_center">93 (3.4%)</td>
+<td headers="stat_5" class="gt_row gt_center">45 (9.4%)</td>
+<td headers="stat_0" class="gt_row gt_center">103 (3.5%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Black or African American</td>
@@ -762,8 +811,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">4 (3.1%)</td>
 <td headers="stat_3" class="gt_row gt_center">34 (4.3%)</td>
 <td headers="stat_4" class="gt_row gt_center">105 (15%)</td>
-<td headers="stat_5" class="gt_row gt_center">95 (30%)</td>
-<td headers="stat_0" class="gt_row gt_center">277 (10%)</td>
+<td headers="stat_5" class="gt_row gt_center">158 (33%)</td>
+<td headers="stat_0" class="gt_row gt_center">340 (12%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Native Hawaiian or Other Pacific Islander</td>
@@ -780,7 +829,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
 <td headers="stat_3" class="gt_row gt_center">0 (0%)</td>
 <td headers="stat_4" class="gt_row gt_center">0 (0%)</td>
-<td headers="stat_5" class="gt_row gt_center">2 (0.6%)</td>
+<td headers="stat_5" class="gt_row gt_center">2 (0.4%)</td>
 <td headers="stat_0" class="gt_row gt_center">2 (&lt;0.1%)</td>
 </tr>
 <tr>
@@ -788,9 +837,9 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_1" class="gt_row gt_center">762 (93%)</td>
 <td headers="stat_2" class="gt_row gt_center">118 (90%)</td>
 <td headers="stat_3" class="gt_row gt_center">728 (92%)</td>
-<td headers="stat_4" class="gt_row gt_center">536 (77%)</td>
-<td headers="stat_5" class="gt_row gt_center">174 (55%)</td>
-<td headers="stat_0" class="gt_row gt_center">2,318 (84%)</td>
+<td headers="stat_4" class="gt_row gt_center">537 (77%)</td>
+<td headers="stat_5" class="gt_row gt_center">237 (50%)</td>
+<td headers="stat_0" class="gt_row gt_center">2,382 (82%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    More than one race</td>
@@ -798,8 +847,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">5 (3.8%)</td>
 <td headers="stat_3" class="gt_row gt_center">10 (1.3%)</td>
 <td headers="stat_4" class="gt_row gt_center">13 (1.9%)</td>
-<td headers="stat_5" class="gt_row gt_center">0 (0%)</td>
-<td headers="stat_0" class="gt_row gt_center">31 (1.1%)</td>
+<td headers="stat_5" class="gt_row gt_center">22 (4.6%)</td>
+<td headers="stat_0" class="gt_row gt_center">53 (1.8%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Unknown</td>
@@ -807,17 +856,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">2 (1.5%)</td>
 <td headers="stat_3" class="gt_row gt_center">1 (0.1%)</td>
 <td headers="stat_4" class="gt_row gt_center">9 (1.3%)</td>
-<td headers="stat_5" class="gt_row gt_center">9 (2.8%)</td>
-<td headers="stat_0" class="gt_row gt_center">21 (0.8%)</td>
-</tr>
-<tr>
-<td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">0</td>
-<td headers="stat_2" class="gt_row gt_center">0</td>
-<td headers="stat_3" class="gt_row gt_center">0</td>
-<td headers="stat_4" class="gt_row gt_center">0</td>
-<td headers="stat_5" class="gt_row gt_center">19</td>
-<td headers="stat_0" class="gt_row gt_center">19</td>
+<td headers="stat_5" class="gt_row gt_center">10 (2.1%)</td>
+<td headers="stat_0" class="gt_row gt_center">22 (0.8%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Ethnicity, n (%)</td>
@@ -834,17 +874,17 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">8 (6.1%)</td>
 <td headers="stat_3" class="gt_row gt_center">31 (3.9%)</td>
 <td headers="stat_4" class="gt_row gt_center">58 (8.3%)</td>
-<td headers="stat_5" class="gt_row gt_center">46 (14%)</td>
-<td headers="stat_0" class="gt_row gt_center">162 (5.8%)</td>
+<td headers="stat_5" class="gt_row gt_center">66 (14%)</td>
+<td headers="stat_0" class="gt_row gt_center">182 (6.2%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Not Hispanic or Latino</td>
 <td headers="stat_1" class="gt_row gt_center">794 (97%)</td>
 <td headers="stat_2" class="gt_row gt_center">122 (93%)</td>
 <td headers="stat_3" class="gt_row gt_center">755 (96%)</td>
-<td headers="stat_4" class="gt_row gt_center">636 (92%)</td>
-<td headers="stat_5" class="gt_row gt_center">288 (86%)</td>
-<td headers="stat_0" class="gt_row gt_center">2,595 (94%)</td>
+<td headers="stat_4" class="gt_row gt_center">637 (92%)</td>
+<td headers="stat_5" class="gt_row gt_center">409 (86%)</td>
+<td headers="stat_0" class="gt_row gt_center">2,717 (93%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Unknown</td>
@@ -852,7 +892,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">1 (0.8%)</td>
 <td headers="stat_3" class="gt_row gt_center">4 (0.5%)</td>
 <td headers="stat_4" class="gt_row gt_center">1 (0.1%)</td>
-<td headers="stat_5" class="gt_row gt_center">2 (0.6%)</td>
+<td headers="stat_5" class="gt_row gt_center">2 (0.4%)</td>
 <td headers="stat_0" class="gt_row gt_center">14 (0.5%)</td>
 </tr>
 <tr>
@@ -866,12 +906,12 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Divorced</td>
-<td headers="stat_1" class="gt_row gt_center">51 (6.2%)</td>
+<td headers="stat_1" class="gt_row gt_center">52 (6.4%)</td>
 <td headers="stat_2" class="gt_row gt_center">17 (13%)</td>
 <td headers="stat_3" class="gt_row gt_center">82 (10%)</td>
 <td headers="stat_4" class="gt_row gt_center">79 (11%)</td>
-<td headers="stat_5" class="gt_row gt_center">55 (16%)</td>
-<td headers="stat_0" class="gt_row gt_center">284 (10%)</td>
+<td headers="stat_5" class="gt_row gt_center">89 (19%)</td>
+<td headers="stat_0" class="gt_row gt_center">319 (11%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Domestic Partnership</td>
@@ -879,17 +919,17 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
 <td headers="stat_3" class="gt_row gt_center">0 (0%)</td>
 <td headers="stat_4" class="gt_row gt_center">0 (0%)</td>
-<td headers="stat_5" class="gt_row gt_center">7 (2.1%)</td>
-<td headers="stat_0" class="gt_row gt_center">7 (0.3%)</td>
+<td headers="stat_5" class="gt_row gt_center">11 (2.3%)</td>
+<td headers="stat_0" class="gt_row gt_center">11 (0.4%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Married</td>
-<td headers="stat_1" class="gt_row gt_center">631 (77%)</td>
+<td headers="stat_1" class="gt_row gt_center">629 (77%)</td>
 <td headers="stat_2" class="gt_row gt_center">95 (73%)</td>
 <td headers="stat_3" class="gt_row gt_center">586 (74%)</td>
-<td headers="stat_4" class="gt_row gt_center">516 (74%)</td>
-<td headers="stat_5" class="gt_row gt_center">210 (63%)</td>
-<td headers="stat_0" class="gt_row gt_center">2,038 (74%)</td>
+<td headers="stat_4" class="gt_row gt_center">517 (74%)</td>
+<td headers="stat_5" class="gt_row gt_center">281 (59%)</td>
+<td headers="stat_0" class="gt_row gt_center">2,108 (72%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Never married</td>
@@ -897,8 +937,8 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">3 (2.3%)</td>
 <td headers="stat_3" class="gt_row gt_center">33 (4.2%)</td>
 <td headers="stat_4" class="gt_row gt_center">35 (5.0%)</td>
-<td headers="stat_5" class="gt_row gt_center">34 (10%)</td>
-<td headers="stat_0" class="gt_row gt_center">133 (4.8%)</td>
+<td headers="stat_5" class="gt_row gt_center">56 (12%)</td>
+<td headers="stat_0" class="gt_row gt_center">155 (5.3%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Unknown</td>
@@ -915,17 +955,17 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <td headers="stat_2" class="gt_row gt_center">12 (9.2%)</td>
 <td headers="stat_3" class="gt_row gt_center">87 (11%)</td>
 <td headers="stat_4" class="gt_row gt_center">62 (8.9%)</td>
-<td headers="stat_5" class="gt_row gt_center">29 (8.7%)</td>
-<td headers="stat_0" class="gt_row gt_center">298 (11%)</td>
+<td headers="stat_5" class="gt_row gt_center">39 (8.2%)</td>
+<td headers="stat_0" class="gt_row gt_center">308 (11%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">0</td>
+<td headers="stat_1" class="gt_row gt_center">1</td>
 <td headers="stat_2" class="gt_row gt_center">0</td>
 <td headers="stat_3" class="gt_row gt_center">0</td>
 <td headers="stat_4" class="gt_row gt_center">1</td>
 <td headers="stat_5" class="gt_row gt_center">1</td>
-<td headers="stat_0" class="gt_row gt_center">2</td>
+<td headers="stat_0" class="gt_row gt_center">3</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline Body Mass Index</td>
@@ -938,39 +978,39 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Mean (SD)</td>
-<td headers="stat_1" class="gt_row gt_center">26.1 (4.1)</td>
-<td headers="stat_2" class="gt_row gt_center">28.4 (5.3)</td>
-<td headers="stat_3" class="gt_row gt_center">27.3 (5.2)</td>
-<td headers="stat_4" class="gt_row gt_center">28.1 (9.4)</td>
-<td headers="stat_5" class="gt_row gt_center">29.0 (16.9)</td>
-<td headers="stat_0" class="gt_row gt_center">27.4 (8.5)</td>
+<td headers="stat_1" class="gt_row gt_center">27.6 (4.1)</td>
+<td headers="stat_2" class="gt_row gt_center">24.0 (NA)</td>
+<td headers="stat_3" class="gt_row gt_center">30.8 (7.2)</td>
+<td headers="stat_4" class="gt_row gt_center">30.0 (NA)</td>
+<td headers="stat_5" class="gt_row gt_center">29.3 (6.5)</td>
+<td headers="stat_0" class="gt_row gt_center">29.2 (6.2)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
-<td headers="stat_1" class="gt_row gt_center">25.7 (23.3, 28.3)</td>
-<td headers="stat_2" class="gt_row gt_center">27.3 (24.7, 31.1)</td>
-<td headers="stat_3" class="gt_row gt_center">26.4 (24.1, 29.6)</td>
-<td headers="stat_4" class="gt_row gt_center">26.8 (24.0, 30.3)</td>
-<td headers="stat_5" class="gt_row gt_center">26.9 (23.7, 30.6)</td>
-<td headers="stat_0" class="gt_row gt_center">26.3 (23.8, 29.6)</td>
+<td headers="stat_1" class="gt_row gt_center">28.8 (24.7, 30.5)</td>
+<td headers="stat_2" class="gt_row gt_center">24.0 (24.0, 24.0)</td>
+<td headers="stat_3" class="gt_row gt_center">28.7 (26.4, 31.0)</td>
+<td headers="stat_4" class="gt_row gt_center">30.0 (30.0, 30.0)</td>
+<td headers="stat_5" class="gt_row gt_center">28.7 (24.7, 31.9)</td>
+<td headers="stat_0" class="gt_row gt_center">28.7 (24.7, 31.0)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Range</td>
-<td headers="stat_1" class="gt_row gt_center">16.6, 45.8</td>
-<td headers="stat_2" class="gt_row gt_center">17.9, 45.9</td>
-<td headers="stat_3" class="gt_row gt_center">16.4, 52.1</td>
-<td headers="stat_4" class="gt_row gt_center">4.0, 176.8</td>
-<td headers="stat_5" class="gt_row gt_center">3.8, 235.1</td>
-<td headers="stat_0" class="gt_row gt_center">3.8, 235.1</td>
+<td headers="stat_1" class="gt_row gt_center">21.8, 31.0</td>
+<td headers="stat_2" class="gt_row gt_center">24.0, 24.0</td>
+<td headers="stat_3" class="gt_row gt_center">25.1, 44.7</td>
+<td headers="stat_4" class="gt_row gt_center">30.0, 30.0</td>
+<td headers="stat_5" class="gt_row gt_center">18.6, 47.9</td>
+<td headers="stat_0" class="gt_row gt_center">18.6, 47.9</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">1</td>
-<td headers="stat_2" class="gt_row gt_center">0</td>
-<td headers="stat_3" class="gt_row gt_center">3</td>
-<td headers="stat_4" class="gt_row gt_center">1</td>
-<td headers="stat_5" class="gt_row gt_center">1</td>
-<td headers="stat_0" class="gt_row gt_center">6</td>
+<td headers="stat_1" class="gt_row gt_center">815</td>
+<td headers="stat_2" class="gt_row gt_center">130</td>
+<td headers="stat_3" class="gt_row gt_center">784</td>
+<td headers="stat_4" class="gt_row gt_center">695</td>
+<td headers="stat_5" class="gt_row gt_center">450</td>
+<td headers="stat_0" class="gt_row gt_center">2,874</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline Diagnostics Status, n (%)</td>
@@ -983,43 +1023,349 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    CN</td>
-<td headers="stat_1" class="gt_row gt_center">228 (28%)</td>
-<td headers="stat_2" class="gt_row gt_center">1 (0.9%)</td>
+<td headers="stat_1" class="gt_row gt_center">225 (29%)</td>
+<td headers="stat_2" class="gt_row gt_center">1 (1.0%)</td>
 <td headers="stat_3" class="gt_row gt_center">295 (37%)</td>
-<td headers="stat_4" class="gt_row gt_center">379 (55%)</td>
-<td headers="stat_5" class="gt_row gt_center">204 (61%)</td>
-<td headers="stat_0" class="gt_row gt_center">1,107 (40%)</td>
+<td headers="stat_4" class="gt_row gt_center">380 (55%)</td>
+<td headers="stat_5" class="gt_row gt_center">292 (61%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,193 (42%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    MCI</td>
-<td headers="stat_1" class="gt_row gt_center">388 (48%)</td>
-<td headers="stat_2" class="gt_row gt_center">115 (99%)</td>
+<td headers="stat_1" class="gt_row gt_center">373 (48%)</td>
+<td headers="stat_2" class="gt_row gt_center">99 (99%)</td>
 <td headers="stat_3" class="gt_row gt_center">344 (44%)</td>
 <td headers="stat_4" class="gt_row gt_center">243 (35%)</td>
-<td headers="stat_5" class="gt_row gt_center">102 (30%)</td>
-<td headers="stat_0" class="gt_row gt_center">1,192 (43%)</td>
+<td headers="stat_5" class="gt_row gt_center">148 (31%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,207 (42%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    DEM</td>
-<td headers="stat_1" class="gt_row gt_center">190 (24%)</td>
+<td headers="stat_1" class="gt_row gt_center">182 (23%)</td>
 <td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
 <td headers="stat_3" class="gt_row gt_center">151 (19%)</td>
-<td headers="stat_4" class="gt_row gt_center">73 (11%)</td>
-<td headers="stat_5" class="gt_row gt_center">30 (8.9%)</td>
-<td headers="stat_0" class="gt_row gt_center">444 (16%)</td>
+<td headers="stat_4" class="gt_row gt_center">73 (10%)</td>
+<td headers="stat_5" class="gt_row gt_center">37 (7.8%)</td>
+<td headers="stat_0" class="gt_row gt_center">443 (16%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">13</td>
-<td headers="stat_2" class="gt_row gt_center">15</td>
+<td headers="stat_1" class="gt_row gt_center">39</td>
+<td headers="stat_2" class="gt_row gt_center">31</td>
 <td headers="stat_3" class="gt_row gt_center">0</td>
 <td headers="stat_4" class="gt_row gt_center">0</td>
 <td headers="stat_5" class="gt_row gt_center">0</td>
-<td headers="stat_0" class="gt_row gt_center">28</td>
+<td headers="stat_0" class="gt_row gt_center">70</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">APOE Genotype, n (%)</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+<td headers="stat_4" class="gt_row gt_center"><br></td>
+<td headers="stat_5" class="gt_row gt_center"><br></td>
+<td headers="stat_0" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε2/ε2</td>
+<td headers="stat_1" class="gt_row gt_center">2 (0.2%)</td>
+<td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_3" class="gt_row gt_center">3 (0.4%)</td>
+<td headers="stat_4" class="gt_row gt_center">1 (0.1%)</td>
+<td headers="stat_5" class="gt_row gt_center">2 (1.7%)</td>
+<td headers="stat_0" class="gt_row gt_center">8 (0.3%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε2/ε3</td>
+<td headers="stat_1" class="gt_row gt_center">53 (6.5%)</td>
+<td headers="stat_2" class="gt_row gt_center">9 (7.0%)</td>
+<td headers="stat_3" class="gt_row gt_center">66 (8.5%)</td>
+<td headers="stat_4" class="gt_row gt_center">52 (7.7%)</td>
+<td headers="stat_5" class="gt_row gt_center">6 (5.1%)</td>
+<td headers="stat_0" class="gt_row gt_center">186 (7.4%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε2/ε4</td>
+<td headers="stat_1" class="gt_row gt_center">18 (2.2%)</td>
+<td headers="stat_2" class="gt_row gt_center">2 (1.6%)</td>
+<td headers="stat_3" class="gt_row gt_center">14 (1.8%)</td>
+<td headers="stat_4" class="gt_row gt_center">17 (2.5%)</td>
+<td headers="stat_5" class="gt_row gt_center">4 (3.4%)</td>
+<td headers="stat_0" class="gt_row gt_center">55 (2.2%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε3/ε3</td>
+<td headers="stat_1" class="gt_row gt_center">363 (44%)</td>
+<td headers="stat_2" class="gt_row gt_center">67 (52%)</td>
+<td headers="stat_3" class="gt_row gt_center">352 (45%)</td>
+<td headers="stat_4" class="gt_row gt_center">347 (52%)</td>
+<td headers="stat_5" class="gt_row gt_center">53 (45%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,182 (47%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε3/ε4</td>
+<td headers="stat_1" class="gt_row gt_center">295 (36%)</td>
+<td headers="stat_2" class="gt_row gt_center">42 (33%)</td>
+<td headers="stat_3" class="gt_row gt_center">269 (35%)</td>
+<td headers="stat_4" class="gt_row gt_center">204 (30%)</td>
+<td headers="stat_5" class="gt_row gt_center">46 (39%)</td>
+<td headers="stat_0" class="gt_row gt_center">856 (34%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε4/ε4</td>
+<td headers="stat_1" class="gt_row gt_center">88 (11%)</td>
+<td headers="stat_2" class="gt_row gt_center">8 (6.3%)</td>
+<td headers="stat_3" class="gt_row gt_center">75 (9.6%)</td>
+<td headers="stat_4" class="gt_row gt_center">52 (7.7%)</td>
+<td headers="stat_5" class="gt_row gt_center">7 (5.9%)</td>
+<td headers="stat_0" class="gt_row gt_center">230 (9.1%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">0</td>
+<td headers="stat_2" class="gt_row gt_center">3</td>
+<td headers="stat_3" class="gt_row gt_center">11</td>
+<td headers="stat_4" class="gt_row gt_center">23</td>
+<td headers="stat_5" class="gt_row gt_center">359</td>
+<td headers="stat_0" class="gt_row gt_center">396</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline ADAS-Cog Item 13 Total Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+<td headers="stat_4" class="gt_row gt_center"><br></td>
+<td headers="stat_5" class="gt_row gt_center"><br></td>
+<td headers="stat_0" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">18.4 (9.2)</td>
+<td headers="stat_2" class="gt_row gt_center">12.4 (5.4)</td>
+<td headers="stat_3" class="gt_row gt_center">16.1 (10.1)</td>
+<td headers="stat_4" class="gt_row gt_center">13.1 (8.9)</td>
+<td headers="stat_5" class="gt_row gt_center">13.0 (8.1)</td>
+<td headers="stat_0" class="gt_row gt_center">15.4 (9.4)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">17.7 (11.0, 24.3)</td>
+<td headers="stat_2" class="gt_row gt_center">11.2 (8.7, 15.3)</td>
+<td headers="stat_3" class="gt_row gt_center">13.7 (8.3, 21.7)</td>
+<td headers="stat_4" class="gt_row gt_center">11.0 (6.7, 16.7)</td>
+<td headers="stat_5" class="gt_row gt_center">12.0 (7.0, 17.0)</td>
+<td headers="stat_0" class="gt_row gt_center">13.3 (8.3, 20.7)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">1.0, 54.7</td>
+<td headers="stat_2" class="gt_row gt_center">2.3, 28.3</td>
+<td headers="stat_3" class="gt_row gt_center">0.0, 52.3</td>
+<td headers="stat_4" class="gt_row gt_center">0.0, 48.3</td>
+<td headers="stat_5" class="gt_row gt_center">0.0, 51.0</td>
+<td headers="stat_0" class="gt_row gt_center">0.0, 54.7</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">8</td>
+<td headers="stat_2" class="gt_row gt_center">1</td>
+<td headers="stat_3" class="gt_row gt_center">7</td>
+<td headers="stat_4" class="gt_row gt_center">11</td>
+<td headers="stat_5" class="gt_row gt_center">39</td>
+<td headers="stat_0" class="gt_row gt_center">66</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline CDR Global Score, n (%)</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+<td headers="stat_4" class="gt_row gt_center"><br></td>
+<td headers="stat_5" class="gt_row gt_center"><br></td>
+<td headers="stat_0" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    0</td>
+<td headers="stat_1" class="gt_row gt_center">229 (28%)</td>
+<td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_3" class="gt_row gt_center">296 (37%)</td>
+<td headers="stat_4" class="gt_row gt_center">385 (55%)</td>
+<td headers="stat_5" class="gt_row gt_center">290 (61%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,200 (41%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    0.5</td>
+<td headers="stat_1" class="gt_row gt_center">495 (61%)</td>
+<td headers="stat_2" class="gt_row gt_center">131 (100%)</td>
+<td headers="stat_3" class="gt_row gt_center">407 (52%)</td>
+<td headers="stat_4" class="gt_row gt_center">269 (39%)</td>
+<td headers="stat_5" class="gt_row gt_center">171 (36%)</td>
+<td headers="stat_0" class="gt_row gt_center">1,473 (51%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    1</td>
+<td headers="stat_1" class="gt_row gt_center">93 (11%)</td>
+<td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_3" class="gt_row gt_center">86 (11%)</td>
+<td headers="stat_4" class="gt_row gt_center">40 (5.7%)</td>
+<td headers="stat_5" class="gt_row gt_center">16 (3.4%)</td>
+<td headers="stat_0" class="gt_row gt_center">235 (8.1%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    2</td>
+<td headers="stat_1" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_3" class="gt_row gt_center">1 (0.1%)</td>
+<td headers="stat_4" class="gt_row gt_center">2 (0.3%)</td>
+<td headers="stat_5" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_0" class="gt_row gt_center">3 (0.1%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">2</td>
+<td headers="stat_2" class="gt_row gt_center">0</td>
+<td headers="stat_3" class="gt_row gt_center">0</td>
+<td headers="stat_4" class="gt_row gt_center">0</td>
+<td headers="stat_5" class="gt_row gt_center">0</td>
+<td headers="stat_0" class="gt_row gt_center">2</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline CDR Sum of Boxes Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+<td headers="stat_4" class="gt_row gt_center"><br></td>
+<td headers="stat_5" class="gt_row gt_center"><br></td>
+<td headers="stat_0" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">1.8 (1.8)</td>
+<td headers="stat_2" class="gt_row gt_center">1.2 (0.7)</td>
+<td headers="stat_3" class="gt_row gt_center">1.5 (1.9)</td>
+<td headers="stat_4" class="gt_row gt_center">1.0 (1.6)</td>
+<td headers="stat_5" class="gt_row gt_center">0.9 (1.5)</td>
+<td headers="stat_0" class="gt_row gt_center">1.4 (1.7)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">1.5 (0.0, 3.0)</td>
+<td headers="stat_2" class="gt_row gt_center">1.0 (0.5, 1.5)</td>
+<td headers="stat_3" class="gt_row gt_center">1.0 (0.0, 2.5)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0 (0.0, 1.5)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0 (0.0, 1.5)</td>
+<td headers="stat_0" class="gt_row gt_center">0.5 (0.0, 2.0)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">0.0, 9.0</td>
+<td headers="stat_2" class="gt_row gt_center">0.5, 4.0</td>
+<td headers="stat_3" class="gt_row gt_center">0.0, 10.0</td>
+<td headers="stat_4" class="gt_row gt_center">0.0, 10.0</td>
+<td headers="stat_5" class="gt_row gt_center">0.0, 15.0</td>
+<td headers="stat_0" class="gt_row gt_center">0.0, 15.0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">2</td>
+<td headers="stat_2" class="gt_row gt_center">0</td>
+<td headers="stat_3" class="gt_row gt_center">0</td>
+<td headers="stat_4" class="gt_row gt_center">0</td>
+<td headers="stat_5" class="gt_row gt_center">0</td>
+<td headers="stat_0" class="gt_row gt_center">2</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline MMSE Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+<td headers="stat_4" class="gt_row gt_center"><br></td>
+<td headers="stat_5" class="gt_row gt_center"><br></td>
+<td headers="stat_0" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">26.7 (2.7)</td>
+<td headers="stat_2" class="gt_row gt_center">28.3 (1.5)</td>
+<td headers="stat_3" class="gt_row gt_center">27.4 (2.7)</td>
+<td headers="stat_4" class="gt_row gt_center">28.0 (2.5)</td>
+<td headers="stat_5" class="gt_row gt_center">27.9 (2.4)</td>
+<td headers="stat_0" class="gt_row gt_center">27.5 (2.6)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">27.0 (25.0, 29.0)</td>
+<td headers="stat_2" class="gt_row gt_center">28.0 (27.0, 30.0)</td>
+<td headers="stat_3" class="gt_row gt_center">28.0 (26.0, 30.0)</td>
+<td headers="stat_4" class="gt_row gt_center">29.0 (27.0, 30.0)</td>
+<td headers="stat_5" class="gt_row gt_center">29.0 (27.0, 30.0)</td>
+<td headers="stat_0" class="gt_row gt_center">28.0 (26.0, 29.5)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">18.0, 30.0</td>
+<td headers="stat_2" class="gt_row gt_center">23.0, 30.0</td>
+<td headers="stat_3" class="gt_row gt_center">19.0, 30.0</td>
+<td headers="stat_4" class="gt_row gt_center">16.0, 30.0</td>
+<td headers="stat_5" class="gt_row gt_center">15.0, 30.0</td>
+<td headers="stat_0" class="gt_row gt_center">15.0, 30.0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">2</td>
+<td headers="stat_2" class="gt_row gt_center">0</td>
+<td headers="stat_3" class="gt_row gt_center">0</td>
+<td headers="stat_4" class="gt_row gt_center">0</td>
+<td headers="stat_5" class="gt_row gt_center">3</td>
+<td headers="stat_0" class="gt_row gt_center">5</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline FAQ Total Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+<td headers="stat_4" class="gt_row gt_center"><br></td>
+<td headers="stat_5" class="gt_row gt_center"><br></td>
+<td headers="stat_0" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">5.0 (6.6)</td>
+<td headers="stat_2" class="gt_row gt_center">1.9 (3.2)</td>
+<td headers="stat_3" class="gt_row gt_center">3.9 (6.2)</td>
+<td headers="stat_4" class="gt_row gt_center">2.6 (5.3)</td>
+<td headers="stat_5" class="gt_row gt_center">2.3 (4.4)</td>
+<td headers="stat_0" class="gt_row gt_center">3.6 (5.9)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">2.0 (0.0, 8.0)</td>
+<td headers="stat_2" class="gt_row gt_center">1.0 (0.0, 2.0)</td>
+<td headers="stat_3" class="gt_row gt_center">1.0 (0.0, 5.0)</td>
+<td headers="stat_4" class="gt_row gt_center">0.0 (0.0, 2.0)</td>
+<td headers="stat_5" class="gt_row gt_center">0.0 (0.0, 2.0)</td>
+<td headers="stat_0" class="gt_row gt_center">0.0 (0.0, 5.0)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">0.0, 30.0</td>
+<td headers="stat_2" class="gt_row gt_center">0.0, 22.0</td>
+<td headers="stat_3" class="gt_row gt_center">0.0, 28.0</td>
+<td headers="stat_4" class="gt_row gt_center">0.0, 30.0</td>
+<td headers="stat_5" class="gt_row gt_center">0.0, 25.0</td>
+<td headers="stat_0" class="gt_row gt_center">0.0, 30.0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">7</td>
+<td headers="stat_2" class="gt_row gt_center">2</td>
+<td headers="stat_3" class="gt_row gt_center">6</td>
+<td headers="stat_4" class="gt_row gt_center">28</td>
+<td headers="stat_5" class="gt_row gt_center">63</td>
+<td headers="stat_0" class="gt_row gt_center">106</td>
 </tr>
 </tbody>
 <tfoot class="gt_sourcenotes"><tr>
-<td class="gt_sourcenote" colspan="7"><span class="gt_from_md">Abbreviation: CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; SD: Standard Deviation; Q1: the 25 percentile; Q3: the 75 percentile</span></td>
+<td class="gt_sourcenote" colspan="7"><span class="gt_from_md">Abbreviation: CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; SD: Standard Deviation; Q1: the 25th percentile; Q3: the 75th percentile</span></td>
     </tr></tfoot>
 <tfoot class="gt_footnotes"><tr>
 <td class="gt_footnote" colspan="7">
@@ -1028,34 +1374,52 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
     </tr></tfoot>
 </table>
 </div>
-<p><img src="ADNI-Enrollment_files/figure-html/viloin-plot-1.png" alt="Distribution of age, education and baseline BMI: Overall" width="672"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">var_label_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">)</span></span>
+<span><span class="va">cont_var_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"AGE"</span>, <span class="st">"EDUC"</span>, <span class="st">"BMI"</span>, <span class="st">"ADASTT13"</span>, <span class="st">"CDGLOBAL"</span>,</span>
+<span>  <span class="st">"CDRSB"</span>, <span class="st">"MMSCORE"</span>, <span class="st">"FAQTOTAL"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cont_bl_violin_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">cont_var_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Y"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"yvalue"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">.</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">yvalue</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">var_label_list</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cont_bl_violin_plot</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">cont_var_list</span></span>
+<span><span class="fu"><a href="https://easystats.github.io/see/reference/plots.html" class="external-link">plots</a></span><span class="op">(</span><span class="va">cont_bl_violin_plot</span>, n_columns <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ADNI-Enrollment_files/figure-html/viloin-plot-1.png" alt="Distribution of response variables: Overall" width="768"></p>
 </div>
-<div class="section level2">
-<h2 id="demographic-summaries-by-baseline-diagnostics-status">Demographic Summaries: By Baseline Diagnostics Status<a class="anchor" aria-label="anchor" href="#demographic-summaries-by-baseline-diagnostics-status"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Yes"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_summary.html" class="external-link">tbl_summary</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">.</span>,</span>
-<span>    by <span class="op">=</span> <span class="va">DX</span>,</span>
-<span>    include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">AGE</span>, <span class="va">SEX</span>, <span class="va">EDUC</span>, <span class="va">RACE</span>, <span class="va">ETHNIC</span>, <span class="va">MARISTAT</span>, <span class="va">BMI</span><span class="op">)</span>,</span>
-<span>    type <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"continuous2"</span>,</span>
-<span>    statistic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>      <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>        <span class="st">"{mean} ({sd})"</span>,</span>
-<span>        <span class="st">"{median} ({p25}, {p75})"</span>,</span>
-<span>        <span class="st">"{min}, {max}"</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_categorical</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"{n} ({p}%)"</span></span>
+<div class="section level3">
+<h3 id="demographic-summaries-by-baseline-diagnostics-status">Demographic Summaries: By Baseline Diagnostics Status<a class="anchor" aria-label="anchor" href="#demographic-summaries-by-baseline-diagnostics-status"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/tbl_summary.html" class="external-link">tbl_summary</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Y"</span><span class="op">)</span>,</span>
+<span>  by <span class="op">=</span> <span class="va">DX</span>,</span>
+<span>  include <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="va">AGE</span>, <span class="va">SEX</span>, <span class="va">EDUC</span>, <span class="va">RACE</span>, <span class="va">ETHNIC</span>, <span class="va">MARISTAT</span>, <span class="va">BMI</span>, <span class="va">APOE</span>,</span>
+<span>    <span class="va">ADASTT13</span>, <span class="va">CDGLOBAL</span>, <span class="va">CDRSB</span>, <span class="va">MMSCORE</span>, <span class="va">FAQTOTAL</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"continuous2"</span>,</span>
+<span>  statistic <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"{mean} ({sd})"</span>,</span>
+<span>      <span class="st">"{median} ({p25}, {p75})"</span>,</span>
+<span>      <span class="st">"{min}, {max}"</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    digits <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
-<span>    percent <span class="op">=</span> <span class="st">"row"</span>,</span>
-<span>    missing_text <span class="op">=</span> <span class="st">"(Missing)"</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/add_stat_label.html" class="external-link">add_stat_label</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous2</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mean (SD)"</span>, <span class="st">"Median (Q1, Q3)"</span>, <span class="st">"Range"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_categorical</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="st">"{n} ({p}%)"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  digits <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>  percent <span class="op">=</span> <span class="st">"row"</span>,</span>
+<span>  missing_text <span class="op">=</span> <span class="st">"(Missing)"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/add_stat_label.html" class="external-link">add_stat_label</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/select_helpers.html" class="external-link">all_continuous2</a></span><span class="op">(</span><span class="op">)</span> <span class="op">~</span> <span class="va">conts_statistic_label</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/modify_caption.html" class="external-link">modify_caption</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
-<span>    <span class="st">"Table 2. ADNI - Participant Characteristics: "</span>,</span>
+<span>    <span class="st">"Table 2. ADNI - Subject Characteristics: "</span>,</span>
 <span>    <span class="st">"By Baseline Diagnosis Status"</span></span>
 <span>  <span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/modify_footnote2.html" class="external-link">modify_footnote_header</a></span><span class="op">(</span></span>
@@ -1065,23 +1429,23 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/modify_abbreviation.html" class="external-link">modify_abbreviation</a></span><span class="op">(</span>abbreviation <span class="op">=</span> <span class="va">abbrev_list</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://www.danieldsjoberg.com/gtsummary/reference/bold_italicize_labels_levels.html" class="external-link">bold_labels</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div id="totufflbxo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#totufflbxo table {
+<div id="xbhisifmmy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xbhisifmmy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#totufflbxo thead, #totufflbxo tbody, #totufflbxo tfoot, #totufflbxo tr, #totufflbxo td, #totufflbxo th {
+#xbhisifmmy thead, #xbhisifmmy tbody, #xbhisifmmy tfoot, #xbhisifmmy tr, #xbhisifmmy td, #xbhisifmmy th {
   border-style: none;
 }
 
-#totufflbxo p {
+#xbhisifmmy p {
   margin: 0;
   padding: 0;
 }
 
-#totufflbxo .gt_table {
+#xbhisifmmy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1107,12 +1471,12 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-left-color: #D3D3D3;
 }
 
-#totufflbxo .gt_caption {
+#xbhisifmmy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#totufflbxo .gt_title {
+#xbhisifmmy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1124,7 +1488,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-bottom-width: 0;
 }
 
-#totufflbxo .gt_subtitle {
+#xbhisifmmy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1136,7 +1500,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-top-width: 0;
 }
 
-#totufflbxo .gt_heading {
+#xbhisifmmy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1148,13 +1512,13 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-right-color: #D3D3D3;
 }
 
-#totufflbxo .gt_bottom_border {
+#xbhisifmmy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#totufflbxo .gt_col_headings {
+#xbhisifmmy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1169,7 +1533,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-right-color: #D3D3D3;
 }
 
-#totufflbxo .gt_col_heading {
+#xbhisifmmy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1189,7 +1553,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   overflow-x: hidden;
 }
 
-#totufflbxo .gt_column_spanner_outer {
+#xbhisifmmy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1201,15 +1565,15 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   padding-right: 4px;
 }
 
-#totufflbxo .gt_column_spanner_outer:first-child {
+#xbhisifmmy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#totufflbxo .gt_column_spanner_outer:last-child {
+#xbhisifmmy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#totufflbxo .gt_column_spanner {
+#xbhisifmmy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1221,11 +1585,11 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   width: 100%;
 }
 
-#totufflbxo .gt_spanner_row {
+#xbhisifmmy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#totufflbxo .gt_group_heading {
+#xbhisifmmy .gt_group_heading {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1251,7 +1615,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   text-align: left;
 }
 
-#totufflbxo .gt_empty_group_heading {
+#xbhisifmmy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1266,15 +1630,15 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   vertical-align: middle;
 }
 
-#totufflbxo .gt_from_md > :first-child {
+#xbhisifmmy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#totufflbxo .gt_from_md > :last-child {
+#xbhisifmmy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#totufflbxo .gt_row {
+#xbhisifmmy .gt_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1293,7 +1657,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   overflow-x: hidden;
 }
 
-#totufflbxo .gt_stub {
+#xbhisifmmy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1306,7 +1670,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   padding-right: 5px;
 }
 
-#totufflbxo .gt_stub_row_group {
+#xbhisifmmy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1320,15 +1684,15 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   vertical-align: top;
 }
 
-#totufflbxo .gt_row_group_first td {
+#xbhisifmmy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#totufflbxo .gt_row_group_first th {
+#xbhisifmmy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#totufflbxo .gt_summary_row {
+#xbhisifmmy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1338,16 +1702,16 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   padding-right: 5px;
 }
 
-#totufflbxo .gt_first_summary_row {
+#xbhisifmmy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#totufflbxo .gt_first_summary_row.thick {
+#xbhisifmmy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#totufflbxo .gt_last_summary_row {
+#xbhisifmmy .gt_last_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1357,7 +1721,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-bottom-color: #D3D3D3;
 }
 
-#totufflbxo .gt_grand_summary_row {
+#xbhisifmmy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1367,7 +1731,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   padding-right: 5px;
 }
 
-#totufflbxo .gt_first_grand_summary_row {
+#xbhisifmmy .gt_first_grand_summary_row {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1377,7 +1741,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-top-color: #D3D3D3;
 }
 
-#totufflbxo .gt_last_grand_summary_row_top {
+#xbhisifmmy .gt_last_grand_summary_row_top {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 5px;
@@ -1387,11 +1751,11 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-bottom-color: #D3D3D3;
 }
 
-#totufflbxo .gt_striped {
+#xbhisifmmy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#totufflbxo .gt_table_body {
+#xbhisifmmy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1400,7 +1764,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-bottom-color: #D3D3D3;
 }
 
-#totufflbxo .gt_footnotes {
+#xbhisifmmy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1414,7 +1778,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-right-color: #D3D3D3;
 }
 
-#totufflbxo .gt_footnote {
+#xbhisifmmy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 1px;
@@ -1423,7 +1787,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   padding-right: 5px;
 }
 
-#totufflbxo .gt_sourcenotes {
+#xbhisifmmy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1437,7 +1801,7 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   border-right-color: #D3D3D3;
 }
 
-#totufflbxo .gt_sourcenote {
+#xbhisifmmy .gt_sourcenote {
   font-size: 90%;
   padding-top: 1px;
   padding-bottom: 1px;
@@ -1445,90 +1809,90 @@ N = 2,771</span><span class="gt_footnote_marks" style="white-space:nowrap;font-s
   padding-right: 5px;
 }
 
-#totufflbxo .gt_left {
+#xbhisifmmy .gt_left {
   text-align: left;
 }
 
-#totufflbxo .gt_center {
+#xbhisifmmy .gt_center {
   text-align: center;
 }
 
-#totufflbxo .gt_right {
+#xbhisifmmy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#totufflbxo .gt_font_normal {
+#xbhisifmmy .gt_font_normal {
   font-weight: normal;
 }
 
-#totufflbxo .gt_font_bold {
+#xbhisifmmy .gt_font_bold {
   font-weight: bold;
 }
 
-#totufflbxo .gt_font_italic {
+#xbhisifmmy .gt_font_italic {
   font-style: italic;
 }
 
-#totufflbxo .gt_super {
+#xbhisifmmy .gt_super {
   font-size: 65%;
 }
 
-#totufflbxo .gt_footnote_marks {
+#xbhisifmmy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#totufflbxo .gt_asterisk {
+#xbhisifmmy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#totufflbxo .gt_indent_1 {
+#xbhisifmmy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#totufflbxo .gt_indent_2 {
+#xbhisifmmy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#totufflbxo .gt_indent_3 {
+#xbhisifmmy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#totufflbxo .gt_indent_4 {
+#xbhisifmmy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#totufflbxo .gt_indent_5 {
+#xbhisifmmy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#totufflbxo .katex-display {
+#xbhisifmmy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#totufflbxo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#xbhisifmmy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
 <table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<caption><span class="gt_from_md">Table 2. ADNI - Participant Characteristics: By Baseline Diagnosis Status</span></caption>
+<caption><span class="gt_from_md">Table 2. ADNI - Subject Characteristics: By Baseline Diagnosis Status</span></caption>
   <thead><tr class="gt_col_headings">
 <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="label"><span class="gt_from_md"><strong>Characteristic</strong></span></th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_1">
 <span class="gt_from_md"><strong>CN</strong><br>
-N = 1,107</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+N = 1,193</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_2">
 <span class="gt_from_md"><strong>MCI</strong><br>
-N = 1,192</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+N = 1,207</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="stat_3">
 <span class="gt_from_md"><strong>DEM</strong><br>
-N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
+N = 443</span><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span>
 </th>
     </tr></thead>
 <tbody class="gt_table_body">
@@ -1540,21 +1904,21 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Mean (SD)</td>
-<td headers="stat_1" class="gt_row gt_center">71.4 (7.0)</td>
-<td headers="stat_2" class="gt_row gt_center">72.6 (7.6)</td>
-<td headers="stat_3" class="gt_row gt_center">74.8 (8.0)</td>
+<td headers="stat_1" class="gt_row gt_center">71.0 (7.0)</td>
+<td headers="stat_2" class="gt_row gt_center">72.4 (7.6)</td>
+<td headers="stat_3" class="gt_row gt_center">74.6 (8.0)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
-<td headers="stat_1" class="gt_row gt_center">71.2 (66.6, 76.1)</td>
-<td headers="stat_2" class="gt_row gt_center">73.0 (67.4, 78.1)</td>
-<td headers="stat_3" class="gt_row gt_center">75.4 (70.2, 80.4)</td>
+<td headers="stat_1" class="gt_row gt_center">70.9 (66.4, 75.9)</td>
+<td headers="stat_2" class="gt_row gt_center">72.7 (66.9, 77.8)</td>
+<td headers="stat_3" class="gt_row gt_center">75.3 (69.7, 80.3)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Range</td>
 <td headers="stat_1" class="gt_row gt_center">50.5, 90.3</td>
 <td headers="stat_2" class="gt_row gt_center">54.5, 91.4</td>
-<td headers="stat_3" class="gt_row gt_center">55.1, 90.9</td>
+<td headers="stat_3" class="gt_row gt_center">55.1, 90.7</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Sex, n (%)</td>
@@ -1564,15 +1928,15 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Female</td>
-<td headers="stat_1" class="gt_row gt_center">656 (48%)</td>
-<td headers="stat_2" class="gt_row gt_center">509 (37%)</td>
-<td headers="stat_3" class="gt_row gt_center">199 (15%)</td>
+<td headers="stat_1" class="gt_row gt_center">719 (50%)</td>
+<td headers="stat_2" class="gt_row gt_center">525 (36%)</td>
+<td headers="stat_3" class="gt_row gt_center">201 (14%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Male</td>
-<td headers="stat_1" class="gt_row gt_center">451 (33%)</td>
-<td headers="stat_2" class="gt_row gt_center">683 (50%)</td>
-<td headers="stat_3" class="gt_row gt_center">245 (18%)</td>
+<td headers="stat_1" class="gt_row gt_center">474 (34%)</td>
+<td headers="stat_2" class="gt_row gt_center">682 (49%)</td>
+<td headers="stat_3" class="gt_row gt_center">242 (17%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Education</td>
@@ -1583,7 +1947,7 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 <tr>
 <td headers="label" class="gt_row gt_left">    Mean (SD)</td>
 <td headers="stat_1" class="gt_row gt_center">16.5 (2.5)</td>
-<td headers="stat_2" class="gt_row gt_center">16.0 (2.7)</td>
+<td headers="stat_2" class="gt_row gt_center">15.9 (2.8)</td>
 <td headers="stat_3" class="gt_row gt_center">15.2 (2.9)</td>
 </tr>
 <tr>
@@ -1601,7 +1965,7 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
 <td headers="stat_1" class="gt_row gt_center">1</td>
-<td headers="stat_2" class="gt_row gt_center">0</td>
+<td headers="stat_2" class="gt_row gt_center">1</td>
 <td headers="stat_3" class="gt_row gt_center">0</td>
 </tr>
 <tr>
@@ -1612,21 +1976,21 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    American Indian or Alaskan Native</td>
-<td headers="stat_1" class="gt_row gt_center">4 (57%)</td>
-<td headers="stat_2" class="gt_row gt_center">3 (43%)</td>
+<td headers="stat_1" class="gt_row gt_center">5 (63%)</td>
+<td headers="stat_2" class="gt_row gt_center">3 (38%)</td>
 <td headers="stat_3" class="gt_row gt_center">0 (0%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Asian</td>
-<td headers="stat_1" class="gt_row gt_center">53 (57%)</td>
-<td headers="stat_2" class="gt_row gt_center">29 (31%)</td>
-<td headers="stat_3" class="gt_row gt_center">11 (12%)</td>
+<td headers="stat_1" class="gt_row gt_center">60 (59%)</td>
+<td headers="stat_2" class="gt_row gt_center">31 (30%)</td>
+<td headers="stat_3" class="gt_row gt_center">11 (11%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Black or African American</td>
-<td headers="stat_1" class="gt_row gt_center">169 (61%)</td>
-<td headers="stat_2" class="gt_row gt_center">79 (29%)</td>
-<td headers="stat_3" class="gt_row gt_center">29 (10%)</td>
+<td headers="stat_1" class="gt_row gt_center">197 (58%)</td>
+<td headers="stat_2" class="gt_row gt_center">109 (32%)</td>
+<td headers="stat_3" class="gt_row gt_center">33 (9.7%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Native Hawaiian or Other Pacific Islander</td>
@@ -1642,27 +2006,21 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    White</td>
-<td headers="stat_1" class="gt_row gt_center">844 (37%)</td>
-<td headers="stat_2" class="gt_row gt_center">1,050 (46%)</td>
-<td headers="stat_3" class="gt_row gt_center">396 (17%)</td>
+<td headers="stat_1" class="gt_row gt_center">890 (38%)</td>
+<td headers="stat_2" class="gt_row gt_center">1,033 (45%)</td>
+<td headers="stat_3" class="gt_row gt_center">391 (17%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    More than one race</td>
-<td headers="stat_1" class="gt_row gt_center">15 (48%)</td>
-<td headers="stat_2" class="gt_row gt_center">12 (39%)</td>
-<td headers="stat_3" class="gt_row gt_center">4 (13%)</td>
+<td headers="stat_1" class="gt_row gt_center">30 (57%)</td>
+<td headers="stat_2" class="gt_row gt_center">16 (30%)</td>
+<td headers="stat_3" class="gt_row gt_center">7 (13%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Unknown</td>
-<td headers="stat_1" class="gt_row gt_center">8 (38%)</td>
-<td headers="stat_2" class="gt_row gt_center">12 (57%)</td>
-<td headers="stat_3" class="gt_row gt_center">1 (4.8%)</td>
-</tr>
-<tr>
-<td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">12</td>
-<td headers="stat_2" class="gt_row gt_center">4</td>
-<td headers="stat_3" class="gt_row gt_center">3</td>
+<td headers="stat_1" class="gt_row gt_center">9 (41%)</td>
+<td headers="stat_2" class="gt_row gt_center">12 (55%)</td>
+<td headers="stat_3" class="gt_row gt_center">1 (4.5%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left" style="font-weight: bold;">Ethnicity, n (%)</td>
@@ -1672,15 +2030,15 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Hispanic or Latino</td>
-<td headers="stat_1" class="gt_row gt_center">85 (52%)</td>
-<td headers="stat_2" class="gt_row gt_center">61 (38%)</td>
-<td headers="stat_3" class="gt_row gt_center">16 (9.9%)</td>
+<td headers="stat_1" class="gt_row gt_center">104 (57%)</td>
+<td headers="stat_2" class="gt_row gt_center">62 (34%)</td>
+<td headers="stat_3" class="gt_row gt_center">16 (8.8%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Not Hispanic or Latino</td>
-<td headers="stat_1" class="gt_row gt_center">1,017 (40%)</td>
-<td headers="stat_2" class="gt_row gt_center">1,125 (44%)</td>
-<td headers="stat_3" class="gt_row gt_center">425 (17%)</td>
+<td headers="stat_1" class="gt_row gt_center">1,084 (41%)</td>
+<td headers="stat_2" class="gt_row gt_center">1,139 (43%)</td>
+<td headers="stat_3" class="gt_row gt_center">424 (16%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Unknown</td>
@@ -1696,44 +2054,44 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Divorced</td>
-<td headers="stat_1" class="gt_row gt_center">147 (52%)</td>
-<td headers="stat_2" class="gt_row gt_center">119 (42%)</td>
-<td headers="stat_3" class="gt_row gt_center">15 (5.3%)</td>
+<td headers="stat_1" class="gt_row gt_center">168 (54%)</td>
+<td headers="stat_2" class="gt_row gt_center">127 (41%)</td>
+<td headers="stat_3" class="gt_row gt_center">18 (5.8%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Domestic Partnership</td>
-<td headers="stat_1" class="gt_row gt_center">4 (57%)</td>
-<td headers="stat_2" class="gt_row gt_center">2 (29%)</td>
-<td headers="stat_3" class="gt_row gt_center">1 (14%)</td>
+<td headers="stat_1" class="gt_row gt_center">8 (73%)</td>
+<td headers="stat_2" class="gt_row gt_center">2 (18%)</td>
+<td headers="stat_3" class="gt_row gt_center">1 (9.1%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Married</td>
-<td headers="stat_1" class="gt_row gt_center">744 (37%)</td>
-<td headers="stat_2" class="gt_row gt_center">899 (45%)</td>
-<td headers="stat_3" class="gt_row gt_center">374 (19%)</td>
+<td headers="stat_1" class="gt_row gt_center">789 (38%)</td>
+<td headers="stat_2" class="gt_row gt_center">898 (44%)</td>
+<td headers="stat_3" class="gt_row gt_center">369 (18%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Never married</td>
-<td headers="stat_1" class="gt_row gt_center">77 (58%)</td>
-<td headers="stat_2" class="gt_row gt_center">44 (33%)</td>
-<td headers="stat_3" class="gt_row gt_center">12 (9.0%)</td>
+<td headers="stat_1" class="gt_row gt_center">86 (56%)</td>
+<td headers="stat_2" class="gt_row gt_center">53 (34%)</td>
+<td headers="stat_3" class="gt_row gt_center">15 (9.7%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Unknown</td>
-<td headers="stat_1" class="gt_row gt_center">3 (33%)</td>
-<td headers="stat_2" class="gt_row gt_center">6 (67%)</td>
+<td headers="stat_1" class="gt_row gt_center">3 (50%)</td>
+<td headers="stat_2" class="gt_row gt_center">3 (50%)</td>
 <td headers="stat_3" class="gt_row gt_center">0 (0%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Widowed</td>
-<td headers="stat_1" class="gt_row gt_center">132 (45%)</td>
-<td headers="stat_2" class="gt_row gt_center">120 (41%)</td>
-<td headers="stat_3" class="gt_row gt_center">42 (14%)</td>
+<td headers="stat_1" class="gt_row gt_center">139 (46%)</td>
+<td headers="stat_2" class="gt_row gt_center">121 (40%)</td>
+<td headers="stat_3" class="gt_row gt_center">40 (13%)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
 <td headers="stat_1" class="gt_row gt_center">0</td>
-<td headers="stat_2" class="gt_row gt_center">2</td>
+<td headers="stat_2" class="gt_row gt_center">3</td>
 <td headers="stat_3" class="gt_row gt_center">0</td>
 </tr>
 <tr>
@@ -1744,31 +2102,235 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Mean (SD)</td>
-<td headers="stat_1" class="gt_row gt_center">28.4 (11.8)</td>
-<td headers="stat_2" class="gt_row gt_center">27.0 (5.2)</td>
-<td headers="stat_3" class="gt_row gt_center">26.0 (4.7)</td>
+<td headers="stat_1" class="gt_row gt_center">27.9 (5.7)</td>
+<td headers="stat_2" class="gt_row gt_center">31.0 (7.5)</td>
+<td headers="stat_3" class="gt_row gt_center">31.3 (4.5)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
-<td headers="stat_1" class="gt_row gt_center">26.9 (24.1, 30.3)</td>
-<td headers="stat_2" class="gt_row gt_center">26.3 (23.9, 29.2)</td>
-<td headers="stat_3" class="gt_row gt_center">25.3 (23.1, 28.3)</td>
+<td headers="stat_1" class="gt_row gt_center">25.2 (24.1, 31.1)</td>
+<td headers="stat_2" class="gt_row gt_center">28.7 (26.7, 31.0)</td>
+<td headers="stat_3" class="gt_row gt_center">29.9 (28.7, 33.9)</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    Range</td>
-<td headers="stat_1" class="gt_row gt_center">4.5, 235.1</td>
-<td headers="stat_2" class="gt_row gt_center">3.8, 79.7</td>
-<td headers="stat_3" class="gt_row gt_center">16.6, 50.6</td>
+<td headers="stat_1" class="gt_row gt_center">18.6, 39.3</td>
+<td headers="stat_2" class="gt_row gt_center">21.8, 47.9</td>
+<td headers="stat_3" class="gt_row gt_center">27.6, 37.9</td>
 </tr>
 <tr>
 <td headers="label" class="gt_row gt_left">    (Missing)</td>
-<td headers="stat_1" class="gt_row gt_center">5</td>
-<td headers="stat_2" class="gt_row gt_center">1</td>
+<td headers="stat_1" class="gt_row gt_center">1,174</td>
+<td headers="stat_2" class="gt_row gt_center">1,194</td>
+<td headers="stat_3" class="gt_row gt_center">439</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">APOE Genotype, n (%)</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε2/ε2</td>
+<td headers="stat_1" class="gt_row gt_center">5 (63%)</td>
+<td headers="stat_2" class="gt_row gt_center">2 (25%)</td>
+<td headers="stat_3" class="gt_row gt_center">1 (13%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε2/ε3</td>
+<td headers="stat_1" class="gt_row gt_center">109 (60%)</td>
+<td headers="stat_2" class="gt_row gt_center">61 (33%)</td>
+<td headers="stat_3" class="gt_row gt_center">13 (7.1%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε2/ε4</td>
+<td headers="stat_1" class="gt_row gt_center">19 (36%)</td>
+<td headers="stat_2" class="gt_row gt_center">24 (45%)</td>
+<td headers="stat_3" class="gt_row gt_center">10 (19%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε3/ε3</td>
+<td headers="stat_1" class="gt_row gt_center">528 (46%)</td>
+<td headers="stat_2" class="gt_row gt_center">500 (43%)</td>
+<td headers="stat_3" class="gt_row gt_center">126 (11%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε3/ε4</td>
+<td headers="stat_1" class="gt_row gt_center">250 (30%)</td>
+<td headers="stat_2" class="gt_row gt_center">392 (47%)</td>
+<td headers="stat_3" class="gt_row gt_center">186 (22%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    ε4/ε4</td>
+<td headers="stat_1" class="gt_row gt_center">28 (13%)</td>
+<td headers="stat_2" class="gt_row gt_center">113 (50%)</td>
+<td headers="stat_3" class="gt_row gt_center">83 (37%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">254</td>
+<td headers="stat_2" class="gt_row gt_center">115</td>
+<td headers="stat_3" class="gt_row gt_center">24</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline ADAS-Cog Item 13 Total Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">8.9 (4.5)</td>
+<td headers="stat_2" class="gt_row gt_center">16.4 (6.7)</td>
+<td headers="stat_3" class="gt_row gt_center">30.0 (8.1)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">8.3 (5.3, 11.7)</td>
+<td headers="stat_2" class="gt_row gt_center">16.0 (11.3, 21.0)</td>
+<td headers="stat_3" class="gt_row gt_center">29.3 (24.3, 34.7)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">0.0, 26.3</td>
+<td headers="stat_2" class="gt_row gt_center">0.7, 39.7</td>
+<td headers="stat_3" class="gt_row gt_center">12.7, 54.7</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">32</td>
+<td headers="stat_2" class="gt_row gt_center">20</td>
+<td headers="stat_3" class="gt_row gt_center">13</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline CDR Global Score, n (%)</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    0</td>
+<td headers="stat_1" class="gt_row gt_center">1,183 (99%)</td>
+<td headers="stat_2" class="gt_row gt_center">13 (1.1%)</td>
+<td headers="stat_3" class="gt_row gt_center">0 (0%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    0.5</td>
+<td headers="stat_1" class="gt_row gt_center">10 (0.7%)</td>
+<td headers="stat_2" class="gt_row gt_center">1,186 (84%)</td>
+<td headers="stat_3" class="gt_row gt_center">214 (15%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    1</td>
+<td headers="stat_1" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_2" class="gt_row gt_center">6 (2.6%)</td>
+<td headers="stat_3" class="gt_row gt_center">226 (97%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    2</td>
+<td headers="stat_1" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_2" class="gt_row gt_center">0 (0%)</td>
+<td headers="stat_3" class="gt_row gt_center">3 (100%)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">0</td>
+<td headers="stat_2" class="gt_row gt_center">2</td>
 <td headers="stat_3" class="gt_row gt_center">0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline CDR Sum of Boxes Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">0.0 (0.2)</td>
+<td headers="stat_2" class="gt_row gt_center">1.5 (1.0)</td>
+<td headers="stat_3" class="gt_row gt_center">4.4 (1.7)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">0.0 (0.0, 0.0)</td>
+<td headers="stat_2" class="gt_row gt_center">1.5 (1.0, 2.0)</td>
+<td headers="stat_3" class="gt_row gt_center">4.5 (3.0, 5.0)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">0.0, 2.0</td>
+<td headers="stat_2" class="gt_row gt_center">0.0, 15.0</td>
+<td headers="stat_3" class="gt_row gt_center">1.0, 10.0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">0</td>
+<td headers="stat_2" class="gt_row gt_center">2</td>
+<td headers="stat_3" class="gt_row gt_center">0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline MMSE Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">29.0 (1.2)</td>
+<td headers="stat_2" class="gt_row gt_center">27.6 (1.9)</td>
+<td headers="stat_3" class="gt_row gt_center">23.1 (2.3)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">29.0 (29.0, 30.0)</td>
+<td headers="stat_2" class="gt_row gt_center">28.0 (26.0, 29.0)</td>
+<td headers="stat_3" class="gt_row gt_center">23.0 (21.0, 25.0)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">23.0, 30.0</td>
+<td headers="stat_2" class="gt_row gt_center">19.0, 30.0</td>
+<td headers="stat_3" class="gt_row gt_center">15.0, 30.0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">0</td>
+<td headers="stat_2" class="gt_row gt_center">5</td>
+<td headers="stat_3" class="gt_row gt_center">0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left" style="font-weight: bold;">Baseline FAQ Total Score</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td>
+<td headers="stat_3" class="gt_row gt_center"><br></td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Mean (SD)</td>
+<td headers="stat_1" class="gt_row gt_center">0.2 (0.9)</td>
+<td headers="stat_2" class="gt_row gt_center">3.2 (4.2)</td>
+<td headers="stat_3" class="gt_row gt_center">13.1 (6.8)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Median (Q1, Q3)</td>
+<td headers="stat_1" class="gt_row gt_center">0.0 (0.0, 0.0)</td>
+<td headers="stat_2" class="gt_row gt_center">2.0 (0.0, 5.0)</td>
+<td headers="stat_3" class="gt_row gt_center">13.0 (8.0, 18.0)</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    Range</td>
+<td headers="stat_1" class="gt_row gt_center">0.0, 13.0</td>
+<td headers="stat_2" class="gt_row gt_center">0.0, 24.0</td>
+<td headers="stat_3" class="gt_row gt_center">0.0, 30.0</td>
+</tr>
+<tr>
+<td headers="label" class="gt_row gt_left">    (Missing)</td>
+<td headers="stat_1" class="gt_row gt_center">56</td>
+<td headers="stat_2" class="gt_row gt_center">38</td>
+<td headers="stat_3" class="gt_row gt_center">7</td>
 </tr>
 </tbody>
 <tfoot class="gt_sourcenotes"><tr>
-<td class="gt_sourcenote" colspan="4"><span class="gt_from_md">Abbreviation: CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; SD: Standard Deviation; Q1: the 25 percentile; Q3: the 75 percentile</span></td>
+<td class="gt_sourcenote" colspan="4"><span class="gt_from_md">Abbreviation: CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; SD: Standard Deviation; Q1: the 25th percentile; Q3: the 75th percentile</span></td>
     </tr></tfoot>
 <tfoot class="gt_footnotes"><tr>
 <td class="gt_footnote" colspan="4">
@@ -1777,7 +2339,43 @@ N = 444</span><span class="gt_footnote_marks" style="white-space:nowrap;font-sty
     </tr></tfoot>
 </table>
 </div>
-<p><img src="ADNI-Enrollment_files/figure-html/viloin-plot-bl-dx-1.png" alt="Distribution of age, education and baseline BMI: By baseline diagnostics status" width="720"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dx_color_pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#73C186"</span>, <span class="st">"#F2B974"</span>, <span class="st">"#DF957C"</span>, <span class="st">"#999999"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create density plot</span></span>
+<span><span class="va">cont_violin_plot_bl_dx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">cont_var_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">ADSL</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Y"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">DX</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"yvalue"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">.</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">yvalue</span>, fill <span class="op">=</span> <span class="va">DX</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">geom_density</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">var_label_list</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      y <span class="op">=</span> <span class="st">"Density"</span>,</span>
+<span>      color <span class="op">=</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">DX</span><span class="op">)</span>,</span>
+<span>      title <span class="op">=</span> <span class="va">var_label_list</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      subtitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">" By "</span>, <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">DX</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      fill <span class="op">=</span> <span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">get_variable_labels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">DX</span><span class="op">)</span></span>
+<span>    <span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">dx_color_pal</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>      legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>      title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cont_violin_plot_bl_dx</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">cont_var_list</span></span>
+<span><span class="fu"><a href="https://easystats.github.io/see/reference/plots.html" class="external-link">plots</a></span><span class="op">(</span></span>
+<span>  <span class="va">cont_violin_plot_bl_dx</span>,</span>
+<span>  n_columns <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  guides <span class="op">=</span> <span class="st">"collect"</span>,</span>
+<span>  caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Based on subjects that have known "</span>,</span>
+<span>    <span class="st">"diagnostics status at baseline visit."</span></span>
+<span>  <span class="op">)</span>,</span>
+<span><span class="op">)</span> <span class="op">&amp;</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ADNI-Enrollment_files/figure-html/viloin-plot-bl-dx-1.png" alt="Distribution of response variables: By baseline diagnostics status" width="768"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

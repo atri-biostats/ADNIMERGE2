@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 14159 observations and 59 variables.</p>
+    <p>A data frame with 14439 observations and 59 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,85 +74,58 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 10664</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 10894</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Assessment DATE when present; otherwise Registry EXAMDATE Date: YYY-MM-DD</p></li>
-<li><p><strong>DONE</strong> <em>character</em> Was assessment/procedure done?</p><ul><li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NDREASON</strong> <em>character</em> If No, reason not done</p><ul><li><p><em>ADNI3:</em> 1=Participant Unable for Cognitive Reasons;2=Participant Unable for Other Reasons (Physical, auditory, etc.);3=Participant/Study Partner Refused;7=Site Error;8=Other Reason;9=Unknown</p></li>
-<li><p><em>ADNI4:</em> 1=Participant Unable for Cognitive Reasons; 2=Participant Unable for Other Reasons (Physical, auditory, etc.); 3=Participant/Study Partner Refused; 7=Site Error; 8=Other Reason; 9=Unknown</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SOURCE</strong> <em>character</em> Information Source</p><ul><li><p><em>ADNI3:</em> 1=Participant Visit;2=Telephone Call/Video Call</p></li>
-<li><p><em>ADNI4:</em> 1=Participant Visit; 2=Telephone Call/Video Call</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMDATE</strong> <em>character</em> Score (date)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMYEAR</strong> <em>character</em> Score (year)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMMONTH</strong> <em>character</em> Score (month)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMDAY</strong> <em>character</em> Score (day of the week)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMSEASON</strong> <em>character</em> Score (season)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMHOSPIT</strong> <em>character</em> Score (building)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMFLOOR</strong> <em>character</em> Score (floor)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMCITY</strong> <em>character</em> Score (city/town)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMAREA</strong> <em>character</em> Score (county)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMSTATE</strong> <em>character</em> Score (state)</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>WORDLIST</strong> <em>character</em> Which list was used?</p><ul><li><p><em>ADNI3:</em> 1=Ball, Flag, Tree;2=Apple, Penny, Table</p></li>
-<li><p><em>ADNI4:</em> 1=Ball, Flag, Tree; 2=Apple, Penny, Table</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>WORD1</strong> <em>character</em> Ball (alt: Apple)</p><ul><li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>WORD2</strong> <em>character</em> Flag (alt: Penny)</p><ul><li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>WORD3</strong> <em>character</em> Tree (alt: Table)</p><ul><li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>DONE</strong> <em>character</em> Was assessment/procedure done? 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NDREASON</strong> <em>character</em> If No, reason not done 1=Participant Unable for Cognitive Reasons ; 2=Participant Unable for Other Reasons (Physical, auditory, etc.) ; 3=Participant/Study Partner Refused ; 7=Site Error ; 8=Other Reason ; 9=Unknown
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>SOURCE</strong> <em>character</em> Information Source 1=Participant Visit ; 2=Telephone Call/Video Call
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMDATE</strong> <em>character</em> Score (date) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMYEAR</strong> <em>character</em> Score (year) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMMONTH</strong> <em>character</em> Score (month) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMDAY</strong> <em>character</em> Score (day of the week) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMSEASON</strong> <em>character</em> Score (season) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMHOSPIT</strong> <em>character</em> Score (building) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMFLOOR</strong> <em>character</em> Score (floor) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMCITY</strong> <em>character</em> Score (city/town) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMAREA</strong> <em>character</em> Score (county) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMSTATE</strong> <em>character</em> Score (state) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORDLIST</strong> <em>character</em> Which list was used? 1=Ball, Flag, Tree ; 2=Apple, Penny, Table
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORD1</strong> <em>character</em> Ball (alt: Apple) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORD2</strong> <em>character</em> Flag (alt: Penny) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORD3</strong> <em>character</em> Tree (alt: Table) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MMTRIALS</strong> <em>numeric</em> 13a. Enter number of trials</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1..6</p></li>
 <li><p><em>ADNI3</em></p></li>
 </ul></li>
-<li><p><strong>MMD</strong> <em>character</em> 14. D 0=0 - Incorrect; 1=1 - Correct
+<li><p><strong>MMD</strong> <em>character</em> 14. D 0=0 - Incorrect ; 1=1 - Correct
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MML</strong> <em>character</em> 15. L 0=0 - Incorrect; 1=1 - Correct
+<li><p><strong>MML</strong> <em>character</em> 15. L 0=0 - Incorrect ; 1=1 - Correct
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMR</strong> <em>character</em> 16. R 0=0 - Incorrect; 1=1 - Correct
+<li><p><strong>MMR</strong> <em>character</em> 16. R 0=0 - Incorrect ; 1=1 - Correct
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMO</strong> <em>character</em> 17. O 0=0 - Incorrect; 1=1 - Correct
+<li><p><strong>MMO</strong> <em>character</em> 17. O 0=0 - Incorrect ; 1=1 - Correct
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMW</strong> <em>character</em> 18. W 0=0 - Incorrect; 1=1 - Correct
+<li><p><strong>MMW</strong> <em>character</em> 18. W 0=0 - Incorrect ; 1=1 - Correct
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MMLTR1</strong> <em>character</em> Indicate 1st letter</p></li>
 <li><p><strong>MMLTR2</strong> <em>character</em> Indicate 2nd letter</p></li>
@@ -158,69 +133,43 @@
 <li><p><strong>MMLTR4</strong> <em>character</em> Indicate 4th letter</p></li>
 <li><p><strong>MMLTR5</strong> <em>character</em> Indicate 5th letter</p></li>
 <li><p><strong>MMLTR6</strong> <em>character</em> Indicate 6th letter (if given) , with options: -, w, D, W, O, S, d, x, M</p></li>
-<li><p><strong>MMLTR7</strong> <em>character</em> Indicate 7th letter (if given) , with options: -, _, x</p></li>
+<li><p><strong>MMLTR7</strong> <em>character</em> Indicate 7th letter (if given) , with options: -, _, x, W</p></li>
 <li><p><strong>WORLDSCORE</strong> <em>numeric</em> Score:  World Backwards Range value: 0, ..., 5</p></li>
-<li><p><strong>WORD1DL</strong> <em>character</em> Ball (alt: Apple)</p><ul><li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>WORD2DL</strong> <em>character</em> Flag (alt: Penny)</p><ul><li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>WORD3DL</strong> <em>character</em> Tree (alt: Table)</p><ul><li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMWATCH</strong> <em>character</em> What is this? [Point to a watch]</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMPENCIL</strong> <em>character</em> What is this? [Point to a pencil or pen]</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMREPEAT</strong> <em>character</em> No ifs, ands, or buts</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMHAND</strong> <em>character</em> Takes in right hand</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMFOLD</strong> <em>character</em> Folds in half</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMONFLR</strong> <em>character</em> Puts on floor</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMREAD</strong> <em>character</em> Close your eyes</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMWRITE</strong> <em>character</em> Please write a sentence</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMDRAW</strong> <em>character</em> Please copy this design</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-<li><p><em>ADNI3:</em> 0=0 - Incorrect;1=1 - Correct</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 0=0 - Incorrect; 1=1 - Correct</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORD1DL</strong> <em>character</em> Ball (alt: Apple) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORD2DL</strong> <em>character</em> Flag (alt: Penny) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>WORD3DL</strong> <em>character</em> Tree (alt: Table) 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMWATCH</strong> <em>character</em> What is this? [Point to a watch] 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMPENCIL</strong> <em>character</em> What is this? [Point to a pencil or pen] 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMREPEAT</strong> <em>character</em> No ifs, ands, or buts 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMHAND</strong> <em>character</em> Takes in right hand 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMFOLD</strong> <em>character</em> Folds in half 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMONFLR</strong> <em>character</em> Puts on floor 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMREAD</strong> <em>character</em> Close your eyes 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMWRITE</strong> <em>character</em> Please write a sentence 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMDRAW</strong> <em>character</em> Please copy this design 0=0 - Incorrect ; 1=1 - Correct
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MMSCORE</strong> <em>numeric</em> MMSE TOTAL SCORE</p><ul><li><p><em>ADNI1, ADNI2, ADNI3:</em> 0..30</p></li>
 <li><p><em>ADNIGO, ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 10, ..., 186199</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 10, ..., 187107</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1</p></li>
 <li><p><strong>LANGUAGE_CODE</strong> <em>character</em> Language Code e=English
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved; 1=Has QC error
+<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

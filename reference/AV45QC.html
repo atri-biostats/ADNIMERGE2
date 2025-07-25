@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,7 +74,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 2, ..., 4754</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 5296</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
@@ -82,50 +84,50 @@
 <li><p><strong>USERDATE</strong> <em> </em> Date record created Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> Date record last updated Date: YYY-MM-DD</p></li>
 <li><p><strong>RECNO</strong> <em>numeric</em>   Range value: 1, ..., 6</p></li>
-<li><p><strong>SCAN</strong> <em>character</em> Scan 1=Original Scan;2=Rescan
+<li><p><strong>SCAN</strong> <em>character</em> Scan 1=Original Scan ; 2=Rescan
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Examination Date Date: YYY-MM-DD</p></li>
 <li><p><strong>PQFILENO</strong> <em>numeric</em> Upload Number Range value: 1, ..., 6</p></li>
 <li><p><strong>PQDATTRA</strong> <em> </em> Date images uploaded to LONI Date: YYY-MM-DD</p></li>
 <li><p><strong>LONIUID</strong> <em>character</em> LONI Unique Series ID</p></li>
 <li><p><strong>PQDATE</strong> <em> </em> Date reviewed Date: YYY-MM-DD</p></li>
-<li><p><strong>PQACQFR</strong> <em>character</em> Standard Sequence Acquisition</p><ul><li><p><em>ADNIGO:</em> 1=4 frames, 5 min/frame;2=2 scans, 10 min each</p></li>
-<li><p><em>ADNI2:</em> 1=4 frames, 5 min/frame;2=2 scans, 10 min each; 3=1 scan, 20min; 4=Not applicable - early add on sequence</p></li>
+<li><p><strong>PQACQFR</strong> <em>character</em> Standard Sequence Acquisition</p><ul><li><p><em>ADNIGO:</em> 1=4 frames, 5 min/frame ; 2=2 scans, 10 min each</p></li>
+<li><p><em>ADNI2:</em> 1=4 frames, 5 min/frame ; 2=2 scans, 10 min each ; 3=1 scan, 20min ; 4=Not applicable - early add on sequence</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQCORALG</strong> <em>character</em> Correct Reconstruction Algorithm? 1=Yes;0=No
+<li><p><strong>PQCORALG</strong> <em>character</em> Correct Reconstruction Algorithm? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQRECON</strong> <em>character</em> Check which of the following reconstruction algorithms was used</p><ul><li><p><em>ADNIGO:</em> 2=FORE/2D-OSEM (Siemens);4=OSEM3D (Siemens);5=3D Iterative (GE);1=3D-Ramla (Philips);3=3D Back-projection (GE)</p></li>
-<li><p><em>ADNI2:</em> 2=FORE/2D-OSEM (Siemens);4=OSEM3D (Siemens);5=3D Iterative (GE);6=FORE Iterative (GE);1=3D or LOR Ramla (Philips);3=3D Back-projection (GE)</p></li>
+<li><p><strong>PQRECON</strong> <em>character</em> Check which of the following reconstruction algorithms was used</p><ul><li><p><em>ADNIGO:</em> 2=FORE/2D-OSEM (Siemens) ; 4=OSEM3D (Siemens) ; 5=3D Iterative (GE) ; 1=3D-Ramla (Philips) ; 3=3D Back-projection (GE)</p></li>
+<li><p><em>ADNI2:</em> 2=FORE/2D-OSEM (Siemens) ; 4=OSEM3D (Siemens) ; 5=3D Iterative (GE) ; 6=FORE Iterative (GE) ; 1=3D or LOR Ramla (Philips) ; 3=3D Back-projection (GE)</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQCORNUM</strong> <em>character</em> If FORE/2D-OSEM or OSEM3D or 3D Iterative or FORE Iterative, correct # subsets and iterations? 1=Yes;0=No
+<li><p><strong>PQCORNUM</strong> <em>character</em> If FORE/2D-OSEM or OSEM3D or 3D Iterative or FORE Iterative, correct # subsets and iterations? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQCORFIL</strong> <em>character</em> Correct Filters/TRIM? 1=Yes;0=No
+<li><p><strong>PQCORFIL</strong> <em>character</em> Correct Filters/TRIM? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQCORTHI</strong> <em>character</em> Correct Slice Thickness (PET/CT systems)? 1=Yes;0=No;2=N/A (PET only system)
+<li><p><strong>PQCORTHI</strong> <em>character</em> Correct Slice Thickness (PET/CT systems)? 1=Yes ; 0=No ; 2=N/A (PET only system)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQVOXEL</strong> <em>character</em> Acceptable Voxel Size? 1=Yes;0=No
+<li><p><strong>PQVOXEL</strong> <em>character</em> Acceptable Voxel Size? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQALLFRAME</strong> <em>character</em> Were all frames acceptable? 1=Yes;0=No
+<li><p><strong>PQALLFRAME</strong> <em>character</em> Were all frames acceptable? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PQUNUSABLE</strong> <em>character</em> Indicate which frames were unacceptable:</p></li>
-<li><p><strong>PQREASON</strong> <em>character</em> Indicate why frames were unacceptable: 1=Subject motion;2=Other (Please Specify)
+<li><p><strong>PQREASON</strong> <em>character</em> Indicate why frames were unacceptable: 1=Subject motion ; 2=Other (Please Specify)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PQREASSP</strong> <em>character</em> If Other, Specify:</p></li>
-<li><p><strong>PASS</strong> <em>character</em> Pass QC? 1=Yes;0=No
+<li><p><strong>PASS</strong> <em>character</em> Pass QC? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQPROERR</strong> <em>character</em> A. Processing Error(s) 1=Incorrect reconstruction algorithm;2=Incorrect filtering;3=Incorrect slice thickness;4=Incorrect voxel size;5=Attenuation Error;6=Normalization Error;7=Inadequate counts;8=Inadequate field of view;9=Incorrect acquisition protocol;10=Unfixable image artifact (e.g. attenuation, normalization, etc.);99=Other (specify)
+<li><p><strong>PQPROERR</strong> <em>character</em> A. Processing Error(s) 1=Incorrect reconstruction algorithm ; 2=Incorrect filtering ; 3=Incorrect slice thickness ; 4=Incorrect voxel size ; 5=Attenuation Error ; 6=Normalization Error ; 7=Inadequate counts ; 8=Inadequate field of view ; 9=Incorrect acquisition protocol ; 10=Unfixable image artifact (e.g. attenuation, normalization, etc.) ; 99=Other (specify)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PQERRSP</strong> <em>character</em> Specify</p></li>
-<li><p><strong>PQACTION</strong> <em>character</em> B. QC outcome 1=Request Reprocessing;2=Request Rescan;3=Unuseable - Don't request rescan (provide details); 4=Allow Rescan (rescan not requested)
+<li><p><strong>PQACTION</strong> <em>character</em> B. QC outcome 1=Request Reprocessing ; 2=Request Rescan ; 3=Unuseable - Don't request rescan (provide details) ; 4=Allow Rescan (rescan not requested)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PQNONESP</strong> <em>character</em> If unusable, reason for not rescanning</p></li>
-<li><p><strong>PQISSUES</strong> <em>character</em> Imaging issues 1=Motion - minimal;2=Motion - mild;3=Motion - mild-to-moderate;4=Motion - moderate;5=Motion - moderate-to-severe;6=Top Cutoff - none;7=Top Cutoff - 0-3mm;8=Top Cutoff - 3-6mm;9=Top Cutoff - 6-9mm;10=Top Cutoff - &gt;9mm;11=Bottom Cutoff - none;12=Bottom Cutoff - 0-3mm;13=Bottom Cutoff - 3-6mm;14=Bottom Cutoff - 6-9mm;15=Bottom Cutoff - &gt;9mm;99=Other (specify)
+<li><p><strong>PQISSUES</strong> <em>character</em> Imaging issues 1=Motion - minimal ; 2=Motion - mild ; 3=Motion - mild-to-moderate ; 4=Motion - moderate ; 5=Motion - moderate-to-severe ; 6=Top Cutoff - none ; 7=Top Cutoff - 0-3mm ; 8=Top Cutoff - 3-6mm ; 9=Top Cutoff - 6-9mm ; 10=Top Cutoff - &gt;9mm ; 11=Bottom Cutoff - none ; 12=Bottom Cutoff - 0-3mm ; 13=Bottom Cutoff - 3-6mm ; 14=Bottom Cutoff - 6-9mm ; 15=Bottom Cutoff - &gt;9mm ; 99=Other (specify)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PQISSOTH</strong> <em>numeric</em> Other, specify Range value: Inf, ..., -Inf</p></li>
+<li><p><strong>PQISSOTH</strong> <em>character</em> Other, specify , with options: Good Images 3DRP</p></li>
 <li><p><strong>COMMENTS</strong> <em>character</em> Additional QC Comments</p></li>
-<li><p><strong>QUARANTINE</strong> <em>character</em> Release from quarantine? 1=Yes;0=No
+<li><p><strong>QUARANTINE</strong> <em>character</em> Release from quarantine? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PAYSITE</strong> <em>character</em> Pay Site? 1=Yes;0=No
+<li><p><strong>PAYSITE</strong> <em>character</em> Pay Site? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

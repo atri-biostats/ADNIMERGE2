@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 8091 observations and 63 variables.</p>
+    <p>A data frame with 8093 observations and 63 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,141 +74,100 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em>   Range value: 2, ..., 7125</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em></p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Assessment COLDATE when present; otherwise Registry EXAMDATE Date: YYY-MM-DD</p></li>
-<li><p><strong>CONCERN</strong> <em>character</em> Are you concerned that you have a memory or other thinking problem?</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>CONCERN</strong> <em>character</em> Are you concerned that you have a memory or other thinking problem?</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY1</strong> <em>character</em> 1. Remembering a few shopping items without a list.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY2</strong> <em>character</em> 2. Remembering things that happened recently (such as recent outings, events in the news).</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY3</strong> <em>character</em> 3. Recalling conversations a few days later.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY4</strong> <em>character</em> 4. Remembering where I have placed objects.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY5</strong> <em>character</em> 5. Repeating stories and/or questions.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY6</strong> <em>character</em> 6. Remembering the current date or day of the week.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY7</strong> <em>character</em> 7. Remembering I have already told someone something.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEMORY8</strong> <em>character</em> 8. Remembering appointments, meetings, or engagements.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG1</strong> <em>character</em> 1. Forgetting the names of objects.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG2</strong> <em>character</em> 2. Verbally giving instructions to others.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG3</strong> <em>character</em> 3. Finding the right words to use in conversations.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG4</strong> <em>character</em> 4. Communicating thoughts in a conversation.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG5</strong> <em>character</em> 5. Following a story in a book or on TV.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG6</strong> <em>character</em> 6. Understanding the point of what other people are trying to say.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG7</strong> <em>character</em> 7. Remembering the meaning of common words.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG8</strong> <em>character</em> 8. Describing a program I have watched on TV.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>LANG9</strong> <em>character</em> 9. Understanding spoken directions or instructions.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT1</strong> <em>character</em> 1. Following a map to find a new location.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT2</strong> <em>character</em> 2. Reading a map and helping with directions when someone else is driving.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT3</strong> <em>character</em> 3. Finding my car in a parking lot.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT4</strong> <em>character</em> 4. Finding my way back to a meeting spot in the mall or other location.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT5</strong> <em>character</em> 5. Finding my way around a familiar neighborhood.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT6</strong> <em>character</em> 6. Finding my way around a familiar store.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT7</strong> <em>character</em> 7. Finding my way around a house visited many times.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VISSPAT8</strong> <em>character</em> 7. Finding my way around a house visited many times. 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know
+<li><p><strong>MEMORY1</strong> <em>character</em> 1. Remembering a few shopping items without a list. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PLAN1</strong> <em>character</em> 1. Planning a sequence of stops on a shopping trip.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PLAN2</strong> <em>character</em> 2. The ability to anticipate weather changes and plan accordingly (i.e., bring a coat or umbrella)</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PLAN3</strong> <em>character</em> 3. Developing a schedule in advance of anticipated events.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PLAN4</strong> <em>character</em> 4. Thinking things through before acting.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PLAN5</strong> <em>character</em> 5. Thinking ahead.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ORGAN1</strong> <em>character</em> 1. Keeping living and work space organized.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ORGAN2</strong> <em>character</em> 2. Balancing the checkbook without error.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ORGAN3</strong> <em>character</em> 3. Keeping financial records organized.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ORGAN4</strong> <em>character</em> 4. Prioritizing tasks by importance.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ORGAN5</strong> <em>character</em> 5. Keeping mail and papers organized.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ORGAN6</strong> <em>character</em> 6. Using an organized strategy to manage a medication schedule involving multiple medications.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>DIVATT1</strong> <em>character</em> 1. The ability to do two things at once.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>DIVATT2</strong> <em>character</em> 2. Returning to a task after being interrupted.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>DIVATT3</strong> <em>character</em> 3. The ability to concentrate on a task without being distracted by external things in the environment.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>DIVATT4</strong> <em>character</em> 4. Cooking or working and talking at the same time.</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Better or no change; 2=2- Questionable/occasionally worse; 3=3- Consistently a little worse; 4=4- Consistently much worse; 9=9- I don't know</p></li>
-<li><p><em>ADNI3:</em> 1=1- Better or no change;2=2- Questionable/occasionally worse;3=3- Consistently a little worse;4=4- Consistently much worse;9=9- I don't know</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>STAFFASST</strong> <em>character</em> 1. How much assistance was needed from the research staff to complete this form?</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=None; 2=A little; 3=A lot; 4=Participant too cognitively impaired to complete</p></li>
-<li><p><em>ADNI3:</em> 1=None;2=A little;3=A lot;4=Participant too cognitively impaired to complete</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>VALIDITY</strong> <em>character</em> 2. Validity of the information collected from the participant (based on research assistant's observations and interactions with the participant while they were completing the ECog):</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=1- Appeared Valid–The participant did not express any confusion or ask for any clarification in completing the ECog.;2=2- Questionable Validity–The participant needed to have the instructions repeated, and/or needed help in understanding a few of the items.; 3=3- Appeared Invalid–The participant was clearly confused about the content of many of the questions or how to complete the form in general.;4=No information collected from participant</p></li>
-<li><p><em>ADNI3:</em> 1=1- Appeared Valid–The participant did not express any confusion or ask for any clarification in completing the ECog.;2=2- Questionable Validity–The participant needed to have the instructions repeated, and/or needed help in understanding a few of the items.;3=3- Appeared Invalid–The participant was clearly confused about the content of many of the questions or how to complete the form in general.;4=No information collected from participant</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SOURCE</strong> <em>character</em> Information Source: 1=Participant Visit;2=Telephone Call;3=Mail
+<li><p><strong>MEMORY2</strong> <em>character</em> 2. Remembering things that happened recently (such as recent outings, events in the news). 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MEMORY3</strong> <em>character</em> 3. Recalling conversations a few days later. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MEMORY4</strong> <em>character</em> 4. Remembering where I have placed objects. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MEMORY5</strong> <em>character</em> 5. Repeating stories and/or questions. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MEMORY6</strong> <em>character</em> 6. Remembering the current date or day of the week. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MEMORY7</strong> <em>character</em> 7. Remembering I have already told someone something. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MEMORY8</strong> <em>character</em> 8. Remembering appointments, meetings, or engagements. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG1</strong> <em>character</em> 1. Forgetting the names of objects. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG2</strong> <em>character</em> 2. Verbally giving instructions to others. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG3</strong> <em>character</em> 3. Finding the right words to use in conversations. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG4</strong> <em>character</em> 4. Communicating thoughts in a conversation. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG5</strong> <em>character</em> 5. Following a story in a book or on TV. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG6</strong> <em>character</em> 6. Understanding the point of what other people are trying to say. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG7</strong> <em>character</em> 7. Remembering the meaning of common words. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG8</strong> <em>character</em> 8. Describing a program I have watched on TV. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LANG9</strong> <em>character</em> 9. Understanding spoken directions or instructions. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT1</strong> <em>character</em> 1. Following a map to find a new location. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT2</strong> <em>character</em> 2. Reading a map and helping with directions when someone else is driving. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT3</strong> <em>character</em> 3. Finding my car in a parking lot. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT4</strong> <em>character</em> 4. Finding my way back to a meeting spot in the mall or other location. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT5</strong> <em>character</em> 5. Finding my way around a familiar neighborhood. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT6</strong> <em>character</em> 6. Finding my way around a familiar store. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT7</strong> <em>character</em> 7. Finding my way around a house visited many times. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VISSPAT8</strong> <em>character</em> 7. Finding my way around a house visited many times. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PLAN1</strong> <em>character</em> 1. Planning a sequence of stops on a shopping trip. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PLAN2</strong> <em>character</em> 2. The ability to anticipate weather changes and plan accordingly (i.e., bring a coat or umbrella) 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PLAN3</strong> <em>character</em> 3. Developing a schedule in advance of anticipated events. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PLAN4</strong> <em>character</em> 4. Thinking things through before acting. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PLAN5</strong> <em>character</em> 5. Thinking ahead. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>ORGAN1</strong> <em>character</em> 1. Keeping living and work space organized. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>ORGAN2</strong> <em>character</em> 2. Balancing the checkbook without error. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>ORGAN3</strong> <em>character</em> 3. Keeping financial records organized. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>ORGAN4</strong> <em>character</em> 4. Prioritizing tasks by importance. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>ORGAN5</strong> <em>character</em> 5. Keeping mail and papers organized. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>ORGAN6</strong> <em>character</em> 6. Using an organized strategy to manage a medication schedule involving multiple medications. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>DIVATT1</strong> <em>character</em> 1. The ability to do two things at once. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>DIVATT2</strong> <em>character</em> 2. Returning to a task after being interrupted. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>DIVATT3</strong> <em>character</em> 3. The ability to concentrate on a task without being distracted by external things in the environment. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>DIVATT4</strong> <em>character</em> 4. Cooking or working and talking at the same time. 1=1- Better or no change ; 2=2- Questionable/occasionally worse ; 3=3- Consistently a little worse ; 4=4- Consistently much worse ; 9=9- I don't know
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>STAFFASST</strong> <em>character</em> 1. How much assistance was needed from the research staff to complete this form? 1=None ; 2=A little ; 3=A lot ; 4=Participant too cognitively impaired to complete
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>VALIDITY</strong> <em>character</em> 2. Validity of the information collected from the participant (based on research assistant's observations and interactions with the participant while they were completing the ECog): 1=1- Appeared Valid–The participant did not express any confusion or ask for any clarification in completing the ECog. ; 2=2- Questionable Validity–The participant needed to have the instructions repeated, and/or needed help in understanding a few of the items. ; 3=3- Appeared Invalid–The participant was clearly confused about the content of many of the questions or how to complete the form in general. ; 4=No information collected from participant
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>SOURCE</strong> <em>character</em> Information Source: 1=Participant Visit ; 2=Telephone Call ; 3=Mail
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>EcogPtDivatt</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
 <li><p><strong>EcogPtLang</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
@@ -215,7 +176,7 @@
 <li><p><strong>EcogPtPlan</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
 <li><p><strong>EcogPtVisspat</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
 <li><p><strong>EcogPtTotal</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
-<li><p><strong>ID</strong> <em>numeric</em>   Range value: 4, ..., 186216</p></li>
+<li><p><strong>ID</strong> <em>numeric</em>   Range value: 4, ..., 187109</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em>   Range value: 1, ..., 63</p></li>
 <li><p><strong>USERDATE</strong> <em> </em>   Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em>   Date: YYY-MM-DD</p></li>

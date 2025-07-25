@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -380,65 +382,65 @@
 <li><p><strong>ADAS_Q8_WL3_Reminder_W22_ribbon</strong> <em>character</em>   , with options: NULL, 0, 1</p></li>
 <li><p><strong>ADAS_Q8_WL3_Reminder_W23_object</strong> <em>character</em>   , with options: NULL, 0, 1</p></li>
 <li><p><strong>ADAS_Q8_WL3_Reminder_W24_collar</strong> <em>character</em>   , with options: NULL, 0, 1</p></li>
-<li><p><strong>ADAS_Q9</strong> <em>character</em> ADAS 1 = None; 2 = Very Mild; 3 = Mild; 4 = Moderate; 5 = Moderately Severe; 6 = Severe; NULL = Missing or N/A</p></li>
-<li><p><strong>ADAS_Q10</strong> <em>character</em> ADAS 1 = None; 2 = Very Mild; 3 = Mild; 4 = Moderate; 5 = Moderately Severe; 6 = Severe; NULL = Missing or N/A</p></li>
-<li><p><strong>ADAS_Q11</strong> <em>character</em> ADAS 1 = None; 2 = Very Mild; 3 = Mild; 4 = Moderate; 5 = Moderately Severe; 6 = Severe; NULL = Missing or N/A</p></li>
-<li><p><strong>ADAS_Q12</strong> <em>character</em> ADAS 1 = None; 2 = Very Mild; 3 = Mild; 4 = Moderate; 5 = Moderately Severe; 6 = Severe; NULL = Missing or N/A</p></li>
+<li><p><strong>ADAS_Q9</strong> <em>character</em> ADAS 1 = None ; 2 = Very Mild ; 3 = Mild ; 4 = Moderate ; 5 = Moderately Severe ; 6 = Severe ; NULL = Missing or N/A</p></li>
+<li><p><strong>ADAS_Q10</strong> <em>character</em> ADAS 1 = None ; 2 = Very Mild ; 3 = Mild ; 4 = Moderate ; 5 = Moderately Severe ; 6 = Severe ; NULL = Missing or N/A</p></li>
+<li><p><strong>ADAS_Q11</strong> <em>character</em> ADAS 1 = None ; 2 = Very Mild ; 3 = Mild ; 4 = Moderate ; 5 = Moderately Severe ; 6 = Severe ; NULL = Missing or N/A</p></li>
+<li><p><strong>ADAS_Q12</strong> <em>character</em> ADAS 1 = None ; 2 = Very Mild ; 3 = Mild ; 4 = Moderate ; 5 = Moderately Severe ; 6 = Severe ; NULL = Missing or N/A</p></li>
 <li><p><strong>ADAS_Q13a</strong> <em>character</em></p></li>
 <li><p><strong>ADAS_Q13b</strong> <em>character</em></p></li>
 <li><p><strong>ADAS_Q13c</strong> <em>character</em></p></li>
 <li><p><strong>ADAS_ExamDate</strong> <em>character</em></p></li>
 <li><p><strong>ANART_QuestionnaireNotAttempted</strong> <em>character</em>   , with options: 0, NULL, 1</p></li>
-<li><p><strong>ANART_Q1</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q2</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q3</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q4</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q5</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q6</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q7</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q8</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q9</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q10</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q11</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q12</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q13</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q14</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q15</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q16</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q17</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q18</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q19</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q20</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q21</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q22</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q23</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q24</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q25</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q26</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q27</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q28</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q29</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q30</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q31</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q32</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q33</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q34</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q35</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q36</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q37</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q38</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q39</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q40</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q41</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q42</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q43</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q44</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q45</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q46</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q47</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q48</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q49</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>ANART_Q50</strong> <em>character</em> ANART 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q1</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q2</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q3</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q4</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q5</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q6</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q7</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q8</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q9</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q10</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q11</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q12</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q13</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q14</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q15</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q16</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q17</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q18</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q19</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q20</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q21</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q22</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q23</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q24</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q25</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q26</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q27</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q28</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q29</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q30</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q31</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q32</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q33</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q34</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q35</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q36</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q37</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q38</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q39</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q40</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q41</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q42</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q43</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q44</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q45</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q46</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q47</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q48</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q49</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>ANART_Q50</strong> <em>character</em> ANART 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
 <li><p><strong>ANART_ExamDate</strong> <em>character</em></p></li>
 <li><p><strong>AVLT_QuestionnaireNotAttempted</strong> <em>character</em>   , with options: 0, NULL, 1</p></li>
 <li><p><strong>AVLT_StartTime</strong> <em>character</em></p></li>
@@ -789,42 +791,42 @@
 <li><p><strong>LogMemIIA_ReminderGiven</strong> <em>character</em>   , with options: NULL, 2, 1, 9999</p></li>
 <li><p><strong>LogMemIIA_ExamDate</strong> <em>character</em></p></li>
 <li><p><strong>MMSE_QuestionnaireNotAttempted</strong> <em>character</em>   , with options: NULL, 0, 1</p></li>
-<li><p><strong>MMSE_Q1</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q2</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q3</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q4</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q5</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q6</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q7</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q8</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q9</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q10</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q11</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q12</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q13</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q1</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q2</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q3</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q4</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q5</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q6</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q7</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q8</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q9</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q10</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q11</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q12</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q13</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
 <li><p><strong>MMSE_Q13a</strong> <em>character</em>   , with options: NULL, 1, 2, 3, 4, 6, 5</p></li>
-<li><p><strong>MMSE_Q14</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q15</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q16</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q17</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q18</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q14</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q15</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q16</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q17</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q18</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
 <li><p><strong>MMSE_Q14value</strong> <em>character</em></p></li>
 <li><p><strong>MMSE_Q15value</strong> <em>character</em></p></li>
 <li><p><strong>MMSE_Q16value</strong> <em>character</em></p></li>
 <li><p><strong>MMSE_Q17value</strong> <em>character</em></p></li>
 <li><p><strong>MMSE_Q18value</strong> <em>character</em></p></li>
-<li><p><strong>MMSE_Q19</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q20</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q21</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q22</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q23</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q24</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q25</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q26</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q27</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q28</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q29</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
-<li><p><strong>MMSE_Q30</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect; 1 = Correct; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q19</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q20</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q21</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q22</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q23</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q24</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q25</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q26</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q27</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q28</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q29</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
+<li><p><strong>MMSE_Q30</strong> <em>character</em> Mini Mental State Exam 0 = Incorrect ; 1 = Correct ; NULL = Missing or N/A</p></li>
 <li><p><strong>MMSE_ExamDate</strong> <em>character</em></p></li>
 <li><p><strong>TMT_QuestionnaireNotAttempted</strong> <em>character</em>   , with options: 0, NULL, 1</p></li>
 <li><p><strong>TMT_PtA_Complete</strong> <em>character</em></p></li>

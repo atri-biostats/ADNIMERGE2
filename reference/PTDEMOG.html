@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 5886 observations and 85 variables.</p>
+    <p>A data frame with 6141 observations and 85 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,178 +74,165 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 10669</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 10894</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Registry EXAMDATE on matching VISCODE Date: YYY-MM-DD</p></li>
-<li><p><strong>PTSOURCE</strong> <em>character</em> Information Source</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=Participant Visit;2=Telephone Call</p></li>
-<li><p><em>ADNI4:</em> 1=Participant Visit; 2=Telephone Call</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTGENDER</strong> <em>character</em> 1. What sex was the participant assigned at birth, on their original birth certificate</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=Male; 2=Female</p></li>
-<li><p><em>ADNI3:</em> 1=Male;2=Female</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=Male; 2=Female</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PTSOURCE</strong> <em>character</em> Information Source 1=Participant Visit ; 2=Telephone Call
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PTGENDER</strong> <em>character</em> 1. What sex was the participant assigned at birth, on their original birth certificate 1=Male ; 2=Female
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTDOB</strong> <em>character</em> 4. Participant Date of Birth</p></li>
 <li><p><strong>PTDOBYY</strong> <em>numeric</em> 2b. Participant Year of Birth 1900..1980</p></li>
-<li><p><strong>PTHAND</strong> <em>character</em> 5. Participant Handedness</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=Right;2=Left</p></li>
-<li><p><em>ADNI4:</em> 1=Right; 2=Left</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTMARRY</strong> <em>character</em> 6. Participant Marital Status</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Married; 2=Widowed; 3=Divorced; 4=Never married; 5=Unknown</p></li>
-<li><p><em>ADNI3:</em> 1=Married;2=Widowed;3=Divorced;4=Never married;5=Unknown</p></li>
-<li><p><em>ADNI4:</em> 1=Married; 2=Widowed; 3=Divorced; 4=Never married; 5=Unknown; 6=Domestic Partnership</p></li>
+<li><p><strong>PTHAND</strong> <em>character</em> 5. Participant Handedness 1=Right ; 2=Left
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PTMARRY</strong> <em>character</em> 6. Participant Marital Status</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=Married ; 2=Widowed ; 3=Divorced ; 4=Never married ; 5=Unknown</p></li>
+<li><p><em>ADNI4:</em> 1=Married ; 2=Widowed ; 3=Divorced ; 4=Never married ; 5=Unknown ; 6=Domestic Partnership</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTEDUCAT</strong> <em>numeric</em> 7. Participant Education</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 0..20</p></li>
 <li><p><em>ADNI3, ADNI4</em></p></li>
-<li><p><em>ADNI3, ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>PTWORKHS</strong> <em>character</em> 7a. Does the participant have a work history sufficient to exclude mental retardation?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>PTWORKHS</strong> <em>character</em> 7a. Does the participant have a work history sufficient to exclude mental retardation?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTWORK</strong> <em>character</em> 8a. Primary occupation during most of adult life?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3</em></p></li>
-<li><p><em>ADNI4:</em> 1=Professional and Higher Executive Occupations, Chief Executives; 2=Middle Professional Occupations/ Small Business Owners; 3=Managers; 4=Support Personnel, Drafters, Technicians; 5=Arts, Design, Entertainment, Sports Occupations – Non-Professional; 6=Aides / Assistants / Clerks; 7=Laborers; 8=Other - Never Employed; 9=Missing/Unknown</p></li>
+<li><p><em>ADNI4:</em> 1=Professional and Higher Executive Occupations, Chief Executives ; 2=Middle Professional Occupations/ Small Business Owners ; 3=Managers ; 4=Support Personnel, Drafters, Technicians ; 5=Arts, Design, Entertainment, Sports Occupations – Non-Professional ; 6=Aides / Assistants / Clerks ; 7=Laborers ; 8=Other - Never Employed ; 9=Missing/Unknown</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTNOTRT</strong> <em>character</em> 9. Participant Retired?</p><ul><li><p><em>ADNI1, ADNIGO:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI2:</em> 1=Yes;0=No;2=Not Applicable</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes;2=Not Applicable</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes; 2=Not Applicable</p></li>
+<li><p><strong>PTNOTRT</strong> <em>character</em> 9. Participant Retired?</p><ul><li><p><em>ADNI1, ADNIGO:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI2:</em> 1=Yes ; 0=No ; 2=Not Applicable</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes ; 2=Not Applicable</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTRTYR</strong> <em>numeric</em> Retirement Date Range value: 1926, ..., 9999</p></li>
-<li><p><strong>PTHOME</strong> <em>character</em> 10. Type of Participant residence</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=House (owned or rented); 2=Condo/Co-op (owned); 3=Apartment (rented); 4=Mobile Home; 5=Retirement Community; 6=Assisted Living; 7=Skilled Nursing Facility; 8=Other (specify)</p></li>
-<li><p><em>ADNI4:</em> 10=House (owned); 2=Condo/Co-op (owned); 3=Apartment (rented); 4=Mobile Home; 5=Retirement Community; 6=Assisted Living; 7=Skilled Nursing Facility; 8=Other (specify); 9=House (rented)</p></li>
+<li><p><strong>PTHOME</strong> <em>character</em> 10. Type of Participant residence</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=House (owned or rented) ; 2=Condo/Co-op (owned) ; 3=Apartment (rented) ; 4=Mobile Home ; 5=Retirement Community ; 6=Assisted Living ; 7=Skilled Nursing Facility ; 8=Other (specify)</p></li>
+<li><p><em>ADNI4:</em> 10=House (owned) ; 2=Condo/Co-op (owned) ; 3=Apartment (rented) ; 4=Mobile Home ; 5=Retirement Community ; 6=Assisted Living ; 7=Skilled Nursing Facility ; 8=Other (specify) ; 9=House (rented)</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTTLANG</strong> <em>character</em> 11. Language to be used for testing the Participant:</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=English; 2=Spanish</p></li>
-<li><p><em>ADNI3:</em> 1=English;2=Spanish</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=English; 2=Spanish</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTPLANG</strong> <em>character</em> 12. What is the participant's primary language?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=English; 2=Spanish; 3=Other (specify)</p></li>
-<li><p><em>ADNI3:</em> 1=English;2=Spanish;3=Other (specify)</p></li>
-<li><p><em>ADNI4:</em> 1=English; 2=Spanish; 3=Other</p></li>
+<li><p><strong>PTTLANG</strong> <em>character</em> 11. Language to be used for testing the Participant: 1=English ; 2=Spanish
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PTPLANG</strong> <em>character</em> 12. What is the participant's primary language?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=English ; 2=Spanish ; 3=Other (specify)</p></li>
+<li><p><em>ADNI4:</em> 1=English ; 2=Spanish ; 3=Other</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTADBEG</strong> <em>numeric</em> 11b. Year of onset of Alzheimer's disease symptoms (best estimate)</p><ul><li><p><em>ADNI1:</em> 1985..2007</p></li>
 <li><p><em>ADNIGO:</em> 1985..2012</p></li>
 </ul></li>
-<li><p><strong>PTCOGBEG</strong> <em>numeric</em> 23a. Year of onset of cognitive symptoms (best estimate)</p><ul><li><p><em>ADNI2:</em> 9999=NA - Cognitively Normal;1985=1985;1986=1986;1987=1987;1988=1988;1989=1989;1990=1990;1991=1991;1992=1992;1993=1993;1994=1994;1995=1995;1996=1996;1997=1997;1998=1998;1999=1999;2000=2000;2001=2001;2002=2002;2003=2003;2004=2004;2005=2005;2006=2006;2007=2007;2008=2008;2009=2009;2010=2010;2011=2011;2012=2012</p></li>
-<li><p><em>ADNI3:</em> 1985=1985;1986=1986;1987=1987;1988=1988;1989=1989;1990=1990;1991=1991;1992=1992;1993=1993;1994=1994;1995=1995;1996=1996;1997=1997;1998=1998;1999=1999;2000=2000;2001=2001;2002=2002;2003=2003;2004=2004;2005=2005;2006=2006;2007=2007;2008=2008;2009=2009;2010=2010;2011=2011;2012=2012;2013=2013;2014=2014;2015=2015;2016=2016;2017=2017;2018=2018;2019=2019;2020=2020;2021=2021;2022=2022;9999=NA - Cognitively Normal</p></li>
-<li><p><em>ADNI4:</em> 1985=1985; 1986=1986; 1987=1987; 1988=1988; 1989=1989; 1990=1990; 1991=1991; 1992=1992; 1993=1993; 1994=1994; 1995=1995; 1996=1996; 1997=1997; 1998=1998; 1999=1999; 2000=2000; 2001=2001; 2002=2002; 2003=2003; 2004=2004; 2005=2005; 2006=2006; 2007=2007; 2008=2008; 2009=2009; 2010=2010; 2011=2011; 2012=2012; 2013=2013; 2014=2014; 2015=2015; 2016=2016; 2017=2017; 2018=2018; 2019=2019; 2020=2020; 2021=2021; 2022=2022; 2023=2023; 2024=2024; 2025=2025; 9999=NA - Cognitively Normal</p></li>
+<li><p><strong>PTCOGBEG</strong> <em>numeric</em> 23a. Year of onset of cognitive symptoms (best estimate)</p><ul><li><p><em>ADNI2:</em> 9999=NA - Cognitively Normal ; 1985=1985 ; 1986=1986 ; 1987=1987 ; 1988=1988 ; 1989=1989 ; 1990=1990 ; 1991=1991 ; 1992=1992 ; 1993=1993 ; 1994=1994 ; 1995=1995 ; 1996=1996 ; 1997=1997 ; 1998=1998 ; 1999=1999 ; 2000=2000 ; 2001=2001 ; 2002=2002 ; 2003=2003 ; 2004=2004 ; 2005=2005 ; 2006=2006 ; 2007=2007 ; 2008=2008 ; 2009=2009 ; 2010=2010 ; 2011=2011 ; 2012=2012</p></li>
+<li><p><em>ADNI3:</em> 1985=1985 ; 1986=1986 ; 1987=1987 ; 1988=1988 ; 1989=1989 ; 1990=1990 ; 1991=1991 ; 1992=1992 ; 1993=1993 ; 1994=1994 ; 1995=1995 ; 1996=1996 ; 1997=1997 ; 1998=1998 ; 1999=1999 ; 2000=2000 ; 2001=2001 ; 2002=2002 ; 2003=2003 ; 2004=2004 ; 2005=2005 ; 2006=2006 ; 2007=2007 ; 2008=2008 ; 2009=2009 ; 2010=2010 ; 2011=2011 ; 2012=2012 ; 2013=2013 ; 2014=2014 ; 2015=2015 ; 2016=2016 ; 2017=2017 ; 2018=2018 ; 2019=2019 ; 2020=2020 ; 2021=2021 ; 2022=2022 ; 9999=NA - Cognitively Normal</p></li>
+<li><p><em>ADNI4:</em> 1985=1985 ; 1986=1986 ; 1987=1987 ; 1988=1988 ; 1989=1989 ; 1990=1990 ; 1991=1991 ; 1992=1992 ; 1993=1993 ; 1994=1994 ; 1995=1995 ; 1996=1996 ; 1997=1997 ; 1998=1998 ; 1999=1999 ; 2000=2000 ; 2001=2001 ; 2002=2002 ; 2003=2003 ; 2004=2004 ; 2005=2005 ; 2006=2006 ; 2007=2007 ; 2008=2008 ; 2009=2009 ; 2010=2010 ; 2011=2011 ; 2012=2012 ; 2013=2013 ; 2014=2014 ; 2015=2015 ; 2016=2016 ; 2017=2017 ; 2018=2018 ; 2019=2019 ; 2020=2020 ; 2021=2021 ; 2022=2022 ; 2023=2023 ; 2024=2024 ; 2025=2025 ; 9999=NA - Cognitively Normal</p></li>
 </ul></li>
-<li><p><strong>PTADDX</strong> <em>numeric</em> 23b. Year of Alzheimer's Disease diagnosis</p><ul><li><p><em>ADNI2:</em> 9999=NA - Not Diagnosed with AD;1985=1985;1986=1986;1987=1987;1988=1988;1989=1989;1990=1990;1991=1991;1992=1992;1993=1993;1994=1994;1995=1995;1996=1996;1997=1997;1998=1998;1999=1999;2000=2000;2001=2001;2002=2002;2003=2003;2004=2004;2005=2005;2006=2006;2007=2007;2008=2008;2009=2009;2010=2010;2011=2011;2012=2012</p></li>
-<li><p><em>ADNI3:</em> 1985=1985;1986=1986;1987=1987;1988=1988;1989=1989;1990=1990;1991=1991;1992=1992;1993=1993;1994=1994;1995=1995;1996=1996;1997=1997;1998=1998;1999=1999;2000=2000;2001=2001;2002=2002;2003=2003;2004=2004;2005=2005;2006=2006;2007=2007;2008=2008;2009=2009;2010=2010;2011=2011;2012=2012;2013=2013;2014=2014;2015=2015;2016=2016;2017=2017;2018=2018;2019=2019;2020=2020;2021=2021;2022=2022;9999=NA - Not Diagnosed with AD</p></li>
-<li><p><em>ADNI4:</em> 1985=1985; 1986=1986; 1987=1987; 1988=1988; 1989=1989; 1990=1990; 1991=1991; 1992=1992; 1993=1993; 1994=1994; 1995=1995; 1996=1996; 1997=1997; 1998=1998; 1999=1999; 2000=2000; 2001=2001; 2002=2002; 2003=2003; 2004=2004; 2005=2005; 2006=2006; 2007=2007; 2008=2008; 2009=2009; 2010=2010; 2011=2011; 2012=2012; 2013=2013; 2014=2014; 2015=2015; 2016=2016; 2017=2017; 2018=2018; 2019=2019; 2020=2020; 2021=2021; 2022=2022; 2023=2023; 2024=2024; 2025=2025; 9999=NA - Not Diagnosed with AD</p></li>
+<li><p><strong>PTADDX</strong> <em>numeric</em> 23b. Year of Alzheimer's Disease diagnosis</p><ul><li><p><em>ADNI2:</em> 9999=NA - Not Diagnosed with AD ; 1985=1985 ; 1986=1986 ; 1987=1987 ; 1988=1988 ; 1989=1989 ; 1990=1990 ; 1991=1991 ; 1992=1992 ; 1993=1993 ; 1994=1994 ; 1995=1995 ; 1996=1996 ; 1997=1997 ; 1998=1998 ; 1999=1999 ; 2000=2000 ; 2001=2001 ; 2002=2002 ; 2003=2003 ; 2004=2004 ; 2005=2005 ; 2006=2006 ; 2007=2007 ; 2008=2008 ; 2009=2009 ; 2010=2010 ; 2011=2011 ; 2012=2012</p></li>
+<li><p><em>ADNI3:</em> 1985=1985 ; 1986=1986 ; 1987=1987 ; 1988=1988 ; 1989=1989 ; 1990=1990 ; 1991=1991 ; 1992=1992 ; 1993=1993 ; 1994=1994 ; 1995=1995 ; 1996=1996 ; 1997=1997 ; 1998=1998 ; 1999=1999 ; 2000=2000 ; 2001=2001 ; 2002=2002 ; 2003=2003 ; 2004=2004 ; 2005=2005 ; 2006=2006 ; 2007=2007 ; 2008=2008 ; 2009=2009 ; 2010=2010 ; 2011=2011 ; 2012=2012 ; 2013=2013 ; 2014=2014 ; 2015=2015 ; 2016=2016 ; 2017=2017 ; 2018=2018 ; 2019=2019 ; 2020=2020 ; 2021=2021 ; 2022=2022 ; 9999=NA - Not Diagnosed with AD</p></li>
+<li><p><em>ADNI4:</em> 1985=1985 ; 1986=1986 ; 1987=1987 ; 1988=1988 ; 1989=1989 ; 1990=1990 ; 1991=1991 ; 1992=1992 ; 1993=1993 ; 1994=1994 ; 1995=1995 ; 1996=1996 ; 1997=1997 ; 1998=1998 ; 1999=1999 ; 2000=2000 ; 2001=2001 ; 2002=2002 ; 2003=2003 ; 2004=2004 ; 2005=2005 ; 2006=2006 ; 2007=2007 ; 2008=2008 ; 2009=2009 ; 2010=2010 ; 2011=2011 ; 2012=2012 ; 2013=2013 ; 2014=2014 ; 2015=2015 ; 2016=2016 ; 2017=2017 ; 2018=2018 ; 2019=2019 ; 2020=2020 ; 2021=2021 ; 2022=2022 ; 2023=2023 ; 2024=2024 ; 2025=2025 ; 9999=NA - Not Diagnosed with AD</p></li>
 </ul></li>
-<li><p><strong>PTETHCAT</strong> <em>character</em> 24. Ethnic Category</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=Hispanic or Latino; 2=Not Hispanic or Latino; 3=Unknown</p></li>
-<li><p><em>ADNI3:</em> 1=Hispanic or Latino;2=Not Hispanic or Latino;3=Unknown</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=Hispanic or Latino; 2=Not Hispanic or Latino; 3=Unknown</p></li>
+<li><p><strong>PTETHCAT</strong> <em>character</em> 24. Ethnic Category 1=Hispanic or Latino ; 2=Not Hispanic or Latino ; 3=Unknown
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PTRACCAT</strong> <em>character</em> 25. Racial Categories</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=American Indian or Alaskan Native ; 2=Asian ; 3=Native Hawaiian or Other Pacific Islander ; 4=Black or African American ; 5=White ; 6=More than one race ; 7=Unknown</p></li>
+<li><p><em>ADNI4:</em> 1=American Indian or Alaskan Native ; 2=Asian ; 3=Native Hawaiian or Other Pacific Islander ; 4=Black or African American ; 5=White ; 7=Unknown ; 8=Native Hawaiian ; 9=Other Pacific Islander</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTRACCAT</strong> <em>character</em> 25. Racial Categories</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=American Indian or Alaskan Native; 2=Asian; 3=Native Hawaiian or Other Pacific Islander; 4=Black or African American; 5=White; 6=More than one race; 7=Unknown</p></li>
-<li><p><em>ADNI3:</em> 1=American Indian or Alaskan Native;2=Asian;3=Native Hawaiian or Other Pacific Islander;4=Black or African American;5=White;6=More than one race;7=Unknown</p></li>
-<li><p><em>ADNI4:</em> 1=American Indian or Alaskan Native; 2=Asian; 3=Native Hawaiian or Other Pacific Islander; 4=Black or African American; 5=White; 7=Unknown; 8=Native Hawaiian; 9=Other Pacific Islander</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTIDENT</strong> <em>character</em> 2. Which term(s) best describes the participant's current gender identity? 1=Man; 2=Woman; 3=Transgender man; 4=Transgender woman; 5=Non-binary/Gender queer; 6=Two-Spirit (if respondent is AIAN); 7=I use a different term; 8=Don't know; 9=Prefer not to say
+<li><p><strong>PTIDENT</strong> <em>character</em> 2. Which term(s) best describes the participant's current gender identity? 1=Man ; 2=Woman ; 3=Transgender man ; 4=Transgender woman ; 5=Non-binary/Gender queer ; 6=Two-Spirit (if respondent is AIAN) ; 7=I use a different term ; 8=Don't know ; 9=Prefer not to say
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTORIENT</strong> <em>numeric</em> 3. Which term(s) best describes the participants current sexual orientation 1=Gay, Lesbian; 2=Straight; that is, not gay or lesbian, etc.; 3=Bisexual; 4=None of these options describe me, and I’d like to see additional options</p></li>
-<li><p><strong>PTORIENTOT</strong> <em>character</em> 3a. Are any of the following options a closer description of how you think of yourself (sexual orientation)? 1=Queer; 10=I mean something else, please specify:; 11=Prefer not to answer; 2=Omnisexual, sapiosexual, or pansexual; 3=Asexual; 4=Two-spirit; 5=Have not figured out or are in the process of figuring out my sexuality; 6=Mostly straight, but sometimes attracted to people of my own sex; 7=Do not think of myself as having sexuality; 8=Do not use labels to identify myself; 9=Don’t know the answer
+<li><p><strong>PTORIENT</strong> <em>numeric</em> 3. Which term(s) best describes the participants current sexual orientation 1=Gay, Lesbian ; 2=Straight ; that is, not gay or lesbian, etc. ; 3=Bisexual ; 4=None of these options describe me, and I’d like to see additional options</p></li>
+<li><p><strong>PTORIENTOT</strong> <em>character</em> 3a. Are any of the following options a closer description of how you think of yourself (sexual orientation)? 1=Queer ; 10=I mean something else, please specify: ; 11=Prefer not to answer ; 2=Omnisexual, sapiosexual, or pansexual ; 3=Asexual ; 4=Two-spirit ; 5=Have not figured out or are in the process of figuring out my sexuality ; 6=Mostly straight, but sometimes attracted to people of my own sex ; 7=Do not think of myself as having sexuality ; 8=Do not use labels to identify myself ; 9=Don’t know the answer
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTENGSPK</strong> <em>character</em> 13. Do you consider yourself a monolingual English speaker? 0=No; 1=Yes
+<li><p><strong>PTENGSPK</strong> <em>character</em> 13. Do you consider yourself a monolingual English speaker? 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTNLANG</strong> <em>character</em> 14. What is your native language? 1=English; 2=Spanish; 3=Other
+<li><p><strong>PTNLANG</strong> <em>character</em> 14. What is your native language? 1=English ; 2=Spanish ; 3=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTENGSPKAGE</strong> <em>logical</em> 14a. For participant's whose native language is not English, how old where you when you learned to speak English? Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>PTCLANG</strong> <em>character</em> 15. What was your primary-caretaker's preferred language? 1=English; 2=Spanish; 3=Other
+<li><p><strong>PTENGSPKAGE</strong> <em>numeric</em> 14a. For participant's whose native language is not English, how old where you when you learned to speak English? Range value: 0, ..., 46</p></li>
+<li><p><strong>PTCLANG</strong> <em>character</em> 15. What was your primary-caretaker's preferred language? 1=English ; 2=Spanish ; 3=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP</strong> <em>character</em> 16. What is the language you prefer to speak? 1=English; 2=Spanish; 3=Other
+<li><p><strong>PTLANGSP</strong> <em>character</em> 16. What is the language you prefer to speak? 1=English ; 2=Spanish ; 3=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR</strong> <em>character</em> 17. What is the language you prefer to write? 1=English; 2=Spanish; 3=Other
+<li><p><strong>PTLANGWR</strong> <em>character</em> 17. What is the language you prefer to write? 1=English ; 2=Spanish ; 3=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTSPTIM</strong> <em>numeric</em> 18. What percentage of the time during an average day do you speak English? Range value: 0, ..., 100</p></li>
 <li><p><strong>PTSPOTTIM</strong> <em>numeric</em> 19. What percentage of the time during an average day do you speak another language? Range value: 0, ..., 100</p></li>
-<li><p><strong>PTLANGPR1</strong> <em>character</em> Language 1 0=No; 1=Yes
+<li><p><strong>PTLANGPR1</strong> <em>character</em> Language 1 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP1</strong> <em>character</em> Speaking 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGSP1</strong> <em>character</em> Speaking 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGRD1</strong> <em>character</em> Reading 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGRD1</strong> <em>character</em> Reading 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR1</strong> <em>character</em> Writing 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGWR1</strong> <em>character</em> Writing 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGUN1</strong> <em>character</em> Understanding 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGUN1</strong> <em>character</em> Understanding 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGPR2</strong> <em>character</em> Language 2 0=No; 1=Yes
+<li><p><strong>PTLANGPR2</strong> <em>character</em> Language 2 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP2</strong> <em>character</em> Speaking 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGSP2</strong> <em>character</em> Speaking 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGRD2</strong> <em>character</em> Reading 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGRD2</strong> <em>character</em> Reading 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR2</strong> <em>character</em> Writing 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGWR2</strong> <em>character</em> Writing 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGUN2</strong> <em>character</em> Understanding 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGUN2</strong> <em>character</em> Understanding 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGPR3</strong> <em>character</em> Language 3 0=No; 1=Yes
+<li><p><strong>PTLANGPR3</strong> <em>character</em> Language 3 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP3</strong> <em>character</em> Speaking 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGSP3</strong> <em>character</em> Speaking 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGRD3</strong> <em>character</em> Reading 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGRD3</strong> <em>character</em> Reading 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR3</strong> <em>character</em> Writing 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGWR3</strong> <em>character</em> Writing 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGUN3</strong> <em>character</em> Understanding 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGUN3</strong> <em>character</em> Understanding 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGPR4</strong> <em>character</em> Language 4 0=No; 1=Yes
+<li><p><strong>PTLANGPR4</strong> <em>character</em> Language 4 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP4</strong> <em>character</em> Speaking 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGSP4</strong> <em>character</em> Speaking 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGRD4</strong> <em>character</em> Reading 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGRD4</strong> <em>character</em> Reading 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR4</strong> <em>character</em> Writing 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGWR4</strong> <em>character</em> Writing 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGUN4</strong> <em>character</em> Understanding 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGUN4</strong> <em>character</em> Understanding 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGPR5</strong> <em>character</em> Language 5 0=No; 1=Yes
+<li><p><strong>PTLANGPR5</strong> <em>character</em> Language 5 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP5</strong> <em>character</em> Speaking 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGSP5</strong> <em>character</em> Speaking 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGRD5</strong> <em>character</em> Reading 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGRD5</strong> <em>character</em> Reading 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR5</strong> <em>character</em> Writing 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGWR5</strong> <em>character</em> Writing 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGUN5</strong> <em>character</em> Understanding 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGUN5</strong> <em>character</em> Understanding 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGPR6</strong> <em>character</em> Language 6 0=No; 1=Yes
+<li><p><strong>PTLANGPR6</strong> <em>character</em> Language 6 0=No ; 1=Yes
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGSP6</strong> <em>character</em> Speaking 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGSP6</strong> <em>character</em> Speaking 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGRD6</strong> <em>character</em> Reading 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGRD6</strong> <em>character</em> Reading 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGWR6</strong> <em>character</em> Writing 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGWR6</strong> <em>character</em> Writing 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTLANGUN6</strong> <em>character</em> Understanding 1=almost none; 2=very poor; 3=fair; 4=functional; 5=good; 6=very good; 7=like native speaker
+<li><p><strong>PTLANGUN6</strong> <em>character</em> Understanding 1=almost none ; 2=very poor ; 3=fair ; 4=functional ; 5=good ; 6=very good ; 7=like native speaker
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTLANGTTL</strong> <em>numeric</em> 21. Total number of languages spoken (based on table above) Range value: 1, ..., 7</p></li>
-<li><p><strong>PTETHCATH</strong> <em>character</em> 24a. If Hispanic or Latino is selected, please provide country/region of origin. : 1=Mexican, Mexican Am., Chicano; 10=Other Latin culture or origin, please specify:; 2=Puerto Rican; 3=Cuban; 4=Another Hispanic, Latino, or Spanish origin; 5=Unknown Hispanic or Latino origin; 6=Dominican; 7=Mexican; 8=South American; 9=Central American
+<li><p><strong>PTETHCATH</strong> <em>character</em> 24a. If Hispanic or Latino is selected, please provide country/region of origin. : 1=Mexican, Mexican Am., Chicano ; 10=Other Latin culture or origin, please specify: ; 2=Puerto Rican ; 3=Cuban ; 4=Another Hispanic, Latino, or Spanish origin ; 5=Unknown Hispanic or Latino origin ; 6=Dominican ; 7=Mexican ; 8=South American ; 9=Central American
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTASIAN</strong> <em>logical</em> 25a. If Asian is selected, please provide country/region of origin. 1=Chinese; 2=Filipino; 3=Asian Indian; 4=Vietnamese; 5=Korean; 6=Japanese; 7=Other Asian</p></li>
-<li><p><strong>PTOPI</strong> <em>character</em> 25b. If Other Pacific Islander is selected, please provide further detail 1=Samoan; 2=Chamorro; 3=Other Pacific islander – for example, Tongan, Fijian, Marshallese, etc
+<li><p><strong>PTASIAN</strong> <em>character</em> 25a. If Asian is selected, please provide country/region of origin. 1=Chinese ; 2=Filipino ; 3=Asian Indian ; 4=Vietnamese ; 5=Korean ; 6=Japanese ; 7=Other Asian
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTBORN</strong> <em>character</em> 26. Were you born in the United States/Canada? 0=No; 1=Yes; 2=Unknown
+<li><p><strong>PTOPI</strong> <em>character</em> 25b. If Other Pacific Islander is selected, please provide further detail 1=Samoan ; 2=Chamorro ; 3=Other Pacific islander – for example, Tongan, Fijian, Marshallese, etc
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTBIRPL</strong> <em>character</em> 26a. If NO to 26: Where were you born? 1=Puerto Rico; 2=Dominican Republic; 3=Cuba; 4=Mexico; 5=South America; 6=Central America; 7=Unknown; 8=Other
+<li><p><strong>PTBORN</strong> <em>character</em> 26. Were you born in the United States/Canada? 0=No ; 1=Yes ; 2=Unknown
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>PTBIRPL</strong> <em>character</em> 26a. If NO to 26: Where were you born? 1=Puerto Rico ; 2=Dominican Republic ; 3=Cuba ; 4=Mexico ; 5=South America ; 6=Central America ; 7=Unknown ; 8=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>PTIMMAGE</strong> <em>numeric</em> 26b. If NO to 26: How old were you when you moved to the United States/Canada? Range value: 0, ..., 57</p></li>
-<li><p><strong>PTIMMWHY</strong> <em>character</em> 26c. What motivated you to migrate to the United States/Canada? 1=To escape our past or future persecution based on race, religion, nationality, and/or membership in a particular social group or political opinion; 10=For jobs and business opportunities; 11=Marriage; 12=To meet new people from different backgrounds; 13=To make money to send back to my family back home in my home country; 14=Other; 2=To escape environmental conflict or violence (i.e., war or escaping gang violence); 3=To escape domestic/intimate partner violence; 4=To find refuge after being displaced due to environmental factors (i.e., natural disasters, erosion, and other environmental factors caused by climate change); 5=To seek better healthcare services; 6=To seek better living conditions; 7=To offer more opportunities for my children; 8=Family reunification; 9=For better educational opportunities for my family and/or me
+<li><p><strong>PTIMMWHY</strong> <em>character</em> 26c. What motivated you to migrate to the United States/Canada? 1=To escape our past or future persecution based on race, religion, nationality, and/or membership in a particular social group or political opinion ; 10=For jobs and business opportunities ; 11=Marriage ; 12=To meet new people from different backgrounds ; 13=To make money to send back to my family back home in my home country ; 14=Other ; 2=To escape environmental conflict or violence (i.e., war or escaping gang violence) ; 3=To escape domestic/intimate partner violence ; 4=To find refuge after being displaced due to environmental factors (i.e., natural disasters, erosion, and other environmental factors caused by climate change) ; 5=To seek better healthcare services ; 6=To seek better living conditions ; 7=To offer more opportunities for my children ; 8=Family reunification ; 9=For better educational opportunities for my family and/or me
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTBIRPR</strong> <em>character</em> 27. Were your parents born in the United States/Canada? 0=No; 1=Yes; 2=Unknown
+<li><p><strong>PTBIRPR</strong> <em>character</em> 27. Were your parents born in the United States/Canada? 0=No ; 1=Yes ; 2=Unknown
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PTBIRGR</strong> <em>character</em> 28. Were your grandparents born in the United States/Canada? 0=No; 1=Yes; 2=Unknown
+<li><p><strong>PTBIRGR</strong> <em>character</em> 28. Were your grandparents born in the United States/Canada? 0=No ; 1=Yes ; 2=Unknown
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 12, ..., 186128</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 12, ..., 186877</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1</p></li>
 <li><p><strong>LANGUAGE_CODE</strong> <em>character</em> Language Code e=English
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved; 1=Has QC error
+<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

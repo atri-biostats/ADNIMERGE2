@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 1811 observations and 335 variables.</p>
+    <p>A data frame with 1935 observations and 336 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,46 +74,47 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
-<li><p><strong>LONIUID</strong> <em>character</em> LONI Image ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID (unique participant identifier that should be used to merge data) Range value: 21, ..., 10340</p></li>
-<li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
-<li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 2, ..., 941</p></li>
+<li><p><strong>LONIUID</strong> <em>numeric</em> LONI Image ID Range value: 1592895, ..., 11173746</p></li>
 <li><p><strong>PTID</strong> <em>character</em> ADNI Participant ID consisting of 3-digit "SITEID" and 4-digit "RID"</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID (unique participant identifier that should be used to merge data) Range value: 21, ..., 10520</p></li>
+<li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
+<li><p><strong>VISCODE2</strong> <em>character</em></p></li>
 <li><p><strong>SCANDATE</strong> <em> </em> SCAN acquisition date Date: YYY-MM-DD</p></li>
+<li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 2, ..., 941</p></li>
 <li><p><strong>PROCESSDATE</strong> <em> </em> Date quantification pipeline was run Date: YYY-MM-DD</p></li>
-<li><p><strong>TRACER</strong> <em>character</em> PET Radiotracer , with options: FTP, MK6240</p></li>
+<li><p><strong>TRACER</strong> <em>character</em> PET Radiotracer , with options: FTP, MK6240, PI2620</p></li>
 <li><p><strong>TRACER_SUVR_WARNING</strong> <em>character</em> Reminder of the incomparability of SUVRs from different tracers. See UCBERKELEY Tau Processing Methods PDF. , with options: DO NOT COMPARE SUVRs ACROSS TRACERS</p></li>
 <li><p><strong>META_TEMPORAL_SUVR</strong> <em>numeric</em> Weighted mean SUVR of Jack et al temporal meta-ROI. All SUVRs in this file are normalized to the inferior cerebellar grey matter unless otherwise noted. See UCBERKELEY Tau PET Processing Methods PDF on LONI for details. Range value: 0.625, ..., 7.089</p></li>
 <li><p><strong>META_TEMPORAL_VOLUME</strong> <em>numeric</em> Jack et al temporal meta-ROI size in mm^3 Range value: 36639, ..., 97274</p></li>
-<li><p><strong>CTX_ENTORHINAL_SUVR</strong> <em>numeric</em> ctx-bilateral-entorhinal Range value: 0.729, ..., 5.592</p></li>
+<li><p><strong>CTX_ENTORHINAL_SUVR</strong> <em>numeric</em> ctx-bilateral-entorhinal Range value: 0.724, ..., 5.592</p></li>
 <li><p><strong>CTX_ENTORHINAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-entorhinal ROI size in mm^3 Range value: 746, ..., 5946</p></li>
 <li><p><strong>INFERIORCEREBELLUM_SUVR</strong> <em>numeric</em> Reference region - mean SUVR of inferior cerebellar grey matter Range value: 1, ..., 1</p></li>
 <li><p><strong>INFERIORCEREBELLUM_VOLUME</strong> <em>numeric</em> Inferior Cerebellar Grey Matter ROI size in mm^3 Range value: 40753, ..., 87660</p></li>
-<li><p><strong>CEREBRAL_WHITE_MATTER_SUVR</strong> <em>numeric</em> bilateral-cerebral-white-matter Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>CEREBRAL_WHITE_MATTER_SUVR</strong> <em>numeric</em> bilateral-cerebral-white-matter Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>CEREBRAL_WHITE_MATTER_VOLUME</strong> <em>numeric</em> bilateral-cerebral-white-matter ROI size in mm^3 Range value: 224785, ..., 578367</p></li>
-<li><p><strong>BRAINSTEM_SUVR</strong> <em>numeric</em> brain-stem Range value: 0.535, ..., 1.389</p></li>
+<li><p><strong>BRAINSTEM_SUVR</strong> <em>numeric</em> brain-stem Range value: 0.493, ..., 1.463</p></li>
 <li><p><strong>BRAINSTEM_VOLUME</strong> <em>numeric</em> brain-stem ROI size in mm^3 Range value: 13764, ..., 31388</p></li>
-<li><p><strong>CC_ANTERIOR_SUVR</strong> <em>numeric</em> cc-anterior Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>CC_ANTERIOR_SUVR</strong> <em>numeric</em> cc-anterior Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>CC_ANTERIOR_VOLUME</strong> <em>numeric</em> cc-anterior ROI size in mm^3 Range value: 171, ..., 1763</p></li>
-<li><p><strong>CC_CENTRAL_SUVR</strong> <em>numeric</em> cc-central Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>CC_CENTRAL_SUVR</strong> <em>numeric</em> cc-central Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>CC_CENTRAL_VOLUME</strong> <em>numeric</em> cc-central ROI size in mm^3 Range value: 233, ..., 1380</p></li>
-<li><p><strong>CC_MID_ANTERIOR_SUVR</strong> <em>numeric</em> cc-mid-anterior Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>CC_MID_ANTERIOR_SUVR</strong> <em>numeric</em> cc-mid-anterior Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>CC_MID_ANTERIOR_VOLUME</strong> <em>numeric</em> cc-mid-anterior ROI size in mm^3 Range value: 225, ..., 1241</p></li>
-<li><p><strong>CC_MID_POSTERIOR_SUVR</strong> <em>numeric</em> cc-mid-posterior Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>CC_MID_POSTERIOR_SUVR</strong> <em>numeric</em> cc-mid-posterior Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>CC_MID_POSTERIOR_VOLUME</strong> <em>numeric</em> cc-mid-posterior ROI size in mm^3 Range value: 189, ..., 1796</p></li>
-<li><p><strong>CC_POSTERIOR_SUVR</strong> <em>numeric</em> cc-posterior Range value: 0.631, ..., 1.859</p></li>
-<li><p><strong>CC_POSTERIOR_VOLUME</strong> <em>numeric</em> cc-posterior ROI size in mm^3 Range value: 259, ..., 2176</p></li>
-<li><p><strong>CSF_SUVR</strong> <em>numeric</em> csf Range value: 0.017, ..., 0.731</p></li>
+<li><p><strong>CC_POSTERIOR_SUVR</strong> <em>numeric</em> cc-posterior Range value: 0.532, ..., 1.859</p></li>
+<li><p><strong>CC_POSTERIOR_VOLUME</strong> <em>numeric</em> cc-posterior ROI size in mm^3 Range value: 259, ..., 2196</p></li>
+<li><p><strong>CSF_SUVR</strong> <em>numeric</em> csf Range value: 0.016, ..., 0.844</p></li>
 <li><p><strong>CSF_VOLUME</strong> <em>numeric</em> csf ROI size in mm^3 Range value: 628, ..., 3561</p></li>
-<li><p><strong>VENTRICLE_3RD_SUVR</strong> <em>numeric</em> 3rd-ventricle Range value: 0.017, ..., 0.73</p></li>
+<li><p><strong>VENTRICLE_3RD_SUVR</strong> <em>numeric</em> 3rd-ventricle Range value: 0.017, ..., 0.844</p></li>
 <li><p><strong>VENTRICLE_3RD_VOLUME</strong> <em>numeric</em> 3rd-ventricle ROI size in mm^3 Range value: 484, ..., 5244</p></li>
-<li><p><strong>VENTRICLE_4TH_SUVR</strong> <em>numeric</em> 4th-ventricle Range value: 0.004, ..., 0.727</p></li>
+<li><p><strong>VENTRICLE_4TH_SUVR</strong> <em>numeric</em> 4th-ventricle Range value: 0.001, ..., 0.855</p></li>
 <li><p><strong>VENTRICLE_4TH_VOLUME</strong> <em>numeric</em> 4th-ventricle ROI size in mm^3 Range value: 739, ..., 5081</p></li>
 <li><p><strong>VENTRICLE_5TH_SUVR</strong> <em>numeric</em> 5th-ventricle Range value: 0.185, ..., 0.655</p></li>
 <li><p><strong>VENTRICLE_5TH_VOLUME</strong> <em>numeric</em> 5th-ventricle ROI size in mm^3 Range value: 1, ..., 11</p></li>
-<li><p><strong>WM_HYPOINTENSITIES_SUVR</strong> <em>numeric</em> wm-hypointensities Range value: 0.001, ..., 2.379</p></li>
+<li><p><strong>WM_HYPOINTENSITIES_SUVR</strong> <em>numeric</em> wm-hypointensities Range value: 0.001, ..., 3.215</p></li>
 <li><p><strong>WM_HYPOINTENSITIES_VOLUME</strong> <em>numeric</em> wm-hypointensities ROI size in mm^3 Range value: 268, ..., 72336</p></li>
-<li><p><strong>NON_WM_HYPOINTENSITIES_SUVR</strong> <em>numeric</em> non-wm-hypointensities Range value: 0.001, ..., 0.887</p></li>
+<li><p><strong>NON_WM_HYPOINTENSITIES_SUVR</strong> <em>numeric</em> non-wm-hypointensities Range value: 0.001, ..., 0.996</p></li>
 <li><p><strong>NON_WM_HYPOINTENSITIES_VOLUME</strong> <em>numeric</em> non-wm-hypointensities ROI size in mm^3 Range value: 1, ..., 233</p></li>
 <li><p><strong>CTX_BANKSSTS_SUVR</strong> <em>numeric</em> ctx-bilateral-bankssts Range value: 0.692, ..., 8.47</p></li>
 <li><p><strong>CTX_BANKSSTS_VOLUME</strong> <em>numeric</em> ctx-bilateral-bankssts ROI size in mm^3 Range value: 2121, ..., 8963</p></li>
@@ -120,35 +123,35 @@
 <li><p><strong>CTX_CAUDALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-caudalmiddlefrontal Range value: 0.724, ..., 7.984</p></li>
 <li><p><strong>CTX_CAUDALMIDDLEFRONTAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-caudalmiddlefrontal ROI size in mm^3 Range value: 5775, ..., 16670</p></li>
 <li><p><strong>CTX_CUNEUS_SUVR</strong> <em>numeric</em> ctx-bilateral-cuneus Range value: 0.538, ..., 9.75</p></li>
-<li><p><strong>CTX_CUNEUS_VOLUME</strong> <em>numeric</em> ctx-bilateral-cuneus ROI size in mm^3 Range value: 3675, ..., 10467</p></li>
+<li><p><strong>CTX_CUNEUS_VOLUME</strong> <em>numeric</em> ctx-bilateral-cuneus ROI size in mm^3 Range value: 3666, ..., 10467</p></li>
 <li><p><strong>CTX_FRONTALPOLE_SUVR</strong> <em>numeric</em> ctx-bilateral-frontalpole Range value: 0.098, ..., 6.29</p></li>
-<li><p><strong>CTX_FRONTALPOLE_VOLUME</strong> <em>numeric</em> ctx-bilateral-frontalpole ROI size in mm^3 Range value: 982, ..., 3825</p></li>
+<li><p><strong>CTX_FRONTALPOLE_VOLUME</strong> <em>numeric</em> ctx-bilateral-frontalpole ROI size in mm^3 Range value: 982, ..., 3888</p></li>
 <li><p><strong>CTX_FUSIFORM_SUVR</strong> <em>numeric</em> ctx-bilateral-fusiform Range value: 0.459, ..., 8.054</p></li>
 <li><p><strong>CTX_FUSIFORM_VOLUME</strong> <em>numeric</em> ctx-bilateral-fusiform ROI size in mm^3 Range value: 10371, ..., 26241</p></li>
 <li><p><strong>CTX_INFERIORPARIETAL_SUVR</strong> <em>numeric</em> ctx-bilateral-inferiorparietal Range value: 0.831, ..., 8.66</p></li>
 <li><p><strong>CTX_INFERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-inferiorparietal ROI size in mm^3 Range value: 12378, ..., 37678</p></li>
 <li><p><strong>CTX_INFERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-bilateral-inferiortemporal Range value: 0.687, ..., 8.061</p></li>
 <li><p><strong>CTX_INFERIORTEMPORAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-inferiortemporal ROI size in mm^3 Range value: 9660, ..., 31454</p></li>
-<li><p><strong>CTX_INSULA_SUVR</strong> <em>numeric</em> ctx-bilateral-insula Range value: 0.7, ..., 4.639</p></li>
+<li><p><strong>CTX_INSULA_SUVR</strong> <em>numeric</em> ctx-bilateral-insula Range value: 0.663, ..., 4.639</p></li>
 <li><p><strong>CTX_INSULA_VOLUME</strong> <em>numeric</em> ctx-bilateral-insula ROI size in mm^3 Range value: 7460, ..., 27196</p></li>
 <li><p><strong>CTX_ISTHMUSCINGULATE_SUVR</strong> <em>numeric</em> ctx-bilateral-isthmuscingulate Range value: 0.564, ..., 7.722</p></li>
 <li><p><strong>CTX_ISTHMUSCINGULATE_VOLUME</strong> <em>numeric</em> ctx-bilateral-isthmuscingulate ROI size in mm^3 Range value: 1985, ..., 8883</p></li>
 <li><p><strong>CTX_LATERALOCCIPITAL_SUVR</strong> <em>numeric</em> ctx-bilateral-lateraloccipital Range value: 0.454, ..., 11.414</p></li>
 <li><p><strong>CTX_LATERALOCCIPITAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-lateraloccipital ROI size in mm^3 Range value: 9370, ..., 35627</p></li>
-<li><p><strong>CTX_LATERALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-lateralorbitofrontal Range value: 0.752, ..., 5.529</p></li>
+<li><p><strong>CTX_LATERALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-lateralorbitofrontal Range value: 0.695, ..., 5.529</p></li>
 <li><p><strong>CTX_LATERALORBITOFRONTAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-lateralorbitofrontal ROI size in mm^3 Range value: 8842, ..., 18822</p></li>
 <li><p><strong>CTX_LINGUAL_SUVR</strong> <em>numeric</em> ctx-bilateral-lingual Range value: 0.491, ..., 8.206</p></li>
-<li><p><strong>CTX_LINGUAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-lingual ROI size in mm^3 Range value: 8165, ..., 20629</p></li>
-<li><p><strong>CTX_MEDIALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-medialorbitofrontal Range value: 0.695, ..., 4.693</p></li>
+<li><p><strong>CTX_LINGUAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-lingual ROI size in mm^3 Range value: 8086, ..., 20629</p></li>
+<li><p><strong>CTX_MEDIALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-medialorbitofrontal Range value: 0.583, ..., 4.693</p></li>
 <li><p><strong>CTX_MEDIALORBITOFRONTAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-medialorbitofrontal ROI size in mm^3 Range value: 6803, ..., 13876</p></li>
 <li><p><strong>CTX_MIDDLETEMPORAL_SUVR</strong> <em>numeric</em> ctx-bilateral-middletemporal Range value: 0.508, ..., 6.668</p></li>
 <li><p><strong>CTX_MIDDLETEMPORAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-middletemporal ROI size in mm^3 Range value: 11213, ..., 31685</p></li>
-<li><p><strong>CTX_PARACENTRAL_SUVR</strong> <em>numeric</em> ctx-bilateral-paracentral Range value: 0.722, ..., 3.298</p></li>
+<li><p><strong>CTX_PARACENTRAL_SUVR</strong> <em>numeric</em> ctx-bilateral-paracentral Range value: 0.704, ..., 3.298</p></li>
 <li><p><strong>CTX_PARACENTRAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-paracentral ROI size in mm^3 Range value: 4734, ..., 10986</p></li>
 <li><p><strong>CTX_PARAHIPPOCAMPAL_SUVR</strong> <em>numeric</em> ctx-bilateral-parahippocampal Range value: 0.279, ..., 5.406</p></li>
 <li><p><strong>CTX_PARAHIPPOCAMPAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-parahippocampal ROI size in mm^3 Range value: 1751, ..., 5501</p></li>
 <li><p><strong>CTX_PARSOPERCULARIS_SUVR</strong> <em>numeric</em> ctx-bilateral-parsopercularis Range value: 0.697, ..., 6.747</p></li>
-<li><p><strong>CTX_PARSOPERCULARIS_VOLUME</strong> <em>numeric</em> ctx-bilateral-parsopercularis ROI size in mm^3 Range value: 4928, ..., 12836</p></li>
+<li><p><strong>CTX_PARSOPERCULARIS_VOLUME</strong> <em>numeric</em> ctx-bilateral-parsopercularis ROI size in mm^3 Range value: 4801, ..., 12836</p></li>
 <li><p><strong>CTX_PARSORBITALIS_SUVR</strong> <em>numeric</em> ctx-bilateral-parsorbitalis Range value: 0.737, ..., 6.378</p></li>
 <li><p><strong>CTX_PARSORBITALIS_VOLUME</strong> <em>numeric</em> ctx-bilateral-parsorbitalis ROI size in mm^3 Range value: 2452, ..., 6892</p></li>
 <li><p><strong>CTX_PARSTRIANGULARIS_SUVR</strong> <em>numeric</em> ctx-bilateral-parstriangularis Range value: 0.654, ..., 5.871</p></li>
@@ -156,69 +159,69 @@
 <li><p><strong>CTX_PERICALCARINE_SUVR</strong> <em>numeric</em> ctx-bilateral-pericalcarine Range value: 0.313, ..., 5.844</p></li>
 <li><p><strong>CTX_PERICALCARINE_VOLUME</strong> <em>numeric</em> ctx-bilateral-pericalcarine ROI size in mm^3 Range value: 2165, ..., 7978</p></li>
 <li><p><strong>CTX_POSTCENTRAL_SUVR</strong> <em>numeric</em> ctx-bilateral-postcentral Range value: 0.78, ..., 3.712</p></li>
-<li><p><strong>CTX_POSTCENTRAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-postcentral ROI size in mm^3 Range value: 11509, ..., 26525</p></li>
+<li><p><strong>CTX_POSTCENTRAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-postcentral ROI size in mm^3 Range value: 10032, ..., 26525</p></li>
 <li><p><strong>CTX_POSTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-bilateral-posteriorcingulate Range value: 0.624, ..., 6.589</p></li>
 <li><p><strong>CTX_POSTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-bilateral-posteriorcingulate ROI size in mm^3 Range value: 2565, ..., 11535</p></li>
-<li><p><strong>CTX_PRECENTRAL_SUVR</strong> <em>numeric</em> ctx-bilateral-precentral Range value: 0.731, ..., 3.127</p></li>
+<li><p><strong>CTX_PRECENTRAL_SUVR</strong> <em>numeric</em> ctx-bilateral-precentral Range value: 0.676, ..., 3.127</p></li>
 <li><p><strong>CTX_PRECENTRAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-precentral ROI size in mm^3 Range value: 13766, ..., 37386</p></li>
 <li><p><strong>CTX_PRECUNEUS_SUVR</strong> <em>numeric</em> ctx-bilateral-precuneus Range value: 0.754, ..., 8.131</p></li>
 <li><p><strong>CTX_PRECUNEUS_VOLUME</strong> <em>numeric</em> ctx-bilateral-precuneus ROI size in mm^3 Range value: 9272, ..., 27581</p></li>
 <li><p><strong>CTX_ROSTRALANTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-bilateral-rostralanteriorcingulate Range value: 0.497, ..., 4.24</p></li>
 <li><p><strong>CTX_ROSTRALANTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-bilateral-rostralanteriorcingulate ROI size in mm^3 Range value: 1558, ..., 7474</p></li>
-<li><p><strong>CTX_ROSTRALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-rostralmiddlefrontal Range value: 0.782, ..., 9.23</p></li>
+<li><p><strong>CTX_ROSTRALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-rostralmiddlefrontal Range value: 0.669, ..., 9.23</p></li>
 <li><p><strong>CTX_ROSTRALMIDDLEFRONTAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-rostralmiddlefrontal ROI size in mm^3 Range value: 16054, ..., 50046</p></li>
-<li><p><strong>CTX_SUPERIORFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-superiorfrontal Range value: 0.727, ..., 5.643</p></li>
+<li><p><strong>CTX_SUPERIORFRONTAL_SUVR</strong> <em>numeric</em> ctx-bilateral-superiorfrontal Range value: 0.69, ..., 5.643</p></li>
 <li><p><strong>CTX_SUPERIORFRONTAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-superiorfrontal ROI size in mm^3 Range value: 25550, ..., 57959</p></li>
-<li><p><strong>CTX_SUPERIORPARIETAL_SUVR</strong> <em>numeric</em> ctx-bilateral-superiorparietal Range value: 0.649, ..., 9.384</p></li>
+<li><p><strong>CTX_SUPERIORPARIETAL_SUVR</strong> <em>numeric</em> ctx-bilateral-superiorparietal Range value: 0.638, ..., 9.384</p></li>
 <li><p><strong>CTX_SUPERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-superiorparietal ROI size in mm^3 Range value: 13348, ..., 37095</p></li>
-<li><p><strong>CTX_SUPERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-bilateral-superiortemporal Range value: 0.795, ..., 4.761</p></li>
+<li><p><strong>CTX_SUPERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-bilateral-superiortemporal Range value: 0.752, ..., 4.761</p></li>
 <li><p><strong>CTX_SUPERIORTEMPORAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-superiortemporal ROI size in mm^3 Range value: 12461, ..., 32667</p></li>
-<li><p><strong>CTX_SUPRAMARGINAL_SUVR</strong> <em>numeric</em> ctx-bilateral-supramarginal Range value: 0.805, ..., 6.568</p></li>
+<li><p><strong>CTX_SUPRAMARGINAL_SUVR</strong> <em>numeric</em> ctx-bilateral-supramarginal Range value: 0.786, ..., 6.568</p></li>
 <li><p><strong>CTX_SUPRAMARGINAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-supramarginal ROI size in mm^3 Range value: 10961, ..., 29495</p></li>
-<li><p><strong>CTX_TEMPORALPOLE_SUVR</strong> <em>numeric</em> ctx-bilateral-temporalpole Range value: 0.666, ..., 6.179</p></li>
+<li><p><strong>CTX_TEMPORALPOLE_SUVR</strong> <em>numeric</em> ctx-bilateral-temporalpole Range value: 0.394, ..., 6.179</p></li>
 <li><p><strong>CTX_TEMPORALPOLE_VOLUME</strong> <em>numeric</em> ctx-bilateral-temporalpole ROI size in mm^3 Range value: 2178, ..., 9644</p></li>
 <li><p><strong>CTX_TRANSVERSETEMPORAL_SUVR</strong> <em>numeric</em> ctx-bilateral-transversetemporal Range value: 0.247, ..., 5.094</p></li>
 <li><p><strong>CTX_TRANSVERSETEMPORAL_VOLUME</strong> <em>numeric</em> ctx-bilateral-transversetemporal ROI size in mm^3 Range value: 1100, ..., 3541</p></li>
-<li><p><strong>ACCUMBENS_AREA_SUVR</strong> <em>numeric</em> bilateral-accumbens-area Range value: 0.309, ..., 4.112</p></li>
+<li><p><strong>ACCUMBENS_AREA_SUVR</strong> <em>numeric</em> bilateral-accumbens-area Range value: 0.3, ..., 4.112</p></li>
 <li><p><strong>ACCUMBENS_AREA_VOLUME</strong> <em>numeric</em> bilateral-accumbens-area ROI size in mm^3 Range value: 300, ..., 1636</p></li>
-<li><p><strong>AMYGDALA_SUVR</strong> <em>numeric</em> bilateral-amygdala Range value: 0.619, ..., 4.068</p></li>
+<li><p><strong>AMYGDALA_SUVR</strong> <em>numeric</em> bilateral-amygdala Range value: 0.38, ..., 4.068</p></li>
 <li><p><strong>AMYGDALA_VOLUME</strong> <em>numeric</em> bilateral-amygdala ROI size in mm^3 Range value: 980, ..., 4740</p></li>
-<li><p><strong>CAUDATE_SUVR</strong> <em>numeric</em> bilateral-caudate Range value: 0.561, ..., 2.545</p></li>
+<li><p><strong>CAUDATE_SUVR</strong> <em>numeric</em> bilateral-caudate Range value: 0.44, ..., 2.545</p></li>
 <li><p><strong>CAUDATE_VOLUME</strong> <em>numeric</em> bilateral-caudate ROI size in mm^3 Range value: 4068, ..., 12321</p></li>
 <li><p><strong>CEREBELLUM_CORTEX_SUVR</strong> <em>numeric</em> bilateral-cerebellum-cortex Range value: 0.489, ..., 1.357</p></li>
-<li><p><strong>CEREBELLUM_CORTEX_VOLUME</strong> <em>numeric</em> bilateral-cerebellum-cortex ROI size in mm^3 Range value: 72344, ..., 142592</p></li>
-<li><p><strong>CEREBELLUM_WHITE_MATTER_SUVR</strong> <em>numeric</em> bilateral-cerebellum-white-matter Range value: 0.492, ..., 1.685</p></li>
+<li><p><strong>CEREBELLUM_CORTEX_VOLUME</strong> <em>numeric</em> bilateral-cerebellum-cortex ROI size in mm^3 Range value: 68832, ..., 142592</p></li>
+<li><p><strong>CEREBELLUM_WHITE_MATTER_SUVR</strong> <em>numeric</em> bilateral-cerebellum-white-matter Range value: 0.378, ..., 1.868</p></li>
 <li><p><strong>CEREBELLUM_WHITE_MATTER_VOLUME</strong> <em>numeric</em> bilateral-cerebellum-white-matter ROI size in mm^3 Range value: 13671, ..., 48785</p></li>
 <li><p><strong>CHOROID_PLEXUS_SUVR</strong> <em>numeric</em> bilateral-choroid-plexus Range value: 0.605, ..., 16.369</p></li>
 <li><p><strong>CHOROID_PLEXUS_VOLUME</strong> <em>numeric</em> bilateral-choroid-plexus ROI size in mm^3 Range value: 459, ..., 3434</p></li>
 <li><p><strong>HIPPOCAMPUS_SUVR</strong> <em>numeric</em> bilateral-hippocampus Range value: 0.622, ..., 3.284</p></li>
 <li><p><strong>HIPPOCAMPUS_VOLUME</strong> <em>numeric</em> bilateral-hippocampus ROI size in mm^3 Range value: 3255, ..., 11461</p></li>
 <li><p><strong>OPTIC_CHIASM_SUVR</strong> <em>numeric</em> optic-chiasm Range value: 0.001, ..., 3.02</p></li>
-<li><p><strong>OPTIC_CHIASM_VOLUME</strong> <em>numeric</em> optic-chiasm ROI size in mm^3 Range value: 45, ..., 333</p></li>
+<li><p><strong>OPTIC_CHIASM_VOLUME</strong> <em>numeric</em> optic-chiasm ROI size in mm^3 Range value: 35, ..., 333</p></li>
 <li><p><strong>INF_LAT_VENT_SUVR</strong> <em>numeric</em> bilateral-inf-lat-vent Range value: 0.004, ..., 6.095</p></li>
 <li><p><strong>INF_LAT_VENT_VOLUME</strong> <em>numeric</em> bilateral-inf-lat-vent ROI size in mm^3 Range value: 164, ..., 16102</p></li>
-<li><p><strong>LATERAL_VENTRICLE_SUVR</strong> <em>numeric</em> bilateral-lateral-ventricle Range value: 0.005, ..., 1.244</p></li>
+<li><p><strong>LATERAL_VENTRICLE_SUVR</strong> <em>numeric</em> bilateral-lateral-ventricle Range value: 0.005, ..., 1.263</p></li>
 <li><p><strong>LATERAL_VENTRICLE_VOLUME</strong> <em>numeric</em> bilateral-lateral-ventricle ROI size in mm^3 Range value: 5800, ..., 138561</p></li>
-<li><p><strong>PALLIDUM_SUVR</strong> <em>numeric</em> bilateral-pallidum Range value: 0.633, ..., 3.077</p></li>
+<li><p><strong>PALLIDUM_SUVR</strong> <em>numeric</em> bilateral-pallidum Range value: 0.466, ..., 3.077</p></li>
 <li><p><strong>PALLIDUM_VOLUME</strong> <em>numeric</em> bilateral-pallidum ROI size in mm^3 Range value: 2454, ..., 6324</p></li>
-<li><p><strong>PUTAMEN_SUVR</strong> <em>numeric</em> bilateral-putamen Range value: 0.651, ..., 2.777</p></li>
+<li><p><strong>PUTAMEN_SUVR</strong> <em>numeric</em> bilateral-putamen Range value: 0.539, ..., 2.777</p></li>
 <li><p><strong>PUTAMEN_VOLUME</strong> <em>numeric</em> bilateral-putamen ROI size in mm^3 Range value: 4438, ..., 15492</p></li>
-<li><p><strong>THALAMUS_PROPER_SUVR</strong> <em>numeric</em> bilateral-thalamus-proper Range value: 0.655, ..., 2.052</p></li>
+<li><p><strong>THALAMUS_PROPER_SUVR</strong> <em>numeric</em> bilateral-thalamus-proper Range value: 0.533, ..., 2.052</p></li>
 <li><p><strong>THALAMUS_PROPER_VOLUME</strong> <em>numeric</em> bilateral-thalamus-proper ROI size in mm^3 Range value: 8557, ..., 19663</p></li>
-<li><p><strong>VENTRALDC_SUVR</strong> <em>numeric</em> bilateral-ventraldc Range value: 0.663, ..., 2.208</p></li>
+<li><p><strong>VENTRALDC_SUVR</strong> <em>numeric</em> bilateral-ventraldc Range value: 0.579, ..., 2.208</p></li>
 <li><p><strong>VENTRALDC_VOLUME</strong> <em>numeric</em> bilateral-ventraldc ROI size in mm^3 Range value: 4643, ..., 11189</p></li>
-<li><p><strong>VESSEL_SUVR</strong> <em>logical</em> bilateral-vessel Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>VESSEL_SUVR</strong> <em>logical</em> bilateral-vessel A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>VESSEL_VOLUME</strong> <em>numeric</em> bilateral-vessel ROI size in mm^3 Range value: 1, ..., 604</p></li>
 <li><p><strong>CTX_LH_BANKSSTS_SUVR</strong> <em>numeric</em> ctx-lh-bankssts Range value: 0.638, ..., 8.571</p></li>
 <li><p><strong>CTX_LH_BANKSSTS_VOLUME</strong> <em>numeric</em> ctx-lh-bankssts ROI size in mm^3 Range value: 779, ..., 4723</p></li>
 <li><p><strong>CTX_LH_CAUDALANTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-lh-caudalanteriorcingulate Range value: 0.083, ..., 3.875</p></li>
 <li><p><strong>CTX_LH_CAUDALANTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-lh-caudalanteriorcingulate ROI size in mm^3 Range value: 461, ..., 4960</p></li>
-<li><p><strong>CTX_LH_CAUDALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-caudalmiddlefrontal Range value: 0.778, ..., 8.657</p></li>
+<li><p><strong>CTX_LH_CAUDALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-caudalmiddlefrontal Range value: 0.775, ..., 8.657</p></li>
 <li><p><strong>CTX_LH_CAUDALMIDDLEFRONTAL_VOLUME</strong> <em>numeric</em> ctx-lh-caudalmiddlefrontal ROI size in mm^3 Range value: 2609, ..., 12065</p></li>
 <li><p><strong>CTX_LH_CUNEUS_SUVR</strong> <em>numeric</em> ctx-lh-cuneus Range value: 0.461, ..., 7.967</p></li>
 <li><p><strong>CTX_LH_CUNEUS_VOLUME</strong> <em>numeric</em> ctx-lh-cuneus ROI size in mm^3 Range value: 1627, ..., 5342</p></li>
-<li><p><strong>CTX_LH_ENTORHINAL_SUVR</strong> <em>numeric</em> ctx-lh-entorhinal Range value: 0.71, ..., 5.736</p></li>
-<li><p><strong>CTX_LH_ENTORHINAL_VOLUME</strong> <em>numeric</em> ctx-lh-entorhinal ROI size in mm^3 Range value: 291, ..., 3307</p></li>
+<li><p><strong>CTX_LH_ENTORHINAL_SUVR</strong> <em>numeric</em> ctx-lh-entorhinal Range value: 0.651, ..., 5.736</p></li>
+<li><p><strong>CTX_LH_ENTORHINAL_VOLUME</strong> <em>numeric</em> ctx-lh-entorhinal ROI size in mm^3 Range value: 291, ..., 3408</p></li>
 <li><p><strong>CTX_LH_FRONTALPOLE_SUVR</strong> <em>numeric</em> ctx-lh-frontalpole Range value: 0.156, ..., 6.617</p></li>
 <li><p><strong>CTX_LH_FRONTALPOLE_VOLUME</strong> <em>numeric</em> ctx-lh-frontalpole ROI size in mm^3 Range value: 486, ..., 1794</p></li>
 <li><p><strong>CTX_LH_FUSIFORM_SUVR</strong> <em>numeric</em> ctx-lh-fusiform Range value: 0.506, ..., 8.781</p></li>
@@ -227,53 +230,53 @@
 <li><p><strong>CTX_LH_INFERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-lh-inferiorparietal ROI size in mm^3 Range value: 5861, ..., 17756</p></li>
 <li><p><strong>CTX_LH_INFERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-lh-inferiortemporal Range value: 0.692, ..., 7.794</p></li>
 <li><p><strong>CTX_LH_INFERIORTEMPORAL_VOLUME</strong> <em>numeric</em> ctx-lh-inferiortemporal ROI size in mm^3 Range value: 4547, ..., 16512</p></li>
-<li><p><strong>CTX_LH_INSULA_SUVR</strong> <em>numeric</em> ctx-lh-insula Range value: 0.687, ..., 4.563</p></li>
+<li><p><strong>CTX_LH_INSULA_SUVR</strong> <em>numeric</em> ctx-lh-insula Range value: 0.646, ..., 4.563</p></li>
 <li><p><strong>CTX_LH_INSULA_VOLUME</strong> <em>numeric</em> ctx-lh-insula ROI size in mm^3 Range value: 3825, ..., 21138</p></li>
 <li><p><strong>CTX_LH_ISTHMUSCINGULATE_SUVR</strong> <em>numeric</em> ctx-lh-isthmuscingulate Range value: 0.518, ..., 7.809</p></li>
 <li><p><strong>CTX_LH_ISTHMUSCINGULATE_VOLUME</strong> <em>numeric</em> ctx-lh-isthmuscingulate ROI size in mm^3 Range value: 615, ..., 6967</p></li>
 <li><p><strong>CTX_LH_LATERALOCCIPITAL_SUVR</strong> <em>numeric</em> ctx-lh-lateraloccipital Range value: 0.616, ..., 10.54</p></li>
 <li><p><strong>CTX_LH_LATERALOCCIPITAL_VOLUME</strong> <em>numeric</em> ctx-lh-lateraloccipital ROI size in mm^3 Range value: 4386, ..., 17628</p></li>
-<li><p><strong>CTX_LH_LATERALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-lateralorbitofrontal Range value: 0.717, ..., 6.507</p></li>
+<li><p><strong>CTX_LH_LATERALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-lateralorbitofrontal Range value: 0.709, ..., 6.507</p></li>
 <li><p><strong>CTX_LH_LATERALORBITOFRONTAL_VOLUME</strong> <em>numeric</em> ctx-lh-lateralorbitofrontal ROI size in mm^3 Range value: 3412, ..., 11834</p></li>
 <li><p><strong>CTX_LH_LINGUAL_SUVR</strong> <em>numeric</em> ctx-lh-lingual Range value: 0.404, ..., 7.338</p></li>
 <li><p><strong>CTX_LH_LINGUAL_VOLUME</strong> <em>numeric</em> ctx-lh-lingual ROI size in mm^3 Range value: 3248, ..., 11629</p></li>
-<li><p><strong>CTX_LH_MEDIALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-medialorbitofrontal Range value: 0.715, ..., 4.624</p></li>
+<li><p><strong>CTX_LH_MEDIALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-medialorbitofrontal Range value: 0.57, ..., 4.624</p></li>
 <li><p><strong>CTX_LH_MEDIALORBITOFRONTAL_VOLUME</strong> <em>numeric</em> ctx-lh-medialorbitofrontal ROI size in mm^3 Range value: 3241, ..., 7019</p></li>
 <li><p><strong>CTX_LH_MIDDLETEMPORAL_SUVR</strong> <em>numeric</em> ctx-lh-middletemporal Range value: 0.467, ..., 7.928</p></li>
 <li><p><strong>CTX_LH_MIDDLETEMPORAL_VOLUME</strong> <em>numeric</em> ctx-lh-middletemporal ROI size in mm^3 Range value: 4242, ..., 14767</p></li>
 <li><p><strong>CTX_LH_PARACENTRAL_SUVR</strong> <em>numeric</em> ctx-lh-paracentral Range value: 0.648, ..., 3.251</p></li>
-<li><p><strong>CTX_LH_PARACENTRAL_VOLUME</strong> <em>numeric</em> ctx-lh-paracentral ROI size in mm^3 Range value: 2046, ..., 7180</p></li>
+<li><p><strong>CTX_LH_PARACENTRAL_VOLUME</strong> <em>numeric</em> ctx-lh-paracentral ROI size in mm^3 Range value: 1868, ..., 7180</p></li>
 <li><p><strong>CTX_LH_PARAHIPPOCAMPAL_SUVR</strong> <em>numeric</em> ctx-lh-parahippocampal Range value: 0.527, ..., 5.488</p></li>
 <li><p><strong>CTX_LH_PARAHIPPOCAMPAL_VOLUME</strong> <em>numeric</em> ctx-lh-parahippocampal ROI size in mm^3 Range value: 938, ..., 3513</p></li>
 <li><p><strong>CTX_LH_PARSOPERCULARIS_SUVR</strong> <em>numeric</em> ctx-lh-parsopercularis Range value: 0.703, ..., 6.923</p></li>
 <li><p><strong>CTX_LH_PARSOPERCULARIS_VOLUME</strong> <em>numeric</em> ctx-lh-parsopercularis ROI size in mm^3 Range value: 2451, ..., 7630</p></li>
-<li><p><strong>CTX_LH_PARSORBITALIS_SUVR</strong> <em>numeric</em> ctx-lh-parsorbitalis Range value: 0.596, ..., 7.216</p></li>
+<li><p><strong>CTX_LH_PARSORBITALIS_SUVR</strong> <em>numeric</em> ctx-lh-parsorbitalis Range value: 0.506, ..., 7.216</p></li>
 <li><p><strong>CTX_LH_PARSORBITALIS_VOLUME</strong> <em>numeric</em> ctx-lh-parsorbitalis ROI size in mm^3 Range value: 438, ..., 3294</p></li>
 <li><p><strong>CTX_LH_PARSTRIANGULARIS_SUVR</strong> <em>numeric</em> ctx-lh-parstriangularis Range value: 0.616, ..., 6.51</p></li>
-<li><p><strong>CTX_LH_PARSTRIANGULARIS_VOLUME</strong> <em>numeric</em> ctx-lh-parstriangularis ROI size in mm^3 Range value: 1834, ..., 5341</p></li>
+<li><p><strong>CTX_LH_PARSTRIANGULARIS_VOLUME</strong> <em>numeric</em> ctx-lh-parstriangularis ROI size in mm^3 Range value: 1834, ..., 5545</p></li>
 <li><p><strong>CTX_LH_PERICALCARINE_SUVR</strong> <em>numeric</em> ctx-lh-pericalcarine Range value: 0.292, ..., 4.6</p></li>
 <li><p><strong>CTX_LH_PERICALCARINE_VOLUME</strong> <em>numeric</em> ctx-lh-pericalcarine ROI size in mm^3 Range value: 984, ..., 4678</p></li>
 <li><p><strong>CTX_LH_POSTCENTRAL_SUVR</strong> <em>numeric</em> ctx-lh-postcentral Range value: 0.682, ..., 3.436</p></li>
-<li><p><strong>CTX_LH_POSTCENTRAL_VOLUME</strong> <em>numeric</em> ctx-lh-postcentral ROI size in mm^3 Range value: 5982, ..., 14589</p></li>
+<li><p><strong>CTX_LH_POSTCENTRAL_VOLUME</strong> <em>numeric</em> ctx-lh-postcentral ROI size in mm^3 Range value: 4696, ..., 14589</p></li>
 <li><p><strong>CTX_LH_POSTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-lh-posteriorcingulate Range value: 0.452, ..., 6.441</p></li>
 <li><p><strong>CTX_LH_POSTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-lh-posteriorcingulate ROI size in mm^3 Range value: 1083, ..., 8715</p></li>
-<li><p><strong>CTX_LH_PRECENTRAL_SUVR</strong> <em>numeric</em> ctx-lh-precentral Range value: 0.711, ..., 3.627</p></li>
+<li><p><strong>CTX_LH_PRECENTRAL_SUVR</strong> <em>numeric</em> ctx-lh-precentral Range value: 0.668, ..., 3.627</p></li>
 <li><p><strong>CTX_LH_PRECENTRAL_VOLUME</strong> <em>numeric</em> ctx-lh-precentral ROI size in mm^3 Range value: 6606, ..., 25709</p></li>
 <li><p><strong>CTX_LH_PRECUNEUS_SUVR</strong> <em>numeric</em> ctx-lh-precuneus Range value: 0.772, ..., 8.728</p></li>
 <li><p><strong>CTX_LH_PRECUNEUS_VOLUME</strong> <em>numeric</em> ctx-lh-precuneus ROI size in mm^3 Range value: 4263, ..., 17038</p></li>
-<li><p><strong>CTX_LH_ROSTRALANTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-lh-rostralanteriorcingulate Range value: 0.64, ..., 4.188</p></li>
+<li><p><strong>CTX_LH_ROSTRALANTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-lh-rostralanteriorcingulate Range value: 0.603, ..., 4.188</p></li>
 <li><p><strong>CTX_LH_ROSTRALANTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-lh-rostralanteriorcingulate ROI size in mm^3 Range value: 571, ..., 5073</p></li>
-<li><p><strong>CTX_LH_ROSTRALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-rostralmiddlefrontal Range value: 0.79, ..., 9.649</p></li>
+<li><p><strong>CTX_LH_ROSTRALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-rostralmiddlefrontal Range value: 0.64, ..., 9.649</p></li>
 <li><p><strong>CTX_LH_ROSTRALMIDDLEFRONTAL_VOLUME</strong> <em>numeric</em> ctx-lh-rostralmiddlefrontal ROI size in mm^3 Range value: 6861, ..., 23211</p></li>
 <li><p><strong>CTX_LH_SUPERIORFRONTAL_SUVR</strong> <em>numeric</em> ctx-lh-superiorfrontal Range value: 0.625, ..., 6.289</p></li>
 <li><p><strong>CTX_LH_SUPERIORFRONTAL_VOLUME</strong> <em>numeric</em> ctx-lh-superiorfrontal ROI size in mm^3 Range value: 13132, ..., 39158</p></li>
-<li><p><strong>CTX_LH_SUPERIORPARIETAL_SUVR</strong> <em>numeric</em> ctx-lh-superiorparietal Range value: 0.708, ..., 8.873</p></li>
-<li><p><strong>CTX_LH_SUPERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-lh-superiorparietal ROI size in mm^3 Range value: 7205, ..., 23420</p></li>
-<li><p><strong>CTX_LH_SUPERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-lh-superiortemporal Range value: 0.769, ..., 5.366</p></li>
+<li><p><strong>CTX_LH_SUPERIORPARIETAL_SUVR</strong> <em>numeric</em> ctx-lh-superiorparietal Range value: 0.558, ..., 8.873</p></li>
+<li><p><strong>CTX_LH_SUPERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-lh-superiorparietal ROI size in mm^3 Range value: 6320, ..., 23420</p></li>
+<li><p><strong>CTX_LH_SUPERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-lh-superiortemporal Range value: 0.732, ..., 5.366</p></li>
 <li><p><strong>CTX_LH_SUPERIORTEMPORAL_VOLUME</strong> <em>numeric</em> ctx-lh-superiortemporal ROI size in mm^3 Range value: 5891, ..., 17284</p></li>
 <li><p><strong>CTX_LH_SUPRAMARGINAL_SUVR</strong> <em>numeric</em> ctx-lh-supramarginal Range value: 0.801, ..., 6.942</p></li>
 <li><p><strong>CTX_LH_SUPRAMARGINAL_VOLUME</strong> <em>numeric</em> ctx-lh-supramarginal ROI size in mm^3 Range value: 5543, ..., 17431</p></li>
-<li><p><strong>CTX_LH_TEMPORALPOLE_SUVR</strong> <em>numeric</em> ctx-lh-temporalpole Range value: 0.673, ..., 5.922</p></li>
+<li><p><strong>CTX_LH_TEMPORALPOLE_SUVR</strong> <em>numeric</em> ctx-lh-temporalpole Range value: 0.477, ..., 5.922</p></li>
 <li><p><strong>CTX_LH_TEMPORALPOLE_VOLUME</strong> <em>numeric</em> ctx-lh-temporalpole ROI size in mm^3 Range value: 48, ..., 5851</p></li>
 <li><p><strong>CTX_LH_TRANSVERSETEMPORAL_SUVR</strong> <em>numeric</em> ctx-lh-transversetemporal Range value: 0.228, ..., 4.831</p></li>
 <li><p><strong>CTX_LH_TRANSVERSETEMPORAL_VOLUME</strong> <em>numeric</em> ctx-lh-transversetemporal ROI size in mm^3 Range value: 601, ..., 2249</p></li>
@@ -285,7 +288,7 @@
 <li><p><strong>CTX_RH_CAUDALMIDDLEFRONTAL_VOLUME</strong> <em>numeric</em> ctx-rh-caudalmiddlefrontal ROI size in mm^3 Range value: 2379, ..., 8501</p></li>
 <li><p><strong>CTX_RH_CUNEUS_SUVR</strong> <em>numeric</em> ctx-rh-cuneus Range value: 0.573, ..., 11.746</p></li>
 <li><p><strong>CTX_RH_CUNEUS_VOLUME</strong> <em>numeric</em> ctx-rh-cuneus ROI size in mm^3 Range value: 982, ..., 6165</p></li>
-<li><p><strong>CTX_RH_ENTORHINAL_SUVR</strong> <em>numeric</em> ctx-rh-entorhinal Range value: 0.678, ..., 5.448</p></li>
+<li><p><strong>CTX_RH_ENTORHINAL_SUVR</strong> <em>numeric</em> ctx-rh-entorhinal Range value: 0.667, ..., 5.448</p></li>
 <li><p><strong>CTX_RH_ENTORHINAL_VOLUME</strong> <em>numeric</em> ctx-rh-entorhinal ROI size in mm^3 Range value: 411, ..., 3452</p></li>
 <li><p><strong>CTX_RH_FRONTALPOLE_SUVR</strong> <em>numeric</em> ctx-rh-frontalpole Range value: 0.05, ..., 6.011</p></li>
 <li><p><strong>CTX_RH_FRONTALPOLE_VOLUME</strong> <em>numeric</em> ctx-rh-frontalpole ROI size in mm^3 Range value: 381, ..., 2370</p></li>
@@ -295,27 +298,27 @@
 <li><p><strong>CTX_RH_INFERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-rh-inferiorparietal ROI size in mm^3 Range value: 6272, ..., 21817</p></li>
 <li><p><strong>CTX_RH_INFERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-rh-inferiortemporal Range value: 0.682, ..., 8.358</p></li>
 <li><p><strong>CTX_RH_INFERIORTEMPORAL_VOLUME</strong> <em>numeric</em> ctx-rh-inferiortemporal ROI size in mm^3 Range value: 4566, ..., 15738</p></li>
-<li><p><strong>CTX_RH_INSULA_SUVR</strong> <em>numeric</em> ctx-rh-insula Range value: 0.714, ..., 4.712</p></li>
+<li><p><strong>CTX_RH_INSULA_SUVR</strong> <em>numeric</em> ctx-rh-insula Range value: 0.68, ..., 4.712</p></li>
 <li><p><strong>CTX_RH_INSULA_VOLUME</strong> <em>numeric</em> ctx-rh-insula ROI size in mm^3 Range value: 3635, ..., 9212</p></li>
 <li><p><strong>CTX_RH_ISTHMUSCINGULATE_SUVR</strong> <em>numeric</em> ctx-rh-isthmuscingulate Range value: 0.615, ..., 7.641</p></li>
 <li><p><strong>CTX_RH_ISTHMUSCINGULATE_VOLUME</strong> <em>numeric</em> ctx-rh-isthmuscingulate ROI size in mm^3 Range value: 783, ..., 3770</p></li>
 <li><p><strong>CTX_RH_LATERALOCCIPITAL_SUVR</strong> <em>numeric</em> ctx-rh-lateraloccipital Range value: 0.292, ..., 12.431</p></li>
 <li><p><strong>CTX_RH_LATERALOCCIPITAL_VOLUME</strong> <em>numeric</em> ctx-rh-lateraloccipital ROI size in mm^3 Range value: 4984, ..., 18366</p></li>
-<li><p><strong>CTX_RH_LATERALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-lateralorbitofrontal Range value: 0.752, ..., 5.269</p></li>
+<li><p><strong>CTX_RH_LATERALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-lateralorbitofrontal Range value: 0.636, ..., 5.269</p></li>
 <li><p><strong>CTX_RH_LATERALORBITOFRONTAL_VOLUME</strong> <em>numeric</em> ctx-rh-lateralorbitofrontal ROI size in mm^3 Range value: 4176, ..., 9667</p></li>
 <li><p><strong>CTX_RH_LINGUAL_SUVR</strong> <em>numeric</em> ctx-rh-lingual Range value: 0.639, ..., 9.147</p></li>
 <li><p><strong>CTX_RH_LINGUAL_VOLUME</strong> <em>numeric</em> ctx-rh-lingual ROI size in mm^3 Range value: 3485, ..., 10478</p></li>
-<li><p><strong>CTX_RH_MEDIALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-medialorbitofrontal Range value: 0.657, ..., 4.993</p></li>
+<li><p><strong>CTX_RH_MEDIALORBITOFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-medialorbitofrontal Range value: 0.595, ..., 4.993</p></li>
 <li><p><strong>CTX_RH_MEDIALORBITOFRONTAL_VOLUME</strong> <em>numeric</em> ctx-rh-medialorbitofrontal ROI size in mm^3 Range value: 3216, ..., 7241</p></li>
 <li><p><strong>CTX_RH_MIDDLETEMPORAL_SUVR</strong> <em>numeric</em> ctx-rh-middletemporal Range value: 0.548, ..., 6.166</p></li>
 <li><p><strong>CTX_RH_MIDDLETEMPORAL_VOLUME</strong> <em>numeric</em> ctx-rh-middletemporal ROI size in mm^3 Range value: 5922, ..., 17219</p></li>
 <li><p><strong>CTX_RH_PARACENTRAL_SUVR</strong> <em>numeric</em> ctx-rh-paracentral Range value: 0.711, ..., 4.662</p></li>
 <li><p><strong>CTX_RH_PARACENTRAL_VOLUME</strong> <em>numeric</em> ctx-rh-paracentral ROI size in mm^3 Range value: 2261, ..., 5526</p></li>
 <li><p><strong>CTX_RH_PARAHIPPOCAMPAL_SUVR</strong> <em>numeric</em> ctx-rh-parahippocampal Range value: 0.589, ..., 5.711</p></li>
-<li><p><strong>CTX_RH_PARAHIPPOCAMPAL_VOLUME</strong> <em>numeric</em> ctx-rh-parahippocampal ROI size in mm^3 Range value: 1096, ..., 2799</p></li>
+<li><p><strong>CTX_RH_PARAHIPPOCAMPAL_VOLUME</strong> <em>numeric</em> ctx-rh-parahippocampal ROI size in mm^3 Range value: 1096, ..., 2800</p></li>
 <li><p><strong>CTX_RH_PARSOPERCULARIS_SUVR</strong> <em>numeric</em> ctx-rh-parsopercularis Range value: 0.689, ..., 6.516</p></li>
 <li><p><strong>CTX_RH_PARSOPERCULARIS_VOLUME</strong> <em>numeric</em> ctx-rh-parsopercularis ROI size in mm^3 Range value: 2139, ..., 7542</p></li>
-<li><p><strong>CTX_RH_PARSORBITALIS_SUVR</strong> <em>numeric</em> ctx-rh-parsorbitalis Range value: 0.705, ..., 5.569</p></li>
+<li><p><strong>CTX_RH_PARSORBITALIS_SUVR</strong> <em>numeric</em> ctx-rh-parsorbitalis Range value: 0.688, ..., 5.569</p></li>
 <li><p><strong>CTX_RH_PARSORBITALIS_VOLUME</strong> <em>numeric</em> ctx-rh-parsorbitalis ROI size in mm^3 Range value: 1261, ..., 4301</p></li>
 <li><p><strong>CTX_RH_PARSTRIANGULARIS_SUVR</strong> <em>numeric</em> ctx-rh-parstriangularis Range value: 0.631, ..., 5.286</p></li>
 <li><p><strong>CTX_RH_PARSTRIANGULARIS_VOLUME</strong> <em>numeric</em> ctx-rh-parstriangularis ROI size in mm^3 Range value: 2268, ..., 7512</p></li>
@@ -325,37 +328,37 @@
 <li><p><strong>CTX_RH_POSTCENTRAL_VOLUME</strong> <em>numeric</em> ctx-rh-postcentral ROI size in mm^3 Range value: 4677, ..., 13254</p></li>
 <li><p><strong>CTX_RH_POSTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-rh-posteriorcingulate Range value: 0.721, ..., 6.73</p></li>
 <li><p><strong>CTX_RH_POSTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-rh-posteriorcingulate ROI size in mm^3 Range value: 994, ..., 4499</p></li>
-<li><p><strong>CTX_RH_PRECENTRAL_SUVR</strong> <em>numeric</em> ctx-rh-precentral Range value: 0.743, ..., 3.159</p></li>
+<li><p><strong>CTX_RH_PRECENTRAL_SUVR</strong> <em>numeric</em> ctx-rh-precentral Range value: 0.684, ..., 3.159</p></li>
 <li><p><strong>CTX_RH_PRECENTRAL_VOLUME</strong> <em>numeric</em> ctx-rh-precentral ROI size in mm^3 Range value: 6369, ..., 18058</p></li>
 <li><p><strong>CTX_RH_PRECUNEUS_SUVR</strong> <em>numeric</em> ctx-rh-precuneus Range value: 0.71, ..., 7.6</p></li>
 <li><p><strong>CTX_RH_PRECUNEUS_VOLUME</strong> <em>numeric</em> ctx-rh-precuneus ROI size in mm^3 Range value: 5009, ..., 14854</p></li>
 <li><p><strong>CTX_RH_ROSTRALANTERIORCINGULATE_SUVR</strong> <em>numeric</em> ctx-rh-rostralanteriorcingulate Range value: 0.336, ..., 4.304</p></li>
 <li><p><strong>CTX_RH_ROSTRALANTERIORCINGULATE_VOLUME</strong> <em>numeric</em> ctx-rh-rostralanteriorcingulate ROI size in mm^3 Range value: 559, ..., 3308</p></li>
-<li><p><strong>CTX_RH_ROSTRALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-rostralmiddlefrontal Range value: 0.774, ..., 8.814</p></li>
+<li><p><strong>CTX_RH_ROSTRALMIDDLEFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-rostralmiddlefrontal Range value: 0.697, ..., 8.814</p></li>
 <li><p><strong>CTX_RH_ROSTRALMIDDLEFRONTAL_VOLUME</strong> <em>numeric</em> ctx-rh-rostralmiddlefrontal ROI size in mm^3 Range value: 7884, ..., 26835</p></li>
-<li><p><strong>CTX_RH_SUPERIORFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-superiorfrontal Range value: 0.793, ..., 5.001</p></li>
+<li><p><strong>CTX_RH_SUPERIORFRONTAL_SUVR</strong> <em>numeric</em> ctx-rh-superiorfrontal Range value: 0.703, ..., 5.001</p></li>
 <li><p><strong>CTX_RH_SUPERIORFRONTAL_VOLUME</strong> <em>numeric</em> ctx-rh-superiorfrontal ROI size in mm^3 Range value: 11678, ..., 28618</p></li>
 <li><p><strong>CTX_RH_SUPERIORPARIETAL_SUVR</strong> <em>numeric</em> ctx-rh-superiorparietal Range value: 0.587, ..., 9.934</p></li>
 <li><p><strong>CTX_RH_SUPERIORPARIETAL_VOLUME</strong> <em>numeric</em> ctx-rh-superiorparietal ROI size in mm^3 Range value: 6110, ..., 18993</p></li>
 <li><p><strong>CTX_RH_SUPERIORTEMPORAL_SUVR</strong> <em>numeric</em> ctx-rh-superiortemporal Range value: 0.717, ..., 5.169</p></li>
 <li><p><strong>CTX_RH_SUPERIORTEMPORAL_VOLUME</strong> <em>numeric</em> ctx-rh-superiortemporal ROI size in mm^3 Range value: 5963, ..., 15383</p></li>
-<li><p><strong>CTX_RH_SUPRAMARGINAL_SUVR</strong> <em>numeric</em> ctx-rh-supramarginal Range value: 0.81, ..., 7.764</p></li>
+<li><p><strong>CTX_RH_SUPRAMARGINAL_SUVR</strong> <em>numeric</em> ctx-rh-supramarginal Range value: 0.757, ..., 7.764</p></li>
 <li><p><strong>CTX_RH_SUPRAMARGINAL_VOLUME</strong> <em>numeric</em> ctx-rh-supramarginal ROI size in mm^3 Range value: 4622, ..., 14291</p></li>
-<li><p><strong>CTX_RH_TEMPORALPOLE_SUVR</strong> <em>numeric</em> ctx-rh-temporalpole Range value: 0.577, ..., 6.325</p></li>
-<li><p><strong>CTX_RH_TEMPORALPOLE_VOLUME</strong> <em>numeric</em> ctx-rh-temporalpole ROI size in mm^3 Range value: 287, ..., 4200</p></li>
+<li><p><strong>CTX_RH_TEMPORALPOLE_SUVR</strong> <em>numeric</em> ctx-rh-temporalpole Range value: 0.319, ..., 6.325</p></li>
+<li><p><strong>CTX_RH_TEMPORALPOLE_VOLUME</strong> <em>numeric</em> ctx-rh-temporalpole ROI size in mm^3 Range value: 287, ..., 4666</p></li>
 <li><p><strong>CTX_RH_TRANSVERSETEMPORAL_SUVR</strong> <em>numeric</em> ctx-rh-transversetemporal Range value: 0.08, ..., 5.439</p></li>
 <li><p><strong>CTX_RH_TRANSVERSETEMPORAL_VOLUME</strong> <em>numeric</em> ctx-rh-transversetemporal ROI size in mm^3 Range value: 461, ..., 1566</p></li>
-<li><p><strong>LEFT_ACCUMBENS_AREA_SUVR</strong> <em>numeric</em> left-accumbens-area Range value: 0.301, ..., 4.736</p></li>
+<li><p><strong>LEFT_ACCUMBENS_AREA_SUVR</strong> <em>numeric</em> left-accumbens-area Range value: 0.167, ..., 4.736</p></li>
 <li><p><strong>LEFT_ACCUMBENS_AREA_VOLUME</strong> <em>numeric</em> left-accumbens-area ROI size in mm^3 Range value: 116, ..., 821</p></li>
-<li><p><strong>LEFT_AMYGDALA_SUVR</strong> <em>numeric</em> left-amygdala Range value: 0.605, ..., 5.24</p></li>
+<li><p><strong>LEFT_AMYGDALA_SUVR</strong> <em>numeric</em> left-amygdala Range value: 0.375, ..., 5.24</p></li>
 <li><p><strong>LEFT_AMYGDALA_VOLUME</strong> <em>numeric</em> left-amygdala ROI size in mm^3 Range value: 375, ..., 2468</p></li>
-<li><p><strong>LEFT_CAUDATE_SUVR</strong> <em>numeric</em> left-caudate Range value: 0.502, ..., 2.459</p></li>
+<li><p><strong>LEFT_CAUDATE_SUVR</strong> <em>numeric</em> left-caudate Range value: 0.409, ..., 2.459</p></li>
 <li><p><strong>LEFT_CAUDATE_VOLUME</strong> <em>numeric</em> left-caudate ROI size in mm^3 Range value: 1993, ..., 5745</p></li>
 <li><p><strong>LEFT_CEREBELLUM_CORTEX_SUVR</strong> <em>numeric</em> left-cerebellum-cortex Range value: 0.443, ..., 1.356</p></li>
-<li><p><strong>LEFT_CEREBELLUM_CORTEX_VOLUME</strong> <em>numeric</em> left-cerebellum-cortex ROI size in mm^3 Range value: 36265, ..., 69630</p></li>
-<li><p><strong>LEFT_CEREBELLUM_WHITE_MATTER_SUVR</strong> <em>numeric</em> left-cerebellum-white-matter Range value: 0.492, ..., 1.685</p></li>
+<li><p><strong>LEFT_CEREBELLUM_CORTEX_VOLUME</strong> <em>numeric</em> left-cerebellum-cortex ROI size in mm^3 Range value: 34655, ..., 69630</p></li>
+<li><p><strong>LEFT_CEREBELLUM_WHITE_MATTER_SUVR</strong> <em>numeric</em> left-cerebellum-white-matter Range value: 0.378, ..., 1.868</p></li>
 <li><p><strong>LEFT_CEREBELLUM_WHITE_MATTER_VOLUME</strong> <em>numeric</em> left-cerebellum-white-matter ROI size in mm^3 Range value: 6892, ..., 26253</p></li>
-<li><p><strong>LEFT_CEREBRAL_WHITE_MATTER_SUVR</strong> <em>numeric</em> left-cerebral-white-matter Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>LEFT_CEREBRAL_WHITE_MATTER_SUVR</strong> <em>numeric</em> left-cerebral-white-matter Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>LEFT_CEREBRAL_WHITE_MATTER_VOLUME</strong> <em>numeric</em> left-cerebral-white-matter ROI size in mm^3 Range value: 30465, ..., 288688</p></li>
 <li><p><strong>LEFT_CHOROID_PLEXUS_SUVR</strong> <em>numeric</em> left-choroid-plexus Range value: 0.275, ..., 18.556</p></li>
 <li><p><strong>LEFT_CHOROID_PLEXUS_VOLUME</strong> <em>numeric</em> left-choroid-plexus ROI size in mm^3 Range value: 130, ..., 1916</p></li>
@@ -363,47 +366,47 @@
 <li><p><strong>LEFT_HIPPOCAMPUS_VOLUME</strong> <em>numeric</em> left-hippocampus ROI size in mm^3 Range value: 1314, ..., 6080</p></li>
 <li><p><strong>LEFT_INF_LAT_VENT_SUVR</strong> <em>numeric</em> left-inf-lat-vent Range value: 0.004, ..., 6.095</p></li>
 <li><p><strong>LEFT_INF_LAT_VENT_VOLUME</strong> <em>numeric</em> left-inf-lat-vent ROI size in mm^3 Range value: 60, ..., 11328</p></li>
-<li><p><strong>LEFT_LATERAL_VENTRICLE_SUVR</strong> <em>numeric</em> left-lateral-ventricle Range value: 0.005, ..., 1.244</p></li>
-<li><p><strong>LEFT_LATERAL_VENTRICLE_VOLUME</strong> <em>numeric</em> left-lateral-ventricle ROI size in mm^3 Range value: 3358, ..., 79775</p></li>
-<li><p><strong>LEFT_PALLIDUM_SUVR</strong> <em>numeric</em> left-pallidum Range value: 0.629, ..., 3.087</p></li>
-<li><p><strong>LEFT_PALLIDUM_VOLUME</strong> <em>numeric</em> left-pallidum ROI size in mm^3 Range value: 1090, ..., 3117</p></li>
-<li><p><strong>LEFT_PUTAMEN_SUVR</strong> <em>numeric</em> left-putamen Range value: 0.612, ..., 2.86</p></li>
+<li><p><strong>LEFT_LATERAL_VENTRICLE_SUVR</strong> <em>numeric</em> left-lateral-ventricle Range value: 0.005, ..., 1.263</p></li>
+<li><p><strong>LEFT_LATERAL_VENTRICLE_VOLUME</strong> <em>numeric</em> left-lateral-ventricle ROI size in mm^3 Range value: 3254, ..., 79775</p></li>
+<li><p><strong>LEFT_PALLIDUM_SUVR</strong> <em>numeric</em> left-pallidum Range value: 0.466, ..., 3.087</p></li>
+<li><p><strong>LEFT_PALLIDUM_VOLUME</strong> <em>numeric</em> left-pallidum ROI size in mm^3 Range value: 1090, ..., 3436</p></li>
+<li><p><strong>LEFT_PUTAMEN_SUVR</strong> <em>numeric</em> left-putamen Range value: 0.566, ..., 2.86</p></li>
 <li><p><strong>LEFT_PUTAMEN_VOLUME</strong> <em>numeric</em> left-putamen ROI size in mm^3 Range value: 1945, ..., 7466</p></li>
-<li><p><strong>LEFT_THALAMUS_PROPER_SUVR</strong> <em>numeric</em> left-thalamus-proper Range value: 0.644, ..., 1.895</p></li>
+<li><p><strong>LEFT_THALAMUS_PROPER_SUVR</strong> <em>numeric</em> left-thalamus-proper Range value: 0.527, ..., 1.895</p></li>
 <li><p><strong>LEFT_THALAMUS_PROPER_VOLUME</strong> <em>numeric</em> left-thalamus-proper ROI size in mm^3 Range value: 3953, ..., 9616</p></li>
-<li><p><strong>LEFT_VENTRALDC_SUVR</strong> <em>numeric</em> left-ventraldc Range value: 0.663, ..., 2.208</p></li>
+<li><p><strong>LEFT_VENTRALDC_SUVR</strong> <em>numeric</em> left-ventraldc Range value: 0.579, ..., 2.208</p></li>
 <li><p><strong>LEFT_VENTRALDC_VOLUME</strong> <em>numeric</em> left-ventraldc ROI size in mm^3 Range value: 2259, ..., 5676</p></li>
-<li><p><strong>LEFT_VESSEL_SUVR</strong> <em>logical</em> left-vessel Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>LEFT_VESSEL_SUVR</strong> <em>logical</em> left-vessel A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>LEFT_VESSEL_VOLUME</strong> <em>numeric</em> left-vessel ROI size in mm^3 Range value: 1, ..., 537</p></li>
 <li><p><strong>RIGHT_ACCUMBENS_AREA_SUVR</strong> <em>numeric</em> right-accumbens-area Range value: 0.212, ..., 4.141</p></li>
 <li><p><strong>RIGHT_ACCUMBENS_AREA_VOLUME</strong> <em>numeric</em> right-accumbens-area ROI size in mm^3 Range value: 114, ..., 815</p></li>
-<li><p><strong>RIGHT_AMYGDALA_SUVR</strong> <em>numeric</em> right-amygdala Range value: 0.574, ..., 3.994</p></li>
+<li><p><strong>RIGHT_AMYGDALA_SUVR</strong> <em>numeric</em> right-amygdala Range value: 0.383, ..., 3.994</p></li>
 <li><p><strong>RIGHT_AMYGDALA_VOLUME</strong> <em>numeric</em> right-amygdala ROI size in mm^3 Range value: 605, ..., 2453</p></li>
-<li><p><strong>RIGHT_CAUDATE_SUVR</strong> <em>numeric</em> right-caudate Range value: 0.555, ..., 2.641</p></li>
+<li><p><strong>RIGHT_CAUDATE_SUVR</strong> <em>numeric</em> right-caudate Range value: 0.464, ..., 2.641</p></li>
 <li><p><strong>RIGHT_CAUDATE_VOLUME</strong> <em>numeric</em> right-caudate ROI size in mm^3 Range value: 2003, ..., 6880</p></li>
 <li><p><strong>RIGHT_CEREBELLUM_CORTEX_SUVR</strong> <em>numeric</em> right-cerebellum-cortex Range value: 0.534, ..., 1.357</p></li>
-<li><p><strong>RIGHT_CEREBELLUM_CORTEX_VOLUME</strong> <em>numeric</em> right-cerebellum-cortex ROI size in mm^3 Range value: 36079, ..., 73171</p></li>
-<li><p><strong>RIGHT_CEREBELLUM_WHITE_MATTER_SUVR</strong> <em>numeric</em> right-cerebellum-white-matter Range value: 0.492, ..., 1.685</p></li>
+<li><p><strong>RIGHT_CEREBELLUM_CORTEX_VOLUME</strong> <em>numeric</em> right-cerebellum-cortex ROI size in mm^3 Range value: 34177, ..., 73171</p></li>
+<li><p><strong>RIGHT_CEREBELLUM_WHITE_MATTER_SUVR</strong> <em>numeric</em> right-cerebellum-white-matter Range value: 0.378, ..., 1.868</p></li>
 <li><p><strong>RIGHT_CEREBELLUM_WHITE_MATTER_VOLUME</strong> <em>numeric</em> right-cerebellum-white-matter ROI size in mm^3 Range value: 6779, ..., 22532</p></li>
-<li><p><strong>RIGHT_CEREBRAL_WHITE_MATTER_SUVR</strong> <em>numeric</em> right-cerebral-white-matter Range value: 0.631, ..., 1.859</p></li>
+<li><p><strong>RIGHT_CEREBRAL_WHITE_MATTER_SUVR</strong> <em>numeric</em> right-cerebral-white-matter Range value: 0.532, ..., 1.859</p></li>
 <li><p><strong>RIGHT_CEREBRAL_WHITE_MATTER_VOLUME</strong> <em>numeric</em> right-cerebral-white-matter ROI size in mm^3 Range value: 129854, ..., 290343</p></li>
 <li><p><strong>RIGHT_CHOROID_PLEXUS_SUVR</strong> <em>numeric</em> right-choroid-plexus Range value: 0.537, ..., 14.78</p></li>
-<li><p><strong>RIGHT_CHOROID_PLEXUS_VOLUME</strong> <em>numeric</em> right-choroid-plexus ROI size in mm^3 Range value: 316, ..., 1912</p></li>
-<li><p><strong>RIGHT_HIPPOCAMPUS_SUVR</strong> <em>numeric</em> right-hippocampus Range value: 0.675, ..., 3.09</p></li>
+<li><p><strong>RIGHT_CHOROID_PLEXUS_VOLUME</strong> <em>numeric</em> right-choroid-plexus ROI size in mm^3 Range value: 312, ..., 1912</p></li>
+<li><p><strong>RIGHT_HIPPOCAMPUS_SUVR</strong> <em>numeric</em> right-hippocampus Range value: 0.625, ..., 3.09</p></li>
 <li><p><strong>RIGHT_HIPPOCAMPUS_VOLUME</strong> <em>numeric</em> right-hippocampus ROI size in mm^3 Range value: 1941, ..., 5775</p></li>
 <li><p><strong>RIGHT_INF_LAT_VENT_SUVR</strong> <em>numeric</em> right-inf-lat-vent Range value: 0.004, ..., 6.095</p></li>
 <li><p><strong>RIGHT_INF_LAT_VENT_VOLUME</strong> <em>numeric</em> right-inf-lat-vent ROI size in mm^3 Range value: 58, ..., 7228</p></li>
-<li><p><strong>RIGHT_LATERAL_VENTRICLE_SUVR</strong> <em>numeric</em> right-lateral-ventricle Range value: 0.005, ..., 1.244</p></li>
+<li><p><strong>RIGHT_LATERAL_VENTRICLE_SUVR</strong> <em>numeric</em> right-lateral-ventricle Range value: 0.005, ..., 1.263</p></li>
 <li><p><strong>RIGHT_LATERAL_VENTRICLE_VOLUME</strong> <em>numeric</em> right-lateral-ventricle ROI size in mm^3 Range value: 2442, ..., 71992</p></li>
-<li><p><strong>RIGHT_PALLIDUM_SUVR</strong> <em>numeric</em> right-pallidum Range value: 0.595, ..., 3.187</p></li>
+<li><p><strong>RIGHT_PALLIDUM_SUVR</strong> <em>numeric</em> right-pallidum Range value: 0.46, ..., 3.187</p></li>
 <li><p><strong>RIGHT_PALLIDUM_VOLUME</strong> <em>numeric</em> right-pallidum ROI size in mm^3 Range value: 1197, ..., 3207</p></li>
-<li><p><strong>RIGHT_PUTAMEN_SUVR</strong> <em>numeric</em> right-putamen Range value: 0.682, ..., 2.899</p></li>
+<li><p><strong>RIGHT_PUTAMEN_SUVR</strong> <em>numeric</em> right-putamen Range value: 0.511, ..., 2.899</p></li>
 <li><p><strong>RIGHT_PUTAMEN_VOLUME</strong> <em>numeric</em> right-putamen ROI size in mm^3 Range value: 2222, ..., 8026</p></li>
-<li><p><strong>RIGHT_THALAMUS_PROPER_SUVR</strong> <em>numeric</em> right-thalamus-proper Range value: 0.64, ..., 2.224</p></li>
+<li><p><strong>RIGHT_THALAMUS_PROPER_SUVR</strong> <em>numeric</em> right-thalamus-proper Range value: 0.541, ..., 2.224</p></li>
 <li><p><strong>RIGHT_THALAMUS_PROPER_VOLUME</strong> <em>numeric</em> right-thalamus-proper ROI size in mm^3 Range value: 4305, ..., 10375</p></li>
-<li><p><strong>RIGHT_VENTRALDC_SUVR</strong> <em>numeric</em> right-ventraldc Range value: 0.663, ..., 2.208</p></li>
+<li><p><strong>RIGHT_VENTRALDC_SUVR</strong> <em>numeric</em> right-ventraldc Range value: 0.579, ..., 2.208</p></li>
 <li><p><strong>RIGHT_VENTRALDC_VOLUME</strong> <em>numeric</em> right-ventraldc ROI size in mm^3 Range value: 2384, ..., 5634</p></li>
-<li><p><strong>RIGHT_VESSEL_SUVR</strong> <em>logical</em> right-vessel Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>RIGHT_VESSEL_SUVR</strong> <em>logical</em> right-vessel A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>RIGHT_VESSEL_VOLUME</strong> <em>numeric</em> right-vessel ROI size in mm^3 Range value: 1, ..., 236</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

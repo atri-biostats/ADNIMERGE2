@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,59 +74,59 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 5296</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: sc, f, m48, m36, m60, v01, v06</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code , with options: sc, f, m48, m36, m60, m12, m72, m24, m84</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Registry EXAMDATE on matching VISCODE Date: YYY-MM-DD</p></li>
-<li><p><strong>MHSOURCE</strong> <em>character</em> Information Source 1=Participant Visit;2=Telephone Call
+<li><p><strong>MHSOURCE</strong> <em>character</em> Information Source 1=Participant Visit ; 2=Telephone Call
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MHPSYCH</strong> <em>character</em> 1. Psychiatric 1=Yes; 0=No
+<li><p><strong>MHPSYCH</strong> <em>character</em> 1. Psychiatric 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH2NEURL</strong> <em>character</em> 2. Neurologic (other than AD) 1=Yes; 0=No
+<li><p><strong>MH2NEURL</strong> <em>character</em> 2. Neurologic (other than AD) 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH3HEAD</strong> <em>character</em> 3. Head, Eyes, Ears, Nose and Throat 1=Yes; 0=No
+<li><p><strong>MH3HEAD</strong> <em>character</em> 3. Head, Eyes, Ears, Nose and Throat 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH4CARD</strong> <em>character</em> 4. Cardiovascular 1=Yes; 0=No
+<li><p><strong>MH4CARD</strong> <em>character</em> 4. Cardiovascular 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH5RESP</strong> <em>character</em> 5. Respiratory 1=Yes; 0=No
+<li><p><strong>MH5RESP</strong> <em>character</em> 5. Respiratory 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH6HEPAT</strong> <em>character</em> 6. Hepatic 1=Yes; 0=No
+<li><p><strong>MH6HEPAT</strong> <em>character</em> 6. Hepatic 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH7DERM</strong> <em>character</em> 7. Dermatologic-Connective Tissue 1=Yes; 0=No
+<li><p><strong>MH7DERM</strong> <em>character</em> 7. Dermatologic-Connective Tissue 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH8MUSCL</strong> <em>character</em> 8. Musculoskeletal 1=Yes; 0=No
+<li><p><strong>MH8MUSCL</strong> <em>character</em> 8. Musculoskeletal 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH9ENDO</strong> <em>character</em> 9. Endocrine-Metabolic 1=Yes; 0=No
+<li><p><strong>MH9ENDO</strong> <em>character</em> 9. Endocrine-Metabolic 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH10GAST</strong> <em>character</em> 10. Gastrointestinal 1=Yes; 0=No
+<li><p><strong>MH10GAST</strong> <em>character</em> 10. Gastrointestinal 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH11HEMA</strong> <em>character</em> 11. Hematopoietic-Lymphatic 1=Yes; 0=No
+<li><p><strong>MH11HEMA</strong> <em>character</em> 11. Hematopoietic-Lymphatic 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH12RENA</strong> <em>character</em> 12. Renal-Genitourinary 1=Yes; 0=No
+<li><p><strong>MH12RENA</strong> <em>character</em> 12. Renal-Genitourinary 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH13ALLE</strong> <em>character</em> 13. Allergies or Drug Sensitivities 1=Yes; 0=No
+<li><p><strong>MH13ALLE</strong> <em>character</em> 13. Allergies or Drug Sensitivities 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH14ALCH</strong> <em>character</em> 14. Alcohol Abuse 1=Yes; 0=No
+<li><p><strong>MH14ALCH</strong> <em>character</em> 14. Alcohol Abuse 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MH14AALCH</strong> <em>numeric</em> 14a. During period of alcohol abuse, estimate the average number of drinks per day 0..30</p></li>
 <li><p><strong>MH14BALCH</strong> <em>numeric</em> 14b. Duration of abuse (years) 1..99</p></li>
 <li><p><strong>MH14CALCH</strong> <em>numeric</em> 14c. Period of time since end of abuse (years) 0..99</p></li>
-<li><p><strong>MH15DRUG</strong> <em>character</em> 15. Drug Abuse 1=Yes; 0=No
+<li><p><strong>MH15DRUG</strong> <em>character</em> 15. Drug Abuse 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MH15ADRUG</strong> <em>numeric</em> 15a.  Duration of abuse (years): 1..99</p></li>
 <li><p><strong>MH15BDRUG</strong> <em>numeric</em> 15b.  Period of time since end of abuse (years): 0..99</p></li>
-<li><p><strong>MH16SMOK</strong> <em>character</em> 16. Smoking 1=Yes; 0=No
+<li><p><strong>MH16SMOK</strong> <em>character</em> 16. Smoking 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MH16ASMOK</strong> <em>numeric</em> 16a. During periods of smoking, the average number of packs/day 0..10</p></li>
 <li><p><strong>MH16BSMOK</strong> <em>numeric</em> 16b. Duration (years) 1..99</p></li>
 <li><p><strong>MH16CSMOK</strong> <em>numeric</em> 16c. If no longer smoking, provide period of time since stopped smoking (years) 0..99</p></li>
-<li><p><strong>MH17MALI</strong> <em>character</em> 17. Malignancy 1=Yes; 0=No
+<li><p><strong>MH17MALI</strong> <em>character</em> 17. Malignancy 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH18SURG</strong> <em>character</em> 18. Major Surgical Procedures 1=Yes; 0=No
+<li><p><strong>MH18SURG</strong> <em>character</em> 18. Major Surgical Procedures 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MH19OTHR</strong> <em>character</em> 19. Other (if none, select 'No') 1=Yes; 0=No
+<li><p><strong>MH19OTHR</strong> <em>character</em> 19. Other (if none, select 'No') 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 4, ..., 2934</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 127</p></li>

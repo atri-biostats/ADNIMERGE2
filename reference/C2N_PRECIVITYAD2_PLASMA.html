@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 232 observations and 19 variables.</p>
+    <p>A data frame with 676 observations and 19 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -74,21 +76,21 @@
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>COLPROT</strong> <em>character</em> Study protocol of data collection , with options: ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Patient ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 69, ..., 10125</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10470</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code NA = Not Available</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code NA = Not Available</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Examination Date Date: YYY-MM-DD</p></li>
 <li><p><strong>Primary</strong> <em>character</em>   , with options: BLD</p></li>
 <li><p><strong>Additive</strong> <em>character</em>   , with options: EDT</p></li>
-<li><p><strong>pT217_C2N</strong> <em>numeric</em>   Range value: 0.65, ..., 17.348</p></li>
+<li><p><strong>pT217_C2N</strong> <em>numeric</em>   Range value: 0.65, ..., 19.358</p></li>
 <li><p><strong>npT217_C2N</strong> <em>numeric</em>   Range value: 13.651, ..., 186.402</p></li>
 <li><p><strong>AB42_C2N</strong> <em>numeric</em> C2N Abeta 42 concentration -4 = Not Available</p></li>
 <li><p><strong>AB40_C2N</strong> <em>numeric</em> C2N Abeta 40 concentration -4 = Not Available</p></li>
 <li><p><strong>AB42_AB40_C2N</strong> <em>numeric</em> C2N Abeta 42/40 ratio -4 = Not Available</p></li>
-<li><p><strong>pT217_npT217_C2N</strong> <em>numeric</em>   Range value: 0.7, ..., 25.9</p></li>
+<li><p><strong>pT217_npT217_C2N</strong> <em>numeric</em>   Range value: 0.55, ..., 27.76</p></li>
 <li><p><strong>APS2_C2N</strong> <em>numeric</em> Amyloid Probability Score 2 (APS2) result for PrecivityAD2™ -4 = Not Available</p></li>
-<li><p><strong>APOE_C2N</strong> <em>character</em> APOE proteotype , with options: E3/E3, E3/E4, E2/E3, E4/E4, E2/E4, E2/E2</p></li>
-<li><p><strong>Comments</strong> <em>character</em>   , with options: p-tau217 LOD, Sample Corrected for Dilution p-tau, p-tau217 LOD, Contaminant present Abeta, p-tau217 LOD, Sample Corrected for Dilution p-tau, Contaminant present Abeta, np-tau ALQ, Sample Corrected for Dilution p-tau, Contaminant present p-tau, Contaminant present Abeta, p-Tau QNS</p></li>
+<li><p><strong>APOE_C2N</strong> <em>character</em> APOE proteotype , with options: E3/E3, E3/E4, E2/E3, E4/E4, E2/E4, E2/E2, N/A</p></li>
+<li><p><strong>Comments</strong> <em>character</em></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>
     <div class="section level2">

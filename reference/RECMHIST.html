@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,19 +74,19 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 5296</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: sc, f, m48, m36, m60, v01, v06</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code , with options: sc, f, m48, m36, m60, m12, m24, m72, m84</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Registry EXAMDATE on matching VISCODE Date: YYY-MM-DD</p></li>
 <li><p><strong>RECNO</strong> <em>numeric</em>   Range value: 1, ..., 48</p></li>
-<li><p><strong>MHNUM</strong> <em>character</em> System Number 1=1. Psychiatric; 2=2. Neurologic; 3=3. Head, Eyes, Ears, Nose, Throat; 4=4. Cardiovascular; 5=5. Respiratory; 6=6. Hepatic; 7=7. Dermatologic-Connective Tissue; 8=8. Musculoskeletal; 9=9. Endocrine-Metabolic; 10=10. Gastrointestinal; 11=11. Hematopoietic-Lymphatic; 12=12. Renal-Genitourinary; 13=13. Allergies or Drug Sensitivities; 14=14. Alcohol Abuse; 15=15. Drug Abuse; 16=16. Smoking; 17=17. Malignancy; 18=18. Major Surgical Procedures; 19=19. Other
+<li><p><strong>MHNUM</strong> <em>character</em> System Number 1=1. Psychiatric ; 2=2. Neurologic ; 3=3. Head, Eyes, Ears, Nose, Throat ; 4=4. Cardiovascular ; 5=5. Respiratory ; 6=6. Hepatic ; 7=7. Dermatologic-Connective Tissue ; 8=8. Musculoskeletal ; 9=9. Endocrine-Metabolic ; 10=10. Gastrointestinal ; 11=11. Hematopoietic-Lymphatic ; 12=12. Renal-Genitourinary ; 13=13. Allergies or Drug Sensitivities ; 14=14. Alcohol Abuse ; 15=15. Drug Abuse ; 16=16. Smoking ; 17=17. Malignancy ; 18=18. Major Surgical Procedures ; 19=19. Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MHDTONSET</strong> <em>character</em> Date of onset:</p></li>
-<li><p><strong>MHCUR</strong> <em>character</em> Is the condition/problem current? 1=Yes; 0=No
+<li><p><strong>MHCUR</strong> <em>character</em> Is the condition/problem current? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MHSTAB</strong> <em>character</em> If Yes, is the condition/problem stable? 1=Yes; 0=No
+<li><p><strong>MHSTAB</strong> <em>character</em> If Yes, is the condition/problem stable? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 8, ..., 32736</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 127</p></li>

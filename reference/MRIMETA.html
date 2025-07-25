@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 4741 observations and 36 variables.</p>
+    <p>A data frame with 4740 observations and 36 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,85 +74,72 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 6837</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Scan Date Date: YYY-MM-DD</p></li>
 <li><p><strong>FIELD_STRENGTH</strong> <em>character</em> Field Strength</p><ul><li><p><em>ADNI1, ADNIGO:</em> 1.5T=1.5 Tesla</p></li>
-<li><p><em>ADNI2, ADNI3:</em> 1.5T=1.5 Tesla;3T=3 Tesla</p></li>
+<li><p><em>ADNI2, ADNI3:</em> 1.5T=1.5 Tesla ; 3T=3 Tesla</p></li>
 <li><p><em>ADNI4:</em> 3T=3 Tesla</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>RECNO</strong> <em>character</em>   1=Original Scan;2=Rescan
+<li><p><strong>RECNO</strong> <em>character</em>   1=Original Scan ; 2=Rescan
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMCONDCT</strong> <em>character</em> Was the scan conducted?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>MMCONDCT</strong> <em>character</em> Was the scan conducted?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMREASON</strong> <em>character</em> If No, please provide reason why the scan was not conducted:</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=Illness;2=Participant unavailable;3=Participant unwilling;4=Administrative problems;5=Withdrawn consent;6=Other (specify)</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=Illness;2=Participant unavailable;3=Participant unwilling;4=Administrative problems;5=Withdrawn consent;6=Other (specify)</p></li>
-<li><p><em>ADNI4:</em> 1=Illness; 2=Participant unavailable; 3=Participant unwilling; 4=Administrative problems; 5=Withdrawn consent; 6=Other (specify)</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMSCOUT</strong> <em>character</em> 1. Tri-Planar Scout (if available, otherwise use an axial scout) 1=Yes;0=No
+<li><p><strong>MMREASON</strong> <em>character</em> If No, please provide reason why the scan was not conducted: 1=Illness ; 2=Participant unavailable ; 3=Participant unwilling ; 4=Administrative problems ; 5=Withdrawn consent ; 6=Other (specify)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMSMPRAGE</strong> <em>character</em> 2. Straight Sagittal MPRAGE Sequence 1=Yes;0=No
+<li><p><strong>MMSCOUT</strong> <em>character</em> 1. Tri-Planar Scout (if available, otherwise use an axial scout) 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMRMPRAGE</strong> <em>character</em> 3. Repeat Straight Sagittal MPRAGE Sequence 1=Yes;0=No
+<li><p><strong>MMSMPRAGE</strong> <em>character</em> 2. Straight Sagittal MPRAGE Sequence 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMB1HEAD</strong> <em>character</em> 4. B1 Calibration Head Coil Scan (Only applicable for phased array head coil on GE and Siemens systems) 1=Yes;0=No
+<li><p><strong>MMRMPRAGE</strong> <em>character</em> 3. Repeat Straight Sagittal MPRAGE Sequence 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMB1BODY</strong> <em>character</em> 5. B1 Calibration Body Coil Scan (Only applicable for phased array head coil on GE and Siemens systems) 1=Yes;0=No
+<li><p><strong>MMB1HEAD</strong> <em>character</em> 4. B1 Calibration Head Coil Scan (Only applicable for phased array head coil on GE and Siemens systems) 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMECHO</strong> <em>character</em> 6. Straight Axial Fast or Turbo Spin Echo 1=Yes;0=No
+<li><p><strong>MMB1BODY</strong> <em>character</em> 5. B1 Calibration Body Coil Scan (Only applicable for phased array head coil on GE and Siemens systems) 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMPHAN</strong> <em>character</em> 7. In new exam; Perform ADNI QC Scan. Localizer and Straight Sagittal MPRAGE (with increased slice thickness to ensure phantom coverage) 1=Yes;0=No
+<li><p><strong>MMECHO</strong> <em>character</em> 6. Straight Axial Fast or Turbo Spin Echo 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMTRNSFR</strong> <em>character</em> Was data transferred to LONI within 24 hours of scan?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>MMPHAN</strong> <em>character</em> 7. In new exam; Perform ADNI QC Scan. Localizer and Straight Sagittal MPRAGE (with increased slice thickness to ensure phantom coverage) 1=Yes ; 0=No
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>MMTRNSFR</strong> <em>character</em> Was data transferred to LONI within 24 hours of scan?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>MMTRNDATE</strong> <em>character</em> Transfer Date</p></li>
 <li><p><strong>MMTRNDATEYR_DRVD</strong> <em>numeric</em> Transfer Year (Derived from MMTRNDATE) Range value: 2005, ..., 2023</p></li>
-<li><p><strong>MMARCHIVE</strong> <em>character</em> Data Archived Locally</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>MMARCHIVE</strong> <em>character</em> Data Archived Locally</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMLPDONE</strong> <em>character</em> Was a Lumbar Puncture completed prior to the MRI scan?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>MMLPDONE</strong> <em>character</em> Was a Lumbar Puncture completed prior to the MRI scan?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MMLPINTER</strong> <em>character</em> If Yes, What was the interval between LP and MRI?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 1=less than 6 hours;2=6-12 hours;3=13-24 hours;4=25-48 hours;5=49-72 hours;6=more than 72 hours</p></li>
-<li><p><em>ADNI4:</em> 1=less than 6 hours; 2=6-12 hours; 3=13-24 hours; 4=25-48 hours; 5=49-72 hours; 6=more than 72 hours</p></li>
+<li><p><strong>MMLPINTER</strong> <em>character</em> If Yes, What was the interval between LP and MRI? 1=less than 6 hours ; 2=6-12 hours ; 3=13-24 hours ; 4=25-48 hours ; 5=49-72 hours ; 6=more than 72 hours
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>SEDATIVE</strong> <em>character</em> Was sedation medication consumed for use during MRI scan?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SEDATIVE</strong> <em>character</em> Was sedation medication consumed for use during MRI scan?</p><ul><li><p><em>ADNI2:</em> 1=Yes;0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>OTRDEV</strong> <em>character</em> Other Protocol Variations</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>OTRDEV</strong> <em>character</em> Other Protocol Variations</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>MOTION</strong> <em>character</em> Patient Motion Problems:</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MOTION</strong> <em>character</em> Patient Motion Problems:</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>EYEKEEP</strong> <em>character</em> Did the participant keep their eyes open (MRI Tech:  ask the subject right after the scan)</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No ; 2=N/A Scanner manufacturer is GE</p></li>
+<li><p><em>ADNI3:</em> 0=No ; 1=Yes ; 2=N/A Scanner manufacturer is GE</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EYEKEEP</strong> <em>character</em> Did the participant keep their eyes open (MRI Tech:  ask the subject right after the scan)</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No; 2=N/A Scanner manufacturer is GE</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes;2=N/A Scanner manufacturer is GE</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>EYEASK</strong> <em>character</em> Was the participant instructed to open their eyes?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No ; 2=N/A Scanner manufacturer is GE</p></li>
+<li><p><em>ADNI3:</em> 0=No ; 1=Yes ; 2=N/A Scanner manufacturer is GE</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EYEASK</strong> <em>character</em> Was the participant instructed to open their eyes?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No; 2=N/A Scanner manufacturer is GE</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes;2=N/A Scanner manufacturer is GE</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>MALFUNC</strong> <em>character</em> Scanner Malfunction:</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MALFUNC</strong> <em>character</em> Scanner Malfunction:</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>FLDSTRNGTH</strong> <em>character</em> Field Strength</p><ul><li><p><em>ADNI2:</em> 1=1.5 Tesla; 2=3 Tesla</p></li>
-<li><p><em>ADNI3:</em> 1=1.5 Tesla;2=3 Tesla</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>FLDSTRNGTH</strong> <em>character</em> Field Strength 1=1.5 Tesla ; 2=3 Tesla
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 6, ..., 176409</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 127</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>

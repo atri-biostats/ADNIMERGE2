@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 7734 observations and 169 variables.</p>
+    <p>A data frame with 7948 observations and 169 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,584 +74,444 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNI2, ADNIGO, ADNI3, ADNI4</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 10592</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 10819</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Examination Date Date: YYY-MM-DD</p></li>
-<li><p><strong>NPISOURC</strong> <em>character</em> Information source</p><ul><li><p><em>ADNI2:</em> 1=Participant visit; 2=Telephone call</p></li>
-<li><p><em>ADNI3:</em> 1=Participant visit;2=Telephone call/Video Call</p></li>
-<li><p><em>ADNI4:</em> 1=Participant visit; 2=Telephone call/Video Call</p></li>
+<li><p><strong>NPISOURC</strong> <em>character</em> Information source</p><ul><li><p><em>ADNI2:</em> 1=Participant visit ; 2=Telephone call</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=Participant visit ; 2=Telephone call/Video Call</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>SPID</strong> <em>numeric</em> Study Partner ID: Range value: 1, ..., 10</p></li>
-<li><p><strong>NPIA</strong> <em>character</em> A. Delusions</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIA</strong> <em>character</em> A. Delusions 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIA1</strong> <em>character</em> 1. Does  P believe that he/she is in danger - that others are planning to hurt him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA1</strong> <em>character</em> 1. Does  P believe that he/she is in danger - that others are planning to hurt him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA2</strong> <em>character</em> 2. Does  P believe that others are stealing from him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA2</strong> <em>character</em> 2. Does  P believe that others are stealing from him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA3</strong> <em>character</em> 3. Does  P believe that his/her spouse is having an affair?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA3</strong> <em>character</em> 3. Does  P believe that his/her spouse is having an affair?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA4</strong> <em>character</em> 4. Does  P believe that unwelcome guests are living in his/her house?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA4</strong> <em>character</em> 4. Does  P believe that unwelcome guests are living in his/her house?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA5</strong> <em>character</em> 5. Does  P believe that his/her spouse or others are not who they claim to be?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA5</strong> <em>character</em> 5. Does  P believe that his/her spouse or others are not who they claim to be?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA6</strong> <em>character</em> 6. Does  P believe that his/her house is not his/her home?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA6</strong> <em>character</em> 6. Does  P believe that his/her house is not his/her home?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA7</strong> <em>character</em> 7. Does  P believe that family members plan to abandon him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA7</strong> <em>character</em> 7. Does  P believe that family members plan to abandon him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA8</strong> <em>character</em> 8. Does  P believe that television or magazine figures are actually present in the home?  [Does he/she try to talk to or interact with them?]</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA8</strong> <em>character</em> 8. Does  P believe that television or magazine figures are actually present in the home?  [Does he/she try to talk to or interact with them?]</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA9</strong> <em>character</em> 9. Does  P believe any other unusual things that I haven't asked about?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA9</strong> <em>character</em> 9. Does  P believe any other unusual things that I haven't asked about?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA10A</strong> <em>character</em> 10a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA10A</strong> <em>character</em> 10a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA10B</strong> <em>character</em> 10b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA10C</strong> <em>character</em> 10c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIA10B</strong> <em>character</em> 10b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIA10C</strong> <em>character</em> 10c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIATOT</strong> <em>numeric</em> A. Delusions: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIB</strong> <em>character</em> B.  Hallucinations</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIB</strong> <em>character</em> B.  Hallucinations 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIB1</strong> <em>character</em> 1. Does  P describe hearing voices or act as if he/she hears voices?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB1</strong> <em>character</em> 1. Does  P describe hearing voices or act as if he/she hears voices?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB2</strong> <em>character</em> 2. Does  P talk to people who are not there?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB2</strong> <em>character</em> 2. Does  P talk to people who are not there?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB3</strong> <em>character</em> 3. Does  P describe seeing things not seen by others or behave as if he/she is seeing things not seen by others (people, animals, lights, etc.)?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB3</strong> <em>character</em> 3. Does  P describe seeing things not seen by others or behave as if he/she is seeing things not seen by others (people, animals, lights, etc.)?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB4</strong> <em>character</em> 4. Does  P report smelling odors not smelled by others?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB4</strong> <em>character</em> 4. Does  P report smelling odors not smelled by others?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB5</strong> <em>character</em> 5. Does  P describe feeling things on his/her skin or otherwise appear to be feeling things crawling or touching him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB5</strong> <em>character</em> 5. Does  P describe feeling things on his/her skin or otherwise appear to be feeling things crawling or touching him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB6</strong> <em>character</em> 6. Does  P describe tastes that are without any known cause?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB6</strong> <em>character</em> 6. Does  P describe tastes that are without any known cause?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB7</strong> <em>character</em> 7. Does  P describe any other unusual sensory experiences?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB7</strong> <em>character</em> 7. Does  P describe any other unusual sensory experiences?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIB8A</strong> <em>character</em> 8a.  Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB8A</strong> <em>character</em> 8a.  Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB8B</strong> <em>character</em> 8b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB8C</strong> <em>character</em> 8c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIB8B</strong> <em>character</em> 8b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIB8C</strong> <em>character</em> 8c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIBTOT</strong> <em>numeric</em> B. Hallucinations: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIC</strong> <em>character</em> C: Agitation/Aggression</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIC</strong> <em>character</em> C: Agitation/Aggression 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIC1</strong> <em>character</em> 1. Does  P get upset with those trying to care for him/her or resist activities such as bathing or changing clothes?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC1</strong> <em>character</em> 1. Does  P get upset with those trying to care for him/her or resist activities such as bathing or changing clothes?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC2</strong> <em>character</em> 2. Is  P stubborn, having to have things his/her way?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC2</strong> <em>character</em> 2. Is  P stubborn, having to have things his/her way?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC3</strong> <em>character</em> 3. Is  P uncooperative, resistive to help from others?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC3</strong> <em>character</em> 3. Is  P uncooperative, resistive to help from others?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC4</strong> <em>character</em> 4. Does  P have any other behaviors that make him/her hard to handle?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC4</strong> <em>character</em> 4. Does  P have any other behaviors that make him/her hard to handle?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC5</strong> <em>character</em> 5. Does  P shout or curse angrily?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC5</strong> <em>character</em> 5. Does  P shout or curse angrily?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC6</strong> <em>character</em> 6. Does  P slam doors, kick furniture, throw things?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC6</strong> <em>character</em> 6. Does  P slam doors, kick furniture, throw things?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC7</strong> <em>character</em> 7. Does  P attempt to hurt or hit others?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC7</strong> <em>character</em> 7. Does  P attempt to hurt or hit others?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC8</strong> <em>character</em> 8. Does  P have any other aggressive or agitated behaviors?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC8</strong> <em>character</em> 8. Does  P have any other aggressive or agitated behaviors?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIC9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC9B</strong> <em>character</em> 9b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC9C</strong> <em>character</em> 9c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIC9B</strong> <em>character</em> 9b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIC9C</strong> <em>character</em> 9c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPICTOT</strong> <em>numeric</em> C. Agitation/Aggression: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPID</strong> <em>character</em> D: Depression/Dysphoria</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPID</strong> <em>character</em> D: Depression/Dysphoria 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPID1</strong> <em>character</em> 1. Does  P have periods of tearfulness or sobbing that seem to indicate sadness?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID1</strong> <em>character</em> 1. Does  P have periods of tearfulness or sobbing that seem to indicate sadness?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID2</strong> <em>character</em> 2. Does  P say or act as if he/she is sad or low in spirits?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID2</strong> <em>character</em> 2. Does  P say or act as if he/she is sad or low in spirits?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID3</strong> <em>character</em> 3. Does  P put him/herself down or say that he/she feels like a failure?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID3</strong> <em>character</em> 3. Does  P put him/herself down or say that he/she feels like a failure?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID4</strong> <em>character</em> 4. Does  P say that he/she is a bad person or deserves to be punished?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID4</strong> <em>character</em> 4. Does  P say that he/she is a bad person or deserves to be punished?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID5</strong> <em>character</em> 5. Does  P seem very discouraged or say that he/ she has not future?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID5</strong> <em>character</em> 5. Does  P seem very discouraged or say that he/ she has not future?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID6</strong> <em>character</em> 6. Does  P say he/she is a burden to the family or that the family would be better off without him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID6</strong> <em>character</em> 6. Does  P say he/she is a burden to the family or that the family would be better off without him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID7</strong> <em>character</em> 7. Does  P express a wish for death or talk about killing him/herself?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID7</strong> <em>character</em> 7. Does  P express a wish for death or talk about killing him/herself?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID8</strong> <em>character</em> 8. Does  P show any other signs of depression or sadness?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID8</strong> <em>character</em> 8. Does  P show any other signs of depression or sadness?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPID9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID9B</strong> <em>character</em> 9b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID9C</strong> <em>character</em> 9c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPID9B</strong> <em>character</em> 9b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPID9C</strong> <em>character</em> 9c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIDTOT</strong> <em>numeric</em> D. Depression/Dysphoria: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIE</strong> <em>character</em> E. Anxiety</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIE</strong> <em>character</em> E. Anxiety 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIE1</strong> <em>character</em> 1. Does  P say that he/she is worried about planned events?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE1</strong> <em>character</em> 1. Does  P say that he/she is worried about planned events?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE2</strong> <em>character</em> 2. Does  P have periods of feeling shaky, unable to relax, or feeling excessively tense?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE2</strong> <em>character</em> 2. Does  P have periods of feeling shaky, unable to relax, or feeling excessively tense?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE3</strong> <em>character</em> 3. Does  P have periods of [or complain of] shortness of breath, gasping, or sighing for no apparent reason other than nervousness?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE3</strong> <em>character</em> 3. Does  P have periods of [or complain of] shortness of breath, gasping, or sighing for no apparent reason other than nervousness?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE4</strong> <em>character</em> 4. Does  P complain of butterflies in his/her stomach, or of racing or pounding of the heart in association with nervousness? [Symptoms not explained by ill health]?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE4</strong> <em>character</em> 4. Does  P complain of butterflies in his/her stomach, or of racing or pounding of the heart in association with nervousness? [Symptoms not explained by ill health]?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE5</strong> <em>character</em> 5. Does  P avoid certain places or situations that make him.her more nervous such as riding in the car, meeting with friends, or being in crowds?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE5</strong> <em>character</em> 5. Does  P avoid certain places or situations that make him.her more nervous such as riding in the car, meeting with friends, or being in crowds?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE6</strong> <em>character</em> 6. Does  P become nervous or upset when separated from you [or his/her caregiver]? [Does he/she cling to you to keep from being separated?]</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE6</strong> <em>character</em> 6. Does  P become nervous or upset when separated from you [or his/her caregiver]? [Does he/she cling to you to keep from being separated?]</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE7</strong> <em>character</em> 7. Does  P show any other signs of anxiety?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE7</strong> <em>character</em> 7. Does  P show any other signs of anxiety?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIE8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE8B</strong> <em>character</em> 8b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE8C</strong> <em>character</em> 8c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIE8B</strong> <em>character</em> 8b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIE8C</strong> <em>character</em> 8c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIETOT</strong> <em>numeric</em> E. Anxiety: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIF</strong> <em>character</em> F. Elation/Euphoria</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIF</strong> <em>character</em> F. Elation/Euphoria 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIF1</strong> <em>character</em> 1. Does  P appear to feel too good or too happy, different from his/her usual self?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF1</strong> <em>character</em> 1. Does  P appear to feel too good or too happy, different from his/her usual self?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF2</strong> <em>character</em> 2. Does  P find humor and laugh at things that others do not find funny?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF2</strong> <em>character</em> 2. Does  P find humor and laugh at things that others do not find funny?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF3</strong> <em>character</em> 3. Does  P seem to have a childish sense of humor with a tendency to giggle or laugh inappropriately (such as when something unfortunate happens to others)?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF3</strong> <em>character</em> 3. Does  P seem to have a childish sense of humor with a tendency to giggle or laugh inappropriately (such as when something unfortunate happens to others)?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF4</strong> <em>character</em> 4. Does  P tell jokes or make remarks that have little humor for others but seem funny to him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF4</strong> <em>character</em> 4. Does  P tell jokes or make remarks that have little humor for others but seem funny to him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF5</strong> <em>character</em> 5. Does he/she play childish pranks such as pinching or playing "keep away" for the fun of it?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF5</strong> <em>character</em> 5. Does he/she play childish pranks such as pinching or playing "keep away" for the fun of it?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF6</strong> <em>character</em> 6. Does  P "talk big" or claim to have more abilities or wealth than is true?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF6</strong> <em>character</em> 6. Does  P "talk big" or claim to have more abilities or wealth than is true?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF7</strong> <em>character</em> 7. Does  P show any other signs of feeling too good or being too happy?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF7</strong> <em>character</em> 7. Does  P show any other signs of feeling too good or being too happy?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIF8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF8B</strong> <em>character</em> 8b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF8C</strong> <em>character</em> 8c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIF8B</strong> <em>character</em> 8b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIF8C</strong> <em>character</em> 8c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIFTOT</strong> <em>numeric</em> F. Elation/Euphoria: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIG</strong> <em>character</em> G. Apathy/Indifference</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIG</strong> <em>character</em> G. Apathy/Indifference 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIG1</strong> <em>character</em> 1. Does  P seem less spontaneous and less active than usual?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG1</strong> <em>character</em> 1. Does  P seem less spontaneous and less active than usual?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG2</strong> <em>character</em> 2. Is  P less likely to initiate a conversation?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG2</strong> <em>character</em> 2. Is  P less likely to initiate a conversation?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG3</strong> <em>character</em> 3. Is  P less affectionate or lacking in emotions when compared to his/her usual self?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG3</strong> <em>character</em> 3. Is  P less affectionate or lacking in emotions when compared to his/her usual self?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG4</strong> <em>character</em> 4. Does  P contribute less to household chores?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG4</strong> <em>character</em> 4. Does  P contribute less to household chores?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG5</strong> <em>character</em> 5. Does  P seem less interested in the activities and plans of others?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG5</strong> <em>character</em> 5. Does  P seem less interested in the activities and plans of others?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG6</strong> <em>character</em> 6. Has  P lost interest in friends and family members?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG6</strong> <em>character</em> 6. Has  P lost interest in friends and family members?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG7</strong> <em>character</em> 7. Is  P less enthusiastic about his/her usual interests?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG7</strong> <em>character</em> 7. Is  P less enthusiastic about his/her usual interests?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG8</strong> <em>character</em> 8. Does  P show any other signs that he/she doesn't care about doing new things?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG8</strong> <em>character</em> 8. Does  P show any other signs that he/she doesn't care about doing new things?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIG9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG9B</strong> <em>character</em> 9b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG9C</strong> <em>character</em> 9c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIG9B</strong> <em>character</em> 9b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIG9C</strong> <em>character</em> 9c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIGTOT</strong> <em>numeric</em> G. Apathy/Indifference: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIH</strong> <em>character</em> H. Disinhibition</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIH</strong> <em>character</em> H. Disinhibition 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIH1</strong> <em>character</em> 1. Does  P act impulsively without appearing to consider the consequences?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH1</strong> <em>character</em> 1. Does  P act impulsively without appearing to consider the consequences?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH2</strong> <em>character</em> 2. Does  P talk to total strangers as if he/she knew them?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH2</strong> <em>character</em> 2. Does  P talk to total strangers as if he/she knew them?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH3</strong> <em>character</em> 3. Does  P say things to people that are insensitive or hurt their feelings?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH3</strong> <em>character</em> 3. Does  P say things to people that are insensitive or hurt their feelings?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH4</strong> <em>character</em> 4. Does  P say crude things or make sexual remarks that they would not usually have said?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH4</strong> <em>character</em> 4. Does  P say crude things or make sexual remarks that they would not usually have said?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH5</strong> <em>character</em> 5. Does  P talk openly about very personal or private matters not usually discussed in public?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH5</strong> <em>character</em> 5. Does  P talk openly about very personal or private matters not usually discussed in public?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH6</strong> <em>character</em> 6. Does  P take liberties or touch or hug others in a way that is out of character for him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH6</strong> <em>character</em> 6. Does  P take liberties or touch or hug others in a way that is out of character for him/her?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH7</strong> <em>character</em> 7. Does  P show any other signs of loss of control of his/her impulses?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH7</strong> <em>character</em> 7. Does  P show any other signs of loss of control of his/her impulses?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIH8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH8B</strong> <em>character</em> 8b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH8C</strong> <em>character</em> 8c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIH8B</strong> <em>character</em> 8b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIH8C</strong> <em>character</em> 8c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIHTOT</strong> <em>numeric</em> H. Disinhibition: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPII</strong> <em>character</em> I. Irritability/Lability</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPII</strong> <em>character</em> I. Irritability/Lability 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPII1</strong> <em>character</em> 1. Does  P have a bad temper, flying "off the handle" easily over little things?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII1</strong> <em>character</em> 1. Does  P have a bad temper, flying "off the handle" easily over little things?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII2</strong> <em>character</em> 2. Does  P rapidly change moods from one to another, being fine one minute and angry the next?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII2</strong> <em>character</em> 2. Does  P rapidly change moods from one to another, being fine one minute and angry the next?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII3</strong> <em>character</em> 3. Does  P have sudden flashes of anger?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII3</strong> <em>character</em> 3. Does  P have sudden flashes of anger?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII4</strong> <em>character</em> 4. Is  P impatient, having trouble coping with delays or waiting for planned activities?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII4</strong> <em>character</em> 4. Is  P impatient, having trouble coping with delays or waiting for planned activities?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII5</strong> <em>character</em> 5. Is  P cranky and irritable?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII5</strong> <em>character</em> 5. Is  P cranky and irritable?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII6</strong> <em>character</em> 6. Is  P argumentative and difficult to get along with?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII6</strong> <em>character</em> 6. Is  P argumentative and difficult to get along with?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII7</strong> <em>character</em> 7. Does  P show any other signs of irritability?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII7</strong> <em>character</em> 7. Does  P show any other signs of irritability?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPII8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII8B</strong> <em>character</em> 8b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII8C</strong> <em>character</em> 8c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPII8B</strong> <em>character</em> 8b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPII8C</strong> <em>character</em> 8c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIITOT</strong> <em>numeric</em> I. Irritability/Lability: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIJ</strong> <em>character</em> J. Aberrant Motor Behavior</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIJ</strong> <em>character</em> J. Aberrant Motor Behavior 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIJ1</strong> <em>character</em> 1. Does  P pace around the house without apparent purpose?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ1</strong> <em>character</em> 1. Does  P pace around the house without apparent purpose?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ2</strong> <em>character</em> 2. Does  P rummage around opening and unpacking drawers or closets?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ2</strong> <em>character</em> 2. Does  P rummage around opening and unpacking drawers or closets?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ3</strong> <em>character</em> 3. Does  P repeatedly put on and take off clothing?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ3</strong> <em>character</em> 3. Does  P repeatedly put on and take off clothing?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ4</strong> <em>character</em> 4. Does  P have repetitive activities or "habits" that he/she performs over and over?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ4</strong> <em>character</em> 4. Does  P have repetitive activities or "habits" that he/she performs over and over?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ5</strong> <em>character</em> 5. Does  P engage in repetitive activities such as handling buttons, picking, wrapping string, etc?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ5</strong> <em>character</em> 5. Does  P engage in repetitive activities such as handling buttons, picking, wrapping string, etc?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ6</strong> <em>character</em> 6. Has  P fidget excessively, seem unable to sit still, or bounce his/her feet or tap his/her fingers a lot?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ6</strong> <em>character</em> 6. Has  P fidget excessively, seem unable to sit still, or bounce his/her feet or tap his/her fingers a lot?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ7</strong> <em>character</em> 7. Does  P do any other activities over and over?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ7</strong> <em>character</em> 7. Does  P do any other activities over and over?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIJ8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ8A</strong> <em>character</em> 8a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ8B</strong> <em>character</em> 8b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ8C</strong> <em>character</em> 8c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIJ8B</strong> <em>character</em> 8b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIJ8C</strong> <em>character</em> 8c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIJTOT</strong> <em>numeric</em> J. Aberrant Motor Behavior: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIK</strong> <em>character</em> K. Sleep</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIK</strong> <em>character</em> K. Sleep 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIK1</strong> <em>character</em> 1. Does  P have difficulty falling asleep?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK1</strong> <em>character</em> 1. Does  P have difficulty falling asleep?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK2</strong> <em>character</em> 2. Does  P get up during the night (do not count if the patient gets up once or twice per night only to go to the bathroom and falls back asleep immediately)?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK2</strong> <em>character</em> 2. Does  P get up during the night (do not count if the patient gets up once or twice per night only to go to the bathroom and falls back asleep immediately)?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK3</strong> <em>character</em> 3. Does  P wander, pace, or get involved in inappropriate activities at night?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK3</strong> <em>character</em> 3. Does  P wander, pace, or get involved in inappropriate activities at night?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK4</strong> <em>character</em> 4. Does  P awaken you during the night?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK4</strong> <em>character</em> 4. Does  P awaken you during the night?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK5</strong> <em>character</em> 5. Does  P awaken at night, dress, and plan to go out thinking that it is morning and time to start the day?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK5</strong> <em>character</em> 5. Does  P awaken at night, dress, and plan to go out thinking that it is morning and time to start the day?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK6</strong> <em>character</em> 6. Does  P awaken too early in the morning (earlier than was his/her habit)?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK6</strong> <em>character</em> 6. Does  P awaken too early in the morning (earlier than was his/her habit)?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK7</strong> <em>character</em> 7. Does  P sleep excessively during the day?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK7</strong> <em>character</em> 7. Does  P sleep excessively during the day?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK8</strong> <em>character</em> 8. Does  P have any other night-time behaviors that bother you that we haven't talked about?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK8</strong> <em>character</em> 8. Does  P have any other night-time behaviors that bother you that we haven't talked about?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIK9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK9B</strong> <em>character</em> 9b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK9C</strong> <em>character</em> 9c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIK9B</strong> <em>character</em> 9b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIK9C</strong> <em>character</em> 9c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPIKTOT</strong> <em>numeric</em> K. Sleep: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>NPIL</strong> <em>character</em> L. Appetite and eating disorders:</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=No; 1=Yes</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
+<li><p><strong>NPIL</strong> <em>character</em> L. Appetite and eating disorders: 0=No ; 1=Yes
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIL1</strong> <em>character</em> 1. Has he/she had a loss of appetite?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL1</strong> <em>character</em> 1. Has he/she had a loss of appetite?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL2</strong> <em>character</em> 2. Has he/she had an increase in appetite?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL2</strong> <em>character</em> 2. Has he/she had an increase in appetite?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL3</strong> <em>character</em> 3. Has he/she had a loss of weight?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL3</strong> <em>character</em> 3. Has he/she had a loss of weight?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL4</strong> <em>character</em> 4. Has he/she gained weight?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL4</strong> <em>character</em> 4. Has he/she gained weight?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL5</strong> <em>character</em> 5. Has he/she had a change in eating behavior such as putting too much food in his/her mouth at once?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL5</strong> <em>character</em> 5. Has he/she had a change in eating behavior such as putting too much food in his/her mouth at once?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL6</strong> <em>character</em> 6. Has he/she had a change in the kind of food he/she likes such as eating too many sweets or other specific types of food?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL6</strong> <em>character</em> 6. Has he/she had a change in the kind of food he/she likes such as eating too many sweets or other specific types of food?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL7</strong> <em>character</em> 7. Has he/she developed eating behaviors such as eating exactly the same types of food each day or eating the food in exactly the same order?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL7</strong> <em>character</em> 7. Has he/she developed eating behaviors such as eating exactly the same types of food each day or eating the food in exactly the same order?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL8</strong> <em>character</em> 8. Have there been any other changes in appetite or eating that I haven't asked about?</p><ul><li><p><em>ADNI2:</em> 1=Yes ; 0=No</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL8</strong> <em>character</em> 8. Have there been any other changes in appetite or eating that I haven't asked about?</p><ul><li><p><em>ADNI2:</em> 1=Yes; 0=No</p></li>
-<li><p><em>ADNI3:</em> 0=No;1=Yes</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIL9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally ;  2=2: Often ;  3=3: Frequently ; 4=4: Very frequently</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=1: Occasionally ; 2=2: Often ; 3=3: Frequently ; 4=4: Very frequently</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL9A</strong> <em>character</em> 9a. Frequency Ratings</p><ul><li><p><em>ADNI2:</em> 1=1: Occasionally;  2=2: Often;  3=3: Frequently; 4=4: Very frequently</p></li>
-<li><p><em>ADNI3:</em> 1=1: Occasionally;2=2: Often;3=3: Frequently;4=4: Very frequently</p></li>
-<li><p><em>ADNI4:</em> 1=1: Occasionally; 2=2: Often; 3=3: Frequently; 4=4: Very frequently</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL9B</strong> <em>character</em> 9b. Severity Ratings</p><ul><li><p><em>ADNI2, ADNI4:</em> 1=1: Mild; 2=2: Moderate; 3=3: Marked</p></li>
-<li><p><em>ADNI3:</em> 1=1: Mild;2=2: Moderate;3=3: Marked</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL9C</strong> <em>character</em> 9c. Caregiver Distress</p><ul><li><p><em>ADNI2, ADNI4:</em> 0=Not at all; 1=Minimally; 2=Mildly; 3=Moderately; 4=Severely; 5=Very severely or extremely</p></li>
-<li><p><em>ADNI3:</em> 0=Not at all;1=Minimally;2=Mildly;3=Moderately;4=Severely;5=Very severely or extremely</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIL9B</strong> <em>character</em> 9b. Severity Ratings 1=1: Mild ; 2=2: Moderate ; 3=3: Marked
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIL9C</strong> <em>character</em> 9c. Caregiver Distress 0=Not at all ; 1=Minimally ; 2=Mildly ; 3=Moderately ; 4=Severely ; 5=Very severely or extremely
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPILTOT</strong> <em>numeric</em> L. Appetite and eating disorders: Item score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..12</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
 <li><p><strong>NPITOTAL</strong> <em>numeric</em> NPI Total Score</p><ul><li><p><em>ADNI2, ADNI3:</em> 0..144</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 2, ..., 186208</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 2, ..., 187116</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1</p></li>
 <li><p><strong>LANGUAGE_CODE</strong> <em>character</em> Language Code e=English
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved; 1=Has QC error
+<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

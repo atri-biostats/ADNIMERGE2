@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 7181 observations and 42 variables.</p>
+    <p>A data frame with 7219 observations and 42 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -72,112 +74,75 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 10214</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Assessment NPDATE when present; otherwise Registry EXAMDATE Date: YYY-MM-DD</p></li>
-<li><p><strong>SOURCE</strong> <em>character</em> Information Source</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=Participant Visit;2=Telephone Call</p></li>
-<li><p><em>ADNI3:</em> 1=Participant Visit;2=Telephone Call/Video Call</p></li>
-<li><p><em>ADNI4:</em> 1=Participant Visit; 2=Telephone Call/Video Call</p></li>
+<li><p><strong>SOURCE</strong> <em>character</em> Information Source</p><ul><li><p><em>ADNIGO, ADNI2:</em> 1=Participant Visit ; 2=Telephone Call</p></li>
+<li><p><em>ADNI3, ADNI4:</em> 1=Participant Visit ; 2=Telephone Call/Video Call</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIA</strong> <em>character</em> A. Delusions:  Does  P believe that others are stealing from him/her, or planning to harm him/her in some way?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIA</strong> <em>character</em> A. Delusions:  Does  P believe that others are stealing from him/her, or planning to harm him/her in some way?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIASEV</strong> <em>character</em> A. Delusions:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
+<li><p><strong>NPIASEV</strong> <em>character</em> A. Delusions:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIB</strong> <em>character</em> B. Hallucinations:  Does  P act as if he/she hears voices? Does he/she talk to people who are not there?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIB</strong> <em>character</em> B. Hallucinations:  Does  P act as if he/she hears voices? Does he/she talk to people who are not there?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIBSEV</strong> <em>character</em> B. Hallucinations:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIC</strong> <em>character</em> C. Agitation/Aggression:  Is  P stubborn and resistive to help from others?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIBSEV</strong> <em>character</em> B. Hallucinations:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
+<li><p><strong>NPICSEV</strong> <em>character</em> C. Agitation/Aggression:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPID</strong> <em>character</em> D. Depression/Dysphoria:  Does  P act as if he/she is sad or in low spirits? Does he/she cry?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIC</strong> <em>character</em> C. Agitation/Aggression:  Is  P stubborn and resistive to help from others?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIDSEV</strong> <em>character</em> D. Depression/Dysphoria:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIE</strong> <em>character</em> E. Anxiety:  Does  P become upset when separated from you? Does he/she have any other signs of nervousness, such as shortness of breath, sighing, being unable to relax, or feeling excessively tense?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPICSEV</strong> <em>character</em> C. Agitation/Aggression:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
+<li><p><strong>NPIESEV</strong> <em>character</em> E. Anxiety:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIF</strong> <em>character</em> F. Elation/Euphoria:  Does  P appear to feel too good or act excessively happy?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPID</strong> <em>character</em> D. Depression/Dysphoria:  Does  P act as if he/she is sad or in low spirits? Does he/she cry?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIFSEV</strong> <em>character</em> F. Elation/Euphoria:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIG</strong> <em>character</em> G. Apathy/Indifference:  Does  P seem less interested in his/her usual activities and in the activities and plans of others?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIDSEV</strong> <em>character</em> D. Depression/Dysphoria:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
+<li><p><strong>NPIGSEV</strong> <em>character</em> G. Apathy/Indifference:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIH</strong> <em>character</em> H. Disinhibition:  Does  P seem to act impulsively? For example, does  P talk to strangers as if he/she knows them, or does  P say things that may hurt people's feelings?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIE</strong> <em>character</em> E. Anxiety:  Does  P become upset when separated from you? Does he/she have any other signs of nervousness, such as shortness of breath, sighing, being unable to relax, or feeling excessively tense?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIHSEV</strong> <em>character</em> H. Disinhibition:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPII</strong> <em>character</em> I. Irritability/Lability:  Is  P impatient or cranky? Does he/she have difficulty coping with delays or waiting for planned activities?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIESEV</strong> <em>character</em> E. Anxiety:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIF</strong> <em>character</em> F. Elation/Euphoria:  Does  P appear to feel too good or act excessively happy?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIFSEV</strong> <em>character</em> F. Elation/Euphoria:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIG</strong> <em>character</em> G. Apathy/Indifference:  Does  P seem less interested in his/her usual activities and in the activities and plans of others?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIGSEV</strong> <em>character</em> G. Apathy/Indifference:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIH</strong> <em>character</em> H. Disinhibition:  Does  P seem to act impulsively? For example, does  P talk to strangers as if he/she knows them, or does  P say things that may hurt people's feelings?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIHSEV</strong> <em>character</em> H. Disinhibition:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPII</strong> <em>character</em> I. Irritability/Lability:  Is  P impatient or cranky? Does he/she have difficulty coping with delays or waiting for planned activities?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIISEV</strong> <em>character</em> I. Irritability/Lability:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIJ</strong> <em>numeric</em> J. Aberrant Motor Behavior:  Does  P engage in repetitive activities, such as pacing around the house, handling buttons, wrapping strings, or doing other things repeatedly?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIISEV</strong> <em>character</em> I. Irritability/Lability:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIJ</strong> <em>numeric</em> J. Aberrant Motor Behavior:  Does  P engage in repetitive activities, such as pacing around the house, handling buttons, wrapping strings, or doing other things repeatedly?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul></li>
-<li><p><strong>NPIJSEV</strong> <em>character</em> J. Aberrant Motor Behavior:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
+<li><p><strong>NPIJSEV</strong> <em>character</em> J. Aberrant Motor Behavior:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIK</strong> <em>character</em> K. Sleep:  Does  P awaken you during the night, rise too early in the morning, or take excessive naps during the day?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIK</strong> <em>character</em> K. Sleep:  Does  P awaken you during the night, rise too early in the morning, or take excessive naps during the day?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
+<li><p><strong>NPIKSEV</strong> <em>character</em> K. Sleep:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPIL</strong> <em>character</em> L. Appetite:  Has  P lost or gained weight, or had a change in the food he/she likes?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No ; 1=Yes ; 2=N/A</p></li>
+<li><p><em>ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIKSEV</strong> <em>character</em> K. Sleep:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPIL</strong> <em>character</em> L. Appetite:  Has  P lost or gained weight, or had a change in the food he/she likes?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0=No;1=Yes;2=N/A</p></li>
-<li><p><em>ADNI4:</em> 0=No; 1=Yes</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPILSEV</strong> <em>character</em> L. Appetite:  Severity Ratings</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI3:</em> 1=1 - Mild (noticeable, but not a significant change).;2=2 - Moderate (significant, but not a dramatic change).;3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-<li><p><em>ADNI1, ADNIGO, ADNI2, ADNI4:</em> 1=1 - Mild (noticeable, but not a significant change).; 2=2 - Moderate (significant, but not a dramatic change).; 3=3 - Severe (very marked or prominent. A dramatic change).</p></li>
-</ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>NPILSEV</strong> <em>character</em> L. Appetite:  Severity Ratings 1=1 - Mild (noticeable, but not a significant change). ; 2=2 - Moderate (significant, but not a dramatic change). ; 3=3 - Severe (very marked or prominent. A dramatic change).
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NPISCORE</strong> <em>numeric</em> NPI-Q Total Score</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2, ADNI3:</em> 0..36</p></li>
 <li><p><em>ADNI4</em></p></li>
 </ul></li>
@@ -189,7 +154,7 @@
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1</p></li>
 <li><p><strong>LANGUAGE_CODE</strong> <em>character</em> Language Code e=English
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved; 1=Has QC error
+<li><p><strong>HAS_QC_ERROR</strong> <em>character</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>

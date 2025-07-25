@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,7 +74,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 386, ..., 70898</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 5296</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
@@ -84,19 +86,22 @@
 <li><p><strong>RECNO</strong> <em>numeric</em>   Range value: 1, ..., 5</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Examination Date Date: YYY-MM-DD</p></li>
 <li><p><strong>LONISID</strong> <em>numeric</em> LONI Study ID Range value: 1945, ..., 135496</p></li>
-<li><p><strong>FLDSTRENG</strong> <em>character</em> Field Strength 1.5=1.5T MRI;3=3T MRI
+<li><p><strong>FLDSTRENG</strong> <em>character</em> Field Strength 1.5=1.5T MRI ; 3=3T MRI
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SCAN</strong> <em>character</em> Scan 1=Original Scan;2=Rescan
+<li><p><strong>SCAN</strong> <em>character</em> Scan 1=Original Scan ; 2=Rescan
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>QCTYPE</strong> <em>character</em> QC Type 1=Clipy;2=Grinder
+<li><p><strong>QCTYPE</strong> <em>character</em> QC Type 1=Clipy ; 2=Grinder
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>NOMEDICAL</strong> <em>character</em> Image Medical Issues (check all that apply): 1=None
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SURGERY</strong> <em>logical</em>   1=Surgery</p></li>
+<li><p><strong>SURGERY</strong> <em>character</em>   1=Surgery
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>HEMMORHAGE</strong> <em>character</em>   1=Hemmorhage
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>DEVANOMALY</strong> <em>logical</em>   1=Development Anomaly</p></li>
-<li><p><strong>LESION</strong> <em>logical</em>   1=Space Occupying Lesion</p></li>
+<li><p><strong>DEVANOMALY</strong> <em>character</em>   1=Development Anomaly
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>LESION</strong> <em>character</em>   1=Space Occupying Lesion
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ATROPHY</strong> <em>character</em>   1=Atypical Atrophy
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>INFARCTION</strong> <em>character</em>   1=Hemispheric Infarction
@@ -105,27 +110,29 @@
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>METALLIC</strong> <em>character</em>   1=Metallic Artifact
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>NPH</strong> <em>logical</em>   1=NPH</p></li>
-<li><p><strong>EDEMA</strong> <em>logical</em>   1=Cerebral Edema</p></li>
+<li><p><strong>NPH</strong> <em>character</em>   1=NPH
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
+<li><p><strong>EDEMA</strong> <em>character</em>   1=Cerebral Edema
+<em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>OTHER</strong> <em>character</em>   1=Other
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCLUSION</strong> <em>character</em> Inclusion 1=Yes;0=No
+<li><p><strong>INCLUSION</strong> <em>character</em> Inclusion 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>STEREOMARK</strong> <em>character</em> Stereotactic Marker present -1 =Not Evaluated;0=Missing;1=Present Correct;2=Present Incorrect
+<li><p><strong>STEREOMARK</strong> <em>character</em> Stereotactic Marker present -1 =Not Evaluated ; 0=Missing ; 1=Present Correct ; 2=Present Incorrect
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>SERIAL</strong> <em>character</em> Serial scan -1 =Not Evaluated;0=Baseline;1=Matches Previous;2=Doesn't Match
+<li><p><strong>SERIAL</strong> <em>character</em> Serial scan -1 =Not Evaluated ; 0=Baseline ; 1=Matches Previous ; 2=Doesn't Match
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>MEDEXCL</strong> <em>character</em> Medical Exclusion (see Comments for details) -1 =Not Evaluated;0=No;1=Yes (not exclusion);2=Yes (potential exclusion)
+<li><p><strong>MEDEXCL</strong> <em>character</em> Medical Exclusion (see Comments for details) -1 =Not Evaluated ; 0=No ; 1=Yes (not exclusion) ; 2=Yes (potential exclusion)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PASS</strong> <em>character</em> Pass: 1=Yes;0=No
+<li><p><strong>PASS</strong> <em>character</em> Pass: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>QUARANTINE</strong> <em>character</em> Release from Quarantine: 1=Yes;0=No
+<li><p><strong>QUARANTINE</strong> <em>character</em> Release from Quarantine: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PAYPATIENT</strong> <em>character</em> Pay Patient: 1=Yes;0=No
+<li><p><strong>PAYPATIENT</strong> <em>character</em> Pay Patient: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>PAYSITE</strong> <em>character</em> Pay Site: 1=Yes;0=No
+<li><p><strong>PAYSITE</strong> <em>character</em> Pay Site: 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>RESCAN</strong> <em>character</em> Rescan 1=Yes;0=No
+<li><p><strong>RESCAN</strong> <em>character</em> Rescan 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>COMMENTS</strong> <em>character</em> Comments</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>

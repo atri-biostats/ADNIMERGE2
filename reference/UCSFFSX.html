@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -91,7 +93,7 @@
 <li><p><strong>BGQC</strong> <em>character</em> QC rating of the basal ganglia. Fail affects the following regions: LeftPutamen (ST53); RightPutamen (ST112); LeftCaudate (ST16); RightCaudate (ST75); LeftPallidum (ST42); RightPallidum (ST101) Pass/Fail</p></li>
 <li><p><strong>CWMQC</strong> <em>character</em> QC rating of the cerebral WM. Fail affects the following regions: LeftCerebralWM (ST20); RightCerebralWM (ST79) Pass/Fail</p></li>
 <li><p><strong>VENTQC</strong> <em>character</em> QC rating of the ventricles. Fail affects the following regions: LeftLateralVentricle (ST37); RightLateralVentricle (ST96); LeftInferiorLateralVentricle (ST30); RightInferiorLateralVentricle (ST89); ThirdVentricle (ST127); FourthVentricle (ST9); FifthVentrical (ST8); LeftChoroidPlexus (ST21); RightChoroidPlexus (ST80) , with options: Pass, Fail</p></li>
-<li><p><strong>ST100SV</strong> <em>logical</em> Volume (WM Parcellation) of RightNonWMHypoIntensities Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST100SV</strong> <em>logical</em> Volume (WM Parcellation) of RightNonWMHypoIntensities A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST101SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightPallidum Range value: 242, ..., 3040</p></li>
 <li><p><strong>ST102CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of RightParacentral Range value: 1500, ..., 6562</p></li>
 <li><p><strong>ST102SA</strong> <em>numeric</em> Surface Area of RightParacentral Range value: 948, ..., 2863</p></li>
@@ -169,14 +171,14 @@
 <li><p><strong>ST121SA</strong> <em>numeric</em> Surface Area of RightTransverseTemporal Range value: 73, ..., 592</p></li>
 <li><p><strong>ST121TA</strong> <em>numeric</em> Cortical Thickness Average of RightTransverseTemporal Range value: 1.167, ..., 3.085</p></li>
 <li><p><strong>ST121TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of RightTransverseTemporal Range value: 0.194, ..., 0.875</p></li>
-<li><p><strong>ST122SV</strong> <em>logical</em> Volume (WM Parcellation) of RightUndetermined Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST122SV</strong> <em>logical</em> Volume (WM Parcellation) of RightUndetermined A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST123CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of RightUnknown Range value: 3088, ..., 10227</p></li>
 <li><p><strong>ST123SA</strong> <em>numeric</em> Surface Area of RightUnknown Range value: 3968, ..., 9908</p></li>
 <li><p><strong>ST123TA</strong> <em>numeric</em> Cortical Thickness Average of RightUnknown Range value: 0.486, ..., 1.592</p></li>
 <li><p><strong>ST123TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of RightUnknown Range value: 0.803, ..., 1.796</p></li>
 <li><p><strong>ST124SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightVentralDC Range value: 2038, ..., 5491</p></li>
 <li><p><strong>ST125SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightVessel Range value: 3, ..., 516</p></li>
-<li><p><strong>ST126SV</strong> <em>logical</em> Volume (WM Parcellation) of RightWMHypoIntensities Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST126SV</strong> <em>logical</em> Volume (WM Parcellation) of RightWMHypoIntensities A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST127SV</strong> <em>numeric</em> Volume (WM Parcellation) of ThirdVentricle Range value: 599, ..., 5668</p></li>
 <li><p><strong>ST128SV</strong> <em>numeric</em> Volume (WM Parcellation) of WMHypoIntensities Range value: 1148, ..., 65054</p></li>
 <li><p><strong>ST129CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of LeftInsula Range value: 2430, ..., 8162</p></li>
@@ -207,10 +209,10 @@
 <li><p><strong>ST1SV</strong> <em>numeric</em> Volume (WM Parcellation) of Brainstem Range value: 14030, ..., 33819</p></li>
 <li><p><strong>ST20SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftCerebralWM Range value: 107685, ..., 322806</p></li>
 <li><p><strong>ST21SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftChoroidPlexus Range value: 975, ..., 4846</p></li>
-<li><p><strong>ST22CV</strong> <em>logical</em> Volume (Cortical Parcellation) of LeftCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ST22SA</strong> <em>logical</em> Surface Area of LeftCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ST22TA</strong> <em>logical</em> Cortical Thickness Average of LeftCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ST22TS</strong> <em>logical</em> Cortical Thickness Standard Deviation of LeftCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST22CV</strong> <em>logical</em> Volume (Cortical Parcellation) of LeftCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST22SA</strong> <em>logical</em> Surface Area of LeftCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST22TA</strong> <em>logical</em> Cortical Thickness Average of LeftCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST22TS</strong> <em>logical</em> Cortical Thickness Standard Deviation of LeftCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST23CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of LeftCuneus Range value: 860, ..., 4880</p></li>
 <li><p><strong>ST23SA</strong> <em>numeric</em> Surface Area of LeftCuneus Range value: 412, ..., 2256</p></li>
 <li><p><strong>ST23TA</strong> <em>numeric</em> Cortical Thickness Average of LeftCuneus Range value: 1.13, ..., 2.712</p></li>
@@ -228,7 +230,7 @@
 <li><p><strong>ST26TA</strong> <em>numeric</em> Cortical Thickness Average of LeftFusiform Range value: 1.388, ..., 3.172</p></li>
 <li><p><strong>ST26TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of LeftFusiform Range value: 0.46, ..., 1.231</p></li>
 <li><p><strong>ST27SA</strong> <em>numeric</em> Surface Area of LeftHemisphere Range value: 57804.7, ..., 111492</p></li>
-<li><p><strong>ST28CV</strong> <em>logical</em> Volume (Cortical Parcellation) of LeftHemisphereWM Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST28CV</strong> <em>logical</em> Volume (Cortical Parcellation) of LeftHemisphereWM A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST29SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftHippocampus Range value: 1217, ..., 5468</p></li>
 <li><p><strong>ST2SV</strong> <em>numeric</em> Volume (WM Parcellation) of CorpusCallosumAnterior Range value: 55, ..., 1351</p></li>
 <li><p><strong>ST30SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftInferiorLateralVentricle Range value: 40, ..., 7819</p></li>
@@ -240,7 +242,7 @@
 <li><p><strong>ST32SA</strong> <em>numeric</em> Surface Area of LeftInferiorTemporal Range value: 1408, ..., 5164</p></li>
 <li><p><strong>ST32TA</strong> <em>numeric</em> Cortical Thickness Average of LeftInferiorTemporal Range value: 1.547, ..., 3.305</p></li>
 <li><p><strong>ST32TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of LeftInferiorTemporal Range value: 0.506, ..., 1.161</p></li>
-<li><p><strong>ST33SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftInterior Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST33SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftInterior A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST34CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of LeftIsthmusCingulate Range value: 752, ..., 3588</p></li>
 <li><p><strong>ST34SA</strong> <em>numeric</em> Surface Area of LeftIsthmusCingulate Range value: 486, ..., 1475</p></li>
 <li><p><strong>ST34TA</strong> <em>numeric</em> Cortical Thickness Average of LeftIsthmusCingulate Range value: 1.137, ..., 3.162</p></li>
@@ -267,7 +269,7 @@
 <li><p><strong>ST40SA</strong> <em>numeric</em> Surface Area of LeftMiddleTemporal Range value: 1394, ..., 4407</p></li>
 <li><p><strong>ST40TA</strong> <em>numeric</em> Cortical Thickness Average of LeftMiddleTemporal Range value: 1.406, ..., 3.193</p></li>
 <li><p><strong>ST40TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of LeftMiddleTemporal Range value: 0.393, ..., 1.066</p></li>
-<li><p><strong>ST41SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftNonWMHypoIntensities Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST41SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftNonWMHypoIntensities A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST42SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftPallidum Range value: 253, ..., 2730</p></li>
 <li><p><strong>ST43CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of LeftParacentral Range value: 1380, ..., 5620</p></li>
 <li><p><strong>ST43SA</strong> <em>numeric</em> Surface Area of LeftParacentral Range value: 792, ..., 2394</p></li>
@@ -345,14 +347,14 @@
 <li><p><strong>ST62SA</strong> <em>numeric</em> Surface Area of LeftTransverseTemporal Range value: 112, ..., 1484</p></li>
 <li><p><strong>ST62TA</strong> <em>numeric</em> Cortical Thickness Average of LeftTransverseTemporal Range value: 1.181, ..., 2.936</p></li>
 <li><p><strong>ST62TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of LeftTransverseTemporal Range value: 0.198, ..., 0.784</p></li>
-<li><p><strong>ST63SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftUndetermined Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST63SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftUndetermined A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST64CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of LeftUnknown Range value: 2937, ..., 9804</p></li>
 <li><p><strong>ST64SA</strong> <em>numeric</em> Surface Area of LeftUnknown Range value: 4230, ..., 9112</p></li>
 <li><p><strong>ST64TA</strong> <em>numeric</em> Cortical Thickness Average of LeftUnknown Range value: 0.434, ..., 1.511</p></li>
 <li><p><strong>ST64TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of LeftUnknown Range value: 0.899, ..., 1.746</p></li>
 <li><p><strong>ST65SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftVentralDC Range value: 2166, ..., 5915</p></li>
 <li><p><strong>ST66SV</strong> <em>numeric</em> Volume (WM Parcellation) of LeftVessel Range value: 3, ..., 516</p></li>
-<li><p><strong>ST67SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftWMHypoIntensities Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST67SV</strong> <em>logical</em> Volume (WM Parcellation) of LeftWMHypoIntensities A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST68SV</strong> <em>numeric</em> Volume (WM Parcellation) of NonWMHypoIntensities Range value: 3, ..., 1100</p></li>
 <li><p><strong>ST69SV</strong> <em>numeric</em> Volume (WM Parcellation) of OpticChiasm Range value: 42, ..., 728</p></li>
 <li><p><strong>ST6SV</strong> <em>numeric</em> Volume (WM Parcellation) of CorpusCallosumPosterior Range value: 48, ..., 1654</p></li>
@@ -377,10 +379,10 @@
 <li><p><strong>ST79SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightCerebralWM Range value: 126353, ..., 328034</p></li>
 <li><p><strong>ST7SV</strong> <em>numeric</em> Volume (WM Parcellation) of Csf Range value: 655, ..., 6291</p></li>
 <li><p><strong>ST80SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightChoroidPlexus Range value: 866, ..., 5684</p></li>
-<li><p><strong>ST81CV</strong> <em>logical</em> Volume (Cortical Parcellation) of RightCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ST81SA</strong> <em>logical</em> Surface Area of RightCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ST81TA</strong> <em>logical</em> Cortical Thickness Average of RightCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ST81TS</strong> <em>logical</em> Cortical Thickness Standard Deviation of RightCorpusCallosum Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST81CV</strong> <em>logical</em> Volume (Cortical Parcellation) of RightCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST81SA</strong> <em>logical</em> Surface Area of RightCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST81TA</strong> <em>logical</em> Cortical Thickness Average of RightCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST81TS</strong> <em>logical</em> Cortical Thickness Standard Deviation of RightCorpusCallosum A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST82CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of RightCuneus Range value: 563, ..., 4693</p></li>
 <li><p><strong>ST82SA</strong> <em>numeric</em> Surface Area of RightCuneus Range value: 441, ..., 2505</p></li>
 <li><p><strong>ST82TA</strong> <em>numeric</em> Cortical Thickness Average of RightCuneus Range value: 1.214, ..., 2.253</p></li>
@@ -398,7 +400,7 @@
 <li><p><strong>ST85TA</strong> <em>numeric</em> Cortical Thickness Average of RightFusiform Range value: 1.474, ..., 3.18</p></li>
 <li><p><strong>ST85TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of RightFusiform Range value: 0.448, ..., 1.089</p></li>
 <li><p><strong>ST86SA</strong> <em>numeric</em> Surface Area of RightHemisphere Range value: 58959.5, ..., 113037</p></li>
-<li><p><strong>ST87CV</strong> <em>logical</em> Volume (Cortical Parcellation) of RightHemisphereWM Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST87CV</strong> <em>logical</em> Volume (Cortical Parcellation) of RightHemisphereWM A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST88SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightHippocampus Range value: 734, ..., 5818</p></li>
 <li><p><strong>ST89SV</strong> <em>numeric</em> Volume (WM Parcellation) of RightInferiorLateralVentricle Range value: 41, ..., 8760</p></li>
 <li><p><strong>ST8SV</strong> <em>numeric</em> Volume (WM Parcellation) of FifthVentricle Range value: 1, ..., 206</p></li>
@@ -410,7 +412,7 @@
 <li><p><strong>ST91SA</strong> <em>numeric</em> Surface Area of RightInferiorTemporal Range value: 1517, ..., 4940</p></li>
 <li><p><strong>ST91TA</strong> <em>numeric</em> Cortical Thickness Average of RightInferiorTemporal Range value: 1.503, ..., 3.404</p></li>
 <li><p><strong>ST91TS</strong> <em>numeric</em> Cortical Thickness Standard Deviation of RightInferiorTemporal Range value: 0.486, ..., 1.132</p></li>
-<li><p><strong>ST92SV</strong> <em>logical</em> Volume (WM Parcellation) of RightInterior Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ST92SV</strong> <em>logical</em> Volume (WM Parcellation) of RightInterior A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>ST93CV</strong> <em>numeric</em> Volume (Cortical Parcellation) of RightIsthmusCingulate Range value: 599, ..., 3358</p></li>
 <li><p><strong>ST93SA</strong> <em>numeric</em> Surface Area of RightIsthmusCingulate Range value: 460, ..., 1459</p></li>
 <li><p><strong>ST93TA</strong> <em>numeric</em> Cortical Thickness Average of RightIsthmusCingulate Range value: 1.221, ..., 3.132</p></li>

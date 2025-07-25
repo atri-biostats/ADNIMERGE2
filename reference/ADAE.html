@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 3495 observations and 62 variables.</p>
+    <p>A data frame with 3675 observations and 62 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -75,28 +77,28 @@
 <ul><li><p><strong>STUDYID</strong> <em>character</em> Study Identifier , with character options: ADNI</p></li>
 <li><p><strong>USUBJID</strong> <em>character</em> Unique Subject Identifier</p></li>
 <li><p><strong>SUBJID</strong> <em>character</em> Subject Identifier for the Study</p></li>
-<li><p><strong>SITEID</strong> <em>character</em> Study Site Identifier</p></li>
+<li><p><strong>SITEID</strong> <em>numeric</em> Study Site Identifier Range value: 1, ..., 941</p></li>
 <li><p><strong>TRTA</strong> <em>character</em> Actual Arm</p></li>
 <li><p><strong>TRTP</strong> <em>character</em> Planned Arm</p></li>
 <li><p><strong>AGE</strong> <em>numeric</em> Age (in Years) Range value: 50.5, ..., 90.3</p></li>
 <li><p><strong>AGEU</strong> <em>character</em> Age Units , with character options: Years</p></li>
 <li><p><strong>AGEGR1</strong> <em>character</em> Pooled Age Group 1 , with character options: &gt;=65, &lt;65</p></li>
 <li><p><strong>AGEGR1N</strong> <em>numeric</em> Pooled Age Group 1 (N) Range value: 1, ..., 2</p></li>
-<li><p><strong>SEX</strong> <em>character</em> Sex , with character options: Female, Male</p></li>
+<li><p><strong>SEX</strong> <em>character</em> Sex , with character options: Male, Female</p></li>
 <li><p><strong>RACE</strong> <em>factor</em> Race , with factor levels: American Indian or Alaskan Native, Asian, Black or African American, Native Hawaiian or Other Pacific Islander, Other Pacific Islander, White, More than one race, Unknown</p></li>
 <li><p><strong>RACEN</strong> <em>numeric</em> Race (N) Range value: 1, ..., 999</p></li>
-<li><p><strong>ETHNIC</strong> <em>character</em> Ethnicity , with character options: Not Hispanic or Latino, Hispanic or Latino, Unknown</p></li>
+<li><p><strong>ETHNIC</strong> <em>character</em> Ethnicity , with character options: Not Hispanic or Latino, Unknown, Hispanic or Latino</p></li>
 <li><p><strong>DX</strong> <em>factor</em> Baseline Diagnostics Status , with factor levels: CN, MCI, DEM</p></li>
-<li><p><strong>ENRLFL</strong> <em>character</em> Enrolled Population Flag , with character options: Yes, No</p></li>
+<li><p><strong>ENRLFL</strong> <em>character</em> Enrolled Population Flag , with character options: Y</p></li>
 <li><p><strong>ENRLDT</strong> <em>Date</em> Date of Enrollment Date: YYY-MM-DD</p></li>
 <li><p><strong>EOSDT</strong> <em>Date</em> End of Study Date Date: YYY-MM-DD</p></li>
 <li><p><strong>EOSDTF</strong> <em>character</em> End of Study Date Imputation Flag , with character options: M</p></li>
 <li><p><strong>ASTDT</strong> <em>Date</em> Analysis Start Date Date: YYY-MM-DD</p></li>
 <li><p><strong>ASTDTF</strong> <em>character</em> Analysis Start Date Imputation Flag</p></li>
-<li><p><strong>ASTDY</strong> <em>numeric</em> Analysis Start Relative Day Range value: -4327, ..., 6929</p></li>
+<li><p><strong>ASTDY</strong> <em>numeric</em> Analysis Start Relative Day Range value: -4327, ..., 7102</p></li>
 <li><p><strong>AENDT</strong> <em>Date</em> Analysis End Date Date: YYY-MM-DD</p></li>
 <li><p><strong>AENDTF</strong> <em>character</em> Analysis End Date Imputation Flag</p></li>
-<li><p><strong>AENDY</strong> <em>numeric</em> Analysis End Relative Day Range value: -133, ..., 337328</p></li>
+<li><p><strong>AENDY</strong> <em>numeric</em> Analysis End Relative Day Range value: -146, ..., 337328</p></li>
 <li><p><strong>ADURN</strong> <em>numeric</em> Adverse Events Duration (N) Range value: -363, ..., 332062</p></li>
 <li><p><strong>ADURU</strong> <em>character</em> Analysis Duration Unit , with character options: days</p></li>
 <li><p><strong>AETERM</strong> <em>character</em> Reported Term for the Adverse Event</p></li>
@@ -110,29 +112,29 @@
 <li><p><strong>AEHLGTCD</strong> <em>character</em> High Level Group Term Code</p></li>
 <li><p><strong>AESOC</strong> <em>character</em> Primary Sytem Organ Class</p></li>
 <li><p><strong>AESOCCD</strong> <em>character</em> Primary Sytem Organ Class Code</p></li>
-<li><p><strong>AESEV</strong> <em>character</em> Severity/Intensity , with character options: Moderate, Severe, Mild</p></li>
-<li><p><strong>AESER</strong> <em>character</em> Serious Event , with character options: No, Yes</p></li>
+<li><p><strong>AESEV</strong> <em>character</em> Severity/Intensity , with character options: Severe, Mild, Moderate</p></li>
+<li><p><strong>AESER</strong> <em>character</em> Serious Event , with character options: Yes, No</p></li>
 <li><p><strong>AESCONG</strong> <em>character</em> Congenital Anomaly or Birth Defect , with character options: No</p></li>
 <li><p><strong>AESDISAB</strong> <em>character</em> Persist or Signif Disability/Incapacity , with character options: No, Yes</p></li>
 <li><p><strong>AESDTH</strong> <em>character</em> Results in Death , with character options: Yes, No</p></li>
 <li><p><strong>AESHOSP</strong> <em>character</em> Requires or Prologns Hospitalization , with character options: No, Yes</p></li>
 <li><p><strong>AESLIFE</strong> <em>character</em> Is Life Threating , with character options: Yes, No</p></li>
 <li><p><strong>AESMIE</strong> <em>character</em> Other Medically Important Serious Event , with character options: No, Yes</p></li>
-<li><p><strong>AERELCM</strong> <em>character</em> Related to Concomitant Therapy , with character options: Not related, Unlikely, Possibly, Definitely, Probably</p></li>
-<li><p><strong>AERELFLRBTBN</strong> <em>character</em> Related to Florbetaben Tracer , with character options: Not related, Unlikely, Definitely, Possibly</p></li>
+<li><p><strong>AERELCM</strong> <em>character</em> Related to Concomitant Therapy , with character options: Not related, Possibly, Unlikely, Definitely, Probably</p></li>
+<li><p><strong>AERELFLRBTBN</strong> <em>character</em> Related to Florbetaben Tracer , with character options: Not related, Unlikely, Definitely, Possibly, Probably</p></li>
 <li><p><strong>AERELFLRBPR</strong> <em>character</em> Related to Florbetapir Tracer , with character options: Not related, Unlikely, Possibly, Probably</p></li>
 <li><p><strong>AEHIMG</strong> <em>character</em> Related to PET/MRI Imaging Procedure , with character options: Not related, Possibly, Unlikely, Definitely, Probably</p></li>
-<li><p><strong>AERELTAU</strong> <em>character</em> Related to Flotaucipir Tracer , with character options: Not related, Possibly, Probably, Unlikely</p></li>
-<li><p><strong>AERELNAV</strong> <em>character</em> Related to NAV-4694 Tracer , with character options: Not related, Definitely, Possibly</p></li>
+<li><p><strong>AERELTAU</strong> <em>character</em> Related to Flotaucipir Tracer , with character options: Not related, Probably, Unlikely, Possibly</p></li>
+<li><p><strong>AERELNAV</strong> <em>character</em> Related to NAV-4694 Tracer , with character options: Not related, Possibly</p></li>
 <li><p><strong>AERELMK</strong> <em>character</em> Related to MK-6240 Tracer , with character options: Not related, Unlikely</p></li>
 <li><p><strong>AERELPI</strong> <em>character</em> Related to PI-2620 Tracer , with character options: Not related</p></li>
 <li><p><strong>AEHLUMB</strong> <em>character</em> Related to Lumbar Puncture , with character options: Not related, Definitely, Probably, Unlikely, Possibly</p></li>
-<li><p><strong>AERELCOVID</strong> <em>character</em> Related to COVID-19 Illness , with character options: Unlikely, Not related, Definitely (Confirmed COVID-19 test), Probably, Possibly</p></li>
+<li><p><strong>AERELCOVID</strong> <em>character</em> Related to COVID-19 Illness , with character options: Not related, Unlikely, Definitely (Confirmed COVID-19 test), Possibly, Probably</p></li>
 <li><p><strong>AERELPAN</strong> <em>character</em> Related to COVID-19 Pandemic Disruption , with character options: Not related, Definitely, Probably, Unlikely, Possibly</p></li>
 <li><p><strong>AERELAD</strong> <em>character</em> Related to Early Stage/Progression of AD , with character options: Not related, Unlikely, Possibly, Probably, Definitely</p></li>
 <li><p><strong>AERELATESP</strong> <em>character</em> Related to Other Study Procedure(s) , with character options: Not related, Unlikely, Probably, Definitely, Possibly</p></li>
-<li><p><strong>AECONTRT</strong> <em>character</em> Concomitant or Additional Trtmnt Given , with character options: Yes, No</p></li>
-<li><p><strong>AEOUT</strong> <em>character</em> Outcome of Adverse Event , with character options: Recovered/Resolved, Fatal, Not recovered/Not resolved, Recovering/Resolving, Recovered/Resolved with sequelae, Unknown</p></li>
+<li><p><strong>AECONTRT</strong> <em>character</em> Concomitant or Additional Trtmnt Given , with character options: No, Yes</p></li>
+<li><p><strong>AEOUT</strong> <em>character</em> Outcome of Adverse Event , with character options: Fatal, Not recovered/Not resolved, Recovered/Resolved, Recovering/Resolving, Recovered/Resolved with sequelae, Unknown</p></li>
 <li><p><strong>AESEQ</strong> <em>integer</em> Sequence Number Range value: 1, ..., 32</p></li>
 </ul></div>
     <div class="section level2">

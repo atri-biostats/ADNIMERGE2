@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,19 +74,19 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 5296</p></li>
 <li><p><strong>PTNO</strong> <em>numeric</em> 4 digit Participant Number Range value: 1, ..., 1435</p></li>
-<li><p><strong>TYPE</strong> <em>character</em> ID Type S=Study Participant;P=Phantom;V=Volunteer
+<li><p><strong>TYPE</strong> <em>character</em> ID Type S=Study Participant ; P=Phantom ; V=Volunteer
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ARM</strong> <em>character</em> Diagnosis/Scan Category Assignment</p><ul><li><p><em>ADNI1:</em> 1=NL - 1.5T only;2=MCI - 1.5T only;3=AD - 1.5T only;4=NL - PET+1.5T;5=MCI - PET+1.5T;6=AD - PET+1.5T;7=NL - 3T+1.5T;8=MCI - 3T+1.5T;9=AD - 3T+1.5T;</p></li>
-<li><p><em>ADNIGO:</em> 1=NL - 1.5T only;2=MCI - 1.5T only;3=AD - 1.5T only;4=NL - PET+1.5T;5=MCI - PET+1.5T;6=AD - PET+1.5T;7=NL - 3T+1.5T;8=MCI - 3T+1.5T;9=AD - 3T+1.5T;10=EMCI</p></li>
-<li><p><em>ADNI2:</em> 1=NL - (ADNI1 1.5T only); 2=LMCI - (ADNI1 1.5T only); 3=AD - (ADNI1 1.5T only); 4=NL - (ADNI1 PET+1.5T); 5=LMCI - (ADNI1 PET+1.5T); 6=AD - (ADNI1 PET+1.5T); 7=NL - (ADNI1 3T+1.5T); 8=LMCI - (ADNI1 3T+1.5T); 9=AD - (ADNI1 3T+1.5T); 10=EMCI; 11=SMC - (Significant Memory Concern)</p></li>
+<li><p><strong>ARM</strong> <em>character</em> Diagnosis/Scan Category Assignment</p><ul><li><p><em>ADNI1:</em> 1=NL - 1.5T only ; 2=MCI - 1.5T only ; 3=AD - 1.5T only ; 4=NL - PET+1.5T ; 5=MCI - PET+1.5T ; 6=AD - PET+1.5T ; 7=NL - 3T+1.5T ; 8=MCI - 3T+1.5T ; 9=AD - 3T+1.5T ;</p></li>
+<li><p><em>ADNIGO:</em> 1=NL - 1.5T only ; 2=MCI - 1.5T only ; 3=AD - 1.5T only ; 4=NL - PET+1.5T ; 5=MCI - PET+1.5T ; 6=AD - PET+1.5T ; 7=NL - 3T+1.5T ; 8=MCI - 3T+1.5T ; 9=AD - 3T+1.5T ; 10=EMCI</p></li>
+<li><p><em>ADNI2:</em> 1=NL - (ADNI1 1.5T only) ; 2=LMCI - (ADNI1 1.5T only) ; 3=AD - (ADNI1 1.5T only) ; 4=NL - (ADNI1 PET+1.5T) ; 5=LMCI - (ADNI1 PET+1.5T) ; 6=AD - (ADNI1 PET+1.5T) ; 7=NL - (ADNI1 3T+1.5T) ; 8=LMCI - (ADNI1 3T+1.5T) ; 9=AD - (ADNI1 3T+1.5T) ; 10=EMCI ; 11=SMC - (Significant Memory Concern)</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ENROLLED</strong> <em>character</em> Enrollment Status</p><ul><li><p><em>ADNI1:</em> null=pending enrollment;1=randomized - assigned a scan category;-1=screen failed;-2=screen failed after randomization</p></li>
-<li><p><em>ADNIGO:</em> null=pending enrollment;1=randomized - assigned a scan category;-1=screen failed;-2=screen failed after randomization;2=Enrolled</p></li>
-<li><p><em>ADNI2:</em> null=pending enrollment;1=randomized - assigned a scan category;-1=screen failed;-2=phantom screen;2=Approved for enrollment in ADNIGO; 3=Approved for enrollment in ADNI2</p></li>
+<li><p><strong>ENROLLED</strong> <em>character</em> Enrollment Status</p><ul><li><p><em>ADNI1:</em> null=pending enrollment ; 1=randomized - assigned a scan category ; -1=screen failed ; -2=screen failed after randomization</p></li>
+<li><p><em>ADNIGO:</em> null=pending enrollment ; 1=randomized - assigned a scan category ; -1=screen failed ; -2=screen failed after randomization ; 2=Enrolled</p></li>
+<li><p><em>ADNI2:</em> null=pending enrollment ; 1=randomized - assigned a scan category ; -1=screen failed ; -2=phantom screen ; 2=Approved for enrollment in ADNIGO ; 3=Approved for enrollment in ADNI2</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>RANDDATE</strong> <em> </em> Randomization Date Date: YYY-MM-DD</p></li>
 <li><p><strong>MAPPDATE</strong> <em> </em> Monitor Approval Date Date: YYY-MM-DD</p></li>

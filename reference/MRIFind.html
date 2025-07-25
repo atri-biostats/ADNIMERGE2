@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -62,7 +64,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 3261 observations and 44 variables.</p>
+    <p>A data frame with 3139 observations and 42 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -71,49 +73,47 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><strong>ParticipantID</strong> <em>character</em></p></li>
+<ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI4, ADNI3, ADNI1, ADNI2, ADNIGO</p></li>
+<li><p><strong>ParticipantID</strong> <em>character</em></p></li>
+<li><p><strong>RID</strong> <em>numeric</em>   Range value: 21, ..., 10849</p></li>
+<li><p><strong>VISCODE</strong> <em>character</em>   , with options: 4_sc, 4_init, 4_m12, 4_m24</p></li>
+<li><p><strong>VISCODE2</strong> <em>character</em></p></li>
 <li><p><strong>StudyDate</strong> <em> </em>   Date: YYY-MM-DD</p></li>
 <li><p><strong>SeriesTime</strong> <em> </em>   hms: HH-MM-SS</p></li>
-<li><p><strong>StudyVisitCode</strong> <em>logical</em>   Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>SeriesNumber</strong> <em>numeric</em>   Range value: 2, ..., 2010</p></li>
-<li><p><strong>SeriesType</strong> <em>character</em>   , with options: T2starw, FLAIR, dMRI, MET2starw</p></li>
-<li><p><strong>SiteID</strong> <em>character</em></p></li>
-<li><p><strong>SeriesChosen</strong> <em>numeric</em>   Range value: 0, ..., 1</p></li>
-<li><p><strong>SeriesQC</strong> <em>numeric</em>   Range value: -1, ..., 4</p></li>
-<li><p><strong>SeriesQCReasons</strong> <em>character</em></p></li>
-<li><p><strong>SeriesProtocol</strong> <em>numeric</em>   Range value: -1, ..., 4</p></li>
-<li><p><strong>SeriesProtocolComment</strong> <em>character</em></p></li>
+<li><p><strong>SeriesNumber</strong> <em>numeric</em>   Range value: 2, ..., 5001</p></li>
+<li><p><strong>SeriesType</strong> <em>character</em>   , with options: dMRI, MET2starw, FLAIR, T2starw</p></li>
+<li><p><strong>SiteID</strong> <em>numeric</em>   Range value: 2, ..., 941</p></li>
 <li><p><strong>UniqueID</strong> <em>numeric</em>   Range value: 1, ..., 218</p></li>
 <li><p><strong>FindingsType</strong> <em>character</em></p></li>
-<li><p><strong>Status</strong> <em>character</em>   , with options: Definite, Possible, None, Not Observed Definite, Rescinded, Not Observed Possible</p></li>
+<li><p><strong>Status</strong> <em>character</em>   , with options: Definite, Possible, Not Observed Possible, None, Not Observed Definite, Rescinded, Resolved</p></li>
 <li><p><strong>FindingComments</strong> <em>character</em></p></li>
 <li><p><strong>AtlasRegions</strong> <em>character</em></p></li>
 <li><p><strong>RASLocations</strong> <em>character</em></p></li>
-<li><p><strong>ARIARegion</strong> <em>logical</em>   Boolean value: TRUE/ FALSE</p></li>
-<li><p><strong>ARIALength</strong> <em>logical</em>   Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ARIARegion</strong> <em>logical</em>   A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ARIALength</strong> <em>logical</em>   A Boolean value: TRUE/ FALSE</p></li>
 <li><p><strong>GMProbability</strong> <em>character</em></p></li>
 <li><p><strong>WMProbability</strong> <em>character</em></p></li>
 <li><p><strong>CSFProbability</strong> <em>character</em></p></li>
 <li><p><strong>MaxDiameter</strong> <em>numeric</em>   Range value: 0, ..., 24</p></li>
-<li><p><strong>SliceCount</strong> <em>numeric</em>   Range value: 0, ..., 13</p></li>
-<li><p><strong>NoFindings</strong> <em>numeric</em>   Range value: -1, ..., 1</p></li>
+<li><p><strong>SliceCount</strong> <em>numeric</em>   Range value: 0, ..., 17</p></li>
+<li><p><strong>NoFindings</strong> <em>numeric</em>   Range value: 0, ..., 1</p></li>
 <li><p><strong>EvalDate</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
-<li><p><strong>ScannerManufacturer</strong> <em>character</em>   , with options: GE, SIEMENS, PHILIPS</p></li>
+<li><p><strong>ScannerManufacturer</strong> <em>character</em>   , with options: SIEMENS, PHILIPS, GE</p></li>
 <li><p><strong>ScannerModel</strong> <em>character</em></p></li>
 <li><p><strong>SoftwareVersion</strong> <em>character</em></p></li>
 <li><p><strong>MagneticFieldStrength</strong> <em>numeric</em>   Range value: 3, ..., 3</p></li>
-<li><p><strong>Acceleration</strong> <em>character</em>   , with options: Unaccelerated, Accelerated, Ultrafast, Undetermined</p></li>
+<li><p><strong>Acceleration</strong> <em>character</em>   , with options: Accelerated, Ultrafast, Unaccelerated</p></li>
 <li><p><strong>AcquisitionType</strong> <em>numeric</em>   Range value: 2, ..., 3</p></li>
-<li><p><strong>AcquisitionPlane</strong> <em>character</em>   , with options: Axial, Sagittal, Unknown</p></li>
-<li><p><strong>NumberVolumes</strong> <em>numeric</em>   Range value: 0, ..., 127</p></li>
-<li><p><strong>SlicesPerVolume</strong> <em>numeric</em>   Range value: 0, ..., 4398</p></li>
+<li><p><strong>AcquisitionPlane</strong> <em>character</em>   , with options: Axial, Sagittal</p></li>
+<li><p><strong>NumberVolumes</strong> <em>numeric</em>   Range value: 1, ..., 127</p></li>
+<li><p><strong>SlicesPerVolume</strong> <em>numeric</em>   Range value: 35, ..., 211</p></li>
 <li><p><strong>SliceThickness</strong> <em>numeric</em>   Range value: 1, ..., 4</p></li>
 <li><p><strong>ReceiveCoilName</strong> <em>character</em></p></li>
 <li><p><strong>StudyInstanceUID</strong> <em>character</em></p></li>
 <li><p><strong>SeriesInstanceUID</strong> <em>character</em></p></li>
-<li><p><strong>LONIStudy</strong> <em>numeric</em>   Range value: 242527, ..., 352021</p></li>
-<li><p><strong>LONISeries</strong> <em>numeric</em>   Range value: 5162600, ..., 5923325</p></li>
-<li><p><strong>LONIImage</strong> <em>numeric</em>   Range value: 10248884, ..., 11183151</p></li>
+<li><p><strong>LONIStudy</strong> <em>numeric</em>   Range value: 242527, ..., 363432</p></li>
+<li><p><strong>LONISeries</strong> <em>numeric</em>   Range value: 5162601, ..., 6020330</p></li>
+<li><p><strong>LONIImage</strong> <em>numeric</em>   Range value: 10248885, ..., 11327726</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>
     <div class="section level2">

@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,13 +74,13 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 1, ..., 1435</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: f, sc</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em>   , with options: f, sc</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Date Criteria Confirmed Date: YYY-MM-DD</p></li>
-<li><p><strong>INCSIGN</strong> <em>character</em> 1. Have the participant and study partner signed the Informed Consent form? 1=Yes; 0=No
+<li><p><strong>INCSIGN</strong> <em>character</em> 1. Have the participant and study partner signed the Informed Consent form? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>INCSGDT</strong> <em> </em> If Yes, date signed Date: YYY-MM-DD</p></li>
 <li><p><strong>INCSG15T</strong> <em>character</em> Check the following to indicate the participant is suitable for and consents to: 1=1.5 Tesla MRI
@@ -89,47 +91,47 @@
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>INCSGLP</strong> <em>character</em>   1=Lumbar Puncture
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCMCOMP</strong> <em>character</em> 2. NL - Is participant free of memory complaints, verified by an informant, aside from those normal with age?MCI - Does the subject have memory complaints and memory difficulties that are verified by an informant?AD -  Does the subject have memory complaints that are verified by an informant? 1=Yes;0=No
+<li><p><strong>INCMCOMP</strong> <em>character</em> 2. NL - Is participant free of memory complaints, verified by an informant, aside from those normal with age?MCI - Does the subject have memory complaints and memory difficulties that are verified by an informant?AD -  Does the subject have memory complaints that are verified by an informant? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCMFXN</strong> <em>character</em> 3. NL - Normal memory function documented by scoring at specific cutoffs on the Logical Memory II subscale (delayed Paragraph Recall) from the Wechsler Memory Scaled - Revised (the maximum score is 25)MCI/AD - Abnormal memory function documented by scoring below the educationn adjusted cutoff on the Logical Memory II subscale (Delayed  Paragraph Recall) from the Wechsler Memory Scale - Revised (the maximum score is 25) 1=Yes;0=No
+<li><p><strong>INCMFXN</strong> <em>character</em> 3. NL - Normal memory function documented by scoring at specific cutoffs on the Logical Memory II subscale (delayed Paragraph Recall) from the Wechsler Memory Scaled - Revised (the maximum score is 25)MCI/AD - Abnormal memory function documented by scoring below the educationn adjusted cutoff on the Logical Memory II subscale (Delayed  Paragraph Recall) from the Wechsler Memory Scale - Revised (the maximum score is 25) 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCMMSE</strong> <em>character</em> 4. NL/MCI - Does the participant have Mini-Mental State Exam score between 24 and 30 (inclusive)?  (Exceptions must be made for subjects with less than 8 years of education at the discretion of the project director).AD - Does the participant have an MMSE score between 20 and 26 (inclusive)? 1=Yes; 0=No
+<li><p><strong>INCMMSE</strong> <em>character</em> 4. NL/MCI - Does the participant have Mini-Mental State Exam score between 24 and 30 (inclusive)?  (Exceptions must be made for subjects with less than 8 years of education at the discretion of the project director).AD - Does the participant have an MMSE score between 20 and 26 (inclusive)? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCCDR</strong> <em>character</em> 5. NL - Does the participant have a Clinical Dementia Rating of 0?  Memory Box score must be 0.MCI - Does the participant have a Clinical Dementia Rating of 0.5?  Memory Box score must be at least 0.5.AD - Does participant have a Clinical Dementia rating of 0.5 or 1.0? 1=Yes; 0=No
+<li><p><strong>INCCDR</strong> <em>character</em> 5. NL - Does the participant have a Clinical Dementia Rating of 0?  Memory Box score must be 0.MCI - Does the participant have a Clinical Dementia Rating of 0.5?  Memory Box score must be at least 0.5.AD - Does participant have a Clinical Dementia rating of 0.5 or 1.0? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCCOG</strong> <em>character</em> 6. NL - Is the participant cognitively normal based on an absence of significant impairment in cognitive functions or activities of daily living?MCI - Is the participant's general cognition and functional performance sufficiently perserved such that a diagnosis of Alzheimer's disease cannot be made by the site physician at the time of the screening visit? AD - Does the participant meet NINCDS/ADRDA criteria for probable AD? 1=Yes; 0=No
+<li><p><strong>INCCOG</strong> <em>character</em> 6. NL - Is the participant cognitively normal based on an absence of significant impairment in cognitive functions or activities of daily living?MCI - Is the participant's general cognition and functional performance sufficiently perserved such that a diagnosis of Alzheimer's disease cannot be made by the site physician at the time of the screening visit? AD - Does the participant meet NINCDS/ADRDA criteria for probable AD? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCHACH</strong> <em>character</em> 7. Does the participant have a Modified Hachinski score less than or equal to 4? 1=Yes; 0=No
+<li><p><strong>INCHACH</strong> <em>character</em> 7. Does the participant have a Modified Hachinski score less than or equal to 4? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCAGE</strong> <em>character</em> 8. Is the participant between 55 and 90 years of age inclusive? 1=Yes; 0=No
+<li><p><strong>INCAGE</strong> <em>character</em> 8. Is the participant between 55 and 90 years of age inclusive? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCSTMED</strong> <em>character</em> 9. Has the participant been on stable doses of non-excluded medications for at least 4 weeks prior to screening? 1=Yes; 0=No
+<li><p><strong>INCSTMED</strong> <em>character</em> 9. Has the participant been on stable doses of non-excluded medications for at least 4 weeks prior to screening? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCGDS</strong> <em>character</em> 10. Does the participant have a Geriatric Depression Scale score of &lt;6? 1=Yes; 0=No
+<li><p><strong>INCGDS</strong> <em>character</em> 10. Does the participant have a Geriatric Depression Scale score of &lt;6? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCINFORM</strong> <em>character</em> 11. Does the participant have an informant available who they have frequent contact with (e.g. an average of 10 hours per week or more), and can accompany the participant to all clinic visits and imaging sessions for the duration of the protocol? 1=Yes; 0=No
+<li><p><strong>INCINFORM</strong> <em>character</em> 11. Does the participant have an informant available who they have frequent contact with (e.g. an average of 10 hours per week or more), and can accompany the participant to all clinic visits and imaging sessions for the duration of the protocol? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCVISUAL</strong> <em>character</em> 12. Does the participant have adequate visual and auditory acuity to allow neuropsychological testing? 1=Yes; 0=No
+<li><p><strong>INCVISUAL</strong> <em>character</em> 12. Does the participant have adequate visual and auditory acuity to allow neuropsychological testing? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCHEALTH</strong> <em>character</em> 13. Is the participant in good general health with no additional diseases expected to interfere with the study? 1=Yes; 0=No
+<li><p><strong>INCHEALTH</strong> <em>character</em> 13. Is the participant in good general health with no additional diseases expected to interfere with the study? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCFEM</strong> <em>character</em> 14. If female, is the participant not pregnant, lactating, or of childbearing potential (i.e. women must be two years post-menopausal or surgically sterile)? 1=Yes; 0=No;2=N/A
+<li><p><strong>INCFEM</strong> <em>character</em> 14. If female, is the participant not pregnant, lactating, or of childbearing potential (i.e. women must be two years post-menopausal or surgically sterile)? 1=Yes ; 0=No ; 2=N/A
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCPART</strong> <em>character</em> 15. NL/MCI - Is the participant willing and able to complete all Baseline assessment and participate in a 3-year protocol?AD - Is the participant willing and able to ...2-year protocol? 1=Yes;0=No
+<li><p><strong>INCPART</strong> <em>character</em> 15. NL/MCI - Is the participant willing and able to complete all Baseline assessment and participate in a 3-year protocol?AD - Is the participant willing and able to ...2-year protocol? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCIMAG</strong> <em>character</em> 16. Is the participant willing to undergo MRI 1.5 Tesla neuroimaging (PET and MRI 3 Tesla are optional) and provide DNA for ApoE assessments and banking as well as plasma samples at protocol specified time points? 1=Yes; 0=No
+<li><p><strong>INCIMAG</strong> <em>character</em> 16. Is the participant willing to undergo MRI 1.5 Tesla neuroimaging (PET and MRI 3 Tesla are optional) and provide DNA for ApoE assessments and banking as well as plasma samples at protocol specified time points? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCEDUC</strong> <em>character</em> 17. Has the participant completed 6 grades of education (or had a good work history sufficient to exclude mental retardation)? 1=Yes; 0=No
+<li><p><strong>INCEDUC</strong> <em>character</em> 17. Has the participant completed 6 grades of education (or had a good work history sufficient to exclude mental retardation)? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCLANG</strong> <em>character</em> 18. Is the participant fluent in English or Spanish? 1=Yes; 0=No
+<li><p><strong>INCLANG</strong> <em>character</em> 18. Is the participant fluent in English or Spanish? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCHIST</strong> <em>character</em> 19a. Medical History 1=Yes;0=No
+<li><p><strong>INCHIST</strong> <em>character</em> 19a. Medical History 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCPHYS</strong> <em>character</em> 19b. Physical Examination? 1=Yes; 0=No
+<li><p><strong>INCPHYS</strong> <em>character</em> 19b. Physical Examination? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCNEUR</strong> <em>character</em> 19c. Neurological Examination? 1=Yes; 0=No
+<li><p><strong>INCNEUR</strong> <em>character</em> 19c. Neurological Examination? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>INCLAB</strong> <em>character</em> 19d. Laboratory Tests? 1=Yes; 0=No
+<li><p><strong>INCLAB</strong> <em>character</em> 19d. Laboratory Tests? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 10, ..., 2236</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 127</p></li>

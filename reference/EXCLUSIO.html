@@ -15,21 +15,23 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/ADNIMERGE2.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><h6 class="dropdown-header" data-toc-skip>R Package Build</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Metadata Specs</h6></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
-    <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Derived/Analysis Ready Data</h6></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
-    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Ready Data</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
     <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ADNI Summaries</h6></li>
     <li><a class="dropdown-item" href="../articles/ADNI-Enrollment.html">ADNI Enrollment</a></li>
+    <li><a class="dropdown-item" href="../articles/ADNI-Longitudinal.html">ADNI Longitudinal Summaries</a></li>
   </ul></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Versions</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/atri-biostats/ADNIMERGE2/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
@@ -72,33 +74,33 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1</p></li>
-<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with factor levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
+<li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
 <li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 1435</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: sc, f</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em>   , with options: sc, f</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Date Criteria Confirmed Date: YYY-MM-DD</p></li>
-<li><p><strong>EXNEURO</strong> <em>character</em> 1. NL - Does the participant have a significant neurologic disease such as Parkinson's disease, multi-infarct dementia, Huntington's disease, normal pressure hydrocephalus, brain tumor, progressive supranuclear palsy, seizure disorder, subdural hematoma, multiple sclerosis, or history of significant head trauma followed by persistent neurologic defaults or known structural brain abnormalities.MCI - Does the participant have a significant neurologic disease other than suspected incipient Alzheimer's disease such as...AD - Does the participant have a significant neurologic disease other than Alzheimer's disease including... 1=Yes; 0=No
+<li><p><strong>EXNEURO</strong> <em>character</em> 1. NL - Does the participant have a significant neurologic disease such as Parkinson's disease, multi-infarct dementia, Huntington's disease, normal pressure hydrocephalus, brain tumor, progressive supranuclear palsy, seizure disorder, subdural hematoma, multiple sclerosis, or history of significant head trauma followed by persistent neurologic defaults or known structural brain abnormalities.MCI - Does the participant have a significant neurologic disease other than suspected incipient Alzheimer's disease such as...AD - Does the participant have a significant neurologic disease other than Alzheimer's disease including... 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXNIMAG</strong> <em>character</em> 2. Does the participant's screening/baseline MRI scans have evidence of infection, infarction, or other focal lesions?  Participants with multiple lacunes or lacunes in a critical memory structure are excluded. 1=Yes; 0=No
+<li><p><strong>EXNIMAG</strong> <em>character</em> 2. Does the participant's screening/baseline MRI scans have evidence of infection, infarction, or other focal lesions?  Participants with multiple lacunes or lacunes in a critical memory structure are excluded. 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXMRI</strong> <em>character</em> 3. Does the participant have a pacemaker, aneurysm clips, artificial heart valves, ear implants, metal fragments or foreign objects in the eyes, skin or body. 1=Yes; 0=No
+<li><p><strong>EXMRI</strong> <em>character</em> 3. Does the participant have a pacemaker, aneurysm clips, artificial heart valves, ear implants, metal fragments or foreign objects in the eyes, skin or body. 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXPSYCH</strong> <em>character</em> 4. NL - Has the participant had major depression or bipolar disorder as described in DSM-IV within the past year or a history of schizophrenia (DSM IV criteria)?MCI/AD - Does the participant have a history of major depression...or a history of psychotic features, agitation, or behavioral problems within the last 3 months which could lead to difficulty complying with the protocol? 1=Yes; 0=No
+<li><p><strong>EXPSYCH</strong> <em>character</em> 4. NL - Has the participant had major depression or bipolar disorder as described in DSM-IV within the past year or a history of schizophrenia (DSM IV criteria)?MCI/AD - Does the participant have a history of major depression...or a history of psychotic features, agitation, or behavioral problems within the last 3 months which could lead to difficulty complying with the protocol? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXABUSE</strong> <em>character</em> 5. Does the participant have a history of alcohol or substance abuse or dependence within the past 2 years (DSM IV criteria)? 1=Yes; 0=No
+<li><p><strong>EXABUSE</strong> <em>character</em> 5. Does the participant have a history of alcohol or substance abuse or dependence within the past 2 years (DSM IV criteria)? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXILLNESS</strong> <em>character</em> 6. Does the participant have a significant systemic illness or unstable medical condition which could lead to difficulty complying with the protocol? 1=Yes; 0=No
+<li><p><strong>EXILLNESS</strong> <em>character</em> 6. Does the participant have a significant systemic illness or unstable medical condition which could lead to difficulty complying with the protocol? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXLAB</strong> <em>character</em> 7. Does the participant have any clinically significant abnormalities in B12, RPR, or TFTs that might interfere with the study. 1=Yes; 0=No
+<li><p><strong>EXLAB</strong> <em>character</em> 7. Does the participant have any clinically significant abnormalities in B12, RPR, or TFTs that might interfere with the study. 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXRESID</strong> <em>character</em> 8. Does the participant reside in a skilled nursing facility? 1=Yes; 0=No
+<li><p><strong>EXRESID</strong> <em>character</em> 8. Does the participant reside in a skilled nursing facility? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXMEDS</strong> <em>character</em> 9. Is the participant currently taking, or has he/she taken in the last 4 weeks, any excluded medication(s) as described in the Procedures Manual? 1=Yes; 0=No
+<li><p><strong>EXMEDS</strong> <em>character</em> 9. Is the participant currently taking, or has he/she taken in the last 4 weeks, any excluded medication(s) as described in the Procedures Manual? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXINVEST</strong> <em>character</em> 10. Has the participant used another investigational agent within one month prior to screening? 1=Yes; 0=No
+<li><p><strong>EXINVEST</strong> <em>character</em> 10. Has the participant used another investigational agent within one month prior to screening? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>EXPARTICIP</strong> <em>character</em> 11. Is the participant participating in a clinical study involving neuropsychological measures being collected more than one time per year? 1=Yes; 0=No
+<li><p><strong>EXPARTICIP</strong> <em>character</em> 11. Is the participant participating in a clinical study involving neuropsychological measures being collected more than one time per year? 1=Yes ; 0=No
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>ID</strong> <em>numeric</em>   Range value: 6, ..., 2188</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 127</p></li>
