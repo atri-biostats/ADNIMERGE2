@@ -45,7 +45,8 @@ Suggests:
   marginaleffects, 
   performance,
   survival,
-  msm
+  msm,
+  consort
 Depends: 
     R (>= 3.5)
 RoxygenNote: 7.3.2
