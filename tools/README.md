@@ -36,7 +36,7 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
    
    + It is recommended to download files from the data-sharing platform on the same date. If the data is download from `Analysis Ready Cohort (ARC) Build`, it is recommended to download the file without adding any prefix to the file name as highlighted in the following figure.
    
- <img src="../man/figures/arc_table_template.png" align="center" height="70" alt = " " />
+ <img src="../man/figures/arc_table_template.png" align="center" height="130" alt = " " />
 
 ## Build Package 
 
