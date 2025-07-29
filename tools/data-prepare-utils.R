@@ -141,7 +141,7 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
 #' @rdname get_unzip_file
 #' @keywords utils_fun
 #' @importFrom utils unzip
-#' @importFrom cli cli_abort
+#' @importFrom cli cli_abort cli_alert_success
 #' @export
 get_unzip_file <- function(input_dir,
                            file_name,
@@ -155,15 +155,20 @@ get_unzip_file <- function(input_dir,
   file_path <- file.path(input_dir, file_name)
   if (!file.exists(file_path)) {
     cli::cli_abort(
-      message = "{.path {file.path(file_name, input_dir)}} file is not existed."
+      message = "{.path {file.path(input_dir, file_name)}} file is not existed."
     )
   }
+  
   utils::unzip(
     zipfile = file_path, exdir = output_dir,
     files = NULL, list = FALSE, overwrite = overwrite,
     setTimes = FALSE, unzip = "internal"
   )
 
+  cli::cli_alert_success(
+    text = "Extracting data from {.path {file.path(input_dir, file_name)}}"
+  )
+  
   return(TRUE)
 }
 
@@ -252,7 +257,7 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
     return("No file is found!")
   }
   csv_data_list <- lapply(file_list, function(x) {
-    cli::cli_alert_info(text = "Importing {x} data")
+    cli::cli_alert_info(text = "Importing {.path {file.path(input_dir, x)}}")
     readr::read_csv(
       file = file.path(input_dir, x),
       col_names = TRUE,
@@ -262,8 +267,9 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
   })
   names(csv_data_list) <- str_remove_all(file_list, pattern = file_extension)
 
-  # Load all the dataset in .GlobalEnv
-  list2env(csv_data_list, .GlobalEnv)
+  # Load available dataset into a new environment
+  new_env <- new.env()
+  list2env(csv_data_list, envir = new_env)
   for (dd_name in names(csv_data_list)) {
     cli::cli_alert_info(
       text = "Applying {.var use_data()} for {.val {dd_name}} data"
@@ -271,7 +277,7 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
     # Using usethis::use_data function
     use_data_modified(
       dataset_name = dd_name,
-      dataset = get(dd_name),
+      dataset = new_env[[dd_name]],
       run_script = TRUE,
       add_text = NULL,
       edit_type = "create",
@@ -813,7 +819,59 @@ get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
   return(output_data)
 }
 
-#' @title Create data.frame with no rows/records
+
+
+# get_dataset_phase_cat <- function(dir.path,
+#                                   file_extension_pattern = "\\.rda",
+#                                   recursive = TRUE){
+#   check_dir_path(dir.path)
+#
+# }
+#' @title Get Dataset Category By Study Phase
+#' @param .data A data.frame
+#' @param phase_vars Study phase variables, Default: NULL
+#' @return A data.frame with `PHASE` variable
+#' @examples 
+#' \dontrun{
+#' get_study_phase_cat(.data = ADNIMERGE2::ADAS)
+#' }
+#' @seealso 
+#'  \code{\link[cli]{cli_abort}}
+#' @rdname get_study_phase_cat
+#' @export 
+#' @importFrom cli cli_abort
+#' @importFrom dplyr rename mutate across select distinct
+#' @importFrom tidyselect all_of everything
+get_study_phase_cat <- function(.data, phase_vars = NULL) {
+  require(dplyr)
+  # Checking for study phase variable
+  if (is.null(phase_vars)) {
+    phase_vars <- c("COLPROT", "PHASE", "Phase", "ProtocolID")
+  }
+  phaseVar <- get_cols_name(.data = .data, col_name = phase_vars)
+  if (length(phaseVar) > 1) {
+    cli::cli_abort(
+      message = paste0(
+        "Only one {.val PHASE} variable must be in the data. \n ",
+        "{.val {phaseVar}} variables are found in the data."
+      )
+    )
+  }
+  if (!is.na(phaseVar)) {
+    names(phaseVar) <- "PHASE"
+    output_data <- .data %>%
+      rename(all_of(phaseVar)) %>%
+      mutate(across(all_of(names(phaseVar)), ~as.character(tolower(.x)))) %>%
+      select(all_of(names(phaseVar))) %>%
+      distinct()
+  } else {
+    output_data <- create_tibble0(col_names = "PHASE") %>%
+      mutate(across(everything(), as.character))
+  }
+  return(output_data)
+}
+
+#' @title Create a tibble/data.frame with no rows/records
 #' @param col_names Character vector of column names
 #' @return A data.frame with the provided columns with no rows/records.
 #' @examples
@@ -827,10 +885,10 @@ get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
 create_tibble0 <- function(col_names) {
   return(
     tibble::tibble(
-    var = col_names,
-    value = NA_character_
-  ) %>%
-    tidyr::pivot_wider(names_from = var, values_from = value) %>%
-    na.omit()
+      var = col_names,
+      value = NA_character_
+    ) %>%
+      tidyr::pivot_wider(names_from = var, values_from = value) %>%
+      na.omit()
   )
 }

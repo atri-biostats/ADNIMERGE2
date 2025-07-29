@@ -194,14 +194,19 @@ adni_pttype <- function() {
 #' example_data <- tibble(RID = c(1, 1000, 3500, 6645, 1000))
 #' create_orig_protocol(data = example_data)
 #' }
-#' @rdname original_study_protocol
+#' @rdname create_orig_protocol
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom dplyr relocate mutate
+#' @importFrom cli cli_alert_warning
 #' @export
 create_orig_protocol <- function(.data) {
   RID <- ORIGPROT <- NULL
   check_colnames(.data = .data, col_names = "RID", strict = TRUE)
+  orig_col <- get_cols_name(.data = .data, col_name = "ORIGPROT")
+  if (!is.na(orig_col)) {
+    cli::cli_alert_warning(text = paste0("{.val ORIGPROT} variable is overwritten!"))
+  }
   .data <- .data %>%
     # Replaced if there is an existed ORGIPROT column
     mutate(ORIGPROT = original_study_protocol(RID = as.numeric(RID))) %>%
@@ -530,17 +535,17 @@ extract_codelist_datadict <- function(.datadic) {
 #'   nested_value = TRUE
 #' )
 #' # List of available factor columns in data dictionary
-#' # \code{\link{DATADIC}()} for the \code{\link{ADAS_ADNIGO23}()} dataset
+#' # \code{\link{DATADIC}()} for the \code{\link{CDR}()} dataset
 #' get_factor_fldname(
 #'   .datadic = data_dict_dd,
-#'   tbl_name = "ADAS",
+#'   tbl_name = "CDR",
 #'   dd_fldnames = NULL
 #' )
-#' # List of factor columns that available in \code{\link{ADAS_ADNIGO23}()} and data dictionary DATADIC
+#' # List of factor columns that available in \code{\link{CDR}()} and data dictionary DATADIC
 #' get_factor_fldname(
 #'   .datadic = data_dict_dd,
-#'   tbl_name = "ADAS",
-#'   dd_fldnames = colnames(ADNIMERGE2::ADAS_ADNIGO23)
+#'   tbl_name = "CDR",
+#'   dd_fldnames = colnames(ADNIMERGE2::CDR)
 #' )
 #' }
 #' @rdname get_factor_fldname
@@ -673,17 +678,17 @@ collect_value_mapping_single_var <- function(.datadic, tbl_name, fld_name) {
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
 #'   .datadic = ADNIMERGE2::DATADIC,
-#'   tbl_name = "ADAS",
+#'   tbl_name = "CDR",
 #'   nested_value = TRUE
 #' )
 #' tbl_unique_fldname <- get_factor_fldname(
 #'   .datadic = data_dict_dd,
-#'   tbl_name = "ADAS",
-#'   dd_fldnames = colnames(ADNIMERGE2::ADAS_ADNIGO23)
+#'   tbl_name = "CDR",
+#'   dd_fldnames = colnames(ADNIMERGE2::CDR)
 #' )
 #' collect_value_mapping(
 #'   .datadic = data_dict_dd,
-#'   tbl_name = "ADAS",
+#'   tbl_name = "CDR",
 #'   all_fld_name = tbl_unique_fldname
 #' )
 #' }
@@ -721,17 +726,17 @@ collect_value_mapping <- function(.datadic, tbl_name, all_fld_name) {
 #' \dontrun{
 #' data_dict_dd <- get_factor_levels_datadict(
 #'   .datadic = ADNIMERGE2::DATADIC,
-#'   tbl_name = "ADAS",
+#'   tbl_name = "CDR",
 #'   nested_value = TRUE
 #' )
 #' tbl_unique_fldname <- get_factor_fldname(
 #'   .datadic = data_dict_dd,
-#'   tbl_name = "ADAS",
-#'   dd_fldnames = colnames(ADNIMERGE2::ADAS_ADNIGO23)
+#'   tbl_name = "CDR",
+#'   dd_fldnames = colnames(ADNIMERGE2::CDR)
 #' )
 #' coded_value <- collect_value_mapping(
 #'   .datadic = data_dict_dd,
-#'   tbl_name = "ADAS",
+#'   tbl_name = "CDR",
 #'   all_fld_name = tbl_unique_fldname
 #' )
 #' convert_value_mapping(coded_value = coded_value)
@@ -1285,7 +1290,7 @@ replace_values_dataset <- function(.data, phaseVar = "PHASE", input_values) {
 #' @return A data frame with replaced value.
 #' @examples
 #' \dontrun{
-#' convert_to_missing_value(.data = ADNIMERGE2::ADAS_ADNIGO23)
+#' convert_to_missing_value(.data = ADNIMERGE2::ADAS)
 #' }
 #' @rdname convert_to_missing_value
 #' @family functions to replace values
@@ -1368,7 +1373,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
 #'  Otherwise return `NA`.
 #' @examples
 #' \dontrun{
-#' get_cols_value(data = ADNIMERGE2::ADAS_ADNIGO23, value = "Letter")
+#' get_cols_value(data = ADNIMERGE2::CDR, value = "Telephone Call")
 #' }
 #' @rdname get_cols_value
 #' @keywords utils_fun
@@ -1410,12 +1415,12 @@ get_cols_value <- function(.data, value, col_name = NULL) {
 #' @examples
 #' \dontrun{
 #' check_colnames(
-#'   .data = ADNIMERGE2::ADAS_ADNIGO23,
+#'   .data = ADNIMERGE2::CDR,
 #'   col_names = c("Phase", "VISCODE"),
 #'   strict = FALSE
 #' )
 #' check_colnames(
-#'   .data = ADNIMERGE2::ADAS_ADNIGO23,
+#'   .data = ADNIMERGE2::CDR,
 #'   col_names = c("RID", "VISCODE"),
 #'   strict = TRUE
 #' )
@@ -1461,8 +1466,8 @@ check_colnames <- function(.data, col_names, strict = FALSE, stop_message = TRUE
 #'  Otherwise return `NA`.
 #' @examples
 #' \dontrun{
-#' get_cols_name(.data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("Phase", "VISCODE"))
-#' get_cols_name(.data = ADNIMERGE2::ADAS_ADNIGO23, col_name = c("RID", "VISCODE"))
+#' get_cols_name(.data = ADNIMERGE2::CDR, col_name = c("Phase", "VISCODE"))
+#' get_cols_name(.data = ADNIMERGE2::CDR, col_name = c("RID", "VISCODE"))
 #' }
 #' @rdname get_cols_name
 #' @keywords utils_fun

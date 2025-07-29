@@ -40,7 +40,7 @@ reference:
   
   - subtitle: Imaging
     desc: > 
-         Includes image acquisition, image analysis results, image quality for both MIR and PET
+         Includes image acquisition, image analysis result, image quality for both MIR Scan and PET Scan
     contents:
     - has_keyword("imaging")   
     
@@ -61,7 +61,41 @@ reference:
   - subtitle: Other Raw Datasets
     contents:
     - has_keyword("other_raw_dataset")
-    
+  
+  - title: ADNI Raw Datasets - By Study Protocol/Phase
+    desc: > 
+        ADNI study data based on the study protocol/phase
+  
+  - subtitle: ADNI1 Phase
+    desc: >
+        Datasets which contains records that were collected in ADNI1 study phase/protocol
+    contents:
+    - has_keyword("adni1")
+  
+  - subtitle: ADNIGO Phase
+    desc: >
+        Datasets which contains records that were collected in ADNIGO study phase/protocol
+    contents:
+    - has_keyword("adnigo")
+  
+  - subtitle: ADNI2 Phase
+    desc: >
+        Datasets which contains records that were collected in ADNI2 study phase/protocol
+    contents:
+    - has_keyword("adni2")
+  
+  - subtitle: ADNI3 Phase
+    desc: >
+        Datasets which contains records that were collected in ADNI3 study phase/protocol
+    contents:
+    - has_keyword("adni3")
+  
+  - subtitle: ADNI4 Phase
+    desc: >
+        Datasets which contains records that are collected in ADNI4 study phase/protocol
+    contents:
+    - has_keyword("adni4")
+  
   - title: ADNI Derived Datasets
     desc: > 
       Derived datasets that are grenerated based on the package vignettes.

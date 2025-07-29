@@ -1,9 +1,9 @@
 ---
 title: "ADNIMERGE2-Package-Building"
 output: 
-   rmarkdown::html_vignette:
-     toc: false
-     code_folding: hide
+  rmarkdown::html_vignette:
+    toc: false
+    code_folding: hide
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Package-Building}
@@ -31,7 +31,7 @@ The document describes the procedure to build an R data package from source `.cs
 
 # Building an R Package from csv files
 
-## Create R Package Project 
+## Create R Package Project
 
 Clone the [https://github.com/atri-biostats/ADNIMERGE2](https://github.com/atri-biostats/ADNIMERGE2) repository. This will create the following directories:
    
@@ -57,7 +57,7 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
 
 ## Build Package 
 
-The next step is start building the package by sourcing [`./tools/build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script file. The [./tools/build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script file is used to prepare dataset, generate documentations and finalize package building. The main procedures in this script are presented as follows: 
+The next step is start building the package by sourcing [`./tools/build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script file. The [./tools/build.R](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script file is used to prepare dataset, generate documentations and finalize package building. The main procedures in this script are presented as follows: 
 
 + Data preparation: 
     

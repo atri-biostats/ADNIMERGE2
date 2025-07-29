@@ -10,7 +10,7 @@ setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
 DATA_DOWNLOADED_DATE <- "2025-07-10" # Data downloaded date YYYY-MM-DD format
-UPDATE_DATADIC <- TRUE # Please see line 513 in the `./data-raw/data_prep.R`
+UPDATE_DATADIC <- TRUE # Please see line 630 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
   wd = ".",
@@ -64,7 +64,7 @@ callr::rscript(
 # # Package License
 # usethis::use_mit_license()
 # # Package news
-# # Caution of overwrting any existing `NEWS.md` file
+# # Caution of overwriting any existing `NEWS.md` file
 # usethis::use_news_md()
 
 ## Finalize package building ----
