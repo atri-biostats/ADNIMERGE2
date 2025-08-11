@@ -22,7 +22,8 @@ Imports:
   tidyselect,
   purrr,
   tidyr, 
-  cli
+  cli, 
+  bookdown
 Suggests:
   knitr,
   tidyverse,
@@ -46,7 +47,10 @@ Suggests:
   performance,
   survival,
   msm,
-  consort
+  minqa,
+  consort,
+  scales,
+  broom
 Depends: 
     R (>= 3.5)
 RoxygenNote: 7.3.2

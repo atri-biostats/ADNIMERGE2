@@ -158,8 +158,8 @@ As part of the study data R package development, some derived datasets are creat
 
 There are few articles included in the package vignettes to demonstrate how to use the study data R package for creating simple summaries or analysis results.
 
-* [Enrollment Summaries](): Includes enrollment summary by calender month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
+* [Enrollment Summaries]('./ADNI-Enrollment.html'): Includes enrollment summary by calender month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
 
-* [Longitudinal Clinical Cognitive Outcome Summaries](): Currently, includes summary of the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog) overtime across the baseline diagnostics status.
+* [Longitudinal Clinical Cognitive Outcome Summaries]('./ADNI-Longitudinal.html'): Currently, includes summary of the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog) overtime across the baseline diagnostics status.
 
 **NOTE: ** *The analysis results that presented in the package vignettes are not pre-planned and only included for illustration purpose.* 

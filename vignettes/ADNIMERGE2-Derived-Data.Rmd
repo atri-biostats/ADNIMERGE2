@@ -447,11 +447,16 @@ dm_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `DM` Variables</summary>
+
 ```{r dm-data-dic-print, echo = FALSE}
 dm_data_dic %>%
   select(FLDNAME, LABEL, TEXT) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r generate-dm0}
 # Join columns
@@ -668,11 +673,16 @@ sc_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `SC` Variables</summary>
+
 ```{r sc-data-dic-print, eval = TRUE, echo = FALSE}
 sc_data_dic %>%
   select(FLDNAME, LABEL) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r generate-sc0}
 # Full demographic records ----
@@ -1037,11 +1047,16 @@ ae_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `AE` Variables</summary>
+
 ```{r ae-data-dic-print, eval = TRUE, echo = FALSE}
 ae_data_dic %>%
   select(FLDNAME, LABEL) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r generate-ae-adni34}
 # Adverse Event for ADNI3 and ADNI4
@@ -1242,11 +1257,16 @@ qs_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `QS` Variables</summary>
+
 ```{r qs-data-dic-print, eval = TRUE, echo = FALSE}
 qs_data_dic %>%
   select(FLDNAME, LABEL) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 The following cognitive/functional assessment scores are included in the [`QS`](../reference/QS.html) dataset.
 
@@ -1682,11 +1702,16 @@ rs_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `RS` Variables</summary>
+
 ```{r rs-data-dic-print, eval = TRUE, echo = FALSE}
 rs_data_dic %>%
   select(FLDNAME, LABEL, TEXT) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 The [`RS`](../reference/RS.html) dataset will contains clinical diagnostics summary of subject per study visit. The clinical diagnostics status (i.e. either Cognitive Normal (CN), Mild Cognitive Impairment (MCI) or Dementia/Alzheimer's (DEM/AD)) of a subject was determined by clinicians' judgment.
 
@@ -1868,11 +1893,16 @@ nv_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `NV` Variables</summary>
+
 ```{r nv-data-dic-print, eval = TRUE, echo = FALSE}
 nv_data_dic %>%
   select(FLDNAME, LABEL, TEXT) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r nv-testcd-list, eval = TRUE, echo = FALSE}
 # Recommended to check variable name length and test labels
@@ -2043,8 +2073,8 @@ NV_TESTCD_LIST %>%
     `TRACER TYPE` = TRACER,
     `IMAGE RESOLUTION` = IMAGE_RESOLUTION, DESCRIPTION = TEXT,
   ) %>%
-  datatable(paging = TRUE, filter = 'top') %>% 
-  formatStyle('DESCRIPTION', fontSize = '10px')
+  datatable(paging = TRUE, filter = "top") %>%
+  formatStyle("DESCRIPTION", fontSize = "10px")
 ```
 
 ```{r nv-input1}
@@ -2471,11 +2501,16 @@ lb_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `LB` Variables</summary>
+
 ```{r lb-data-dic-print, eval = TRUE, echo = FALSE}
 lb_data_dic %>%
   select(FLDNAME, LABEL, TEXT) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r lb-prepare-labdata-1go2, eval = TRUE, echo = FALSE}
 common_cols <- c(
@@ -2584,7 +2619,7 @@ LB_TESTCD_LIST %>%
   filter(!is.na(LBNAM)) %>%
   arrange(SOURCE, LBNAM, LBMETHOD) %>%
   select(SOURCE, LBNAM, LBMETHOD, LBTESTCD, LBTEST, LBORRESU, LBSTRESU) %>%
-  datatable(paging = TRUE, filter = 'top')
+  datatable(paging = TRUE, filter = "top")
 ```
 
 ```{r lb-prepare-labdata-print, echo = TRUE, warning = FALSE, message = FALSE, results = 'asis', ref.label = c("lb-prepare-labdata-1go2", "lb-prepare-labdata-34", "lb-prepare-labdata-34-cont")}
@@ -2888,11 +2923,16 @@ gf_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `GF` Variables</summary>
+
 ```{r gf-data-dic-print, eval = TRUE, echo = FALSE}
 gf_data_dic %>%
   select(FLDNAME, LABEL, TEXT) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r generate-gf}
 GF <- APOERES %>%
@@ -3024,11 +3064,16 @@ vs_data_dic <- bind_rows(
   )
 ```
 
+<details>
+<summary>Show `VS` Variables</summary>
+
 ```{r vs-data-dic-print, eval = TRUE, echo = FALSE}
 vs_data_dic %>%
   select(FLDNAME, LABEL, TEXT) %>%
   datatable(., paging = TRUE)
 ```
+
+</details>
 
 ```{r vs-testcd-list, eval = TRUE, echo = FALSE}
 # Required checking variable name length and test labels
