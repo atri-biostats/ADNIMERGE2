@@ -31,7 +31,7 @@
 #' @importFrom cli cli_abort
 convert_number_days <- function(x, unit = "month", bin = 1, digits = 2L, adjust_negative_value = FALSE) {
   rlang::arg_match0(arg = unit, values = c("week", "month", "year"))
-  check_is_logical(adjsut_negative_value)
+  check_is_logical(adjust_negative_value)
   if (unit %in% "week") intv <- 7
   if (unit %in% "month") intv <- 30
   if (unit %in% "year") intv <- 365.25

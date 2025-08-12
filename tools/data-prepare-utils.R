@@ -865,7 +865,9 @@ get_study_phase_cat <- function(.data, phase_vars = NULL) {
       select(all_of(names(phaseVar))) %>%
       distinct()
   } else {
-    output_data <- create_tibble0(col_names = "PHASE") %>%
+    output_data <- tibble(
+      PHASE = "undefined_phase"
+    ) %>% 
       mutate(across(everything(), as.character))
   }
   return(output_data)
