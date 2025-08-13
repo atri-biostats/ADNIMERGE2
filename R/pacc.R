@@ -1,132 +1,635 @@
+# c("DX", "BLFL", "ADASQ4", "LDELTOTL", "DIGITSCR", "TRABSCOR", "MMSE")
+
 #' @title Generate ADNI modified versions of the Preclinical Alzheimer's Cognitive Composite (PACC)
 #'
-#' @description The Preclinical Alzheimer's Cognitive Composite (\href{https://doi.org/10.1001/jamaneurol.2014.803}{PACC}) 
+#' @description
+#' The Preclinical Alzheimer's Cognitive Composite (\href{https://doi.org/10.1001/jamaneurol.2014.803}{PACC})
 #' is a baseline standardized composite of
 #'
-#' @details 
 #' \itemize{
 #'   \item Free and Cued Selective Reminding Test (FCSRT)
 #'   \item Logical Memory IIa Delayed Recall (LM)
-#'   \item Digit Symbol Substitituion Test (DSST)
+#'   \item Digit Symbol Substitution Test (DSST)
 #'   \item Mini-Mental State Examination (MMSE)
 #' }
 #'
+#' @details
+#'
 #' This function generates two modified versions of PACC scores based on ADNI data. FCSRT is not used in ADNI, so we use the
 #' Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS) as a proxy. Score \code{mPACCdigit} uses the
-#' DSST when available (ADNI1). \code{mPACCtrailsB} uses (log transformed) Trails B as a proxy for DSST. Raw component scores 
-#' standardized according to the mean and standard deviation of baseline scores of ADNI subjects with normal cognition 
-#' to create \code{Z} scores for each component \code{(Z=(raw - mean(raw.bl))/sd(raw.bl))}. 
-#' The Z scores are reoriented if necessary so that greater scores reflect better performance. 
-#' The composite is the sum of these Z scores. 
+#' DSST when available (ADNI1). \code{mPACCtrailsB} uses (log transformed) Trails B as a proxy for DSST. Raw component scores
+#' standardized according to the mean and standard deviation of baseline scores of ADNI subjects with normal cognition
+#' to create \code{Z} scores for each component \code{(Z=(raw - mean(raw.bl))/sd(raw.bl))}.
+#' The Z scores are reoriented if necessary so that greater scores reflect better performance.
+#' The composite is the sum of these Z scores.
 #'
-#' \strong{Missing components:} At least two components must be present to produce a score. If more than two components are missing, 
+#' \strong{Missing components:} At least two components must be present to produce a score. If more than two components are missing,
 #' the PACC will be \code{NA}.
+
+#' @param .data_wide Data.frame in wide format contains the PACC component score
 #'
-#' @param dd data frame to score with variables ADASQ4, LDELTOTAL, DIGITSCOR, MMSE, TRABSCOR, DX.bl, and VISCODE
-#' @param keepComponents should components and z scores be returned? Defaults to FALSE so that just the composite scores are returned.
+#' @param bl.summary Baseline component score summary
 #'
-#' @return The \code{data.frame} with appended columns for \code{mPACCdigit} and \code{mPACCtrailsB}
-#' @references 
+#'  It can be created either using `get_baseline_score_summary` function or
+#'  a component score summary at baseline visit grouped by baseline diagnostics summary.
+#'  See \code{\link{get_score_summary_stats}()}
+#'
+#' @param componentVars Character vector of component score variable names, Default: c("ADASQ4", "MMSE", "LDELTOTL", "DIGITSCR", "TRABSCOR")
+#'
+#' The component score variable names should be arranged based the following order. Otherwise, an \strong{invalid} total score will be calculated.
+#'
+#' \itemize{
+#'   \item Delayed Recall portion from `ADAS`, can be named as `ADASQ4`
+#'   \item Mini-Mental State Examination Score, can be named as `MMSE`
+#'   \item Logical Memory IIa Delayed Recall Score, can be named as `LDELTOTL`
+#'   \item Digit Symbol Substitution Test Score from `NEUROBAT`, can be named as `DIGITSCR`
+#'   \item Trails B Score from `NEUROBAT`, can be named as `TRABSCOR`
+#' }
+#'
+#' @param log.trialbscore Boolean value if the `Trails B` score is already log transformed (in log scale), Default: FALSE
+#'
+#' @param keepComponents A Boolean to keep component score, Default: FALSE
+#'
+#' @param varName Column name that contain the component score names for long format data, Default = NULL
+#' Only applicable for long format data and it should be not missing if `wideFormat = FALSE`.
+#'
+#' @param score_col Variable names that contains component score/numeric value for long format data, Default = NULL
+#' Only applicable for long format data and it should be not missing if `wideFormat = FALSE`.
+#'
+#' @param id_cols Character vector of ID columns for long format data, Default: NULL
+#' Only applicable for long format data and it should be not missing if `wideFormat = FALSE`.
+#'
+#' @return
+#'
+#' The \code{data.frame} with appended columns for \code{mPACCdigit} and \code{mPACCtrailsB} for wide format input data.
+#' The \code{data.frame} with additional rows of \code{mPACCdigit} and \code{mPACCtrailsB} for long format input data.
+#'
+#' @references
 #' \itemize{
 #'   \item Donohue MC, et al. The Preclinical Alzheimer Cognitive Composite: Measuring Amyloid-Related Decline. \emph{JAMA Neurol}. 2014;71(8):961–970. doi:10.1001/jamaneurol.2014.803 \url{http://dx.doi.org/10.1001/jamaneurol.2014.803}
 #'   \item Donohue MC, Sperling RA, Petersen R, Sun C, Weiner MW, Aisen PS, for the Alzheimer’s Disease Neuroimaging Initiative. Association Between Elevated Brain Amyloid and Subsequent Cognitive Decline Among Cognitively Normal Persons. \emph{JAMA}. 2017;317(22):2305–2316. \url{http://dx.doi.org/10.1001/jama.2017.6669}
 #' }
+#'
 #' @author Michael Donohue \email{mdonohue@@usc.edu}
-#' @seealso \code{\link{adnimerger}}, \code{\link{adnimerge}}
+#'
 #' @examples
+#' \dontrun{
 #' library(nlme)
 #' library(dplyr)
 #' library(multcomp)
 #' library(Hmisc)
-#' 
-#' csf2numeric <- function(x){
+#' library(ADNIMERGE)
+#'
+#' csf2numeric <- function(x) {
 #'   as.numeric(gsub("<", "", gsub(">", "", x)))
 #' }
-#' 
-#' dd <- subset(adnimerge, DX.bl %in% c('CN', 'SMC') & !is.na(mPACCtrailsB)) %>%
+#'
+#' dd <- subset(adnimerge, DX.bl %in% c("CN", "SMC") & !is.na(mPACCtrailsB)) %>%
 #'   mutate(
 #'     ABETA = csf2numeric(ABETA)
 #'   )
 #'
-#' # identify those with elevated PIB PET at ANY visit OR 
+#' # identify those with elevated PIB PET at ANY visit OR
 #' # elevated BASELINE AV45 PET OR elevated BASELINE FBB PET OR
 #' # low BASELINE CSF Abeta
 #' # AV45 ~ PIB regression from Landau et al 2012:
 #' elevatedAmyloid <- unique(c(
-#'   subset(dd, 0.67*PIB + 0.15 > 1.11)$RID,
-#'   subset(dd, VISCODE == 'bl' & AV45 > 1.11)$RID,
-#'   subset(dd, VISCODE == 'bl' & FBB > 1.08)$RID,
-#'   subset(dd, VISCODE == 'bl' & ABETA < 900)$RID
+#'   subset(dd, 0.67 * PIB + 0.15 > 1.11)$RID,
+#'   subset(dd, VISCODE == "bl" & AV45 > 1.11)$RID,
+#'   subset(dd, VISCODE == "bl" & FBB > 1.08)$RID,
+#'   subset(dd, VISCODE == "bl" & ABETA < 900)$RID
 #' ))
-#' anyAmyloid <- unique(subset(dd, !is.na(AV45.bl) | !is.na(PIB) | 
-#'  | !is.na(FBB.bl) | !is.na(ABETA.bl))$RID)
-#' dd <- mutate(dd,
-#'   ElevatedAmyloid =
-#'     ifelse(RID %in% elevatedAmyloid, 1,
-#'     ifelse(RID %in% anyAmyloid, 0, NA)),
-#'   m = Month.bl, m2 = Month.bl^2,
-#'   APOEe4 = APOE4>0)
+#' anyAmyloid <- unique(subset(dd, !is.na(AV45.bl) | !is.na(PIB) | !is.na(FBB.bl) | !is.na(ABETA.bl))$RID)
 #'
-#' summary(ElevatedAmyloid ~ APOEe4 + AGE + PTEDUCAT, data = dd,
-#'   subset=VISCODE=='bl', method='reverse', overall=TRUE)
+#' dd <- dd %>%
+#'   mutate(
+#'     ElevatedAmyloid = ifelse(RID %in% elevatedAmyloid, 1,
+#'       ifelse(RID %in% anyAmyloid, 0, NA)
+#'     ),
+#'     m = Month.bl,
+#'     m2 = Month.bl^2,
+#'     APOEe4 = APOE4 > 0
+#'   )
+#'
+#' summary(
+#'   ElevatedAmyloid ~ APOEe4 + AGE + PTEDUCAT,
+#'   data = dd,
+#'   subset = VISCODE == "bl",
+#'   method = "reverse",
+#'   overall = TRUE
+#' )
 #'
 #' # Quadratic time model:
-#' fit <- lme(mPACCtrailsB ~ mPACCtrailsB.bl + APOEe4 + AGE + PTEDUCAT + m + m2 + (m + m2):ElevatedAmyloid,
-#'   random = ~m|RID, data = dd, na.action=na.omit)
+#' fit <- lme(
+#'   fixed = mPACCtrailsB ~ mPACCtrailsB.bl + APOEe4 + AGE + PTEDUCAT + m + m2 + (m + m2):ElevatedAmyloid,
+#'   random = ~ m | RID,
+#'   data = dd,
+#'   na.action = na.omit
+#' )
 #'
-#' Months <- seq(12,96,12)
+#' Months <- seq(12, 96, 12)
 #' elevated.design <- model.matrix(
 #'   mPACCtrailsB ~ mPACCtrailsB.bl + APOEe4 + AGE + PTEDUCAT + m + m2 + (m + m2):ElevatedAmyloid,
-#'   data = data.frame(mPACCtrailsB = 0, mPACCtrailsB.bl=0, APOEe4=TRUE, AGE=75, PTEDUCAT=12, ElevatedAmyloid=1, m=Months, m2=Months^2)
+#'   data = data.frame(
+#'     mPACCtrailsB = 0, mPACCtrailsB.bl = 0, APOEe4 = TRUE, AGE = 75,
+#'     PTEDUCAT = 12, ElevatedAmyloid = 1, m = Months, m2 = Months^2
+#'   )
 #' )
 #'
 #' normal.design <- model.matrix(
 #'   mPACCtrailsB ~ mPACCtrailsB.bl + APOEe4 + AGE + PTEDUCAT + m + m2 + (m + m2):ElevatedAmyloid,
-#'   data = data.frame(mPACCtrailsB = 0, mPACCtrailsB.bl=0, APOEe4=TRUE, AGE=75, PTEDUCAT=12, ElevatedAmyloid=0, m=Months, m2=Months^2)
+#'   data = data.frame(
+#'     mPACCtrailsB = 0, mPACCtrailsB.bl = 0, APOEe4 = TRUE, AGE = 75,
+#'     PTEDUCAT = 12, ElevatedAmyloid = 0, m = Months, m2 = Months^2
+#'   )
 #' )
 #'
 #' contrast.data <- elevated.design - normal.design
 #' summary(multcomp::glht(fit, linfct = contrast.data))
+#' }
+#' @seealso
+#'  \code{\link[cli]{cli_abort}}
+#' @rdname compute_pacc_score
+#' @family scoring function
+#' @keywords adni_scoring_fun pacc_score_utils_fun
 #' @export
-pacc <- function(dd, keepComponents = FALSE)
-{
-  require(dplyr)
-  require(tidyr)
-  holdNames <- colnames(dd)
-  dd <- mutate(dd, log.TRABSCOR = log(TRABSCOR+1))
-  
-  bl.summary <- filter(dd, VISCODE == 'bl') %>% select(DX.bl, ADASQ4, LDELTOTAL, DIGITSCOR, log.TRABSCOR, MMSE) %>%
-    gather(VARIABLE, SCORE, -DX.bl) %>%
-    filter(!is.na(SCORE)) %>%
-    group_by(DX.bl, VARIABLE) %>%
-    dplyr::summarize(
-      N=n(),
-      mean = mean(SCORE),
-      sd = sd(SCORE))
-  
-  zscore <- function(x, var){ 
-    (x - filter(bl.summary, DX.bl=='CN' & VARIABLE==var)$mean)/
-      filter(bl.summary, DX.bl=='CN' & VARIABLE==var)$sd
+#' @importFrom cli cli_abort cli_alert_warning
+#' @importFrom dplyr mutate across select relocate
+#' @importFrom tidyselect all_of any_of ends_with contains last_col
+
+compute_pacc_score <- function(.data,
+                               bl.summary,
+                               componentVars = c("ADASQ4", "MMSE", "LDELTOTL", "DIGITSCR", "TRABSCOR"),
+                               log.trialbscore = FALSE,
+                               keepComponents = FALSE,
+                               wideFormat = FALSE,
+                               varName = NULL,
+                               score_col = NULL,
+                               id_cols = NULL) {
+  require(tidyverse)
+
+  mPACCdigit <- mPACCtrailsB <- NULL
+  check_is_logical(keepComponents)
+  check_is_logical(log.trialbscore)
+  check_is_logical(wideFormat)
+
+  var_names <- componentVars
+  if (length(var_names) != 5) {
+    cli::cli_abort(
+      message = c(
+        "The length of {.var var_name} must be 7. \n",
+        "{.val {var_name}} are provided"
+      )
+    )
   }
-  
-  dd <- mutate(dd, 
-    ADASQ4.z       = -zscore(ADASQ4, 'ADASQ4'),
-    LDELTOTAL.z    =  zscore(LDELTOTAL, 'LDELTOTAL'),
-    DIGITSCOR.z    =  zscore(DIGITSCOR, 'DIGITSCOR'),
-    log.TRABSCOR.z = -zscore(log.TRABSCOR, 'log.TRABSCOR'),
-    MMSE.z         =  zscore(MMSE, 'MMSE'))
-  
+
+  if (!all(var_names %in% bl.summary$VAR)) {
+    cli::cli_abort(
+      message = c(
+        "All {.var componentVars} not found in {.var bl.summary$VAR}. \n",
+        "Component variables are: {.val {componentVars}}, and \n",
+        "The baseline summary data {.var bl.summary} contains: {.val {unique(bl.summary$VAR)}} variable(s)."
+      )
+    )
+  }
+
+  if (!wideFormat) {
+    check_non_missing_value(varName)
+    check_non_missing_value(score_col)
+    check_non_missing_value(id_cols)
+    check_colnames(
+      .data = .data,
+      col_names = c(varName, score_col, id_cols),
+      stop_message = TRUE,
+      strict = TRUE
+    )
+  }
+
+  # check_colnames(
+  #   .data = bl.summary,
+  #   col_names = c("VAR", "MEAN", "SD"),
+  #   stop_message = TRUE,
+  #   strict = TRUE
+  # )
+
+  # Change long format data into wide format
+  if (!wideFormat) {
+    .data_wide <- .data %>%
+      pivot_wider(
+        id_cols = all_of(id_cols),
+        names_from = all_of(varName),
+        values_from = all_of(score_col)
+      ) %>%
+      select(all_of(c(id_cols, var_names)))
+  } else {
+    .data_wide <- .data
+  }
+
+  check_colnames(
+    .data = .data_wide,
+    col_names = var_names,
+    stop_message = TRUE,
+    strict = TRUE
+  )
+
+  .data_wide <- .data_wide %>%
+    {
+      if (!log.trialbscore) {
+        # Create log transformation for Trial B Scores
+        mutate(., across(all_of(var_names[5], ~ log(.x + 1), .names = "LOG.{col}")))
+      } else {
+        (.)
+      }
+    }
+
+  if (!log.trialbscore) {
+    var_names[5] <- paste0("LOG.", var_names[5])
+  }
+
+  # Check for any pre-existing standardized variables
+  check.zscore_var <- .data_wide %>%
+    select(any_of(ends_with(".zscore"))) %>%
+    colnames()
+  check.zscore_var <- check.zscore_var[check.zscore_var %in% paste0(var_names, ".zscore")]
+  if (length(check.zscore_var) != 0) {
+    cli::cli_alert_warning(
+      message = c(
+        "{var .data_wide} must not contains pre-existed {.val {paste0(var_names, '.zscore')}} variables. \n",
+        "Caution: these variables will be overwriting! \n",
+        "{var .data_wide} contains pre-existed {.val {check.zscore_var}} variable(s)."
+      )
+    )
+  }
+
+  # Normalized item-level score by corresponding baseline score among cognitive normal subjects
+  .data_wide <- .data_wide %>%
+    mutate(across(all_of(var_names),
+      ~ normalize_var_by_baseline_score(x = .x, baseline_summary = bl.summary, varName = cur_column()),
+      .names = "{col}.zscore"
+    )) %>%
+    # Adjust direction
+    mutate(across(all_of(var_names[c(1, 5)]), ~ .x * -1))
+
   # check that all measure are positively correlated:
-  corTest <- cor(select(dd, ADASQ4.z, LDELTOTAL.z, DIGITSCOR.z, log.TRABSCOR.z, MMSE.z), use='pairwise.complete.obs')
-  if(any(corTest<0)) stop('Some PACC z scores are negatively correlated!')
-  # GGally::ggpairs(select(dd, ADASQ4.z, LDELTOTAL.z, DIGITSCOR.z, log.TRABSCOR.z, MMSE.z))
-  
-  compscore <- function(x, n.components=4, n.missing=2){
-    ifelse(sum(is.na(x))>n.missing, NA, mean(x, na.rm=TRUE))*n.components
+  corTest <- .data_wide %>%
+    select(all_of(paste0(var_names, ".zscore"))) %>%
+    cor(., use = "pairwise.complete.obs")
+
+  if (any(corTest < 0)) {
+    cli::cli_abort(
+      message = "Some PACC z scores are negatively correlated!"
+    )
   }
-  
-  dd$mPACCdigit <- apply(dd[, c('ADASQ4.z', 'LDELTOTAL.z', 'DIGITSCOR.z', 'MMSE.z')], 1, compscore)
-  dd$mPACCtrailsB <- apply(dd[, c('ADASQ4.z', 'LDELTOTAL.z', 'log.TRABSCOR.z', 'MMSE.z')], 1, compscore)
-  if(!keepComponents) dd <- dd[, c(holdNames, 'mPACCdigit', 'mPACCtrailsB')]  
-  as.data.frame(dd)
+  # # visualization/plot checks
+  # GGally::ggpairs(
+  #   data = dd %>%
+  #     select(all_of(ends_with(".zscore")))
+  # )
+
+  compscore <- function(x, n.components = 4, n.missing = 2) {
+    ifelse(sum(is.na(x)) > n.missing, NA, mean(x, na.rm = TRUE)) * n.components
+  }
+
+  .data_wide$mPACCdigit <- apply(.data_wide[, paste0(var_names[-5], ".zscore")], 1, compscore)
+  .data_wide$mPACCtrailsB <- apply(.data_wide[, paste0(var_names[-4], ".zscore")], 1, compscore)
+
+  .data_wide <- .data_wide %>%
+    relocate(all_of(c("mPACCdigit", "mPACCtrailsB")), .after = last_col()) %>%
+    {
+      if (!keepComponents) {
+        select(., -all_of(paste0(var_names, ".zscore")))
+      } else {
+        (.)
+      }
+    }
+
+  if (!wideFormat) {
+    .data_long <- .data_wide %>%
+      pivot_longer(
+        cols = -all_of(id_cols),
+        names_to = varName,
+        values_to = score_col
+      )
+
+    output_data <- .data %>%
+      bind_rows(.data_long)
+  }
+
+  if (wideFormat) {
+    output_data <- .data_wide
+  }
+
+  output_data <- as.data.frame(output_data)
+
+  return(output_data)
+}
+
+#' @title Get Grouped Score/Numeric Summary Stats
+#'
+#' @description
+#'  This function is used to get the numeric variable summary statistic grouped by certain variable.
+#'
+#' @param dd Data.frame
+#'
+#' @param wideFormat A Boolean value whether the data.frame is in \emph{wide} or \emph{long} format, Default: TRUE
+#'
+#' @param scoreVar
+#'
+#' Character vector of variable(s) that contain the actual score/numeric values,
+#' Default: c("ADASQ4", "LDELTOTL", "DIGITSCR", "LOG.TRABSCOR", "MMSE")
+#' For long format data.frame, `scoreVar` should be a length of one character vector
+#' of variable that contains the score/numeric values.
+#'
+#' @param groupVar1 Additional grouping variable, only applicable for \emph{long} format data.frame.
+#'
+#' @param groupVar Group variable, Default: 'DX'
+#'
+#' @param filterGroup Filter value of group variable `groupVar`, Default: NULL
+#' Only applicable if the `groupVar` is a length of one character vector.
+#'
+#' @return A data.frame with the following columns:
+#'
+#' \itemsize{
+#'   \item \code{groupVar}: Grouping variable
+#'   \item N: Number of non-missing observation
+#'   \item MEAN: Mean score
+#'   \item SD: Standard deviation value
+#' }
+#'
+#' @details
+#'  All computed summary statistic are based on non-missing observation.
+#'  The result summary will be filter by the corresponding `filterGroup` value(s).
+#'
+#' @examples
+#' \dontrun{
+#'
+#' }
+#' @seealso
+#'  \code{\link{get_baseline_score_summary_stats}()}
+#' @rdname get_score_summary_stats
+#' @keywords pacc_score_utils_fun
+#' @export
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr filter if_all pivot_longer group_by across ungroup if_any select
+#' @importFrom tidyselect all_of
+
+get_score_summary_stats <- function(dd,
+                                    wideFormat = TRUE,
+                                    scoreVar = c("ADASQ4", "LDELTOTL", "DIGITSCR", "LOG.TRABSCOR", "MMSE"),
+                                    groupVar1 = NULL,
+                                    groupVar = "DX",
+                                    filterGroup = NULL) {
+  require(tidyverse)
+  N <- MEAN <- SD <- NULL
+  check_is_logical(wideFormat)
+  if (wideFormat) {
+    check_colnames(
+      .data = dd,
+      col_names = c(scoreVar, groupVar),
+      strict = TRUE,
+      stop_message = TRUE
+    )
+  }
+  # For long format data
+  if (!wideFormat) {
+    if (is.null(scoreVar)) scoreVar <- "SCORE"
+    if (is.null(scoreName)) groupVar1 <- "SCORE"
+    check_colnames(
+      .data = dd,
+      col_names = c(scoreVar, groupVar1, groupVar),
+      strict = TRUE,
+      stop_message = TRUE
+    )
+  }
+
+  dd <- dd %>%
+    as_tibble() %>%
+    {
+      if (wideFormat) {
+        # Change into a long format
+        pivot_longer(
+          .,
+          cols = all_of(scoreSource),
+          names_to = "VAR",
+          values_to = "SCORE"
+        )
+      } else {
+        rename_with(., paste0("VAR"), all_of(groupVar1)) %>%
+          rename_with(., paste0("SCORE"), all_of(scoreVar))
+      }
+    }
+
+  score_summary <- dd %>%
+    group_by(across(all_of(c(groupVar, "VAR")))) %>%
+    dplyr::summarize(
+      N = sum(!is.na(SCORE)),
+      MEAN = mean(SCORE, na.rm = TRUE),
+      SD = sd(SCORE, na.rm = TRUE)
+    ) %>%
+    ungroup()
+
+  if (!is.null(filterGroup)) {
+    if (length(groupVar) != 1) {
+      cli::cli_abort(
+        message = c(
+          "{.var groupVar} must be a length of one character vector. \n",
+          "{.var groupVar} contains {.val {groupVar}} variables."
+        )
+      )
+    }
+    score_summary <- score_summary %>%
+      filter(if_any(.cols = all_of(groupVar), ~ .x %in% filterGroup))
+  }
+
+  score_summary <- score_summary %>%
+    select(all_of(c(groupVar, "N", "MEAN", "SD")))
+
+  return(score_summary)
+}
+
+#' @title Get Baseline Grouped Score/Numeric Summary Stats
+#'
+#' @description This function is used to get baseline grouped summary statistic of numeric/score variable(s).
+#'
+#' @param dd A data.frame that contains a baseline record identifier variable.
+#'
+#' @param blVar Character vector of baseline record identifier variable
+
+#' @param filterBL Baseline record identifier values, Default: c("Y", "Yes", "bl")
+#'
+#' @param ... \code{\link[assertr]{get_score_summary_stats}} arguments
+#'
+#' @return Similar to \code{\link[assertr]{get_score_summary_stats}} result
+#'
+#' @examples
+#' \dontrun{
+#'
+#' }
+#' @seealso
+#'  \code{\link{get_score_summary_stats}()}
+#' @rdname get_baseline_score_summary_stats
+#' @export
+#' @importFrom cli cli_abort
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr filter if_all
+#' @importFrom tidyselect all_of
+
+get_baseline_score_summary_stats <- function(dd, blVar, filterBL = c("Y", "Yes", "bl"), ...) {
+  if (length(blVar) != 0) {
+    cli::cli_abort(
+      message = c(
+        "{.var blVar} must be a length of one character vector. \n",
+        "{.var blVar} contains {.val {blVar}} variables."
+      )
+    )
+  }
+  check_colnames(
+    .data = dd,
+    col_names = blVar,
+    strict = TRUE,
+    stop_message = TRUE
+  )
+
+  dd <- dd %>%
+    as_tibble() %>%
+    filter(if_all(all_of(blVar), ~ .x %in% filterBL))
+
+  bl_summary <- get_score_summary_stats(dd = dd, ...)
+
+  return(bl_summary)
+}
+
+#' @title Normalized Item Value By Baseline Score
+#'
+#' @param x Numeric/score value
+#'
+#' @param baseline_summary A data.frame of baseline score summary.
+#'  `baseline_summary` should contains the following variables:
+#'
+#' \itemsize{
+#'   \item VAR: Contains variable names
+#'   \item MEAN: Mean value
+#'   \item SD: Standard deviation value
+#' }
+#' The `baseline_summary` can be generated using get_baseline_score_summary function.
+#'
+#' @param varName Variable name
+#'
+#' @return A numeric vector
+#'
+#' @examples
+#' \dontrun{
+#'
+#' }
+#' @rdname normalize_var_by_baseline_score
+#' @keywords utils_fun pacc_score_utils_fun
+#' @family PACC score utility functions
+#' @importFrom dplyr filter nrow
+#' @importFrom tibble as_tibble
+#' @importFrom assertr verify
+
+normalize_var_by_baseline_score <- function(x, baseline_summary, varName) {
+  VAR <- MEAN <- SD <- NULL
+  check_is_data.frame(baseline_summary)
+  check_colnames(
+    .data = baseline_summary,
+    col_names = c("VAR", "MEAN", "SD"),
+    stop_message = TRUE,
+    strict = TRUE
+  )
+
+  baseline_summary <- baseline_summary %>%
+    as_tibble() %>%
+    filter(VAR %in% varName) %>%
+    verify(nrow(.) <= 1)
+
+  x <- calculate_zscore(
+    x = x,
+    mean = baseline_summary$MEAN,
+    sd = baseline_summary$SD
+  )
+
+  return(x)
+}
+
+#' @title Calculate Standardized Z-Score
+#' @param x Numeric value
+#' @param mean Mean value
+#' @param sd Standard deviation value
+#' @return A numeric vector
+#' @examples
+#' \dontrun{
+#' mean <- 10
+#' sd <- 2
+#' x <- rnorm(n = 100, mean = mean, sd = sd)
+#' calculate_zscore(x = x, mean = mean, sd = sd)
+#' calculate_zscore(x = x, mean = 5, sd = 1.5)
+#' calculate_zscore(x = c(1, 0.5, NA, 3), mean = 5, sd = 1.5)
+#' }
+#' @rdname calculate_zscore
+#' @family utility functions
+#' @keywords utils_fun
+calculate_zscore <- function(x, mean, sd) {
+  if (!is.numeric(x) & any(!is.na(x))) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must be a numeric value. \n",
+        "{.var x} is a {.cls {class(x)}} object."
+      )
+    )
+  }
+  x <- (x - as.numeric(mean)) / as.numeric(sd)
+  return(x)
+}
+
+#' @title Is a data.frame object?
+#' @param x Object
+#' @return A stop error if the object is not a data.frame class
+#' @examples
+#' \dontrun{
+#' mean <- 10
+#' sd <- 2
+#' x <- rnorm(n = 100, mean = 5, sd = 2)
+#' df <- tibble(random_sample = x)
+#' check_is_data.frame(x = x)
+#' check_is_data.frame(x = df)
+#' }
+#' @rdname check_is_data.frame
+#' @family checks function
+#' @keywords utils_fun
+#' @importFrom cli cli_abort
+check_is_data.frame <- function(x) {
+  if (!is.data.frame(x)) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must be a data.frame object. \n",
+        "{.var x} is a {.cls {class(x)}} object."
+      )
+    )
+  }
+  invisible(x)
+}
+
+
+#' @title Check for non-missing value
+#' @param x Input value
+#' @return A stop error if the value is missing value \emph(NULL)
+#' @examples
+#' \dontrun{
+#' check_non_missing_value(x = LETTERS[1:10])
+#' check_non_missing_value(x = NULL)
+#' }
+#' @rdname check_non_missing_value
+#' @family checks function
+#' @keywords utils_fun
+#' @importFrom cli cli_abort
+check_non_missing_value <- function(x) {
+  if (is.null(x)) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must not be missing value."
+      )
+    )
+  }
+  invisible(x)
 }
