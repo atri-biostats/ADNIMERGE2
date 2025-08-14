@@ -1,4 +1,4 @@
-# c("DX", "BLFL", "ADASQ4", "LDELTOTL", "DIGITSCR", "TRABSCOR", "MMSE")
+# Compute PACC score ----
 
 #' @title Generate ADNI modified versions of the Preclinical Alzheimer's Cognitive Composite (PACC)
 #'
@@ -23,9 +23,9 @@
 #' The Z scores are reoriented if necessary so that greater scores reflect better performance.
 #' The composite is the sum of these Z scores.
 #'
-#' \strong{Missing components:} At least two components must be present to produce a score. If more than two components are missing,
-#' the PACC will be \code{NA}.
-
+#' \strong{Missing components:} At least two components must be present to produce a score.
+#' If more than two components are missing, the PACC will be \code{NA}.
+#'
 #' @param .data_wide Data.frame in wide format contains the PACC component score
 #'
 #' @param bl.summary Baseline component score summary
@@ -36,7 +36,8 @@
 #'
 #' @param componentVars Character vector of component score variable names, Default: c("ADASQ4", "MMSE", "LDELTOTL", "DIGITSCR", "TRABSCOR")
 #'
-#' The component score variable names should be arranged based the following order. Otherwise, an \strong{invalid} total score will be calculated.
+#' The component score variable names should be arranged based the following order.
+#' Otherwise, an \strong{invalid} total score will be calculated.
 #'
 #' \itemize{
 #'   \item Delayed Recall portion from `ADAS`, can be named as `ADASQ4`
@@ -50,13 +51,15 @@
 #'
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
+#' @param wideFormat A Boolean value whether the data.frame is in \emph{wide} or \emph{long} format, Default: TRUE
+#'
 #' @param varName Column name that contain the component score names for long format data, Default = NULL
 #' Only applicable for long format data and it should be not missing if `wideFormat = FALSE`.
 #'
-#' @param score_col Variable names that contains component score/numeric value for long format data, Default = NULL
+#' @param scoreCol Variable names that contains component score/numeric value for long format data, Default = NULL
 #' Only applicable for long format data and it should be not missing if `wideFormat = FALSE`.
 #'
-#' @param id_cols Character vector of ID columns for long format data, Default: NULL
+#' @param idCols Character vector of ID columns for long format data, Default: NULL
 #' Only applicable for long format data and it should be not missing if `wideFormat = FALSE`.
 #'
 #' @return
@@ -154,7 +157,7 @@
 #' @keywords adni_scoring_fun pacc_score_utils_fun
 #' @export
 #' @importFrom cli cli_abort cli_alert_warning
-#' @importFrom dplyr mutate across select relocate
+#' @importFrom dplyr mutate across select relocate pivot_wider pivot_longer bind_rows
 #' @importFrom tidyselect all_of any_of ends_with contains last_col
 
 compute_pacc_score <- function(.data,
@@ -164,8 +167,8 @@ compute_pacc_score <- function(.data,
                                keepComponents = FALSE,
                                wideFormat = FALSE,
                                varName = NULL,
-                               score_col = NULL,
-                               id_cols = NULL) {
+                               scoreCol = NULL,
+                               idCols = NULL) {
   require(tidyverse)
 
   mPACCdigit <- mPACCtrailsB <- NULL
@@ -195,11 +198,11 @@ compute_pacc_score <- function(.data,
 
   if (!wideFormat) {
     check_non_missing_value(varName)
-    check_non_missing_value(score_col)
-    check_non_missing_value(id_cols)
+    check_non_missing_value(scoreCol)
+    check_non_missing_value(idCols)
     check_colnames(
       .data = .data,
-      col_names = c(varName, score_col, id_cols),
+      col_names = c(varName, scoreCol, idCols),
       stop_message = TRUE,
       strict = TRUE
     )
@@ -216,11 +219,11 @@ compute_pacc_score <- function(.data,
   if (!wideFormat) {
     .data_wide <- .data %>%
       pivot_wider(
-        id_cols = all_of(id_cols),
+        id_cols = all_of(idCols),
         names_from = all_of(varName),
-        values_from = all_of(score_col)
+        values_from = all_of(scoreCol)
       ) %>%
-      select(all_of(c(id_cols, var_names)))
+      select(all_of(c(idCols, var_names)))
   } else {
     .data_wide <- .data
   }
@@ -306,9 +309,9 @@ compute_pacc_score <- function(.data,
   if (!wideFormat) {
     .data_long <- .data_wide %>%
       pivot_longer(
-        cols = -all_of(id_cols),
+        cols = -all_of(idCols),
         names_to = varName,
-        values_to = score_col
+        values_to = scoreCol
       )
 
     output_data <- .data %>%
@@ -324,20 +327,20 @@ compute_pacc_score <- function(.data,
   return(output_data)
 }
 
+# Get summary statistic -----
 #' @title Get Grouped Score/Numeric Summary Stats
 #'
 #' @description
 #'  This function is used to get the numeric variable summary statistic grouped by certain variable.
 #'
-#' @param dd Data.frame
+#' @param .data Data.frame
 #'
 #' @param wideFormat A Boolean value whether the data.frame is in \emph{wide} or \emph{long} format, Default: TRUE
 #'
-#' @param scoreVar
-#'
-#' Character vector of variable(s) that contain the actual score/numeric values,
+#' @param scoreVar Character vector of variable(s) that contain the actual score/numeric values,
 #' Default: c("ADASQ4", "LDELTOTL", "DIGITSCR", "LOG.TRABSCOR", "MMSE")
-#' For long format data.frame, `scoreVar` should be a length of one character vector
+#'
+#' For long format data, `scoreVar` should be a length of one character vector
 #' of variable that contains the score/numeric values.
 #'
 #' @param groupVar1 Additional grouping variable, only applicable for \emph{long} format data.frame.
@@ -351,6 +354,7 @@ compute_pacc_score <- function(.data,
 #'
 #' \itemsize{
 #'   \item \code{groupVar}: Grouping variable
+#'   \item VAR: Score/numeric variable name
 #'   \item N: Number of non-missing observation
 #'   \item MEAN: Mean score
 #'   \item SD: Standard deviation value
@@ -362,7 +366,72 @@ compute_pacc_score <- function(.data,
 #'
 #' @examples
 #' \dontrun{
+#' # For long format data
+#' # Suppose we wanted to compute the baseline summary score of
+#' # all available assessments in `ADNIMERGE2::ADQS`
 #'
+#' # By baseline diagnosis status.
+#' library(tidyverse)
+#' library(ADNIMERGE2)
+#'
+#' long_format_example <- ADNIMERGE2::ADQS %>%
+#'   filter(ABLFL %in% "Y") %>%
+#'   #  Check there is only one baseline record per assessment type per subject
+#'   ADNIMERGE2::assert_uniq(USUBJID, PARAMCD)
+#'
+#' get_score_summary_stats(
+#'   .data = long_format_example,
+#'   wideFormat = FALSE,
+#'   scoreVar = "AVAL",
+#'   groupVar1 = "PARAMCD",
+#'   groupVar = "DX",
+#'   filterGroup = NULL
+#' )
+#'
+#' # For only cognitive normal (CN) subjects
+#' get_score_summary_stats(
+#'   .data = long_format_example,
+#'   wideFormat = FALSE,
+#'   scoreVar = "AVAL",
+#'   groupVar1 = "PARAMCD",
+#'   groupVar = "DX",
+#'   filterGroup = "CN"
+#' )
+#'
+#' # For wide format data
+#' # Suppose we wanted to compute the baseline summary statistic of `AGE`, `BMI`, `ADASTT11` and `ADASTT13`
+#' wide_format_example <- ADNIMERGE2::ADSL %>%
+#'   filter(ENRLFL %in% "Y")
+#'
+#' # By baseline diagnostics status
+#' get_score_summary_stats(
+#'   .data = wide_format_example,
+#'   wideFormat = TRUE,
+#'   scoreVar = c("AGE", "BMI", "ADASTT11", "ADASTT13"),
+#'   groupVar1 = NULL,
+#'   groupVar = "DX",
+#'   filterGroup = NULL
+#' )
+#'
+#'
+#' get_score_summary_stats(
+#'   .data = wide_format_example,
+#'   wideFormat = TRUE,
+#'   scoreVar = c("AGE", "BMI", "ADASTT11", "ADASTT13"),
+#'   groupVar1 = NULL,
+#'   groupVar = "DX",
+#'   filterGroup = "CN"
+#' )
+#'
+#' # By SEX
+#' get_score_summary_stats(
+#'   .data = wide_format_example,
+#'   wideFormat = TRUE,
+#'   scoreVar = c("AGE", "BMI", "ADASTT11", "ADASTT13"),
+#'   groupVar1 = NULL,
+#'   groupVar = "SEX",
+#'   filterGroup = NULL
+#' )
 #' }
 #' @seealso
 #'  \code{\link{get_baseline_score_summary_stats}()}
@@ -370,10 +439,10 @@ compute_pacc_score <- function(.data,
 #' @keywords pacc_score_utils_fun
 #' @export
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr filter if_all pivot_longer group_by across ungroup if_any select
+#' @importFrom dplyr filter if_all pivot_longer group_by across ungroup if_any select mutate
 #' @importFrom tidyselect all_of
 
-get_score_summary_stats <- function(dd,
+get_score_summary_stats <- function(.data,
                                     wideFormat = TRUE,
                                     scoreVar = c("ADASQ4", "LDELTOTL", "DIGITSCR", "LOG.TRABSCOR", "MMSE"),
                                     groupVar1 = NULL,
@@ -384,7 +453,7 @@ get_score_summary_stats <- function(dd,
   check_is_logical(wideFormat)
   if (wideFormat) {
     check_colnames(
-      .data = dd,
+      .data = .data,
       col_names = c(scoreVar, groupVar),
       strict = TRUE,
       stop_message = TRUE
@@ -392,34 +461,34 @@ get_score_summary_stats <- function(dd,
   }
   # For long format data
   if (!wideFormat) {
-    if (is.null(scoreVar)) scoreVar <- "SCORE"
-    if (is.null(scoreName)) groupVar1 <- "SCORE"
+    check_non_missing_value(scoreVar)
+    check_non_missing_value(groupVar1)
     check_colnames(
-      .data = dd,
+      .data = .data,
       col_names = c(scoreVar, groupVar1, groupVar),
       strict = TRUE,
       stop_message = TRUE
     )
   }
 
-  dd <- dd %>%
+  .data <- .data %>%
     as_tibble() %>%
     {
       if (wideFormat) {
         # Change into a long format
         pivot_longer(
           .,
-          cols = all_of(scoreSource),
+          cols = all_of(scoreVar),
           names_to = "VAR",
           values_to = "SCORE"
         )
       } else {
-        rename_with(., paste0("VAR"), all_of(groupVar1)) %>%
-          rename_with(., paste0("SCORE"), all_of(scoreVar))
+        mutate(., across(all_of(groupVar1), ~., .names = "VAR")) %>%
+          mutate(., across(all_of(scoreVar), ~., .names = "SCORE"))
       }
     }
 
-  score_summary <- dd %>%
+  score_summary <- .data %>%
     group_by(across(all_of(c(groupVar, "VAR")))) %>%
     dplyr::summarize(
       N = sum(!is.na(SCORE)),
@@ -442,7 +511,7 @@ get_score_summary_stats <- function(dd,
   }
 
   score_summary <- score_summary %>%
-    select(all_of(c(groupVar, "N", "MEAN", "SD")))
+    select(all_of(c(groupVar, "VAR", "N", "MEAN", "SD")))
 
   return(score_summary)
 }
@@ -451,11 +520,11 @@ get_score_summary_stats <- function(dd,
 #'
 #' @description This function is used to get baseline grouped summary statistic of numeric/score variable(s).
 #'
-#' @param dd A data.frame that contains a baseline record identifier variable.
+#' @inheritParams get_score_summary_stats
 #'
-#' @param blVar Character vector of baseline record identifier variable
-
-#' @param filterBL Baseline record identifier values, Default: c("Y", "Yes", "bl")
+#' @param filterBy Character vector of baseline record identifier variable
+#'
+#' @param filterValue Baseline record identifier values, Default: c("Y", "Yes", "bl")
 #'
 #' @param ... \code{\link[assertr]{get_score_summary_stats}} arguments
 #'
@@ -463,42 +532,70 @@ get_score_summary_stats <- function(dd,
 #'
 #' @examples
 #' \dontrun{
+#' # For long format data
+#' # Suppose we wanted to compute the baseline summary score of
+#' # all available assessments in `ADNIMERGE2::ADQS` by baseline diagnosis status.
+#' library(tidyverse)
+#' library(ADNIMERGE2)
 #'
+#' get_baseline_score_summary_stats(
+#'   .data = ADNIMERGE2::ADQS,
+#'   filterBy = "ABLFL",
+#'   filterValue = "Y",
+#'   wideFormat = FALSE,
+#'   scoreVar = "AVAL",
+#'   groupVar1 = "PARAMCD",
+#'   groupVar = "DX",
+#'   filterGroup = NULL
+#' )
+#'
+#' get_baseline_score_summary_stats(
+#'   .data = ADNIMERGE2::ADQS,
+#'   filterBy = "ABLFL",
+#'   filterValue = "Y",
+#'   wideFormat = FALSE,
+#'   scoreVar = "AVAL",
+#'   groupVar1 = "PARAMCD",
+#'   groupVar = "DX",
+#'   filterGroup = "CN"
+#' )
 #' }
 #' @seealso
 #'  \code{\link{get_score_summary_stats}()}
 #' @rdname get_baseline_score_summary_stats
+#' @keywords pacc_score_utils_fun
 #' @export
 #' @importFrom cli cli_abort
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter if_all
 #' @importFrom tidyselect all_of
 
-get_baseline_score_summary_stats <- function(dd, blVar, filterBL = c("Y", "Yes", "bl"), ...) {
-  if (length(blVar) != 0) {
+get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y", "Yes", "bl"), ...) {
+  if (length(filterBy) != 1) {
     cli::cli_abort(
       message = c(
-        "{.var blVar} must be a length of one character vector. \n",
-        "{.var blVar} contains {.val {blVar}} variables."
+        "{.var filterBy} must be a length of one character vector. \n",
+        "{.var filterBy} contains {.val {filterBy}} variables."
       )
     )
   }
   check_colnames(
-    .data = dd,
-    col_names = blVar,
+    .data = .data,
+    col_names = filterBy,
     strict = TRUE,
     stop_message = TRUE
   )
 
-  dd <- dd %>%
+  .data <- .data %>%
     as_tibble() %>%
-    filter(if_all(all_of(blVar), ~ .x %in% filterBL))
+    filter(if_all(all_of(filterBy), ~ .x %in% filterValue))
 
-  bl_summary <- get_score_summary_stats(dd = dd, ...)
+  bl_summary <- get_score_summary_stats(.data = .data, ...)
 
   return(bl_summary)
 }
 
+# Standardize/Normalize values ----
 #' @title Normalized Item Value By Baseline Score
 #'
 #' @param x Numeric/score value
@@ -519,28 +616,90 @@ get_baseline_score_summary_stats <- function(dd, blVar, filterBL = c("Y", "Yes",
 #'
 #' @examples
 #' \dontrun{
+#' # Suppose we wanted to standardize/normalize ADASTT13 scores in `ADNIMERGE2:ADQS` by
+#' # baseline summary score of enrolled `CN` subjects
+#' library(tidyverse)
+#' library(assertr)
+#' library(ADNIMERGE2)
 #'
+#' bl.summary <- ADNIMERGE2::ADSL %>%
+#'   get_baseline_score_summary_stats(
+#'     .data = ADNIMERGE2::ADSL,
+#'     filterBy = "ENRLFL",
+#'     filterValue = "Y",
+#'     wideFormat = TRUE,
+#'     scoreVar = "ADASTT13",
+#'     groupVar = "DX",
+#'     filterGroup = "CN"
+#'   )
+#'
+#' # Using numeric vector
+#' example_data1 <- ADNIMERGE2::ADQS %>%
+#'   filter(PARAMCD %in% "ADASTT13")
+#' rsample_adas13 <- example_data1$AVAL
+#' rsample_adas13 <- sample(rsample_adas13, size = 100)
+#' normalize_var_by_baseline_score(
+#'   x = rsample_adas13,
+#'   baseline_summary = bl.summary,
+#'   varName = NULL
+#' )
+#'
+#' # Using data.frame format
+#'
+#' example_data2 <- ADNIMERGE2::ADQS %>%
+#'   mutate(across(AVAL, ~ normalize_var_by_baseline_score(x = .x, baseline_summary = bl.summary, varName = "ADASTT13"),
+#'     .names = "{col}.zscore"
+#'   ))
+#'
+#' example_data2 %>%
+#'   group_by(PARAMCD, !is.na(AVAL), !is.na(AVAL.zscore)) %>%
+#'   count() %>%
+#'   ungroup()
+#'
+#' library(ggplot2)
+#'
+#' example_data2 %>%
+#'   filter(PARAMCD %in% "ADASTT13") %>%
+#'   pivot_longer(
+#'     cols = c("AVAL", "AVAL.zscore"),
+#'     names_to = "SOURCE",
+#'     values_to = "VALUE"
+#'   ) %>%
+#'   ggplot(aes(x = VALUE)) +
+#'   geom_histogram() +
+#'   facet_wrap(~SOURCE)
 #' }
 #' @rdname normalize_var_by_baseline_score
-#' @keywords utils_fun pacc_score_utils_fun
-#' @family PACC score utility functions
+#' @keywords pacc_score_utils_fun
+#' @family Utility functions
 #' @importFrom dplyr filter nrow
 #' @importFrom tibble as_tibble
 #' @importFrom assertr verify
 
-normalize_var_by_baseline_score <- function(x, baseline_summary, varName) {
+normalize_var_by_baseline_score <- function(x, baseline_summary, varName = NULL) {
   VAR <- MEAN <- SD <- NULL
   check_is_data.frame(baseline_summary)
-  check_colnames(
-    .data = baseline_summary,
-    col_names = c("VAR", "MEAN", "SD"),
-    stop_message = TRUE,
-    strict = TRUE
-  )
+  col_names <- c("MEAN", "SD")
+  if (!is.null(varName)) {
+    col_names <- c("VAR", col_names)
+  }
+  col_names <-
+    check_colnames(
+      .data = baseline_summary,
+      col_names = col_names,
+      stop_message = TRUE,
+      strict = TRUE
+    )
 
   baseline_summary <- baseline_summary %>%
     as_tibble() %>%
-    filter(VAR %in% varName) %>%
+    {
+      if (!is.null(varName)) {
+        filter(., VAR %in% varName)
+      } else {
+        (.)
+      }
+    } %>%
     verify(nrow(.) <= 1)
 
   x <- calculate_zscore(
@@ -569,6 +728,7 @@ normalize_var_by_baseline_score <- function(x, baseline_summary, varName) {
 #' @rdname calculate_zscore
 #' @family utility functions
 #' @keywords utils_fun
+
 calculate_zscore <- function(x, mean, sd) {
   if (!is.numeric(x) & any(!is.na(x))) {
     cli::cli_abort(
@@ -581,6 +741,8 @@ calculate_zscore <- function(x, mean, sd) {
   x <- (x - as.numeric(mean)) / as.numeric(sd)
   return(x)
 }
+
+# Utility functions ----
 
 #' @title Is a data.frame object?
 #' @param x Object
@@ -598,6 +760,7 @@ calculate_zscore <- function(x, mean, sd) {
 #' @family checks function
 #' @keywords utils_fun
 #' @importFrom cli cli_abort
+
 check_is_data.frame <- function(x) {
   if (!is.data.frame(x)) {
     cli::cli_abort(
@@ -609,7 +772,6 @@ check_is_data.frame <- function(x) {
   }
   invisible(x)
 }
-
 
 #' @title Check for non-missing value
 #' @param x Input value
@@ -623,6 +785,7 @@ check_is_data.frame <- function(x) {
 #' @family checks function
 #' @keywords utils_fun
 #' @importFrom cli cli_abort
+
 check_non_missing_value <- function(x) {
   if (is.null(x)) {
     cli::cli_abort(
