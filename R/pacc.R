@@ -47,7 +47,7 @@
 #'   \item Trails B Score from `NEUROBAT`, can be named as `TRABSCOR`
 #' }
 #'
-#' @param log.trialbscore Boolean value if the `Trails B` score is already log transformed (in log scale), Default: FALSE
+#' @param rescale_trialB A Boolean value to change the `Trails B` score in log scale, Default: TRUE
 #'
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
@@ -163,9 +163,9 @@
 compute_pacc_score <- function(.data,
                                bl.summary,
                                componentVars = c("ADASQ4", "MMSE", "LDELTOTL", "DIGITSCR", "TRABSCOR"),
-                               log.trialbscore = FALSE,
+                               rescale_trialB = FALSE,
                                keepComponents = FALSE,
-                               wideFormat = FALSE,
+                               wideFormat = TRUE,
                                varName = NULL,
                                scoreCol = NULL,
                                idCols = NULL) {
@@ -173,7 +173,7 @@ compute_pacc_score <- function(.data,
 
   mPACCdigit <- mPACCtrailsB <- NULL
   check_is_logical(keepComponents)
-  check_is_logical(log.trialbscore)
+  check_is_logical(rescale_trialB)
   check_is_logical(wideFormat)
 
   var_names <- componentVars
@@ -208,12 +208,12 @@ compute_pacc_score <- function(.data,
     )
   }
 
-  # check_colnames(
-  #   .data = bl.summary,
-  #   col_names = c("VAR", "MEAN", "SD"),
-  #   stop_message = TRUE,
-  #   strict = TRUE
-  # )
+  check_colnames(
+    .data = bl.summary,
+    col_names = c("VAR", "MEAN", "SD"),
+    stop_message = TRUE,
+    strict = TRUE
+  )
 
   # Change long format data into wide format
   if (!wideFormat) {
@@ -237,15 +237,15 @@ compute_pacc_score <- function(.data,
 
   .data_wide <- .data_wide %>%
     {
-      if (!log.trialbscore) {
+      if (rescale_trialB) {
         # Create log transformation for Trial B Scores
-        mutate(., across(all_of(var_names[5], ~ log(.x + 1), .names = "LOG.{col}")))
+        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG.{col}"))
       } else {
         (.)
       }
     }
 
-  if (!log.trialbscore) {
+  if (rescale_trialB) {
     var_names[5] <- paste0("LOG.", var_names[5])
   }
 
@@ -267,7 +267,15 @@ compute_pacc_score <- function(.data,
   # Normalized item-level score by corresponding baseline score among cognitive normal subjects
   .data_wide <- .data_wide %>%
     mutate(across(all_of(var_names),
-      ~ normalize_var_by_baseline_score(x = .x, baseline_summary = bl.summary, varName = cur_column()),
+      ~ {
+        # Adjust for LOG.trialB score
+        if (rescale_trialB) {
+          col_name <- gsub("LOG\\.", "", cur_column())
+        } else {
+          col_name <- cur_column()
+        }
+        normalize_var_by_baseline_score(x = .x, baseline_summary = bl.summary, varName = col_name)
+      },
       .names = "{col}.zscore"
     )) %>%
     # Adjust direction
@@ -285,7 +293,7 @@ compute_pacc_score <- function(.data,
   }
   # # visualization/plot checks
   # GGally::ggpairs(
-  #   data = dd %>%
+  #   data = .data_wide %>%
   #     select(all_of(ends_with(".zscore")))
   # )
 
