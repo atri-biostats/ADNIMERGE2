@@ -235,11 +235,27 @@ compute_pacc_score <- function(.data,
     strict = TRUE
   )
 
+  if (rescale_trialB) {
+    trailB_score <- .data_wide %>%
+      select(all_of(var_names[5])) %>%
+      pull()
+
+    if (any(trailB_score < 0)) {
+      cli::cli_abort(
+        message = c(
+          "{.var trailB_score} represents the Trial B score. \n",
+          "{.var trailB_score} must not contains any negative values for log rescale/transformation. \n",
+          "Did you set {.var rescale_trialB} to {.val {FALSE}}?"
+        )
+      )
+    }
+  }
+
   .data_wide <- .data_wide %>%
     {
       if (rescale_trialB) {
         # Create log transformation for Trial B Scores
-        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG.{col}"))
+        mutate(., across(all_of(var_names), ~ log(.x + 1), .names = "LOG.{col}"))
       } else {
         (.)
       }
