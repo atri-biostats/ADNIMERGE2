@@ -620,7 +620,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
 }
 
 # Standardize/Normalize values ----
-#' @title Normalized Item Value By Baseline Score
+#' @title Standardize/normalize numeric/score value by baseline summary
 #'
 #' @param x Numeric/score value
 #'
@@ -726,7 +726,7 @@ normalize_var_by_baseline_score <- function(x, baseline_summary, varName = NULL)
     } %>%
     verify(nrow(.) <= 1)
 
-  x <- calculate_zscore(
+  x <- compute_zscore(
     x = x,
     mean = baseline_summary$MEAN,
     sd = baseline_summary$SD
@@ -745,19 +745,19 @@ normalize_var_by_baseline_score <- function(x, baseline_summary, varName = NULL)
 #' mean <- 10
 #' sd <- 2
 #' x <- rnorm(n = 100, mean = mean, sd = sd)
-#' calculate_zscore(x = x, mean = mean, sd = sd)
-#' calculate_zscore(x = x, mean = 5, sd = 1.5)
-#' calculate_zscore(x = c(1, 0.5, NA, 3), mean = 5, sd = 1.5)
+#' compute_zscore(x = x, mean = mean, sd = sd)
+#' compute_zscore(x = x, mean = 5, sd = 1.5)
+#' compute_zscore(x = c(1, 0.5, NA, 3), mean = 5, sd = 1.5)
 #' }
-#' @rdname calculate_zscore
+#' @rdname compute_zscore
 #' @family utility functions
 #' @keywords utils_fun
 
-calculate_zscore <- function(x, mean, sd) {
+compute_zscore <- function(x, mean, sd) {
   if (!is.numeric(x) & any(!is.na(x))) {
     cli::cli_abort(
       message = c(
-        "{.var x} must be a numeric value. \n",
+        "{.var x} must be a numeric object. \n",
         "{.var x} is a {.cls {class(x)}} object."
       )
     )
