@@ -235,7 +235,8 @@ compute_pacc_score <- function(.data,
     strict = TRUE
   )
 
-  if (rescale_trialB) {
+  # Log transformed Trial B score
+  if (!rescale_trialB) {
     trailB_score <- .data_wide %>%
       select(all_of(var_names[5])) %>%
       pull()
@@ -295,7 +296,7 @@ compute_pacc_score <- function(.data,
       .names = "{col}.zscore"
     )) %>%
     # Adjust direction
-    mutate(across(all_of(var_names[c(1, 5)]), ~ .x * -1))
+    mutate(across(all_of(paste0(var_names[c(1, 5)], ".zscore")), ~ -.x))
 
   # check that all measure are positively correlated:
   corTest <- .data_wide %>%
@@ -820,3 +821,4 @@ check_non_missing_value <- function(x) {
   }
   invisible(x)
 }
+
