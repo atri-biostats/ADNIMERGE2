@@ -256,7 +256,7 @@ compute_pacc_score <- function(.data,
     {
       if (rescale_trialB) {
         # Create log transformation for Trial B Scores
-        mutate(., across(all_of(var_names), ~ log(.x + 1), .names = "LOG.{col}"))
+        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG.{col}"))
       } else {
         (.)
       }
@@ -347,7 +347,7 @@ compute_pacc_score <- function(.data,
     output_data <- .data_wide
   }
 
-  output_data <- as.data.frame(output_data)
+  output_data <- as_tibble(output_data)
 
   return(output_data)
 }
@@ -822,3 +822,257 @@ check_non_missing_value <- function(x) {
   invisible(x)
 }
 
+
+## Get variable common date -----
+#' @title Get Variables Common Date
+#'
+#' @description
+#'  This function is used to get a common value across multiple date columns and compared
+#'  with reference date column if it is provided.
+#'
+#' @param .data A wide format data.frame
+#'
+#' @param date_cols Character vector of date column names
+#'
+#' @param select_method
+#' Selection method if there is more than one unique non-missing date, Default: 'min'
+#' Either the minimum date `'min`, or the maximum date `'max'`.
+#'
+#' @param compared_ref_date A Boolean to compared the common date with the reference date if it is provided, Default: FALSE
+#'
+#' @param ref_date_col Reference date column name, Default: NULL
+#'
+#' @param preferred_date_col
+#' Preferred date when common date and reference date are different.
+#' Only applicable if `compared_ref_date` is `TRUE`.
+#'
+#' @return A data.frame with the appended columns:
+#' \itemsiz{
+#'  \item COMMON_DATE: Common date among the provided date columns
+#'  \item FINAL_DATE: Final date after comparing with reference date if `compared_ref_date` is `TRUE`. Otherwise the same as `COMMON_DATE`
+#'  \item DATE_RECORD_TYPE: Record type to identify whether the date columns are the same across row or not
+#'  }
+#'
+#' @details
+#'  The comparison algorithm is based on rowwise operation and presented as follow:
+#'
+#'  For records that have at least one non-missing date columns based on the list of provided date columns:
+#'  \itemsiz{
+#'    \item If all date columns are the same/equal, then it select one unique date values.
+#'    \item If at least one date column is differ from the other columns, then it select either the minimum or maximum date based on the selection method (`select_method`)
+#'  }
+#'
+#' The reference date column should be present for any comparison with reference date.
+#'
+#' Otherwise, the date will considered as missing.
+#'
+#' @examples
+#' \dontrun{
+#'
+#' }
+#'
+#' @rdname get_vars_common_date
+#'
+#' @export
+#' @importFrom rlang arg_match0
+#' @importFrom cli cli_abort
+#' @importFrom dplyr mutate row_number filter group_by ungroup n_distinct distinct left_join case_when select
+#' @importFrom tidyr pivot_longer
+#' @importFrom tidyselect all_of
+
+get_vars_common_date <- function(.data,
+                                 date_cols,
+                                 select_method = "min",
+                                 compared_ref_date = FALSE,
+                                 ref_date_col = NULL,
+                                 preferred_date_col = NULL) {
+  require(tidyverse)
+
+  TEMP_ID <- DATE_COLS <- DATES <- ALL_SAME_DATE_SATUS <- NUM_RECORDS <- NULL
+  COMMON_DATE <- DATE_RECORD_TYPE <- REF_DATE_COL <- FINAL_DATE <- NULL
+
+  rlang::arg_match0(arg = select_method, values = c("min", "max"))
+  check_is_logical(compared_ref_date)
+
+  # For records that have at least one non-missing date
+  .data <- .data %>%
+    as_tibble() %>%
+    mutate(TEMP_ID = row_number())
+
+  .data_long <- .data %>%
+    pivot_longer(
+      cols = all_of(date_cols),
+      names_to = "DATE_COLS",
+      values_to = "DATES"
+    ) %>%
+    mutate(DATES = as.Date(DATES)) %>%
+    filter(!is.na(DATES)) %>%
+    # Check for similar values
+    group_by(TEMP_ID) %>%
+    mutate(ALL_SAME_DATE_SATUS = n_distinct(DATES) == 1) %>%
+    ungroup()
+
+  ## If all dates are the same/equal
+  .data_long_equal <- .data_long %>%
+    filter(ALL_SAME_DATE_SATUS == TRUE) %>%
+    group_by(TEMP_ID) %>%
+    mutate(
+      COMMON_DATE = unique(DATES),
+      DATE_RECORD_TYPE = "Same"
+    ) %>%
+    ungroup() %>%
+    distinct(TEMP_ID, COMMON_DATE, DATE_RECORD_TYPE)
+
+  ## For any non-unique dates
+  .data_long_unequal <- .data_long %>%
+    filter(ALL_SAME_DATE_SATUS == FALSE) %>%
+    group_by(TEMP_ID) %>%
+    {
+      if (select_method %in% "max") {
+        mutate(., COMMON_DATE = min(DATES))
+      } else {
+        mutate(., COMMON_DATE = max(DATES))
+      }
+    } %>%
+    mutate(NUM_RECORDS = n()) %>%
+    ungroup() %>%
+    mutate(DATE_RECORD_TYPE = case_when(NUM_RECORDS >= 1 ~ "Unequal")) %>%
+    distinct(TEMP_ID, COMMON_DATE, DATE_RECORD_TYPE)
+
+  .data_combined_date <- bind_rows(.data_long_equal, .data_long_unequal)
+
+  output_data <- .data %>%
+    left_join(.data_combined_date,
+      by = "TEMP_ID"
+    ) %>%
+    assert_uniq(TEMP_ID)
+
+  # Comparison with reference date column
+  if (!compared_ref_date) ref_date_col <- NULL
+  if (compared_ref_date) {
+    if (is.null(ref_date_col)) {
+      cli::cli_abort(
+        message = c(
+          "{.var ref_date_col} must not be missing!\n",
+          "Otherwise {.var compared_ref_date} must be {.val {FALSE}} value."
+        )
+      )
+    }
+
+    check_non_missing_value(preferred_date_col)
+    rlang::arg_match0(arg = preferred_date_col, values = c("COMMON_DATE", "REF_DATE_COL"))
+
+    output_data <- output_data %>%
+      mutate(REF_DATE_COL = as.Date(get(ref_date_col))) %>%
+      mutate(
+        FINAL_DATE = case_when(
+          REF_DATE_COL == COMMON_DATE ~ COMMON_DATE,
+          !is.na(REF_DATE_COL) & is.na(COMMON_DATE) ~ REF_DATE_COL,
+          is.na(REF_DATE_COL) & !is.na(COMMON_DATE) ~ COMMON_DATE,
+          !is.na(REF_DATE_COL) & !is.na(COMMON_DATE) & REF_DATE_COL != COMMON_DATE ~ get(preferred_date_col)
+        )
+      )
+  } else {
+    output_data <- output_data %>%
+      mutate(FINAL_DATE = COMMON_DATE)
+  }
+
+  output_data <- output_data %>%
+    select(-TEMP_ID)
+
+  return(output_data)
+}
+
+# Rename columns, convert into character type and tibble object ----
+#' @title Make Similar Format
+#' @param .data Data.frame
+#' @return A tibble/data.frame object with upper-case column names and character type.
+#' @rdname set_as_tibble
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr rename_with mutate across
+#' @importFrom tidyselect everything
+#' @export
+
+set_as_tibble <- function(.data) {
+  require(tidyverse)
+  .data <- .data %>%
+    as_tibble() %>%
+    rename_with(~ toupper(.x), everything()) %>%
+    mutate(across(everything(), as.character))
+  return(.data)
+}
+
+#
+#' @title Carrying Forward Screening Record as Baseline Record
+#'
+#' @description
+#' This function is used to carry forward screening record as baseline record per
+#' subject id (`RID`) and study phase (`COLPROT`).
+#'
+#' @param .data Data.frame
+#'
+#' @return A data.frame that contains adjusted baseline record and screening record.
+#'
+#' @examples
+#' \dontrun{
+#' pacc_mmse_long_file <- system.file(
+#'   "/extradata/pacc-raw-input/pacc_mmse_long.csv",
+#'   package = "ADNIMERGE2"
+#' )
+#' pacc_mmse_long <- readr::read_csv(
+#'   file = pacc_mmse_long_file,
+#'   guess_max = Inf
+#' )
+#' baseline_screening_mmse_record <- adjust_screening_record(.data = pacc_mmse_long)
+#' }
+#' @rdname adjust_screening_record
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr filter mutate across case_when select distinct left_join group_by ungroup
+#' @importFrom tidyselect all_of
+#' @importFrom tidyr expand_grid fill
+#' @export
+
+adjust_screening_record <- function(.data) {
+  # Screening visit code
+  screenVisit <- c("sc", "v01", "4_sc")
+  # baseline visit code
+  baselineVisit <- c("bl", "v03", "4_bl")
+  join_by_vars <- c("RID", "COLPROT", "VISCODE")
+  check_colnames(
+    .data = .data,
+    col_names = join_by_vars,
+    strict = TRUE,
+    stop_message = TRUE
+  )
+  .data <- .data %>%
+    as_tibble() %>%
+    filter(if_any(all_of(join_by_vars[3]), ~ .x %in% c(screenVisit, baselineVisit))) %>%
+    mutate(across(all_of(join_by_vars[3]), ~ case_when(
+      .x %in% screenVisit ~ "sc",
+      .x %in% baselineVisit ~ "bl"
+    ))) %>%
+    assert_non_missing(all_of(join_by_vars[3])) %>%
+    assert_uniq(all_of(join_by_vars))
+
+  output_data <- .data %>%
+    select(COLPROT, RID) %>%
+    distinct() %>%
+    expand_grid(VISCODE = c("sc", "bl")) %>%
+    left_join(.data,
+      by = join_by_vars
+    ) %>%
+    group_by(across(all_of(join_by_vars[1:2]))) %>%
+    fill(-all_of(c(join_by_vars)), .direction = "down") %>%
+    ungroup()
+
+  output_data <- output_data %>%
+    mutate(across(all_of(join_by_vars[3]), ~ case_when(
+      .x %in% "sc" & get(join_by_vars[2]) %in% adni_phase()[3] ~ "v01",
+      .x %in% "bl" & get(join_by_vars[2]) %in% adni_phase()[3] ~ "v03",
+      .x %in% "sc" & get(join_by_vars[2]) %in% adni_phase()[5] ~ "4_sc",
+      .x %in% "bl" & get(join_by_vars[2]) %in% adni_phase()[5] ~ "4_bl",
+      TRUE ~ .x
+    )))
+
+  return(output_data)
+}
