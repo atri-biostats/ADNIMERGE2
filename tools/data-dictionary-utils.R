@@ -713,8 +713,9 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
 #' @description This function is used to generate roxygen document for multiple datasets.
 #' @param dataset_name_list Character vector of dataset names
 #' @param roxygen_source_type
-#'   Indicator to generate the roxygen document either directly from an actual dataset (`actual_dataset`) or
-#'   prepared data dictionary dataset (`data_dictionary`). Default: "actual_dataset"
+#'   Indicator to generate the roxygen document either directly from an actual 
+#'   dataset (\code{actual_dataset}) or pre-prepared data dictionary dataset 
+#'   (\code{data_dictionary}). Default: "actual_dataset"
 #' @param data_list
 #'  Listed objects of a single actual dataset or multiple actual datasets. Default: NULL
 #' @param data_dict Prepared data dictionary dataset. Default: NULL
@@ -722,12 +723,12 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
 #' @param output_file_name
 #'  Output file name. Should be a file path if the interest is to store the result in local environment.
 #' @param existed_append
-#'  A boolen value to overwrite on an existed `output_file_name` files.
-#'  Only applicable if a file path is provided to `output_file_name`.
+#'  A boolen value to overwrite on an existed \code{output_file_name} files.
+#'  Only applicable if a file path is provided to \code{output_file_name}.
 #' @return
-#'  A data.frame of two columns: data_doc and dataset_name if output_file_name is `NULL`.
+#'  A data.frame of two columns: data_doc and dataset_name if output_file_name is \code{"NULL"}.
 #'  Otherwise write an R script that contains the roxygen documentation in a
-#'  local directory with the specified file path: `output_file_name`.
+#'  local directory with the specified file path: \code{output_file_name}.
 #' @seealso \code{\link{generate_roxygen_single_dataset}()} \code{\link{cat}}
 #' @examples
 #' \dontrun{
@@ -912,7 +913,7 @@ return_null_missing <- function(data, var_name, single_value_check = TRUE) {
 #'  A character vector of list object names that will be checked, Default NULL
 #' @return
 #'  A stop message if there is any missing/NULL/NA names in the list data.frame.
-#'  Otherwise returns `TRUE`.
+#'  Otherwise returns \code{TRUE}.
 #' @rdname check_list_names
 #' @keywords utils_fun
 #' @importFrom cli cli_abort

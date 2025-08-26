@@ -104,7 +104,7 @@ reference:
   
   - title: ADNI Specific Functions
     desc: > 
-       Functions that are created specifically for the ADNI study data
+       Functions that are created specifically for ADNI study data
   - subtitle: Enrollment
     contents:
     - has_keyword("adni_enroll_fun")
@@ -112,6 +112,7 @@ reference:
   - subtitle: Study Protocol/Phase
     contents:
     - has_keyword("adni_procotol_fun")
+    - has_keyword("adni_utils")
     
   - subtitle: Data Dictionary
     contents:
@@ -122,6 +123,7 @@ reference:
   - subtitle: Scoring Functions
     contents:
     - has_keyword("adni_scoring_fun")
+    - has_keyword("pacc_score_utils_fun")
   
   - title: Utility Functions
     desc: > 
@@ -156,6 +158,8 @@ navbar:
         href: articles/ADNIMERGE2-Package-Building.html
       - text: -------
       - text: Derived Data
+      - text: PACC Score - Modified Version
+        href: articles/ADNIMERGE2-PACC.html
       - text: ADNIMERGE2 Derived Data
         href: articles/ADNIMERGE2-Derived-Data.html
       - text: ADNIMERGE2 Analysis Metadata Specs

@@ -78,10 +78,10 @@ check_is_logical <- function(x) {
   invisible(x)
 }
 
-# Check `is_datadict_tbl` Class Type -----
-#' @title Check `is_datadict_tbl` Object Class Type
+# Check is_datadict_tbl Class Type -----
+#' @title Check \code{is_datadict_tbl} Object Class Type
 #' @param x Object
-#' @return A stop error if the class object is not `is_datadict_tbl`.
+#' @return A stop error if the class object is not \code{is_datadict_tbl}.
 #' @rdname is_datadict_tbl
 #' @family checks function
 #' @keywords adni_datadic_fun

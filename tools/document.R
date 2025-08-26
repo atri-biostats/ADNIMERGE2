@@ -381,6 +381,7 @@ if (exists("derived_data_list")) {
   source_link <- function(tblname) {
     vignette_link <- case_when(
       nchar(tblname) == 2 ~ "ADNIMERGE2-Derived-Data",
+      nchar(tblname) >2 & tolower(tblname) %in% "pacc" ~ "ADNIMERGE2-PACC",
       nchar(tblname) > 2 ~ "ADNIMERGE2-Analysis-Data"
     )
     output_link <- c()

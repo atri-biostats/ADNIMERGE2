@@ -489,7 +489,6 @@ DM <- DM %>%
     get_adni_screen_date(
       .registry = REGISTRY,
       phase = "Overall",
-      both = FALSE,
       multiple_screen_visit = FALSE
     ) %>%
       select(RID, ORIGPROT, SESTDTC = SCREENDATE) %>%
@@ -1251,7 +1250,7 @@ qs_data_dic %>%
 The following cognitive/functional assessment scores are included in the [`QS`](../reference/QS.html) dataset.
 
 ```{r qs-testcd-list, eval = TRUE, echo = FALSE}
-QS_TESTCD_LIST <- bind_rows(
+OTHER_QS_TESTCD_LIST <- bind_rows(
   c(
     QSCAT = "ADAS-COG",
     QSTESTCD = "ADASTT11",
@@ -1329,57 +1328,56 @@ QS_TESTCD_LIST <- bind_rows(
     QSTESTCD = "NPIQTOTL",
     QSTEST = "Neuropsychiatric Inventory Q",
     SOURCE = "NPIQ"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "DIGITSCR",
-    QSTEST = "Digit Symbol Substitution",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "LDELTOTL",
-    QSTEST = "Logical Memory - Delayed Recall",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "LIMMTOTL",
-    QSTEST = "Logical Memory - Immediate Recall",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "RAVLTFG",
-    QSTEST = "RAVLT Forgetting (Trial 5 - Delayed)",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "RAVLTFGP",
-    QSTEST = "RAVLT Percent Forgetting",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "RAVLTIMM",
-    QSTEST = "RVAL Immediate (Sum of 5 Trials)",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "RAVLTLRN",
-    QSTEST = "RVAL Learning (Trial 5 - Trial 1)",
-    SOURCE = "NEUROBAT"
-  ),
-  c(
-    QSCAT = "NEUROBAT",
-    QSTESTCD = "TRABSCOR",
-    QSTEST = "Trails B",
-    SOURCE = "NEUROBAT"
   )
 )
 
+NEUROBAT_TESTCD <- bind_rows(
+  c(
+    QSTESTCD = "DIGITSCR",
+    QSTEST = "Digit Symbol Substitution"
+  ),
+  c(
+    QSTESTCD = "LDELTOTL",
+    QSTEST = "Logical Memory - Delayed Recall"
+  ),
+  c(
+    QSTESTCD = "LIMMTOTL",
+    QSTEST = "Logical Memory - Immediate Recall"
+  ),
+  c(
+    QSTESTCD = "RAVLTFG",
+    QSTEST = "RAVLT Forgetting (Trial 5 - Delayed)"
+  ),
+  c(
+    QSTESTCD = "RAVLTFGP",
+    QSTEST = "RAVLT Percent Forgetting"
+  ),
+  c(
+    QSTESTCD = "RAVLTIMM",
+    QSTEST = "RVAL Immediate (Sum of 5 Trials)"
+  ),
+  c(
+    QSTESTCD = "RAVLTLRN",
+    QSTEST = "RVAL Learning (Trial 5 - Trial 1)"
+  ),
+  c(
+    QSTESTCD = "TRABSCOR",
+    QSTEST = "Trails B"
+  )
+) %>%
+  mutate(
+    QSCAT = "NEUROBAT",
+    SOURCE = "NEUROBAT"
+  )
+
+QS_TESTCD_LIST <- bind_rows(
+  OTHER_QS_TESTCD_LIST,
+  NEUROBAT_TESTCD
+)
+```
+
+
+```{r print-qs-testcd-list, eval = TRUE, echo = FALSE}
 QS_TESTCD_LIST %>%
   arrange(SOURCE, QSCAT, QSTESTCD) %>%
   select(SOURCE, QSCAT, QSTESTCD, QSTEST) %>%
@@ -1545,6 +1543,7 @@ NEUROBAT_SCORE_DATA <- NEUROBAT %>%
     ),
     QSSTAT = ifelse(is.na(QSSTRESC), "NOT DONE", NA_character_)
   )
+
 # Score data names
 score_data_names <- ls()[str_detect(ls(), "SCORE\\_DATA")]
 ```
@@ -2043,8 +2042,8 @@ NV_TESTCD_LIST %>%
     `TRACER TYPE` = TRACER,
     `IMAGE RESOLUTION` = IMAGE_RESOLUTION, DESCRIPTION = TEXT,
   ) %>%
-  datatable(paging = TRUE, filter = 'top') %>% 
-  formatStyle('DESCRIPTION', fontSize = '10px')
+  datatable(paging = TRUE, filter = "top") %>%
+  formatStyle("DESCRIPTION", fontSize = "10px")
 ```
 
 ```{r nv-input1}
@@ -2584,7 +2583,7 @@ LB_TESTCD_LIST %>%
   filter(!is.na(LBNAM)) %>%
   arrange(SOURCE, LBNAM, LBMETHOD) %>%
   select(SOURCE, LBNAM, LBMETHOD, LBTESTCD, LBTEST, LBORRESU, LBSTRESU) %>%
-  datatable(paging = TRUE, filter = 'top')
+  datatable(paging = TRUE, filter = "top")
 ```
 
 ```{r lb-prepare-labdata-print, echo = TRUE, warning = FALSE, message = FALSE, results = 'asis', ref.label = c("lb-prepare-labdata-1go2", "lb-prepare-labdata-34", "lb-prepare-labdata-34-cont")}

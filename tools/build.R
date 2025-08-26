@@ -31,13 +31,26 @@ if (DECODE_VALUE) {
   )
 }
 
+
+# Generate PACC score input data ----
+INCLUDE_PACC_DERIVED_DATA <- TRUE
+# NOTE: 
+#  Required to install the latest version of ADNIMERGE and ADNI4 study R packages
+if (INCLUDE_PACC_DERIVED_DATA) {
+  callr::rscript(
+    script = "./tools/generate-pacc-input-data.R",
+    wd = ".", 
+    cmdargs = list(DATA_DOWNLOADED_DATE = DATA_DOWNLOADED_DATE)
+  )
+}
+
 ## Generate derived/analysis dataset ----
 INCLUDE_DERIVED_DATASET <- TRUE
 
 if (INCLUDE_DERIVED_DATASET) {
   # List of derived dataset
   DERIVED_DATASET_LIST <- c(
-    "DM", "AE", "QS", "SC", "RS", "NV", "LB", "VS", "GF",
+    "PACC", "DM", "AE", "QS", "SC", "RS", "NV", "LB", "VS", "GF",
     "ADSL", "ADAE", "ADQS", "ADRS", "METACORES"
   )
   callr::rscript(
@@ -60,8 +73,8 @@ callr::rscript(
 )
 
 ## Additional package related files ----
-# # run once: 
-# # Package License
+# # run once:
+# # Package license
 # usethis::use_mit_license()
 # # Package news
 # # Caution of overwriting any existing `NEWS.md` file

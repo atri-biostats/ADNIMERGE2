@@ -41,6 +41,18 @@ load_result <- lapply(utils_file_list, source)
 ## Derived dataset -----
 vignette_dir <- file.path(".", "vignettes")
 
+## PACC derived score ----
+if (any(str_detect(DERIVED_DATASET_LIST, "PACC"))) {
+  pacc_raw_data_dir <- "./inst/extradata/pacc-raw-input"
+  load_csv_files(input_dir = pacc_raw_data_dir)
+  temp_file <- tempfile()
+  pacc_vignette_path <- file.path(vignette_dir, "ADNIMERGE2-PACC.Rmd")
+  knitr::purl(input = pacc_vignette_path, output = temp_file)
+  source(file = temp_file)
+}
+
+## Other derived dataset ----
+
 temp_file <- tempfile()
 derived_vignette_path <- file.path(vignette_dir, "ADNIMERGE2-Derived-Data.Rmd")
 knitr::purl(input = derived_vignette_path, output = temp_file)
