@@ -889,7 +889,7 @@ check_non_missing_value <- function(x) {
 #'  }
 #'
 #' @details
-#'  This function is used to get a common value across multiple date columns and
+#'  This function is used to get a common date value across multiple date columns and
 #'  compared with reference date column if it is provided. The comparison algorithm
 #'  is based on rowwise operation and presented as follow:
 #'

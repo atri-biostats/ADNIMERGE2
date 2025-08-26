@@ -34,12 +34,13 @@ if (DECODE_VALUE) {
 
 # Generate PACC score input data ----
 INCLUDE_PACC_DERIVED_DATA <- TRUE
-# NOTE: 
-#  Required to install the latest version of ADNIMERGE and ADNI4 study R packages
+# NOTE:
+#  Required to install the latest version of `ADNIMERGE` and `ADNI4 `study R packages
+#  `ADNI4` R data package is only available internally
 if (INCLUDE_PACC_DERIVED_DATA) {
   callr::rscript(
     script = "./tools/generate-pacc-input-data.R",
-    wd = ".", 
+    wd = ".",
     cmdargs = list(DATA_DOWNLOADED_DATE = DATA_DOWNLOADED_DATE)
   )
 }
@@ -50,9 +51,12 @@ INCLUDE_DERIVED_DATASET <- TRUE
 if (INCLUDE_DERIVED_DATASET) {
   # List of derived dataset
   DERIVED_DATASET_LIST <- c(
-    "PACC", "DM", "AE", "QS", "SC", "RS", "NV", "LB", "VS", "GF",
+    "DM", "AE", "QS", "SC", "RS", "NV", "LB", "VS", "GF",
     "ADSL", "ADAE", "ADQS", "ADRS", "METACORES"
   )
+  if (INCLUDE_PACC_DERIVED_DATA) {
+    DERIVED_DATASET_LIST <- c("PACC", DERIVED_DATASET_LIST)
+  }
   callr::rscript(
     script = "./tools/generate-derived-data.R",
     wd = ".",
