@@ -29,6 +29,9 @@
 #' \strong{Missing components:} At least two components must be present to produce a score.
 #' If more than two components are missing, the PACC will be \code{NA}.
 #'
+#' \strong{mPACCdigit} only will be calculated for the study phase when DSST was collected, which is in ADNI1 study phase.
+#'  Otherwise the \code{mPACCdigit} score will be missing (i.e., \code{NA}) even though the remaining PACC component scores are non-missing.
+#'
 #' Please see \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
 #' how \code{\link{compute_pacc_score}()} function can be used.
 #'
@@ -188,7 +191,6 @@ compute_pacc_score <- function(.data,
                                varName = NULL,
                                scoreCol = NULL,
                                idCols = NULL) {
-
   mPACCdigit <- mPACCtrailsB <- NULL
   check_is_logical(keepComponents)
   check_is_logical(rescale_trialsB)
@@ -247,6 +249,17 @@ compute_pacc_score <- function(.data,
       select(all_of(c(idCols, var_names)))
   } else {
     .data_wide <- .data
+  }
+
+  # Get phase var names
+  phase_vars <- c("Phase", "PHASE", "COLPORT")
+  phaseVar <- get_cols_name(.data = .data_wide, col_name = phase_vars)
+  if (length(phaseVar) == 0) {
+    cli_abort(message = "{.var phaseVar} must be a length of 1 character vector.")
+  }
+
+  if (length(phaseVar) != 1) {
+    cli_abort(message = "{.var phaseVar} must be a length of 1 character vector of {.val {phase_vars}}.")
   }
 
   check_colnames(
@@ -347,6 +360,8 @@ compute_pacc_score <- function(.data,
 
   .data_wide <- .data_wide %>%
     relocate(all_of(c("mPACCdigit", "mPACCtrailsB")), .after = last_col()) %>%
+    # mPACCdigit only in ADNI1 phase
+    mutate(across(all_of("mPACCdigit"), ~ case_when(get("COLPORT") %in% adni_phase()[1] ~ .x))) %>%
     {
       if (!keepComponents) {
         select(., -all_of(paste0(var_names, ".zscore")))
@@ -500,7 +515,7 @@ get_score_summary_stats <- function(.data,
                                     wideFormat = TRUE,
                                     scoreVar,
                                     groupVar = "DX",
-                                    filterGroup = NULL, 
+                                    filterGroup = NULL,
                                     groupVar1 = NULL) {
   N <- MEAN <- SD <- VAR <- SCORE <- NULL
   check_is_logical(wideFormat)
@@ -664,7 +679,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
 #'   \item \code{VAR}: Contains variable name. Only applicable for non-missing \code{varName} value.
 #' }
 #'
-#' The \code{baseline_summary} can be generated using 
+#' The \code{baseline_summary} can be generated using
 #' \code{\link{get_baseline_score_summary_stats}()} function.
 #'
 #' @param varName Variable name
@@ -926,7 +941,6 @@ get_vars_common_date <- function(.data,
                                  compared_ref_date = FALSE,
                                  ref_date_col = NULL,
                                  preferred_date_col = NULL) {
-
   TEMP_ID <- DATE_COLS <- DATES <- ALL_SAME_DATE_SATUS <- NUM_RECORDS <- NULL
   COMMON_DATE <- DATE_RECORD_TYPE <- REF_DATE_COL <- FINAL_DATE <- NULL
 
@@ -1050,6 +1064,10 @@ set_as_tibble <- function(.data) {
 #'
 #' @param .data Data.frame
 #'
+#' @param wide_format A Boolean indicator of wide data format, Default: TRUE
+#'
+#' @param id_cols Id variable names and only applicable for long format data format.
+#'
 #' @return A data.frame that contains adjusted baseline record and screening record.
 #'
 #' @examples
@@ -1062,8 +1080,15 @@ set_as_tibble <- function(.data) {
 #'   file = pacc_mmse_long_file,
 #'   guess_max = Inf
 #' )
-#' bl_sc_mmse_record <- adjust_scbl_record(.data = pacc_mmse_long)
+#' bl_sc_mmse_record <- adjust_scbl_record(.data = pacc_mmse_long, wide_format = TRUE)
 #' head(bl_sc_mmse_record)
+#' # For long format data
+#' bl_sc_mmse_record_long <- adjust_scbl_record(
+#'   .data = pacc_mmse_long,
+#'   wide_format = FALSE,
+#'   id_cols = "SCORE_SOURCE"
+#' )
+#' head(bl_sc_mmse_record_long)
 #' }
 #' @rdname adjust_scbl_record
 #' @keywords adni_enroll_fun
@@ -1073,12 +1098,16 @@ set_as_tibble <- function(.data) {
 #' @importFrom tidyr expand_grid fill
 #' @export
 
-adjust_scbl_record <- function(.data) {
+adjust_scbl_record <- function(.data, wide_format = TRUE, id_cols = NULL) {
   VISCODE <- NULL
+  check_is_logical(wide_format)
+  if (!wide_format) {
+    check_non_missing_value(id_cols)
+  }
   # Screening and baseline visits
   sc_bl_visit <- c(get_screen_vistcode(type = "first"), get_baseline_vistcode())
-
   join_by_vars <- c("RID", "COLPROT", "VISCODE")
+  if (!is.null(id_cols)) join_by_vars <- c(join_by_vars, id_cols)
   check_colnames(
     .data = .data,
     col_names = join_by_vars,
@@ -1099,11 +1128,11 @@ adjust_scbl_record <- function(.data) {
     assert_uniq(all_of(join_by_vars))
 
   output_data <- .data %>%
-    select(all_of(join_by_vars[1:2])) %>%
+    select(all_of(join_by_vars[!join_by_vars %in% "VISCODE"])) %>%
     distinct() %>%
     expand_grid(VISCODE = c("sc", "bl")) %>%
     left_join(.data, by = join_by_vars) %>%
-    group_by(across(all_of(join_by_vars[1:2]))) %>%
+    group_by(across(all_of(join_by_vars[!join_by_vars %in% "VISCODE"]))) %>%
     fill(-all_of(c(join_by_vars)), .direction = "down") %>%
     ungroup()
 

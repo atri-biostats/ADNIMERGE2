@@ -159,7 +159,7 @@ pacc_data_dic <- bind_rows(
     LABEL = "Mini-Mental State Examiniation Standardized Score",
     TEXT = paste0(
       "Standardized by corresponding baseline score among ",
-       "cognitive normal (CN) new enrollee in ADNI study."
+      "cognitive normal (CN) new enrollee in ADNI study."
     )
   ),
   c(
@@ -175,7 +175,7 @@ pacc_data_dic <- bind_rows(
     LABEL = "Digit Symbol Substitution Standardized Score",
     TEXT = paste0(
       "Standardized by corresponding baseline score among ",
-       "cognitive normal (CN) new enrollee in ADNI1 study phase."
+      "cognitive normal (CN) new enrollee in ADNI1 study phase."
     )
   ),
   c(
@@ -183,7 +183,7 @@ pacc_data_dic <- bind_rows(
     LABEL = "Logical Memory - Delayed Recall Log Standardized Score",
     TEXT = paste0(
       "Standardized by corresponding log transformed baseline score among ",
-       "cognitive normal (CN) new enrollee in ADNI study. ",
+      "cognitive normal (CN) new enrollee in ADNI study. ",
       "Also adjusted for directional effect (i.e. multiplied by -1)"
     )
   ),
@@ -260,30 +260,16 @@ neurobat_vars <- c("LDELTOTL", "DIGITSCR", "TRABSCOR")
 join_by_vars <- c("COLPROT", "RID", "VISCODE", "SCORE_SOURCE")
 
 # Identify carried baseline records from screening visit
-adjusted_bl_neurobat <- pacc_neurobat_wide %>%
-  adjust_scbl_record() %>%
-  pivot_longer(
-    cols = all_of(neurobat_vars),
-    names_to = "SCORE_SOURCE",
-    values_to = "SCORE"
-  ) %>%
+adjusted_bl_neurobat <- adjust_scbl_record(
+  .data = pacc_neurobat_long,
+  wide_format = FALSE,
+  id_cols = "SCORE_SOURCE"
+) %>%
   # Only baseline records
-  filter(VISCODE %in% get_baseline_vistcode()) %>%
-  mutate(ADJUSTED_BL = "Yes")
-
-adjusted_bl_neurobat <- adjusted_bl_neurobat %>%
-  left_join(
-    pacc_neurobat_long %>%
-      filter(VISCODE %in% get_baseline_vistcode()) %>%
-      mutate(IS_ORGINAL_BL_RECORD = "Yes") %>%
-      select(COLPROT, RID, VISCODE, SCORE_SOURCE, IS_ORGINAL_BL_RECORD),
-    by = join_by_vars
-  ) %>%
-  assert_uniq(all_of(join_by_vars)) %>%
-  filter(is.na(IS_ORGINAL_BL_RECORD)) %>%
-  select(-IS_ORGINAL_BL_RECORD, -ADJUSTED_BL)
+  filter(VISCODE %in% get_baseline_vistcode())
 
 pacc_neurobat_long <- pacc_neurobat_long %>%
+  filter(!VISCODE %in% get_baseline_vistcode()) %>%
   bind_rows(adjusted_bl_neurobat) %>%
   distinct() %>%
   assert_uniq(all_of(join_by_vars)) %>%
@@ -400,7 +386,6 @@ pacc_component_bl.summary <- get_score_summary_stats(
 )
 pacc_component_bl.summary
 ```
-
 ## Compute PACC Score 
 
 The composite PACC score is the sum of the standardized component score adjusted by the number of components. The following two conditions should be checked before computing the PACC score.
