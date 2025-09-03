@@ -164,8 +164,8 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
       message = paste0(
         "Multiple {.val {tgt_var}} records per {.val {grp_vars}} variable{?s} \n ",
         "The following records have multiple flagged baseline records: \n",
-        "Online the first top six records, set {.val action_type = 'return_records'}",
-        " to the full records \n {print(head(multiple_blf_records))}"
+        "Only the first top six records are listed. Set {.val action_type = 'return_records'}",
+        " to see the full records \n {print(head(multiple_blf_records))}"
       )
     )
   }
@@ -174,7 +174,7 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
     check_object_type(show_alert, "logical")
     if (show_alert) {
       cli_alert_info(
-        text = "No multiple flagged {.val {tgt_var}} records across {.val {grp_vars}}"
+        text = "No multiple flagged {.val {tgt_var}} records per {.val {grp_vars}} variable{?s}"
       )
     }
     invisible(multiple_blf_records)
@@ -276,7 +276,13 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
 
 drive_bfl_visit <- function(.data, visit_col = "VISIT", baseline_visits = "Baseline",
                             value_col = NULL, status_col = NULL) {
-  check_colnames(.data = .data, col_names = "ENRFLG", strict = TRUE, stop_message = TRUE)
+  check_colnames(
+    .data = .data,
+    col_names = "ENRFLG",
+    strict = TRUE,
+    stop_message = TRUE
+  )
+  
   .data <- .data %>%
     mutate(across(all_of(visit_col), ~ case_when(.x %in% baseline_visits ~ "Y"), .names = "BLFG")) %>%
     mutate(across(all_of("BLFG"), ~ case_when(!is.na(get("ENRFLG")) ~ .x)))
