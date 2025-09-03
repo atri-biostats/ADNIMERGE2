@@ -90,9 +90,9 @@ A study visit date from the [`REGISTRY`](../reference/REGISTRY.html) eCRF will b
 
 A baseline flag is included in some of the derived dataset to identify records that are closest to subject enrollment date or collected at baseline visit. A record is flagged as baseline if one of the following criteria is met: 
 
-* Record collected at baseline visits within 30 days from the enrollment date 
+* Record collected at baseline visits regardless the baseline visit/collection date.  from the enrollment date 
 
-* Any record collected prior to the baseline visits and closest to the enrollment date if the baseline record value is missing or not collected. 
+* Any record collected prior to the baseline visit and closest to the enrollment window period end date if the baseline record value is missing or not collected. Enrollment window period is defined as 90 days after the actual enrollment date.
 
 The assessment baseline flag is created using the [`derive_blfl_adni`](https://github.com/atri-biostats/ADNIMERGE2/tree/inst/derived-dataset-sdtmoak-utils.R) function which is based the `sdtm.oak::derive_blfl` function with minor study-specific modification. 
 
@@ -2793,7 +2793,8 @@ LB <- bind_rows(
   assign_epoch() %>%
   derive_blfl_adni(
     dm_domain = DM,
-    tgt_var = "LBBLFL"
+    tgt_var = "LBBLFL", 
+    .strict = FALSE
   ) %>%
   derive_study_day_adni(
     dm_domain = DM,
