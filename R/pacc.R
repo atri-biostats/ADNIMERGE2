@@ -360,6 +360,7 @@ compute_pacc_score <- function(.data,
 
   .data_wide <- .data_wide %>%
     relocate(all_of(c("mPACCdigit", "mPACCtrailsB")), .after = last_col()) %>%
+    mutate(across(all_of(c("mPACCdigit", "mPACCtrailsB")), ~ round(.x, 6))) %>%
     # mPACCdigit only in ADNI1 phase
     mutate(across(all_of("mPACCdigit"), ~ case_when(get(phaseVar) %in% adni_phase()[1] ~ .x))) %>%
     {
