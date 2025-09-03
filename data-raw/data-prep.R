@@ -42,7 +42,7 @@ if (length(args) != 2) {
   )
 }
 
-DATA_DOWNLOADED_DATE <- as.character(args[1])
+DATA_DOWNLOADED_DATE <- args[1]
 if (!is.character(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   cli::cli_abort(
     message = c(

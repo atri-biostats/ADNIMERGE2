@@ -67,13 +67,13 @@
 #' @param wideFormat A Boolean value whether the data.frame is in \code{wide} or \code{long} format, Default: TRUE
 #'
 #' @param varName Column name that contain the component score names for long format data, Default = NULL.
-#' Only applicable for a \code{long} format data and \code{varName} must not be missing if \code{wideFormat = FALSE}.
+#' Only applicable for a \code{long} format data and \code{varName} must not be missing if \code{wideFormat} is \code{FALSE}.
 #'
 #' @param scoreCol Variable names that contains component score/numeric value for long format data, Default = NULL.
-#' Only applicable for a \code{long} format data and \code{scoreCol} must not be missing if \code{wideFormat = FALSE}.
+#' Only applicable for a \code{long} format data and \code{scoreCol} must not be missing if \code{wideFormat} is \code{FALSE}.
 #'
 #' @param idCols Character vector of ID columns for long format data, Default: NULL.
-#' Only applicable for a \code{long} format data and \code{idCols} must not be missing if \code{wideFormat = FALSE}.
+#' Only applicable for a \code{long} format data and \code{idCols} must not be missing if \code{wideFormat} is \code{FALSE}.
 #'
 #' @return
 #' \itemize{
@@ -192,9 +192,9 @@ compute_pacc_score <- function(.data,
                                scoreCol = NULL,
                                idCols = NULL) {
   mPACCdigit <- mPACCtrailsB <- NULL
-  check_is_logical(keepComponents)
-  check_is_logical(rescale_trialsB)
-  check_is_logical(wideFormat)
+  check_object_type(keepComponents, "logical")
+  check_object_type(rescale_trialsB, "logical")
+  check_object_type(wideFormat, "logical")
 
   var_names <- componentVars
   if (length(var_names) != 5) {
@@ -252,7 +252,7 @@ compute_pacc_score <- function(.data,
   }
 
   # Get phase var names
-  phase_vars <- c("Phase", "PHASE", "COLPORT")
+  phase_vars <- c("Phase", "PHASE", "COLPROT")
   phaseVar <- get_cols_name(.data = .data_wide, col_name = phase_vars)
   if (length(phaseVar) == 0) {
     cli_abort(message = "{.var phaseVar} must be a length of 1 character vector.")
@@ -361,7 +361,7 @@ compute_pacc_score <- function(.data,
   .data_wide <- .data_wide %>%
     relocate(all_of(c("mPACCdigit", "mPACCtrailsB")), .after = last_col()) %>%
     # mPACCdigit only in ADNI1 phase
-    mutate(across(all_of("mPACCdigit"), ~ case_when(get("COLPORT") %in% adni_phase()[1] ~ .x))) %>%
+    mutate(across(all_of("mPACCdigit"), ~ case_when(get(phaseVar) %in% adni_phase()[1] ~ .x))) %>%
     {
       if (!keepComponents) {
         select(., -all_of(paste0(var_names, ".zscore")))
@@ -404,7 +404,7 @@ compute_pacc_score <- function(.data,
 #'
 #' @param scoreVar Character vector of variable(s) that contain the actual score/numeric values
 #'
-#' When \code{wideFormat = FALSE} (i.e., for long format data), \code{scoreVar}
+#' When \code{wideFormat} is \code{FALSE} (i.e., for a long format data), \code{scoreVar}
 #' must be a length of one character vector of variable name that contains
 #' the score/numeric values.
 #'
@@ -518,7 +518,7 @@ get_score_summary_stats <- function(.data,
                                     filterGroup = NULL,
                                     groupVar1 = NULL) {
   N <- MEAN <- SD <- VAR <- SCORE <- NULL
-  check_is_logical(wideFormat)
+  check_object_type(wideFormat, "logical")
   if (wideFormat) {
     check_colnames(
       .data = .data,
@@ -757,7 +757,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
 
 normalize_var_by_baseline_score <- function(x, baseline_summary, varName = NULL) {
   VAR <- MEAN <- SD <- NULL
-  check_is_data.frame(baseline_summary)
+  check_object_type(baseline_summary, "data.frame")
   col_names <- c("MEAN", "SD")
   if (!is.null(varName)) {
     col_names <- c("VAR", col_names)
@@ -822,36 +822,6 @@ calculate_zscore <- function(x, mean, sd) {
 }
 
 # Utility functions ----
-
-#' @title Is a data.frame object?
-#' @param x Object
-#' @return A stop error if the object is not a data.frame class
-#' @examples
-#' \dontrun{
-#' mean <- 10
-#' sd <- 2
-#' x <- rnorm(n = 100, mean = 5, sd = 2)
-#' df <- tibble(random_sample = x)
-#' check_is_data.frame(x = x)
-#' check_is_data.frame(x = df)
-#' }
-#' @rdname check_is_data.frame
-#' @family checks function
-#' @keywords utils_fun
-#' @importFrom cli cli_abort
-
-check_is_data.frame <- function(x) {
-  if (!is.data.frame(x)) {
-    cli::cli_abort(
-      message = c(
-        "{.var x} must be a data.frame object. \n",
-        "{.var x} is a {.cls {class(x)}} object."
-      )
-    )
-  }
-  invisible(x)
-}
-
 #' @title Check for non-missing value
 #' @param x Input value
 #' @return A stop error if the value is missing value \code{'NULL'}
@@ -945,7 +915,7 @@ get_vars_common_date <- function(.data,
   COMMON_DATE <- DATE_RECORD_TYPE <- REF_DATE_COL <- FINAL_DATE <- NULL
 
   rlang::arg_match0(arg = select_method, values = c("min", "max"))
-  check_is_logical(compared_ref_date)
+  check_object_type(compared_ref_date, "logical")
 
   # For records that have at least one non-missing date
   .data <- .data %>%
@@ -1100,7 +1070,7 @@ set_as_tibble <- function(.data) {
 
 adjust_scbl_record <- function(.data, wide_format = TRUE, id_cols = NULL) {
   VISCODE <- NULL
-  check_is_logical(wide_format)
+  check_object_type(wide_format, "logical")
   if (!wide_format) {
     check_non_missing_value(id_cols)
   }

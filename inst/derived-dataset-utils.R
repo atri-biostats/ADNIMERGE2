@@ -155,7 +155,7 @@ assign_visit_attr <- function(.data,
   require(tidyverse)
   require(assertr)
   VISDTC <- VISTAT <- NULL
-  check_is_logical(check_missing)
+  check_object_type(check_missing, "logical")
   col_names <- c("RID", "ORIGPROT", "COLPROT", "VISCODE")
   join_cols <- get_cols_name(.data, col_names)
   check_colnames(
@@ -730,8 +730,8 @@ rename_with_list <- function(.data, name_char, by_name = TRUE, .strict = TRUE,
   require(dplyr)
   require(tidyselect)
   require(cli)
-  check_is_logical(by_name)
-  check_is_logical(.strict)
+  check_object_type(by_name, "logical")
+  check_object_type(.strict, "logical")
   if (is.null(suffix)) suffix <- ""
   if (is.null(prefix)) prefix <- ""
   if (.strict) {

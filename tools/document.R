@@ -141,7 +141,7 @@ temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   summarize_dataset(
     data = raw_data_list %>% pluck(., tb),
     dataset_name = tb,
-    wider_format = TRUE
+    wide_format = TRUE
   )
 }) %>%
   bind_rows() %>%
@@ -423,7 +423,7 @@ if (exists("derived_data_list")) {
     summarize_dataset(
       data = derived_data_list %>% pluck(., tb),
       dataset_name = tb,
-      wider_format = TRUE
+      wide_format = TRUE
     )
   }) %>%
     bind_rows() %>%

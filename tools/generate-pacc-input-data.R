@@ -29,17 +29,84 @@ if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   )
 }
 # Compared with raw source dataset date
-if (ADNI4::data_dump_date != DATA_DOWNLOADED_DATE) {
-  cli::cli_abort(
-    message = c(
-      "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
-      "{.var ADNI4} R package download date is {.val {ADNI4::data_dump_date}}."
-    )
-  )
-}
+# if (ADNI4::data_dump_date != DATA_DOWNLOADED_DATE) {
+#   cli::cli_abort(
+#     message = c(
+#       "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
+#       "{.var ADNI4} R package download date is {.val {ADNI4::data_dump_date}}."
+#     )
+#   )
+# }
 
 devtools::load_all("./")
 
+#' @title Get RID from PTID
+#' @param x PTID
+#' @return A numeric vector
+#' @rdname get_rid
+#' @importFrom stringr str_remove_all
+#' @export
+get_rid <- function(x) {
+  x <- as.numeric(stringr::str_remove_all(x, "^[0-9]{3}\\_S\\_"))
+  return(x)
+}
+
+#' @title Create Common Columns in ADNIMERGE2
+#' @param .data A data.frame
+#' @return A data.frame with appended columns of either `RID`, ` VISCODE` or `COLPROT`.
+#' @rdname create_common_cols
+#' @export
+#' @importFrom dplyr mutate
+
+create_common_cols <- function(.data) {
+  RID <- VISCODE <- COLPROT <- NULL
+  .data <- .data %>%
+    {
+      if ("subject.label" %in% colnames(.)) {
+        mutate(., RID = get_rid(subject.label))
+      } else if ("subject_label" %in% colnames(.)) {
+        mutate(., RID = get_rid(subject_label))
+      } else {
+        (.)
+      }
+    } %>%
+    {
+      if ("event.code" %in% colnames(.)) {
+        mutate(., VISCODE = event.code)
+      } else if ("event_code" %in% colnames(.)) {
+        mutate(., VISCODE = event_code)
+      } else {
+        (.)
+      }
+    } %>%
+    mutate(COLPROT = "ADNI4")
+  return(.data)
+}
+
+#' @title Derive SITED IDs
+#' @param .data A data.frame
+#' @param join_var Variable name for site code, Default: 'site_code'
+#' @return A data.frame with appended column of `SITEID`
+#' @rdname derive_site_id
+#' @export
+#' @importFrom dplyr left_join select
+#' @importFrom assertr assert not_na
+
+derive_site_id <- function(.data, join_var = "site_code") {
+  if (!join_var %in% colnames(.data)) {
+    stop(join_var, " not found in the data")
+  }
+  join_var_by <- "site.code"
+  names(join_var_by) <- join_var
+  .data <- .data %>%
+    left_join(
+      ADNI4::site_list %>%
+        select(site.code, SITEID = site.id),
+      by = join_var_by
+    ) %>%
+    assert(not_na, SITEID)
+  return(.data)
+}
 # Utility functions ------
 #' @title Check for Unique Records
 #' @description
@@ -75,7 +142,7 @@ convert_f_viscode_to_sc <- function(.data, visitVar = "VISCODE") {
 
 # Prepare input data -----
 ## Get ADAS - Delayed Word Recall Score/Q4 sub-score -----
-### ADNIMERGE - For ADNI1-3 phases
+### For ADNI1-3 phases
 adas_q4score_adni13 <- ADNIMERGE::adas %>%
   select(
     COLPROT, RID, SITEID,
@@ -96,7 +163,7 @@ adas_q4score_adni13 <- ADNIMERGE::adas %>%
   ) %>%
   select(-VISDATE)
 
-## ADNI4 - For ANDI4 phase
+## For ANDI4 phase
 adni4_adas_q4score <- ADNI4::adas_score %>%
   create_common_cols() %>%
   derive_site_id() %>%
@@ -112,13 +179,12 @@ adni4_adas_q4score <- ADNI4::adas_score %>%
   mutate(DATE = ifelse(is.na(DATE), EXAMDATE, DATE)) %>%
   select(-EXAMDATE)
 
-# Bind across phases
+# Bind across study phases
 pacc_adas_q4score <- bind_rows(adas_q4score_adni13, adni4_adas_q4score) %>%
   rename("VISDATE" = DATE) %>%
   rename_with(~ paste0("ADAS_", .x), any_of(c("DONE", "NDREASON"))) %>%
   check_unique_record()
 
-# Long format
 pacc_adas_q4score_long <- pacc_adas_q4score %>%
   mutate(
     SCORE = Q4SCORE,
@@ -134,7 +200,6 @@ pacc_mmse <- MMSE %>%
   rename_with(~ paste0("MMSE_", .x), any_of(c("DONE", "NDREASON"))) %>%
   check_unique_record()
 
-# Long format
 pacc_mmse_long <- pacc_mmse %>%
   mutate(
     SCORE = MMSCORE,
@@ -153,9 +218,6 @@ pacc_neurobat <- NEUROBAT %>%
   convert_f_viscode_to_sc() %>%
   check_unique_record()
 
-pacc_neurobat_wide <- pacc_neurobat
-
-# Long format
 pacc_neurobat_long <- pacc_neurobat %>%
   select(COLPROT, RID, VISCODE, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
   pivot_longer(
@@ -172,8 +234,7 @@ if (dir.exists(pacc_raw_data_dir)) {
 }
 dir.create(pacc_raw_data_dir, recursive = TRUE)
 pacc_input_data_names <- c(
-  "pacc_adas_q4score_long", "pacc_mmse_long",
-  "pacc_neurobat_long", "pacc_neurobat_wide"
+  "pacc_adas_q4score_long", "pacc_mmse_long", "pacc_neurobat_long"
 )
 save_csv <- lapply(pacc_input_data_names, function(x) {
   readr::write_csv(

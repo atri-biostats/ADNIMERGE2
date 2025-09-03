@@ -136,7 +136,7 @@ assign_vars_label <- function(.data, data_dict, .strict = TRUE) {
   require(tidyselect)
   require(labelled)
   require(assertr)
-  check_is_logical(.strict)
+  check_object_type(.strict, "logical")
   if (.strict) {
     select_of <- function(x) {
       tidyselect::all_of(x)
@@ -181,7 +181,7 @@ assign_vars_label <- function(.data, data_dict, .strict = TRUE) {
 #' @importFrom cli cli_abort
 #' @export
 check_domain_abbrv <- function(domain, char_result = TRUE) {
-  check_is_logical(char_result)
+  check_object_type(char_result, "logical")
   domain <- toupper(domain)
   if (nchar(domain) != 2) {
     cli_abort(

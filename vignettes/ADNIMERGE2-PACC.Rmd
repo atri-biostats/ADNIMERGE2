@@ -50,11 +50,11 @@ According to @donohue2014preclinical, the `PACC` score is a baseline standardize
 
 Each of component score is required to be standardized by the corresponding baseline score prior to computing the composite score. Higher values of the composite score indicate better performance.
 
-In ADNI study, some of these components are either collected partially during certain study phase or not available at all. Since FSCRT is not available at all, the Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS), which is called `ADAS-Cog Q4 score`, will be used as a proxy. The ADAS-Cog Q4 score ranges from `0 to 10` points where higher value indicates worse condition. Similarly, a logarithm scale of `Trails B` score will be used as a proxy for DSST since DSST was collected in the early phase of the study (i.e. `ADNI1`). Therefore, we will have two modified version of `PACC` composite score: 
+In ADNI study, some of these components are either collected partially during certain study phase or not available at all. Since FSCRT is not available at all, the Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS), which is called `ADAS-Cog Q4 score`, will be used as a proxy. The ADAS-Cog Q4 score ranges from `0 to 10` points where higher value indicates worse condition. Similarly, a logarithm scale of `Trails B` score will be used as a proxy for DSST. Therefore, we will have two modified version of `PACC` composite score: 
 
-a. **mPACCdigit: ** Compute when DSST score is used.
+a. **mPACCdigit: ** It will only be computed in ADNI1 study phase since DSST was collected in the early phase of ADNI study.
 
-b. **mPACCtrailsB: ** Compute when Trails B score is used.
+b. **mPACCtrailsB: ** It will be computed across all ADNI study phases using `Trails B` score as a proxy for DSST.
 
 # Load Required R Packages 
 
@@ -390,9 +390,9 @@ pacc_component_bl.summary
 
 The composite PACC score is the sum of the standardized component score adjusted by the number of components. The following two conditions should be checked before computing the PACC score.
 
-* `Trials B` Measurement Scale: To identify whether the score is in a logarithm scale. For instance here, the `Trials B` score is not in a logarithm scale. We need either to map the raw score values to logarithm scale prior to using the scoring function or to specify an argument that allows to perform a logarithm transformation inside the scoring function.
+* `Trials B` Measurement Scale: To identify whether the score is in a logarithm scale. For instance, here the `Trials B` score is not in a logarithm scale. We need either to map the raw score values to logarithm scale prior to using a scoring function or to specify an argument that allows to perform a logarithm transformation inside a scoring function.
 
-* Standardized Component Directional Effect: To verify the same directional effect across standardized component score and convert into the same effect since the composite score will be the sum of the standardized component scores. In ADNI study, `ADAS-cog Q4` and `Trials B` scores have opposite directional effect compared to the remaining PACC component scores. Higher values of those two components indicates worse condition. It required to convert the direction effect of these standardized components. Thus, higher values of the composite score indicates better performance.
+* Standardized Component Directional Effect: To verify the same directional effect across standardized component score and convert into the same effect since the composite score will be the sum of the standardized component scores. In ADNI study, `ADAS-cog Q4` and `Trials B` scores have opposite directional effect compared to the remaining PACC component scores. Higher values of those two components indicates worse condition. It is required to convert the direction effect of those two standardized components. Therefore, higher values of the composite score indicates better performance.
 
 Moreover, the composite score will only be calculated if there are at least two non-missing component scores at a given study visit per subject.
 

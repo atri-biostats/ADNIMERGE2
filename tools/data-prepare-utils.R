@@ -46,9 +46,10 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
   require(rlang)
 
   arg_match0(edit_type, values = c("create", "modify"))
-  check_is_logical(run_script)
-  check_is_logical(include_pipe)
-  check_is_logical(clean)
+  check_object_type(run_script, "logical")
+  check_object_type(include_pipe, "logical")
+  check_object_type(clean, "logical")
+
   added_script <- paste0(dataset_name, " <- ", dataset_name)
 
   # Create data-preparation script in 'data-raw/dataset_name.R'
@@ -614,7 +615,7 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
   require(assertr)
   CODES <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- NULL
   prefix_char <- as.character(prefix_char)
-  check_is_logical(nested_value)
+  check_object_type(nested_value, "logical")
   is_datadict_tbl(.datadic)
   if (nested_value) add_cols <- "CODES" else add_cols <- c("prefix", "suffix")
   check_colnames(

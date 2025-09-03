@@ -105,14 +105,7 @@ convert_adni_phase_order_num <- function(phase_num) {
       )
     )
   }
-  if (!is.numeric(phase_num)) {
-    cli_abort(
-      message = c(
-        "{.var phase_num} must be a numeric object",
-        "{.var phase_num} is a {.cls {class(phase_num)}} object."
-      )
-    )
-  }
+  check_object_type(phase_num, "numeric")
   phase_num <- as.numeric(phase_num)
   phase_name <- adni_phase()[phase_num]
   return(phase_name)
@@ -924,7 +917,7 @@ replace_multiple_values <- function(input_string, code, decode) {
 #' @export
 detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) {
   rlang::arg_match0(arg = num_type, values = c("any", "positive", "negative"))
-  check_is_logical(stop_message)
+  check_object_type(stop_message, "logical")
   value <- suppressWarnings(as.numeric(value))
   if (all(is.na(value))) {
     result <- FALSE
@@ -1436,8 +1429,8 @@ get_cols_value <- function(.data, value, col_name = NULL) {
 #' @importFrom cli cli_abort
 #' @export
 check_colnames <- function(.data, col_names, strict = FALSE, stop_message = TRUE) {
-  check_is_logical(strict)
-  check_is_logical(stop_message)
+  check_object_type(strict, "logical")
+  check_object_type(stop_message, "logical")
   if (strict == TRUE) status <- !all(col_names %in% colnames(.data))
   if (strict == FALSE) status <- !any(col_names %in% colnames(.data))
 
@@ -1532,8 +1525,8 @@ check_value_match <- function(values,
                               add_stop_message = NULL,
                               value_split = FALSE,
                               split_pattern = "\\||:|;") {
-  check_is_logical(excluded.na)
-  check_is_logical(stop_message)
+  check_object_type(excluded.na, "logical")
+  check_object_type(stop_message, "logical")
   values <- as.character(values)
   check_list <- as.character(check_list)
   if (excluded.na == TRUE) {
@@ -1595,23 +1588,16 @@ check_duplicate_records <- function(.data,
                                     return_duplicate_record = FALSE,
                                     extra_cols = NULL) {
   COMBINED_ID <- NUM_RECORDS <- NULL
-  check_is_logical(stop_message)
-  check_is_logical(return_duplicate_record)
+  check_object_type(stop_message, "logical")
+  check_object_type(return_duplicate_record, "logical")
 
   if (is.null(col_names)) {
     cli_abort(
       message = c("{.var {col_names}} must not be missing")
     )
   }
-  if (!is.character(col_names)) {
-    cli_abort(
-      message = c(
-        "{.var {col_names}} a character vector of column names. \n",
-        "{.var {col_names}} is a {.cls {class(col_names)}} object."
-      )
-    )
-  }
-
+  check_object_type(col_names, "character")
+  
   check_records <- .data %>%
     select(all_of(col_names), any_of(extra_cols)) %>%
     filter(if_all(all_of(col_names), ~ !is.na(.x))) %>%

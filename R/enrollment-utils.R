@@ -151,7 +151,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
     col_names = col_name_list,
     strict = TRUE
   )
-  check_is_logical(multiple_screen_visit)
+  check_object_type(multiple_screen_visit, "logical")
   check_overall_phase(phase = phase)
 
   detect_numeric_value(
