@@ -107,7 +107,7 @@ single_build_from_derived <- function(metacore,
     cli_abort(
       message = c(
         "{.var ds_list} must be a single list object. \n",
-        "{.var ds_list} is a list object with {.clas {length(names(ds_list))} name(s)."
+        "{.var ds_list} is a list object with {.clas {length(names(ds_list))} name{?s}."
       )
     )
   }

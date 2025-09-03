@@ -846,7 +846,7 @@ get_study_phase_cat <- function(.data, phase_vars = NULL) {
     cli::cli_abort(
       message = paste0(
         "Only one {.val PHASE} variable must be in the data. \n ",
-        "{.val {phaseVar}} variables are found in the data."
+        "{.val {phaseVar}} variable{?s} {?is/are} found in the data."
       )
     )
   }

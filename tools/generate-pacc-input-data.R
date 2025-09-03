@@ -29,84 +29,17 @@ if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   )
 }
 # Compared with raw source dataset date
-# if (ADNI4::data_dump_date != DATA_DOWNLOADED_DATE) {
-#   cli::cli_abort(
-#     message = c(
-#       "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
-#       "{.var ADNI4} R package download date is {.val {ADNI4::data_dump_date}}."
-#     )
-#   )
-# }
+if (ADNI4::data_dump_date != DATA_DOWNLOADED_DATE) {
+  cli::cli_abort(
+    message = c(
+      "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
+      "{.var ADNI4} R package download date is {.val {ADNI4::data_dump_date}}."
+    )
+  )
+}
 
 devtools::load_all("./")
 
-#' @title Get RID from PTID
-#' @param x PTID
-#' @return A numeric vector
-#' @rdname get_rid
-#' @importFrom stringr str_remove_all
-#' @export
-get_rid <- function(x) {
-  x <- as.numeric(stringr::str_remove_all(x, "^[0-9]{3}\\_S\\_"))
-  return(x)
-}
-
-#' @title Create Common Columns in ADNIMERGE2
-#' @param .data A data.frame
-#' @return A data.frame with appended columns of either `RID`, ` VISCODE` or `COLPROT`.
-#' @rdname create_common_cols
-#' @export
-#' @importFrom dplyr mutate
-
-create_common_cols <- function(.data) {
-  RID <- VISCODE <- COLPROT <- NULL
-  .data <- .data %>%
-    {
-      if ("subject.label" %in% colnames(.)) {
-        mutate(., RID = get_rid(subject.label))
-      } else if ("subject_label" %in% colnames(.)) {
-        mutate(., RID = get_rid(subject_label))
-      } else {
-        (.)
-      }
-    } %>%
-    {
-      if ("event.code" %in% colnames(.)) {
-        mutate(., VISCODE = event.code)
-      } else if ("event_code" %in% colnames(.)) {
-        mutate(., VISCODE = event_code)
-      } else {
-        (.)
-      }
-    } %>%
-    mutate(COLPROT = "ADNI4")
-  return(.data)
-}
-
-#' @title Derive SITED IDs
-#' @param .data A data.frame
-#' @param join_var Variable name for site code, Default: 'site_code'
-#' @return A data.frame with appended column of `SITEID`
-#' @rdname derive_site_id
-#' @export
-#' @importFrom dplyr left_join select
-#' @importFrom assertr assert not_na
-
-derive_site_id <- function(.data, join_var = "site_code") {
-  if (!join_var %in% colnames(.data)) {
-    stop(join_var, " not found in the data")
-  }
-  join_var_by <- "site.code"
-  names(join_var_by) <- join_var
-  .data <- .data %>%
-    left_join(
-      ADNI4::site_list %>%
-        select(site.code, SITEID = site.id),
-      by = join_var_by
-    ) %>%
-    assert(not_na, SITEID)
-  return(.data)
-}
 # Utility functions ------
 #' @title Check for Unique Records
 #' @description

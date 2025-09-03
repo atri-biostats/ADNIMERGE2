@@ -23,7 +23,7 @@ if (all(DERIVED_DATASET_LIST %in% "NULL") | any(is.na(DERIVED_DATASET_LIST))) {
   cli::cli_abort(
     message = c(
       "{.val DERIVED_DATASET_LIST} must not be missing. \n",
-      "The value of {.var DERIVED_DATASET_LIST} is {.val {DERIVED_DATASET_LIST}}."
+      "The value of {.var DERIVED_DATASET_LIST} {?is/are} {.val {DERIVED_DATASET_LIST}}."
     )
   )
 }
@@ -41,7 +41,7 @@ load_result <- lapply(utils_file_list, source)
 ## Derived dataset -----
 vignette_dir <- file.path(".", "vignettes")
 
-## PACC derived score ----
+## PACC derived data ----
 if (any(str_detect(DERIVED_DATASET_LIST, "PACC"))) {
   pacc_raw_data_dir <- "./inst/extradata/pacc-raw-input"
   load_csv_files(input_dir = pacc_raw_data_dir)
@@ -51,8 +51,7 @@ if (any(str_detect(DERIVED_DATASET_LIST, "PACC"))) {
   source(file = temp_file)
 }
 
-## Other derived dataset ----
-
+## Other derived datasets ----
 temp_file <- tempfile()
 derived_vignette_path <- file.path(vignette_dir, "ADNIMERGE2-Derived-Data.Rmd")
 knitr::purl(input = derived_vignette_path, output = temp_file)
@@ -88,8 +87,8 @@ if (!all(save_derived_data == TRUE)) {
   cli::cli_abort(
     message = c(
       paste0(
-        "At least one the derived datasets {.val {DERIVED_DATASET_LIST}} ",
-        "has not been saved in the `./data` directory."
+        "At least one of the derived datasets {.val {DERIVED_DATASET_LIST}} ",
+        "is not saved in the `./data` directory."
       )
     )
   )

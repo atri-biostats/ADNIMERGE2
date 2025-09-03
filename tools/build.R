@@ -36,7 +36,7 @@ if (DECODE_VALUE) {
 INCLUDE_PACC_DERIVED_DATA <- TRUE
 # NOTE:
 #  Required to install the latest version of `ADNIMERGE` and `ADNI4 `study R packages
-#  `ADNI4` R data package is only available internally
+#  `ADNI4` R package is only available internally
 if (INCLUDE_PACC_DERIVED_DATA) {
   callr::rscript(
     script = "./tools/generate-pacc-input-data.R",

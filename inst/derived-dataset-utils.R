@@ -296,8 +296,8 @@ adjust_visit_status <- function(.data, domain = NULL, vistat_col = "VISTAT") {
   } else {
     check_var_list <- paste0(domain, c("ORRES", "STRESC", "STRESN"))
     cli::cli_abort(message = paset0(
-      "At least on of {.val {check_var_list}} variable(s)",
-      " must be presented in the data."
+      "At least one of {.val {check_var_list}} variable{?s}",
+      " must be found in the data."
     ))
   }
 
@@ -678,7 +678,7 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
   }
   if (relation %in% relation_lvls[1]) {
     if (nrow(data1) != nrow_data1) {
-      cli::cli_abort(message = "Set `one-to-many` relationship")
+      cli::cli_abort(message = "Set {.cls {'one-to-many'}} relationship")
     }
   } else {
     cli::cli_alert_warning(text = "Duplicated records in merged data")
@@ -706,10 +706,10 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
 #'   "Phase" = "COLPROT", "VISCODE" = "VISIT CODE",
 #'   "VISNAME" = "VSIT NAME", "VISORDER" = "VISIT ORDER"
 #' )
-#' # When a list/character name is presented in the data
+#' # When a list/character name is found in the data
 #' data1 <- ADNIMERGE2::VISITS %>%
 #'   rename_with_list(., name_char = name_char, by_name = FALSE, .strict = TRUE)
-#' # When a list/character name is not presented in the data
+#' # When a list/character name is not found in the data
 #' data2 <- data1 %>%
 #'   rename_with_list(., name_char = name_char, by_name = TRUE, .strict = TRUE, prefix = "RENAMED_")
 #' # Without strict method

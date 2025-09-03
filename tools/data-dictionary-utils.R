@@ -498,7 +498,7 @@ summarize_dataset <- function(data, dataset_name = NULL, wide_format = FALSE) {
   if (wide_format && nrow(data_dict_dd) != length(colnames(data))) {
     cli_abort(
       message = c(
-        "Discrepancy between number of numbers in {.val data_dict_dd} and number of columns in {.val data}. \n",
+        "Discrepancy between number of rows in {.val data_dict_dd} and number of columns in {.val data}. \n",
         "{.clas {nrow(data_dict_dd)}} rows; {.clas {length(colnames(data))}} columns."
       )
     )

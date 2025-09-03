@@ -1313,7 +1313,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
     cli_abort(
       message = c(
         "Phase column must be a length of single character vector.\n",
-        "There are more than one `PHASE` variables: {.val {phase_var}}."
+        "There are more than one {.val {'PHASE'}} variables: {.val {phase_var}}."
       )
     )
   }
@@ -1543,7 +1543,7 @@ check_value_match <- function(values,
       )
     }
     cli_abort(
-      message = paste0("`", toString(non_existed_values), "` value(s) are not found ", add_stop_message)
+      message = paste0("{.val {toString(non_existed_values)}} value{?s} {?is/are} not found ", add_stop_message)
     )
   }
   return(result)
@@ -1618,7 +1618,7 @@ check_duplicate_records <- function(.data,
       relocate(COMBINED_ID, NUM_RECORDS)
   } else {
     cli_alert_info(
-      text = c("No duplicated records across {.val {col_names}} column(s).")
+      text = c("No duplicated records across {.val {col_names}} column{?s}.")
     )
     output_data <- .data
   }

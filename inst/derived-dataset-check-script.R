@@ -94,7 +94,7 @@ run_check_derived_dataset <- function(pkg = "ADNIMERGE2",
 
   if (export_report) {
     if (is.null(output_dir)) {
-      cli_abort(message = "{.path output_dir} must be not be missing.")
+      cli_abort(message = "{.path output_dir} must not be missing.")
     }
     if (!grepl(pattern = "\\.xlsx$", x = output_file)) {
       cli_abort(message = "{.file output_file} must be an excel file with {val. .xlsx} name extension.")

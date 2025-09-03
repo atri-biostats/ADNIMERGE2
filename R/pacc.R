@@ -200,7 +200,7 @@ compute_pacc_score <- function(.data,
   if (length(var_names) != 5) {
     cli::cli_abort(
       message = c(
-        "The length of {.var var_name} must be 7. \n",
+        "{.var var_name} must be length of 5. \n",
         "{.val {var_name}} are provided"
       )
     )
@@ -213,7 +213,7 @@ compute_pacc_score <- function(.data,
         "Component variables are: {.val {componentVars}}, and \n",
         paste0(
           "The baseline summary data {.var bl.summary} contains:",
-          " {.val {unique(bl.summary$VAR)}} variable(s)."
+          " {.val {unique(bl.summary$VAR)}} variable{?s}."
         )
       )
     )
@@ -311,9 +311,9 @@ compute_pacc_score <- function(.data,
   if (length(check.zscore_var) != 0) {
     cli::cli_alert_warning(
       message = c(
-        "{var .data_wide} must not contains pre-existing {.val {paste0(var_names, '.zscore')}} variables. \n",
+        "{var .data_wide} must not contains pre-existing {.val {paste0(var_names, '.zscore')}} variable{?s}. \n",
         "Caution: these variables will be overwriting! \n",
-        "{var .data_wide} contains pre-existed {.val {check.zscore_var}} variable(s)."
+        "{var .data_wide} contains pre-existed {.val {check.zscore_var}} variable{?s}."
       )
     )
   }
@@ -571,7 +571,7 @@ get_score_summary_stats <- function(.data,
       cli::cli_abort(
         message = c(
           "{.var groupVar} must be a length of one character vector. \n",
-          "{.var groupVar} contains {.val {groupVar}} variables."
+          "{.var groupVar} contains {.val {groupVar}} variable{?s}."
         )
       )
     }
@@ -646,7 +646,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
     cli::cli_abort(
       message = c(
         "{.var filterBy} must be a length of one character vector. \n",
-        "{.var filterBy} contains {.val {filterBy}} variables."
+        "{.var filterBy} contains {.val {filterBy}} variable{?s}."
       )
     )
   }
@@ -834,6 +834,7 @@ calculate_zscore <- function(x, mean, sd) {
 #' @family checks function
 #' @keywords utils_fun
 #' @importFrom cli cli_abort
+#' @export
 
 check_non_missing_value <- function(x) {
   if (is.null(x)) {

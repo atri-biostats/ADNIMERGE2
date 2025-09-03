@@ -228,7 +228,7 @@ These raw datasets are in a long format and presented as follow:
 
 * `pacc_mmse_long`: A dataset contains the `MMSE` score downloaded from the data-sharing platform.
 
-* `pacc_neurobat`: A dataset contains Logical Memory - Delayed Recall (`LDELTOTL`), Digit Symbol Substitution (`DIGITSCR`), and Trials B (`TRABSCOR`) raw scores from Neuropsychological Battery (`NEUROBAT`) data. The `NEUROBAT` data is also downloaded from the data-sharing platform. Both a long and wide format of the data are loaded.
+* `pacc_neurobat`: A dataset contains Logical Memory - Delayed Recall (`LDELTOTL`), Digit Symbol Substitution (`DIGITSCR`), and Trials B (`TRABSCOR`) raw scores from Neuropsychological Battery (`NEUROBAT`) data. The `NEUROBAT` data is also downloaded from the data-sharing platform.
 
 * `pacc_adas_q4score_long`: A dataset contains the raw `ADAS-Cog Q4` score that obtained from two sources: 
    

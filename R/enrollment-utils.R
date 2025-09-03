@@ -380,8 +380,8 @@ get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Ov
   if (visit_type %in% "baseline") {
     warning(
       paste0(
-        "The output data may conatins the screening diagnostics status of ",
-        "subjects with screening failure as thier baseline diagnostics status. ",
+        "The output data may contains the screening diagnostics status of ",
+        "subjects with screening failure as a baseline diagnostics status. ",
         "Required to use enrollment date/flag."
       )
     )
