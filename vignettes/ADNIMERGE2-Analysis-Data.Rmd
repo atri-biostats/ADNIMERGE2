@@ -657,7 +657,7 @@ ADQS <- ADQS %>%
     data = .,
     metacore = adqs_metacore,
     na_acceptable = TRUE,
-    omit_vars = c("ENRLFL", "ABLFL", "PARAMCD")
+    omit_vars = c("ENRLFL", "ABLFL")
   ) %>%
   order_cols(
     data = .,

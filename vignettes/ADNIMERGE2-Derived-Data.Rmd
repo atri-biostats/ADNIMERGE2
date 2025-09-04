@@ -1370,9 +1370,27 @@ NEUROBAT_TESTCD <- bind_rows(
     SOURCE = "NEUROBAT"
   )
 
+PACC_TESTCD <- bind_rows(
+  c(
+    QSTESTCD = "mPACCdigit",
+    QSTEST = "Modified PACC Digit Score"
+  ),
+  c(
+    QSTESTCD = "mPACCtrailsB",
+    QSTEST = "Modified PACC Trials B Score"
+  ),
+) %>%
+  mutate(
+    QSTESTCD = str_to_upper(QSTESTCD),
+    QSCAT = "PACC",
+    SOURCE = "PACC"
+  )
+
+
 QS_TESTCD_LIST <- bind_rows(
   OTHER_QS_TESTCD_LIST,
-  NEUROBAT_TESTCD
+  NEUROBAT_TESTCD,
+  PACC_TESTCD
 )
 ```
 
@@ -1381,7 +1399,7 @@ QS_TESTCD_LIST <- bind_rows(
 QS_TESTCD_LIST %>%
   arrange(SOURCE, QSCAT, QSTESTCD) %>%
   select(SOURCE, QSCAT, QSTESTCD, QSTEST) %>%
-  datatable()
+  datatable(., paging = TRUE)
 ```
 
 ```{r qs-input}
@@ -1541,6 +1559,26 @@ NEUROBAT_SCORE_DATA <- NEUROBAT %>%
         "RAVLTIMM", "RAVLTRN", "RAVLTFG", "RAVLTFGP"
       ) ~ "Yes"
     ),
+    QSSTAT = ifelse(is.na(QSSTRESC), "NOT DONE", NA_character_)
+  )
+
+# Composite modified PACC score
+pacc_cols <- c("mPACCdigit", "mPACCtrailsB")
+
+PACC_SCORE_DATA <- PACC %>%
+  rename("VISDATE" = PACC_VISDATE) %>%
+  select(any_of(qs_com_cols), all_of(pacc_cols)) %>%
+  mutate(RID = as.numeric(RID)) %>%
+  generate_oak_id_vars_adni(raw_src = "PACC") %>%
+  pivot_longer(
+    cols = all_of(pacc_cols),
+    names_to = "QSTESTCD",
+    values_to = "QSSTRESC"
+  ) %>%
+  mutate(
+    QSTESTCD = str_to_upper(QSTESTCD),
+    QSSTRESC = as.character(QSSTRESC),
+    QSDRVFL = "Yes",
     QSSTAT = ifelse(is.na(QSSTRESC), "NOT DONE", NA_character_)
   )
 
@@ -2793,7 +2831,7 @@ LB <- bind_rows(
   assign_epoch() %>%
   derive_blfl_adni(
     dm_domain = DM,
-    tgt_var = "LBBLFL", 
+    tgt_var = "LBBLFL",
     .strict = FALSE
   ) %>%
   derive_study_day_adni(

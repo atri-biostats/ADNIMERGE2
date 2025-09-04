@@ -298,7 +298,15 @@ adsl_dic <- bind_rows(
   c(
     variable = "APOE", type = "text", length = "8", label = "APOE Genotype",
     origin = "Predecessor", derivation = "GF.GFSTRESC"
-  )
+  ), 
+   c(
+    variable = "MPACCDIGIT", type = "float", length = "3", label = "Baseline mPACCdigit", sig_dig = 8,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCDIGIT and QSBLFL = 'Y'."
+  ),
+  c(
+    variable = "MPACCTRAILSB", type = "float", length = "3", label = "Baseline mPACCtrialsB", sig_dig = 8,
+    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCTRAILSB and QSBLFL = 'Y'."
+  ),
 ) %>%
   as_tibble() %>%
   mutate(
@@ -876,10 +884,11 @@ AESEV_CODEDLIST <- tibble(
 
 # Parameter code list ----
 QSTESTCD_LIST <- c(
-  "CDGLOBAL", "CDRSB", "DIGITSCOR", "ECOGPTT", "ECOGSPTT", "FAQTOTAL",
-  "FCISCORE", "GDTOTAL", "LDELTOTL", "LIMMTOTL", "MMSCORE", "MOCA",
+  "ADASTT11", "ADASTT13", "CDGLOBAL", "CDRSB", "DIGITSCR", 
+  "ECOGPTTT", "ECOGSPTT", "FAQTOTAL","FCISCORE", "GDTOTAL", "LDELTOTL", 
+  "LIMMTOTL", "MMSCORE", "MOCA", "MPACCDIGIT", "MPACCTRAILSB",
   "NPIQTOTL", "NPITOTAL", "RAVLTFG", "RAVLTFGP", "RAVLTIMM",
-  "RAVLTLRN", "ADASTT11", "ADASTT13", "TRABSCOR"
+  "RAVLTLRN",  "TRABSCOR"
 )
 # To apply with data flow
 # QSTESTCD_LIST <- QS %>%

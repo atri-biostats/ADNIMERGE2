@@ -20,7 +20,7 @@
 #' }
 #' @seealso \code{\link{get_adni_screen_date}()}
 #' @rdname get_adni_enrollment
-#' @family ADNI enrollment
+#' @family ADNI specific functions
 #' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
@@ -71,7 +71,7 @@ get_adni_enrollment <- function(.registry) {
 }
 
 # Function to extract screening date -----
-#' @title Gets ADNI Screening Date
+#' @title Get ADNI Screening Date
 #'
 #' @details
 #' This function is used to extract subject's screening date in ADNI study when
@@ -133,7 +133,7 @@ get_adni_enrollment <- function(.registry) {
 #' }
 #' @seealso \code{\link{get_adni_enrollment}()}
 #' @rdname get_adni_screen_date
-#' @family ADNI screening
+#' @family ADNI specific functions
 #' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any rename
@@ -245,19 +245,23 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 }
 
 # Function to extract baseline/screening diagnostics status ----
-#' @title Gets ADNI Baseline/Screening Diagnostics Summary
+#' @title Get ADNI Baseline/Screening Diagnostics Summary
 #'
 #' @details
 #'  This function is used to extract either the baseline or screening diagnostics status
 #'  subjects when they participate for the first time in ADNI study.
 #'
 #' \strong{Screening Diagnostics Status}: The diagnostics status collected at screening visit.
+#'
 #' \strong{Baseline Diagnostics Status}:
+#'
 #' \itemize{
 #'  \item The diagnostics status collected at baseline visit.
 #'
 #'  \item The diagnostics status collected at screening status for subjects that
 #'  did not have a baseline collected diagnostics status.
+#'  The corresponding screening visit/exam date will be used as a baseline record.
+#'
 #'  \strong{NOTE}: The result data will contains the screening diagnostics status
 #'   of those who did not enrolled in the study (i.e. with screening failure) as their
 #'   baseline diagnostics status. Required to adjust baseline diagnostics with
@@ -333,7 +337,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 #' )
 #' }
 #' @rdname get_adni_blscreen_dxsum
-#' @family ADNI enrollment
+#' @family ADNI specific functions
 #' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
@@ -346,16 +350,19 @@ get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Ov
   COLPROT <- ORIGPROT <- PTTYPE <- NULL
   rlang::arg_match(arg = phase, values = c("Overall", adni_phase()), multiple = TRUE)
   rlang::arg_match0(arg = visit_type, values = c("baseline", "screen"))
-  col_names <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "EXAMDATE", "DIAGNOSIS")
-  check_colnames(.data = .dxsum, col_names = col_names, strict = TRUE, stop_message = TRUE)
   check_overall_phase(phase = phase)
+  col_names <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "EXAMDATE", "DIAGNOSIS")
 
-  .dxsum <- .dxsum %>%
+  output_data <- .dxsum %>%
     select(all_of(col_names)) %>%
+    adjust_scbl_record(
+      .data = ,
+      adjust_date_col = "EXAMDATE",
+      check_col = "DIAGNOSIS",
+      extra_id_cols = "ORIGPROT"
+    ) %>%
     # Create study track
-    mutate(PTTYPE = adni_study_track(COLPROT, ORIGPROT))
-
-  output_data <- adjust_scbl_record(.data = .dxsum) %>%
+    mutate(PTTYPE = adni_study_track(COLPROT, ORIGPROT)) %>%
     {
       if (visit_type %in% "baseline") {
         filter(., if_all(all_of("VISCODE"), ~ .x %in% get_baseline_vistcode()))
@@ -439,7 +446,7 @@ check_overall_phase <- function(phase) {
 #' )
 #' }
 #' @rdname get_death_flag
-#' @family ADNI flag
+#' @family ADNI flag functions
 #' @keywords adni_enroll_fun
 #' @importFrom dplyr full_join distinct group_by ungroup filter select mutate
 #' @importFrom assertr assert
@@ -544,7 +551,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
 #' )
 #' }
 #' @rdname get_disposition_flag
-#' @family ADNI flag
+#' @family ADNI flag functions
 #' @keywords adni_enroll_fun
 #' @importFrom dplyr filter distinct pull group_by select bind_rows row_number
 #' @importFrom tidyr nest
@@ -636,6 +643,7 @@ get_disposition_flag <- function(.registry, .studysum) {
   return(early_discon_adni)
 }
 
+# Screening/Baseline Visit Code -----
 #' @title Get Screening Visit Code
 #' @param type
 #'  Type either all screening visit codes or the first screening visit per
@@ -648,7 +656,9 @@ get_disposition_flag <- function(.registry, .studysum) {
 #' }
 #' @seealso
 #'  \code{\link{get_baseline_vistcode}()}
+#'  \code{\link{VISITS}()}
 #' @rdname get_screen_vistcode
+#' @family ADNI visit codes
 #' @keywords adni_utils
 #' @export
 #' @importFrom rlang arg_match0
@@ -670,9 +680,12 @@ get_screen_vistcode <- function(type = "all") {
 #' }
 #' @seealso
 #'  \code{\link{get_screen_vistcode}()}
+#'  \code{\link{VISITS}()}
 #' @rdname get_baseline_vistcode
 #' @keywords adni_utils
+#' @family ADNI visit codes
 #' @export
 get_baseline_vistcode <- function() {
   return(c("bl", "v03", "4_bl"))
 }
+

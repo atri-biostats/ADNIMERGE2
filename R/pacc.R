@@ -20,7 +20,7 @@
 #'
 #' This function generates two modified versions of PACC scores based on ADNI data. FCSRT is not used in ADNI, so we use the
 #' Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS) as a proxy. Score \code{mPACCdigit} uses the
-#' DSST when available (ADNI1). \code{mPACCtrailsB} uses (log transformed) Trails B as a proxy for DSST. Raw component scores
+#' DSST and only computed for \code{ADNI1} study phase. \code{mPACCtrailsB} uses (log transformed) Trails B as a proxy for DSST. Raw component scores
 #' standardized according to the mean and standard deviation of baseline scores of ADNI subjects with normal cognition
 #' to create \code{Z} scores for each component \code{(Z=(raw - mean(raw.bl))/sd(raw.bl))}.
 #' The Z scores are reoriented if necessary so that greater scores reflect better performance.
@@ -1008,7 +1008,7 @@ get_vars_common_date <- function(.data,
   return(output_data)
 }
 
-# Rename columns, convert into character type and tibble object ----
+## Rename columns, convert into character type and tibble object ----
 #' @title Make Similar Format
 #' @param .data Data.frame
 #' @return A tibble/data.frame object with upper-case column names and character type.
@@ -1027,7 +1027,7 @@ set_as_tibble <- function(.data) {
   return(.data)
 }
 
-#
+# Baseline record adjustment from screening visit -----
 #' @title Carrying Forward Screening Record as Baseline Record
 #'
 #' @description
@@ -1038,8 +1038,15 @@ set_as_tibble <- function(.data) {
 #'
 #' @param wide_format A Boolean indicator of wide data format, Default: TRUE
 #'
-#' @param id_cols Id variable names and only applicable for long format data format.
+#' @param extra_id_cols ID variable names in addition to \code{RID}, \code{COLPROT} and \code{VISCODE}.
+#'  Only applicable for a long format data.
 #'
+#' @param adjust_date_col Adjusting date column values.
+#'   Only applicable if \code{adjust_date_col} is non-missing
+#'
+#' @param check_col Column name which values used to determine date column adjustment.
+#' Only applicable if \code{adjust_date_col} is non-missing
+
 #' @return A data.frame that contains adjusted baseline record and screening record.
 #'
 #' @examples
@@ -1052,41 +1059,60 @@ set_as_tibble <- function(.data) {
 #'   file = pacc_mmse_long_file,
 #'   guess_max = Inf
 #' )
-#' bl_sc_mmse_record <- adjust_scbl_record(.data = pacc_mmse_long, wide_format = TRUE)
+#' # For a wide format data
+#' bl_sc_mmse_record <- adjust_scbl_record(
+#'   .data = pacc_mmse_long %>%
+#'     pivot_wider(names_from = SCORE_SOURCE, values_from = SCORE),
+#'   wide_format = TRUE
+#' )
 #' head(bl_sc_mmse_record)
-#' # For long format data
+#'
+#' # For a long format data without adjusting for visit date
 #' bl_sc_mmse_record_long <- adjust_scbl_record(
 #'   .data = pacc_mmse_long,
 #'   wide_format = FALSE,
-#'   id_cols = "SCORE_SOURCE"
+#'   extra_id_cols = "SCORE_SOURCE"
 #' )
 #' head(bl_sc_mmse_record_long)
+#'
+#' # For a long format data with adjusting for visit date
+#' bl_sc_mmse_record_long <- adjust_scbl_record(
+#'   .data = pacc_mmse_long,
+#'   wide_format = FALSE,
+#'   extra_id_cols = "SCORE_SOURCE",
+#'   adjust_date_col = "VISDATE",
+#'   check_col = "SCORE"
+#' )
 #' }
 #' @rdname adjust_scbl_record
 #' @keywords adni_enroll_fun
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr filter mutate across case_when select distinct left_join group_by ungroup
+#' @importFrom dplyr filter mutate across case_when select distinct left_join
+#' @importFrom dplyr group_by ungroup bind_rows
 #' @importFrom tidyselect all_of
 #' @importFrom tidyr expand_grid fill
+#' @importFrom assertr verify
 #' @export
 
-adjust_scbl_record <- function(.data, wide_format = TRUE, id_cols = NULL) {
+adjust_scbl_record <- function(.data, wide_format = TRUE, extra_id_cols = NULL,
+                               adjust_date_col = NULL, check_col = NULL) {
   VISCODE <- NULL
   check_object_type(wide_format, "logical")
   if (!wide_format) {
-    check_non_missing_value(id_cols)
+    check_non_missing_value(extra_id_cols)
   }
   # Screening and baseline visits
   sc_bl_visit <- c(get_screen_vistcode(type = "first"), get_baseline_vistcode())
   join_by_vars <- c("RID", "COLPROT", "VISCODE")
-  if (!is.null(id_cols)) join_by_vars <- c(join_by_vars, id_cols)
+  if (!is.null(extra_id_cols)) join_by_vars <- c(join_by_vars, extra_id_cols)
   check_colnames(
     .data = .data,
     col_names = join_by_vars,
     strict = TRUE,
     stop_message = TRUE
   )
-  .data <- .data %>%
+
+  scbl_data <- .data %>%
     as_tibble() %>%
     filter(if_any(all_of(join_by_vars[3]), ~ .x %in% c(sc_bl_visit))) %>%
     mutate(across(
@@ -1099,11 +1125,13 @@ adjust_scbl_record <- function(.data, wide_format = TRUE, id_cols = NULL) {
     assert_non_missing(all_of(join_by_vars[3])) %>%
     assert_uniq(all_of(join_by_vars))
 
-  output_data <- .data %>%
+  output_data <- scbl_data %>%
     select(all_of(join_by_vars[!join_by_vars %in% "VISCODE"])) %>%
     distinct() %>%
     expand_grid(VISCODE = c("sc", "bl")) %>%
-    left_join(.data, by = join_by_vars) %>%
+    left_join(scbl_data,
+      by = join_by_vars
+    ) %>%
     group_by(across(all_of(join_by_vars[!join_by_vars %in% "VISCODE"]))) %>%
     fill(-all_of(c(join_by_vars)), .direction = "down") %>%
     ungroup()
@@ -1117,5 +1145,119 @@ adjust_scbl_record <- function(.data, wide_format = TRUE, id_cols = NULL) {
       TRUE ~ .x
     )))
 
+  if (!is.null(adjust_date_col)) {
+    check_non_missing_value(check_col)
+    output_data <- output_data %>%
+      filter(if_any(all_of(join_by_vars[3]), ~ .x %in% get_screen_vistcode())) %>%
+      bind_rows(
+        adjust_scbl_visitdate(
+          .data = .data,
+          .adj_scbl_data = output_data,
+          date_col = adjust_date_col,
+          check_col = check_col,
+          extra_id_cols = extra_id_cols
+        )
+      ) %>%
+      verify(nrow(.) == nrow(output_data))
+  }
+
   return(output_data)
+}
+
+#' @title Adjust Baseline Visit/Assessment Collection Date
+#'
+#' @description
+#'  This function is used to adjust the visit/assessment collection date
+#'  of a baseline record that was carried forward from a screening visit.
+#'
+#' @inheritParams adjust_scbl_record
+#'
+#' @param .adj_scbl_data A data.frame generated using \code{\link{adjust_scbl_record}()} function
+#'
+#' @param date_col Date column name
+#'
+#' @return A data.frame the same as \code{.adj_scbl_data} input data with adjusted values.
+#'
+#' @examples
+#' \dontrun{
+#' pacc_neurobat_long_file <- system.file(
+#'   "/extradata/pacc-raw-input/pacc_neurobat_long.csv",
+#'   package = "ADNIMERGE2"
+#' )
+#' pacc_neurobat_long <- readr::read_csv(
+#'   file = pacc_neurobat_long_file,
+#'   guess_max = Inf
+#' )
+#' bl_sc_neurobat_record_long <- adjust_scbl_record(
+#'   .data = pacc_neurobat_long,
+#'   wide_format = FALSE,
+#'   extra_id_cols = "SCORE_SOURCE",
+#'   adjust_date_col = NULL
+#' )
+#' # Only for baseline visit records
+#' adjust_scbl_visitdate(
+#'   .data = pacc_neurobat_long,
+#'   .adj_scbl_data = bl_sc_neurobat_record_long,
+#'   date_col = "VISDATE",
+#'   check_col = "SCORE",
+#'   id_cols = "SCORE_SOURCE"
+#' )
+#' }
+#' @seealso
+#'  \code{\link{adjust_scbl_record}()}
+#' @rdname adjust_scbl_visitdate
+#' @keywords internal
+
+adjust_scbl_visitdate <- function(.data, .adj_scbl_data, date_col, check_col, extra_id_cols = NULL) {
+  IS_ORIGINAL_BL <- IS_KNOWN_BL_SCORE <- NULL
+
+  checks <- lapply(c("date_col", "check_col"), function(i) {
+    temp_value <- get(i)
+    if (length(temp_value) != 1) {
+      cli_abort(
+        message = paste0(
+          "{.var {i}} must be a length of 1 character vector. \n",
+          "{.var {i}} contains {.val {temp_value}} value{?s}."
+        )
+      )
+    }
+  })
+
+  join_by_vars <- c("RID", "COLPROT", "VISCODE", date_col, check_col)
+
+  if (!is.null(extra_id_cols)) join_by_vars <- c(join_by_vars, extra_id_cols)
+
+  .adj_scbl_data <- .adj_scbl_data %>%
+    # Only baseline visit
+    filter(if_any(all_of(join_by_vars[3]), ~ .x %in% get_baseline_vistcode()))
+
+  .adj_scbl_data <- .adj_scbl_data %>%
+    # Add first screening visit date
+    left_join(
+      .data %>%
+        filter(if_any(all_of(join_by_vars[3]), ~ .x %in% get_screen_vistcode(type = "first"))) %>%
+        mutate(across(all_of(date_col), ~., .names = "SC_{col}")) %>%
+        select(all_of(join_by_vars[!join_by_vars %in% c("VISCODE", check_col)])) %>%
+        rename_with(~ paste0("SC_", .x), all_of(date_col)),
+      by = join_by_vars[join_by_vars %in% c(join_by_vars[1:2], extra_id_cols)]
+    ) %>%
+    verify(nrow(.) == nrow(.adj_scbl_data)) %>%
+    # Add actual baseline visit record and date
+    left_join(
+      .data %>%
+        filter(if_any(all_of(join_by_vars[3]), ~ .x %in% get_baseline_vistcode())) %>%
+        mutate(across(all_of(check_col), ~ case_when(!is.na(.x) ~ "Yes", TRUE ~ "No"), .names = "IS_KNOWN_BL_SCORE")) %>%
+        mutate(IS_ORIGINAL_BL = "Yes") %>%
+        select(all_of(c(join_by_vars[!join_by_vars %in% check_col], "IS_ORIGINAL_BL", "IS_KNOWN_BL_SCORE"))) %>%
+        rename_with(~ paste0("BL_", .x), all_of(date_col)),
+      by = join_by_vars[join_by_vars %in% c(join_by_vars[1:3], extra_id_cols)]
+    ) %>%
+    mutate(across(all_of(date_col), ~ case_when(
+      IS_ORIGINAL_BL %in% "Yes" & IS_KNOWN_BL_SCORE %in% "No" & !is.na(get(check_col)) ~ get(paste0("SC_", date_col)),
+      is.na(IS_ORIGINAL_BL) ~ get(paste0("SC_", date_col)),
+      TRUE ~ .x
+    ))) %>%
+    select(-any_of(c("IS_ORIGINAL_BL", "IS_KNOWN_BL_SCORE", paste0("SC_", date_col), paste0("BL_", date_col))))
+
+  return(.adj_scbl_data)
 }
