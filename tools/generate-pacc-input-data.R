@@ -29,7 +29,7 @@ if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   )
 }
 # Compared with raw source dataset date
-if (ADNI4::data_dump_date != DATA_DOWNLOADED_DATE) {
+if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
   cli::cli_abort(
     message = c(
       "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
