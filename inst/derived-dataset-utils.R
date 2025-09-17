@@ -43,8 +43,8 @@ derive_usubjid <- function(.data,
       by = join_col
     ) %>%
     verify(nrow(.) == nrow_input) %>%
-    # Will be removed after checking data entry
-    filter(if_all(all_of(varList), ~!is.na(.x))) %>%
+    # Will be removed after data-entry checking-in
+    filter(if_all(all_of(varList), ~ !is.na(.x))) %>%
     assert_non_missing(all_of(varList))
 
   return(.data)
@@ -143,6 +143,7 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
 #'  A data.frame of visit record per subject ID generated based on \code{REGISTRY}
 #'  and `ROSTER` forms, Default: get("ADNI_VISIT_RECORD")
 #' @param domain Domain abbreviation, Default: NULL
+#' @param check_missing_visnum A Boolean value to check missing \code{VISITNUM}
 #' @return A data frame appended with \code{VISIT} and \code{VISITNUM}.
 #' @rdname assign_visit_attr
 #' @keywords adni_visit_adjust
@@ -151,11 +152,11 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
 #' @importFrom tidyselect all_of
 assign_visit_attr <- function(.data,
                               visit_record_data = get("ADNI_VISIT_RECORD"),
-                              domain = NULL, check_missing = TRUE) {
+                              domain = NULL, check_missing_visnum = TRUE) {
   require(tidyverse)
   require(assertr)
   VISDTC <- VISTAT <- NULL
-  check_object_type(check_missing, "logical")
+  check_object_type(check_missing_visnum, "logical")
   col_names <- c("RID", "ORIGPROT", "COLPROT", "VISCODE")
   join_cols <- get_cols_name(.data, col_names)
   check_colnames(
@@ -214,7 +215,7 @@ assign_visit_attr <- function(.data,
       }
     }
 
-  if (check_missing) {
+  if (check_missing_visnum) {
     .data <- .data %>%
       assert_non_missing(VISITNUM, VISIT)
   }
@@ -345,10 +346,16 @@ assign_epoch <- function(.data, .epoch = get("EPOCH_LIST_LONG")) {
   )
   nrow_input <- nrow(.data)
 
+  check_colnames(
+    .data = .epoch,
+    col_names = "PHASE",
+    strict = TRUE,
+    stop_message = TRUE
+  )
   .epoch <- .epoch %>%
     {
-      if ("Phase" %in% colnames(.)) {
-        rename(., "COLPROT" = Phase)
+      if ("PHASE" %in% colnames(.)) {
+        rename(., "COLPROT" = PHASE)
       } else {
         (.)
       }

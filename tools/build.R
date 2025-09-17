@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-07-10" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2025-09-16" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 630 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -30,7 +30,6 @@ if (DECODE_VALUE) {
     cmdargs = list(USE_UPDATED_DATADIC = USE_UPDATED_DATADIC)
   )
 }
-
 
 # Generate PACC score input data ----
 INCLUDE_PACC_DERIVED_DATA <- TRUE

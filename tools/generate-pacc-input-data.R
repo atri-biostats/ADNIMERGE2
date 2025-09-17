@@ -98,13 +98,13 @@ adas_q4score_adni13 <- ADNIMERGE::adas %>%
 
 ## For ANDI4 phase
 adni4_adas_q4score <- ADNI4::adas_score %>%
-  create_common_cols() %>%
-  derive_site_id() %>%
+  ADNI4::create_common_cols() %>%
+  ADNI4::derive_site_id() %>%
   select(COLPROT, RID, VISCODE, done, ndreason, date, q4task, q4unable, q4score) %>%
   set_as_tibble() %>%
   left_join(
     ADNI4::registry %>%
-      create_common_cols() %>%
+      ADNI4::create_common_cols() %>%
       set_as_tibble() %>%
       select(RID, VISCODE, EXAMDATE),
     by = c("RID", "VISCODE")

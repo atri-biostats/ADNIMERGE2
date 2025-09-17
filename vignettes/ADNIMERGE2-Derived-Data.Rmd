@@ -116,33 +116,16 @@ load_utils_funs <- lapply(utils_file_path, source)
 ```{r phase-visit-epoch, class.source = NULL, echo = FALSE}
 # Create study epoch stage- overall and phase-specific
 EPOCH_LIST <- VISITS %>%
-  filter(!VISCODE %in% "reg") %>%
-  # Add ADNI4 phase visit
-  bind_rows(
-    tibble(
-      Phase = "ADNI4",
-      VISCODE = c("4_sc", "4_bl", "4_init", "4_m12", "4_m24", "4_m36", "4_m48"),
-      VISNAME = c(
-        "Screening - New Pt", "Baseline - New Pt",
-        "ADNI4 Initial Visit - Continuing Pt", "ADNI4 Month 12 Visit",
-        "ADNI4 Month 24 Visit", "ADNI4 Month 36 Visit",
-        "ADNI4 Month 48 Visit"
-      )
-    ) %>%
-      mutate(
-        ID = row_number(),
-        VISORDER = row_number()
-      )
-  ) %>%
+  filter(!VISCODE %in% c("reg", "AUT", "4_disp")) %>%
   mutate(EPOCH = case_when(
     VISCODE %in% c("sc", "4_sc", "scmri", "f", "v01", "v02") ~ "Screening",
     VISCODE %in% c("bl", "4_bl", "init", "4_init", "v03", "v06") ~ "Baseline",
     VISCODE %in% c("reg", "f") ~ NA_character_,
     TRUE ~ "Follow-up" # Includes uns1, tau and nv visits
   )) %>%
-  mutate(PHASE_EPOCH = paste0(Phase, " - ", EPOCH)) %>%
-  select(Phase, VISCODE, PHASE_EPOCH, EPOCH, VISORDER, VISNAME) %>%
-  group_by(Phase) %>%
+  mutate(PHASE_EPOCH = paste0(PHASE, " - ", EPOCH)) %>%
+  select(PHASE, VISCODE, PHASE_EPOCH, EPOCH, VISORDER, VISNAME) %>%
+  group_by(PHASE) %>%
   arrange(VISORDER) %>%
   mutate(PHASE_VISITNUM = row_number() - 2) %>%
   ungroup() %>%
@@ -150,30 +133,31 @@ EPOCH_LIST <- VISITS %>%
   # 999 - represents unscheduled visit
   mutate(PHASE_VISITNUM = case_when(
     VISCODE %in% c("nv", "uns1", "tau") ~ 999,
-    Phase %in% "ADNI1" & VISCODE %in% c("f", "sc") ~ -1,
-    Phase %in% "ADNI1" & VISCODE %in% "bl" ~ 1,
-    Phase %in% "ADNI1" & str_detect(VISCODE, "m") ~ PHASE_VISITNUM + 1,
-    Phase %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") ~ PHASE_VISITNUM - 1,
-    Phase %in% "ADNI2" & VISCODE %in% c("v01", "v02") ~ PHASE_VISITNUM - 1,
-    Phase %in% "ADNI2" & VISCODE %in% c("v03", "v06") ~ 1,
-    Phase %in% "ADNI2" & VISCODE %in% c("v04", "v07") ~ 2,
-    Phase %in% "ADNI2" & VISCODE %in% "v05" ~ 3,
-    Phase %in% "ADNI2" & !VISCODE %in% str_c("v0", 1:7) ~ PHASE_VISITNUM - 2,
-    Phase %in% c("ADNI3", "ADNI4") & VISCODE %in% c("sc", "4_sc") ~ -1,
-    Phase %in% c("ADNI3", "ADNI4") & VISCODE %in% c("bl", "4_bl") ~ 1,
+    PHASE %in% "ADNI1" & VISCODE %in% c("f", "sc") ~ -1,
+    PHASE %in% "ADNI1" & VISCODE %in% "bl" ~ 1,
+    PHASE %in% "ADNI1" & str_detect(VISCODE, "m") ~ PHASE_VISITNUM + 1,
+    PHASE %in% "ADNIGO" & VISCODE %in% c("sc", "scmri") ~ PHASE_VISITNUM - 1,
+    PHASE %in% "ADNI2" & VISCODE %in% c("v01", "v02") ~ PHASE_VISITNUM - 1,
+    PHASE %in% "ADNI2" & VISCODE %in% c("v03", "v06") ~ 1,
+    PHASE %in% "ADNI2" & VISCODE %in% c("v04", "v07") ~ 2,
+    PHASE %in% "ADNI2" & VISCODE %in% "v05" ~ 3,
+    PHASE %in% "ADNI2" & !VISCODE %in% str_c("v0", 1:7) ~ PHASE_VISITNUM - 2,
+    PHASE %in% c("ADNI3", "ADNI4") & VISCODE %in% c("sc", "4_sc") ~ -1,
+    PHASE %in% c("ADNI3", "ADNI4") & VISCODE %in% c("bl", "4_bl") ~ 1,
     TRUE ~ PHASE_VISITNUM
   )) %>%
   mutate(PTTYPE = case_when(
-    Phase %in% c("ADNI1", "ADNIGO") ~ "Both",
+    PHASE %in% c("ADNI1", "ADNIGO") ~ "Both",
     str_detect(VISNAME, "Continuing ") == TRUE ~ "Rollover",
     str_detect(VISNAME, "New Pt|Screening") == TRUE ~ "New",
     TRUE ~ "Both"
   )) %>%
-  arrange(Phase, PHASE_VISITNUM) %>%
+  arrange(PHASE, PHASE_VISITNUM) %>%
   mutate(VISIT = case_when(
-    !str_detect(VISNAME, paste0(adni_phase(), collapse = "|")) ~ paste0(Phase, " ", VISNAME),
+    !str_detect(VISNAME, paste0(adni_phase(), collapse = "|")) ~ paste0(PHASE, " ", VISNAME),
     TRUE ~ VISNAME
-  ))
+  )) %>%
+  assert_non_missing(-VISORDER)
 
 # Separate by participant type
 EPOCH_LIST_LONG <- EPOCH_LIST %>%
@@ -186,7 +170,7 @@ EPOCH_LIST_LONG <- EPOCH_LIST %>%
       # Adjust EPOCH for rollovers
       mutate(EPOCH = case_when(
         EPOCH %in% c("Baseline", "Screening") &
-          Phase %in% c(adni_phase()[-1]) ~ "Follow-up",
+          PHASE %in% c(adni_phase()[-1]) ~ "Follow-up",
         TRUE ~ EPOCH
       ))
   )
@@ -239,11 +223,12 @@ PHASE_VISIT_RECORD <- tibble(RID = unique_rid) %>%
   mutate(COLPROT = convert_adni_phase_order_num(PHASE_NUM_INTERVAL)) %>%
   # Add study track
   mutate(PTTYPE = adni_study_track(COLPROT, ORIGPROT)) %>%
+  # filter(RID %in% 1412) %>%
   # Add phase-specific visit code and order
   left_join(
     EPOCH_LIST_LONG %>%
       filter(PTTYPE %in% c("New", "Rollover")) %>%
-      select(COLPROT = Phase, VISCODE, PHASE_VISITNUM, VISIT, PTTYPE, EPOCH),
+      select(COLPROT = PHASE, VISCODE, PHASE_VISITNUM, VISIT, PTTYPE, EPOCH),
     relationship = "many-to-many",
     by = c("COLPROT", "PTTYPE")
   ) %>%
@@ -770,8 +755,7 @@ SC <- bind_rows(SC_DEMOG, SC_ADI, SC_RURALITY) %>%
   assign_visit_attr(
     .data = .,
     visit_record_data = ADNI_VISIT_RECORD,
-    domain = "SC",
-    check_missing = TRUE
+    domain = "SC"
   ) %>%
   assign_epoch(
     .data = .,
@@ -795,7 +779,7 @@ SC <- bind_rows(SC_DEMOG, SC_ADI, SC_RURALITY) %>%
 
 ```{r scrtest-detail, eval = TRUE, echo = FALSE}
 # Field labels from data dictionary
-# Some the labels might have more than 40 characters
+# Some labels might have more than 40 characters
 sc_string_pattern <- paste0(
   "^[0-9]\\.|^[0-9]{2}\\.|^[0-9][a-z]\\.|",
   "[0-9]{2}[a-z]\\.|Participant|Participant\\'s",
@@ -1409,7 +1393,6 @@ qs_com_cols <- c(
 )
 
 # ADAS Cognitive Behavior Total Score ----
-## Completed variable ??
 ADAS_SCORE_DATA <- ADAS %>%
   select(all_of(qs_com_cols), ADASTT11 = TOTSCORE, ADASTT13 = TOTAL13) %>%
   generate_oak_id_vars_adni(raw_src = "ADAS") %>%
@@ -1425,7 +1408,6 @@ ADAS_SCORE_DATA <- ADAS %>%
   )
 
 # Clinical Dementia Rating Score ----
-## Completion columns??
 CDR_SCORE_DATA <- CDR %>%
   select(all_of(qs_com_cols), CDGLOBAL, CDRSB) %>%
   generate_oak_id_vars_adni(raw_src = "CDR") %>%
@@ -1440,7 +1422,6 @@ CDR_SCORE_DATA <- CDR %>%
   )
 
 # Everyday Cognition Total Score ----
-## Completion variable
 ECOG_SCORE_DATA <- ECOGPT %>%
   mutate(QSTESTCD = "ECOGPTTT") %>%
   select(all_of(qs_com_cols), QSTESTCD, QSSTRESC = EcogPtTotal) %>%
@@ -1470,7 +1451,6 @@ FCI_SCORE_DATA <- FCI %>%
   generate_oak_id_vars_adni(raw_src = "FCI")
 
 # Functional Assessments Questionnaires - Score ----
-# Completion status ??
 FAQ_SCORE_DATA <- FAQ %>%
   select(all_of(qs_com_cols), QSSTRESC = FAQTOTAL) %>%
   mutate(
@@ -1503,7 +1483,6 @@ MMSE_SCORE_DATA <- MMSE %>%
   generate_oak_id_vars_adni(raw_src = "MMSE")
 
 # Montreal Cognitive Assessments ----
-# Completion status ??
 MOCA_SCORE_DATA <- MOCA %>%
   select(all_of(qs_com_cols), QSSTRESC = MOCA) %>%
   mutate(
@@ -1514,7 +1493,6 @@ MOCA_SCORE_DATA <- MOCA %>%
   generate_oak_id_vars_adni(raw_src = "MOCA")
 
 # Neuropsychiatric Inventory ----
-# Completion status??
 NPI_SCORE_DATA <- NPI %>%
   rename("VISDATE" = EXAMDATE) %>%
   select(all_of(qs_com_cols), QSSTRESC = NPITOTAL) %>%
@@ -1527,7 +1505,6 @@ NPI_SCORE_DATA <- NPI %>%
   generate_oak_id_vars_adni(raw_src = "NPI")
 
 # Neuropsychiatric Inventory Q ----
-# Completion status??
 NPIQ_SCORE_DATA <- NPIQ %>%
   select(all_of(qs_com_cols), QSSTRESC = NPISCORE) %>%
   mutate(
@@ -1728,7 +1705,7 @@ rs_data_dic %>%
 The [`RS`](../reference/RS.html) dataset will contains clinical diagnostics summary of subject per study visit. The clinical diagnostics status (i.e. either Cognitive Normal (CN), Mild Cognitive Impairment (MCI) or Dementia/Alzheimer's (DEM/AD)) of a subject was determined by clinicians' judgment.
 
 ```{r rs-testcd-list, eval = TRUE, echo = FALSE}
-# Required checking variable name length and test labels
+# Recommended to check variable name length and test labels
 RS_TESTCD_LIST <- bind_rows(
   c(
     RSCAT = "DIAGNOSTICS",
@@ -2087,9 +2064,8 @@ NV_TESTCD_LIST %>%
 ```{r nv-input1}
 # FDG-PET Analysis Results Data ----
 FDG_PET_DATA <- UCBERKELEYFDG_8mm %>%
-  # Based on method manual document (on the data-shared platform)
+  # Based on method manual document
   select(ORIGPROT, RID, VISCODE, VISCODE2, EXAMDATE, ROINAME, MEAN) %>%
-  # Remove missing visit code
   filter(!is.na(VISCODE)) %>%
   assert_uniq(RID, VISCODE, VISCODE2, ROINAME) %>%
   verify(all(ORIGPROT %in% adni_phase()[-5])) %>%
@@ -2170,7 +2146,7 @@ amystatus_lvls <- c("Non Elevated", "Elevated")
 
 AMYREAD_DATA <- AMYREAD %>%
   verify(all(COLPROT == adni_phase()[5])) %>%
-  # Based on a clinician decision
+  # Based on clinicians' decision
   mutate(AMYSTAT = case_when(
     str_detect(CONSENS, "No, visual read and quantification") ~ as.character(CONGRU),
     str_detect(CONSENS, "Yes, this scan should be reviewed") ~ as.character(CONSENSRES)
@@ -2356,7 +2332,7 @@ NV <- bind_rows(FDG_PET_DATA, PIB_PET_DATA, AMYREAD_DATA, PET_DATA) %>%
   assert_non_missing(NVTEST, NVSCAT, NVCAT) %>%
   derive_usubjid() %>%
   assign_studyid_domain(domain = "NV") %>%
-  assign_visit_attr(check_missing = TRUE) %>%
+  assign_visit_attr() %>%
   assign_epoch() %>%
   derive_blfl_adni(
     dm_domain = DM,
@@ -2716,8 +2692,6 @@ UPENNBIOMK_ALZBIO3_DATA <- UPENNBIOMK_MASTER %>%
     check_cols = c("COLPROT", "VISCODE"),
     relation = "one-to-many"
   )
-# Few instance with the same examdate with different visitcode
-## 35, 514, 1063, 2061, 2109, 2205, 2249, 4313
 
 UPENNBIOMK_ALZBIO3_DATA <- UPENNBIOMK_ALZBIO3_DATA %>%
   pivot_longer(
@@ -2819,7 +2793,7 @@ LB <- bind_rows(
   ) %>%
   bind_rows(ADNI34_CLINICAL_LABDATA) %>%
   assert_non_missing(LBGRPID) %>%
-  # Required adjustment ???
+  # Future work to add lab result category
   # set_dom_test(
   #    .data_list = LB_TESTCD_LIST %>%
   #     select(LBTESTCD, LBTEST, LBORRESU, LBSTRESU),
@@ -2827,7 +2801,7 @@ LB <- bind_rows(
   # ) %>%
   derive_usubjid() %>%
   assign_studyid_domain(domain = "LB") %>%
-  assign_visit_attr(check_missing = FALSE) %>%
+  assign_visit_attr(check_missing_visnum = FALSE) %>%
   assign_epoch() %>%
   derive_blfl_adni(
     dm_domain = DM,
@@ -2944,10 +2918,9 @@ GF <- APOERES %>%
     GFSTRESC = str_replace_all(GENOTYPE, "(\\d+)", "ε\\1"),
     GFDTC = create_iso8601(as.character(APTESTDT), .format = "y-m-d"),
   ) %>%
-  # Required to adjust for collection date ??
   derive_usubjid() %>%
   assign_studyid_domain(domain = "GF") %>%
-  assign_visit_attr(check_missing = FALSE) %>%
+  assign_visit_attr(check_missing_visnum = FALSE) %>%
   derive_study_day_adni(
     dm_domain = DM,
     domain = "GF"

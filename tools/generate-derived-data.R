@@ -68,7 +68,7 @@ knitr::purl(input = analysis_vignette_path, output = temp_file)
 source(file = temp_file)
 
 ## Store all derived objects in `./data` directory ----
-### using use_data_modified() function
+### using `use_data_modified()` function
 source(file = file.path(".", "tools", "data-prepare-utils.R"))
 save_derived_data <- lapply(
   DERIVED_DATASET_LIST,
