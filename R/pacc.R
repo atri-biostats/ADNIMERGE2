@@ -565,7 +565,11 @@ get_score_summary_stats <- function(.data,
       SD = stats::sd(SCORE, na.rm = TRUE)
     ) %>%
     ungroup() %>%
-    mutate(across(c("MEAN", "SD"), ~ ifelse(.x %in% NaN, NA_real_, .x)))
+    mutate(across(c("MEAN", "SD"), ~ ifelse(.x %in% NaN, NA_real_, .x))) %>%
+    mutate(
+      MEAN = round(MEAN, 4),
+      SD = round(SD, 6)
+    )
 
   if (!is.null(filterGroup)) {
     if (length(groupVar) != 1) {

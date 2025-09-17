@@ -476,6 +476,57 @@ pacc_data_dic %>%
 
 </details>
 
+# Baseline Modified-PACC Score
+
+The following r chunks show how to get baseline PACC composite score based on the `PACC` dataset. Similar result can be obtained using [`ADSL`](../reference/ADSL.html) or [`ADQS`](../reference/ADQS.html) datasets. For more information on how to use those datasets, please refer to [ADNI-Enrollment]() and [ADNIMERGE2-Analysis-Data]() articles.
+
+```{r bl-pacc}
+# Modified PACC using DSS score
+baseline_mPACCdigit <- PACC %>%
+  # Only in ADNI1 study phase
+  filter(COLPROT == adni_phase()[1]) %>%
+  filter(ORIGPROT == COLPROT) %>%
+  filter(VISCODE %in% get_baseline_vistcode()) %>%
+  # Enrolled subjects
+  filter(ENRLFG %in% "Yes") %>%
+  assert_uniq(RID) %>%
+  select(RID, ORIGPROT, mPACCdigit, DX)
+
+# Modified PACC using Trials B score as a proxy for DSS
+baseline_mPACCtrailsB <- PACC %>%
+  filter(ORIGPROT == COLPROT) %>%
+  filter(VISCODE %in% get_baseline_vistcode()) %>%
+  # Enrolled subjects
+  filter(ENRLFG %in% "Yes") %>%
+  assert_uniq(RID) %>%
+  select(RID, ORIGPROT, mPACCtrailsB, DX)
+```
+
+```{r plot-bl-pacc, fig.width = 7, fig.height = 3, fig.alt = "Baseline Modiffied PACC score"}
+baseline_PACC <- baseline_mPACCtrailsB %>%
+  mutate(
+    SCORE = mPACCtrailsB,
+    SCORE_NAME = "mPACCtrailsB"
+  ) %>%
+  bind_rows(
+    baseline_mPACCdigit %>%
+      mutate(
+        SCORE = mPACCdigit,
+        SCORE_NAME = "mPACCdigit"
+      )
+  ) %>% 
+  group_by(SCORE_NAME) %>% 
+  mutate(SCORE_NAME = paste0(SCORE_NAME, " (n = ", sum(!is.na(SCORE)), ")")) %>% 
+  ungroup()
+
+baseline_PACC %>%
+  ggplot2::ggplot(aes(x = SCORE)) +
+  geom_histogram() +
+  facet_wrap(~SCORE_NAME, scales = "free_y") +
+  labs(x = "Baseline Modified PACC Score", y = "Count") +
+  theme_bw(base_size = 12)
+```
+
 # References {-}
 
 <div id="refs"></div>
