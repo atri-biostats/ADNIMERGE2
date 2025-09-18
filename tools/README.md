@@ -34,9 +34,9 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
    
    + Required to download a data dictionary `*.csv` file
    
-   + It is recommended to download files from the data-sharing platform on the same date. If the data is download from `Analysis Ready Cohort (ARC) Build/Table`, it is recommended to download the file without adding any prefix to the file name as highlighted in the following figure.
-   
- <img src="../man/figures/arc_table_template.png" align="center" height="130" alt = " " />
+   + It is recommended to download files from the data-sharing platform on the same date. If the data is download from `Analysis Ready Cohort (ARC) Build`, it is recommended to download the file without adding any prefix to the file name as highlighted in the following figure.
+
+ <img src="../man/figures/arc_table_template.png" align="center" height="130">
 
 ## Build Package 
 
@@ -76,3 +76,18 @@ Run `source('tools/build.R')` to prepare dataset, generate documentations and bu
           
 + Build the data package: using [devtools R package](https://devtools.r-lib.org/)
 
+# References {-}
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-adniloni" class="csl-entry">
+
+“Alzheimer’s Disease Neuroimaging Initiative — Adni.loni.usc.edu.” <https://adni.loni.usc.edu/>.
+
+<div id="ref-rPkgs" class="csl-entry">
+
+Wickham, Hadley, and Jennifer Bryan. “R Packages (2e) — r-Pkgs.org.” <https://r-pkgs.org/>.
+
+</div>
+
+</div>
