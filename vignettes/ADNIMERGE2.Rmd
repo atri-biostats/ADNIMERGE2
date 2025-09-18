@@ -154,6 +154,8 @@ As part of the study data R package development, some derived datasets are creat
 
 * *Some of the derived datasets in the package may not be fully complied with the [CDISC](https://www.cdisc.org/) standardization, and those data are generated for illustration purpose.*
 
+Furthermore, a derived data for modified version of the Preclinical Alzheimer Cognitive Composite (PACC) score is also included. [ADNIMERGE2-PACC](vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")) shows creating PACC score from raw datasets.
+
 ## Articles 
 
 There are few articles included in the package vignettes to demonstrate how to use the study data R package for creating simple summaries or analysis results.
