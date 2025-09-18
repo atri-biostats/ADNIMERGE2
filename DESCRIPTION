@@ -22,7 +22,9 @@ Imports:
   tidyselect,
   purrr,
   tidyr, 
-  cli
+  cli, 
+  readr,
+  stats
 Suggests:
   knitr,
   tidyverse,

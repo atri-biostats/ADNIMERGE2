@@ -34,12 +34,12 @@ test_that("Check adni_enrollment function", {
   expect_identical(
     object = enroll_summary_dm,
     expected = enroll_summary,
-    info = "Check adni_enrollment function based on registry and DM records"
+    info = "Check get_adni_enrollment function based on `REGISTRY` and `DM` records"
   )
 
   expect_identical(
     object = enroll_summary_adsl,
     expected = enroll_summary,
-    info = "Check adni_enrollment function based on registry and ADSL records"
+    info = "Check get_adni_enrollment function based on `REGISTRY` and `ADSL` records"
   )
 })

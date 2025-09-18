@@ -66,7 +66,7 @@ if (file.exists(cur_data_dict_path)) {
 } else {
   EXISTED_DATADTIC <- FALSE
   cli_alert_warning(
-    text = "No existed data dictionary with file name {.val {cur_data_dict_path}}"
+    text = "No existing data dictionary with file name {.val {cur_data_dict_path}}"
   )
   DECODE_VALUE <- FALSE
 }
@@ -152,7 +152,7 @@ if (EXISTED_DATADTIC) {
   } else {
     DECODE_VALUE <- FALSE
     cli_alert_warning(
-      text = "No existed data conatins variables with coded values"
+      text = "No existing data conatins variables with coded values"
     )
   }
 }
@@ -171,7 +171,7 @@ if (DECODE_VALUE) {
 
   # Replace with function ?
   for (tb in seq_len(nrow(coded_tblname))) {
-    note_prefix <- str_c(tb, "/", nrow(coded_tblname), ":")
+    note_prefix <- cli::col_blue(str_c(tb, "/", nrow(coded_tblname), ":"))
     cur_tblname_dd <- coded_tblname %>% filter(row_number() == tb)
     cur_tblname_full <- cur_tblname_dd %>% pull(file_path)
     cur_tblname_short <- cur_tblname_dd %>% pull(short_tblname)
@@ -199,7 +199,7 @@ if (DECODE_VALUE) {
     if (length(unique_tb_fldname) == 0) {
       cli_alert_info(
         text = paste0(
-          "{.val {.emph {note_prefix}}} No existed unique columns with ",
+          "{.val {.emph {note_prefix}}} No existing unique columns with ",
           "coded values in {.val {cur_tblname_short}} data"
         )
       )
@@ -265,7 +265,7 @@ if (DECODE_VALUE) {
       if (is.na(phaseVar)) {
         cli_alert_warning(
           text = paste0(
-            "{.val {.emph {note_prefix}}} No existed either of the {.val {pre_phase_vars}} columns in ",
+            "{.val {.emph {note_prefix}}} No existing phase column in ",
             "{.val {cur_tblname_short}} data"
           )
         )
@@ -312,7 +312,7 @@ if (DECODE_VALUE) {
   coded_records_dir <- file.path("./data-raw", "coded_records")
   if (dir.exists(coded_records_dir)) {
     cli_alert_warning(
-      text = paste0("{.val {coded_records_dir}} is over-written")
+      text = paste0("Overwriting {.val {coded_records_dir}}")
     )
     unlink(x = coded_records_dir, recursive = FALSE)
   }
@@ -325,4 +325,4 @@ if (DECODE_VALUE) {
   rm(list = c("UPDATED_DATADIC", "DATADIC", "dataset_data_dict", "coded_tblname", "tblname_list_dd"))
 }
 
-cli_alert_success(text = paste0("Completed de-coding values"))
+cli_alert_success(text = paste0("Completed mapping coded values"))

@@ -6,14 +6,14 @@
 #'  The output result that can be used to create a data dictionary file.
 #' @param data Data frame
 #' @param var_name Variable name
-#' @param wider_format
+#' @param wide_format
 #'  Indicator whether to generate the factor level values in
 #'  a wider or long format, Default: FALSE
 #' @return A data.frame that contains the following variables:
 #'   \item{field_name}{Variable name}
 #'   \item{field_class}{Variable class type: 'factor'}
 #'   \item{field_label}{Variable label}
-#'   \item{field_values_order}{Factor levels order number and only included for long format: wider_format = FALSE}
+#'   \item{field_values_order}{Factor levels order number and only included for long format: wide_format = FALSE}
 #'   \item{field_values}{Factor levels}
 #'   \item{field_notes}{Text notes that could be used to generate the roxygen document for the dataset}
 #' @examples
@@ -21,7 +21,7 @@
 #' summarize_factor_variable(
 #'   data = ADNIMERGE2::DM,
 #'   var_name = "ORIGPROT",
-#'   wider_format = FALSE
+#'   wide_format = FALSE
 #' )
 #' }
 #' @rdname summarize_factor_variable
@@ -31,7 +31,7 @@
 #' @importFrom rlang arg_match0
 #' @importFrom tibble tibble
 #' @importFrom assertr verify
-summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
+summarize_factor_variable <- function(data, var_name, wide_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
@@ -41,7 +41,7 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = "factor")
-  check_is_logical(wider_format)
+  check_object_type(wide_format, "logical")
   # Add description for roxygen document
   var_notes <- str_c(
     "Factor variable with levels: ",
@@ -60,7 +60,7 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
       field_values, field_notes
     ) %>%
     {
-      if (wider_format) {
+      if (wide_format) {
         group_by(., field_name) %>%
           mutate(., field_values = toString(field_values)) %>%
           ungroup(.) %>%
@@ -82,7 +82,7 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
 #'  The output result can be used to create a data dictionary file.
 #' @param data Data frame
 #' @param var_name  Variable name
-#' @param wider_format
+#' @param wide_format
 #'  Indicator whether to generate the character values in a wider or long format
 #'  if there are less than 10 unique values, Default: FALSE
 #' @return A data.frame that contains the following variables:
@@ -90,14 +90,14 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
 #'   \item{field_class}{Variable class type: 'character'}
 #'   \item{field_label}{Variable labels}
 #'   \item{field_values}{Variable values and only computed if the number of values is less than 10}
-#'   \item{field_values_order}{Variable values order number and only included for long format: wider_format = FALSE}
+#'   \item{field_values_order}{Variable values order number and only included for long format: wide_format = FALSE}
 #'   \item{field_notes}{Text notes that could be used to generate the roxygen document for the dataset}
 #' @examples
 #' \dontrun{
 #' summarize_character_variable(
 #'   data = ADNIMERGE2::DM,
 #'   var_name = "SEX",
-#'   wider_format = FALSE
+#'   wide_format = FALSE
 #' )
 #' }
 #' @rdname summarize_character_variable
@@ -108,7 +108,7 @@ summarize_factor_variable <- function(data, var_name, wider_format = FALSE) {
 #' @importFrom tibble tibble
 #' @importFrom assertr verify
 #' @importFrom stringr str_detect
-summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
+summarize_character_variable <- function(data, var_name, wide_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
@@ -119,7 +119,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
   var_label <- labelled::get_variable_labels(var_values)
   var_class_type <- class(var_values)
   rlang::arg_match0(arg = var_class_type, values = "character")
-  check_is_logical(wider_format)
+  check_object_type(wide_format, "logical")
   # Warning message if number of item value is more than 10
   var_values <- unique(var_values)[!is.na(unique(var_values))]
   id_format_pattern <- "[0-9]{3}\\_s\\_d+|[0-9]{3}\\_S\\_d+|[0-9]{3}-s-d+|[0-9]{3}-S-d+"
@@ -156,7 +156,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
       field_values, field_notes
     ) %>%
     {
-      if (wider_format) {
+      if (wide_format) {
         group_by(., field_name) %>%
           mutate(., field_values = toString(field_values)) %>%
           ungroup(.) %>%
@@ -177,7 +177,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
 #'  The output result can be used to create a data dictionary file.
 #' @param data Data frame
 #' @param var_name Variable name
-#' @param wider_format
+#' @param wide_format
 #'  Indicator whether to generate the minimum and maximum values in a wide or
 #'  long format, Default: FALSE
 #' @return A data.frame that contains the following variables:
@@ -192,7 +192,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
 #' summarize_numeric_variable(
 #'   data = ADNIMERGE2::DM,
 #'   var_name = "AGE",
-#'   wider_format = FALSE
+#'   wide_format = FALSE
 #' )
 #' }
 #' @rdname summarize_numeric_variable
@@ -202,7 +202,7 @@ summarize_character_variable <- function(data, var_name, wider_format = FALSE) {
 #' @importFrom rlang arg_match0
 #' @importFrom tibble tibble
 #' @importFrom assertr verify
-summarize_numeric_variable <- function(data, var_name, wider_format = FALSE) {
+summarize_numeric_variable <- function(data, var_name, wide_format = FALSE) {
   require(tidyverse)
   require(labelled)
   require(assertr)
@@ -215,7 +215,7 @@ summarize_numeric_variable <- function(data, var_name, wider_format = FALSE) {
     arg = var_class_type,
     values = c("numeric", "double", "integer")
   )
-  check_is_logical(wider_format)
+  check_object_type(wide_format, "logical")
   # Minimum and Maximum Values
   min_value <- min(var_values, na.rm = TRUE)
   max_value <- max(var_values, na.rm = TRUE)
@@ -238,7 +238,7 @@ summarize_numeric_variable <- function(data, var_name, wider_format = FALSE) {
       field_values, field_notes
     ) %>%
     {
-      if (wider_format) {
+      if (wide_format) {
         group_by(., field_name) %>%
           mutate(.,
             field_values = toString(field_values),
@@ -382,7 +382,7 @@ summarize_logical_variable <- function(data, var_name) {
 #'  The output result can be used to create a data dictionary file.
 #' @param data Data frame
 #' @param var_name Variable name
-#' @param wider_format
+#' @param wide_format
 #'  A Boolean value to generate the minimum and maximum values in a wide or
 #'  long format, Default: FALSE
 #' @return A data.frame that contains the at least the following variables:
@@ -395,7 +395,7 @@ summarize_logical_variable <- function(data, var_name) {
 #' summarize_variable(
 #'   data = ADNIMERGE2::DM,
 #'   var_name = "ORIGPROT",
-#'   wider_format = FALSE
+#'   wide_format = FALSE
 #' )
 #' }
 #' @rdname summarize_variable
@@ -406,7 +406,7 @@ summarize_logical_variable <- function(data, var_name) {
 #' @importFrom dplyr select
 #' @importFrom tidyselect all_of
 #' @export
-summarize_variable <- function(data, var_name, wider_format = FALSE) {
+summarize_variable <- function(data, var_name, wide_format = FALSE) {
   require(tidyverse)
   require(assertr)
   require(rlang)
@@ -417,15 +417,15 @@ summarize_variable <- function(data, var_name, wider_format = FALSE) {
     "Date", "POSIXct", "POSIXt", "hms", "difftime", "logical"
   )
   arg_match(arg = var_class_type, values = specified_class_type, multiple = TRUE)
-  check_is_logical(wider_format)
+  check_object_type(wide_format, "logical")
   if (any(var_class_type %in% specified_class_type[1])) {
-    summary_result <- summarize_factor_variable(data = data, var_name = var_name, wider_format = wider_format)
+    summary_result <- summarize_factor_variable(data = data, var_name = var_name, wide_format = wide_format)
   }
   if (any(var_class_type %in% specified_class_type[2])) {
-    summary_result <- summarize_character_variable(data = data, var_name = var_name, wider_format = wider_format)
+    summary_result <- summarize_character_variable(data = data, var_name = var_name, wide_format = wide_format)
   }
   if (any(var_class_type %in% specified_class_type[3:5])) {
-    summary_result <- summarize_numeric_variable(data = data, var_name = var_name, wider_format = wider_format)
+    summary_result <- summarize_numeric_variable(data = data, var_name = var_name, wide_format = wide_format)
   }
   if (any(var_class_type %in% specified_class_type[6:10])) {
     summary_result <- summarize_date_variable(data = data, var_name = var_name)
@@ -436,7 +436,7 @@ summarize_variable <- function(data, var_name, wider_format = FALSE) {
 
   summary_result <- summary_result %>%
     {
-      if (wider_format) {
+      if (wide_format) {
         verify(., nrow(.) == 1)
       } else {
         (.)
@@ -453,7 +453,7 @@ summarize_variable <- function(data, var_name, wider_format = FALSE) {
 #'   generate a data dictionary file.
 #' @param data Data frame
 #' @param dataset_name Dataset label, Default: NULL
-#' @param wider_format
+#' @param wide_format
 #'  Indicator whether to generate result in a wide or long format, Default: FALSE
 #' @return A data.frame that contains the at least the following variables:
 #'   \item{dd_name}{Dataset name}
@@ -466,7 +466,7 @@ summarize_variable <- function(data, var_name, wider_format = FALSE) {
 #' summarize_variable(
 #'   data = ADNIMERGE2::DM,
 #'   var_name = "ORIGPROT",
-#'   wider_format = FALSE
+#'   wide_format = FALSE
 #' )
 #' }
 #' @rdname summarize_variable
@@ -474,11 +474,11 @@ summarize_variable <- function(data, var_name, wider_format = FALSE) {
 #' @seealso \code{\link{summarize_variable}}
 #' @importFrom dplyr bind_rows mutate relocate select
 #' @export
-summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
+summarize_dataset <- function(data, dataset_name = NULL, wide_format = FALSE) {
   require(tidyverse)
   if (is.null(dataset_name)) tbl_name <- "TEMP_TBL" else tbl_name <- dataset_name
   data_dict_dd <- lapply(colnames(data), function(x) {
-    summarize_variable(data = data, var_name = x, wider_format = wider_format)
+    summarize_variable(data = data, var_name = x, wide_format = wide_format)
   }) %>%
     bind_rows() %>%
     mutate(
@@ -495,10 +495,10 @@ summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
       }
     }
 
-  if (wider_format && nrow(data_dict_dd) != length(colnames(data))) {
+  if (wide_format && nrow(data_dict_dd) != length(colnames(data))) {
     cli_abort(
       message = c(
-        "Discrepancy between number of numbers in {.val data_dict_dd} and number of columns in {.val data}. \n",
+        "Discrepancy between number of rows in {.val data_dict_dd} and number of columns in {.val data}. \n",
         "{.clas {nrow(data_dict_dd)}} rows; {.clas {length(colnames(data))}} columns."
       )
     )
@@ -543,7 +543,7 @@ summarize_dataset <- function(data, dataset_name = NULL, wider_format = FALSE) {
 #' temp_data_dict <- summarize_dataset(
 #'   dd = ADNIMERGE2::DM,
 #'   dataset_name = "DM",
-#'   wider_format = TRUE
+#'   wide_format = TRUE
 #' ) %>%
 #'   mutate(dataset_name = "DM", dataset_source_type = "derived")
 #' generate_single_dataset_roxygen(data_dict = temp_data_dict)
@@ -591,7 +591,7 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
     temp_summarized_dd <- summarize_dataset(
       data = data,
       dataset_name = dataset_name,
-      wider_format = TRUE
+      wide_format = TRUE
     ) %>%
       select(dd_name, field_name, field_class, field_label, field_notes, num_rows, num_cols) %>%
       distinct()
@@ -713,8 +713,9 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
 #' @description This function is used to generate roxygen document for multiple datasets.
 #' @param dataset_name_list Character vector of dataset names
 #' @param roxygen_source_type
-#'   Indicator to generate the roxygen document either directly from an actual dataset (`actual_dataset`) or
-#'   prepared data dictionary dataset (`data_dictionary`). Default: "actual_dataset"
+#'   Indicator to generate the roxygen document either directly from an actual 
+#'   dataset (\code{actual_dataset}) or pre-prepared data dictionary dataset 
+#'   (\code{data_dictionary}). Default: "actual_dataset"
 #' @param data_list
 #'  Listed objects of a single actual dataset or multiple actual datasets. Default: NULL
 #' @param data_dict Prepared data dictionary dataset. Default: NULL
@@ -722,12 +723,12 @@ generate_roxygen_single_dataset <- function(dataset_name, dataset_label = NULL, 
 #' @param output_file_name
 #'  Output file name. Should be a file path if the interest is to store the result in local environment.
 #' @param existed_append
-#'  A boolen value to overwrite on an existed `output_file_name` files.
-#'  Only applicable if a file path is provided to `output_file_name`.
+#'  A boolen value to overwrite on an existed \code{output_file_name} files.
+#'  Only applicable if a file path is provided to \code{output_file_name}.
 #' @return
-#'  A data.frame of two columns: data_doc and dataset_name if output_file_name is `NULL`.
+#'  A data.frame of two columns: data_doc and dataset_name if output_file_name is \code{"NULL"}.
 #'  Otherwise write an R script that contains the roxygen documentation in a
-#'  local directory with the specified file path: `output_file_name`.
+#'  local directory with the specified file path: \code{output_file_name}.
 #' @seealso \code{\link{generate_roxygen_single_dataset}()} \code{\link{cat}}
 #' @examples
 #' \dontrun{
@@ -756,7 +757,7 @@ generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "
   require(tidyverse)
   require(rlang)
   arg_match0(arg = roxygen_source_type, values = c("actual_dataset", "data_dictionary"))
-  check_is_logical(existed_append)
+  check_object_type(existed_append, "logical")
   if (is.null(field_nameVar)) field_nameVar <- "field_name"
   if (is.null(field_classVar)) field_classVar <- "field_class"
   if (is.null(field_labelVar)) field_labelVar <- "field_label"
@@ -879,7 +880,7 @@ generate_roxygen_document <- function(dataset_name_list, roxygen_source_type = "
 #' @importFrom dplyr select pull
 #' @importFrom cli cli_abort
 return_null_missing <- function(data, var_name, single_value_check = TRUE) {
-  check_is_logical(single_value_check)
+  check_object_type(single_value_check, "logical")
   # If the variable is existed
   if (var_name %in% colnames(data)) {
     var_value_list <- data %>%
@@ -912,7 +913,7 @@ return_null_missing <- function(data, var_name, single_value_check = TRUE) {
 #'  A character vector of list object names that will be checked, Default NULL
 #' @return
 #'  A stop message if there is any missing/NULL/NA names in the list data.frame.
-#'  Otherwise returns `TRUE`.
+#'  Otherwise returns \code{TRUE}.
 #' @rdname check_list_names
 #' @keywords utils_fun
 #' @importFrom cli cli_abort
@@ -967,7 +968,7 @@ check_list_names <- function(data_list, list_names = NULL) {
 #' temp_data_dict <- summarize_dataset(
 #'   data = ADNIMERGE2::DM,
 #'   dataset_name = "DM",
-#'   wider_format = TRUE
+#'   wide_format = TRUE
 #' )
 #' # Renamed pre-specified columns:
 #' # i.e.: field_nameVar, field_classVar, field_labelVar, and field_notesVar
@@ -1017,7 +1018,7 @@ data_dict_column_names <- function(data_dict, field_nameVar = NULL,
 #' temp_data_dict <- summarize_dataset(
 #'   data = ADNIMERGE2::DM,
 #'   dataset_name = "DM",
-#'   wider_format = TRUE
+#'   wide_format = TRUE
 #' )
 #' # Generate a variable format list
 #' generate_variable_format_list(data_dict = temp_data_dict, var_name = "TRACK")

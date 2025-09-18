@@ -141,8 +141,7 @@ adsl_metacore <- METACORES %>%
 
 ```{r generate-adsl0}
 ADSL <- build_from_derived(
-  metacore = METACORES,
-  dataset_name = "ADSL",
+  metacore = adsl_metacore,
   ds_list = list(
     "DM" = DM,
     "GF" = GF %>%
@@ -151,13 +150,13 @@ ADSL <- build_from_derived(
       ungroup()
   ),
   predecessor_only = TRUE,
-  keep = TRUE
+  keep = "ALL"
 ) %>%
   assert_uniq(USUBJID) %>%
   # Create AGE Group - creating categorical group from numeric
   create_cat_var(
     data = .,
-    metacore = METACORES,
+    metacore = adsl_metacore,
     ref_var = AGE,
     grp_var = AGEGR1,
     num_grp_var = AGEGR1N
@@ -165,12 +164,13 @@ ADSL <- build_from_derived(
   # Adjust for multiple race groups
   mutate(RACE = case_when(
     str_detect(RACE, "\\|") ~ "More than one race",
+    str_detect(RACE, "Native Hawaiian$|^Other Pacific Islander") ~ "Native Hawaiian or Other Pacific Islander",
     TRUE ~ as.character(RACE)
   )) %>%
   # Re-code RACE
   create_var_from_codelist(
     data = .,
-    metacore = METACORES,
+    metacore = adsl_metacore,
     input_var = RACE,
     out_var = RACEN,
     decode_to_code = TRUE
@@ -190,8 +190,7 @@ ADSL <- build_from_derived(
   # Convert to factor with Control Terms (CT)
   convert_var_to_fct_wrapper(
     .data = .,
-    metacore = METACORES %>%
-      select_dataset(dataset = "ADSL"),
+    metacore = adsl_metacore,
     var = c("ORIGPROT", "DX", "RACE")
   ) %>%
   # Add baseline amyloid status
@@ -328,14 +327,12 @@ ADSL <- ADSL %>%
   # Remove any columns that are not specified in the meta-specs
   drop_unspec_vars(
     dataset = .,
-    metacore = METACORES,
-    dataset_name = "ADSL"
+    metacore = adsl_metacore
   ) %>%
   # Add variable labels
   metatools::set_variable_labels(
     data = .,
-    metacore = METACORES,
-    dataset_name = "ADSL"
+    metacore = adsl_metacore
   )
 ```
 
@@ -344,34 +341,29 @@ ADSL <- ADSL %>%
   # Check all variables specified are present and no more
   check_variables(
     data = .,
-    metacore = METACORES,
-    dataset_name = "ADSL"
+    metacore = adsl_metacore
   ) %>%
   # Checks all variables with CT only contain values within the CT
   check_ct_data(
     data = .,
-    metacore = METACORES %>%
-      select_dataset("ADSL"),
+    metacore = adsl_metacore,
     na_acceptable = TRUE,
     omit_vars = c("ENRLFL", "DTHFL")
   ) %>%
   # Orders the columns according to the spec
   order_cols(
     data = .,
-    metacore = METACORES,
-    dataset_name = "ADSL"
+    metacore = adsl_metacore
   ) %>%
   # Sort the dataset based on key columns
   sort_by_key(
     data = .,
-    metacore = METACORES,
-    dataset_name = "ADSL"
+    metacore = adsl_metacore
   ) %>%
   # Check uniqueness of record by key columns
   check_unique_keys(
     data = .,
-    metacore = METACORES,
-    datase = "ADSL"
+    metacore = adsl_metacore
   )
 ```
 
@@ -379,8 +371,7 @@ ADSL <- ADSL %>%
 ADSL <- ADSL %>%
   xportr_metadata(
     .df = .,
-    metadata = METACORES %>%
-      select_dataset("ADSL"),
+    metadata = adsl_metacore,
     domain = "ADSL",
     verbose = "stop"
   ) %>%
@@ -417,7 +408,6 @@ adae_metacore <- METACORES %>%
 # Modified user-defined function
 ADAE <- build_from_derived(
   metacore = adae_metacore,
-  dataset_name = "ADAE",
   ds_list = list("ADSL" = ADSL, "AE" = AE),
   predecessor_only = TRUE,
   keep = FALSE
@@ -559,7 +549,7 @@ ADQS <- single_build_from_derived(
   dataset_name = "ADQS",
   ds_list = list("QS" = QS),
   predecessor_only = TRUE,
-  keep = TRUE
+  keep = "ALL"
 ) %>%
   # Add variables from ADSL dataset
   derive_vars_merged(
@@ -569,9 +559,9 @@ ADQS <- single_build_from_derived(
       dataset_name = "ADQS",
       ds_list = list("ADSL" = ADSL),
       predecessor_only = TRUE,
-      keep = TRUE
+      keep = "ALL"
     ),
-    by_vars = exprs(USUBJID),
+    by_vars = exprs(STUDYID, USUBJID),
     new_vars = NULL,
     check_type = "error",
     relationship = "many-to-one"
@@ -657,7 +647,7 @@ ADQS <- ADQS %>%
     data = .,
     metacore = adqs_metacore,
     na_acceptable = TRUE,
-    omit_vars = c("ENRLFL", "ABLFL", "PARAMCD")
+    omit_vars = c("ENRLFL", "ABLFL")
   ) %>%
   order_cols(
     data = .,
@@ -882,7 +872,7 @@ ADRS <- ADRS_PREP %>%
       dataset_name = "ADRS",
       ds_list = list("ADSL" = ADSL),
       predecessor_only = TRUE,
-      keep = TRUE
+      keep = "ALL"
     ),
     by_vars = exprs(STUDYID, USUBJID),
     check_type = "error",

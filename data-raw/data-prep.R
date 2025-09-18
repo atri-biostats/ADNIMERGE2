@@ -27,7 +27,7 @@ specified_dir_list <- c(
 
 check_dir_list <- lapply(specified_dir_list, function(dir) {
   if (dir.exists(dir) == TRUE) unlink(dir, recursive = TRUE)
-  cli::cli_alert_info(text = "{.path {dir}} deleted")
+  cli::cli_alert_info(text = "{.path {dir}} removed")
 })
 
 # Data downloaded date arg parameter ----
@@ -37,12 +37,12 @@ if (length(args) != 2) {
   cli::cli_abort(
     message = c(
       "Input argument {.val arg} must be size of 2. \n",
-      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+      "{.val arg} is a length of {.val {length(arg)}} vector."
     )
   )
 }
 
-DATA_DOWNLOADED_DATE <- as.character(args[1])
+DATA_DOWNLOADED_DATE <- args[1]
 if (!is.character(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   cli::cli_abort(
     message = c(
@@ -63,6 +63,14 @@ if (!is.logical(UPDATE_DATADIC) | is.na(UPDATE_DATADIC)) {
 }
 
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
+if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
+  cli::cli_abort(
+    message = c(
+      "{.var DATA_DOWNLOADED_DATE} must not be missing. \n",
+      "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format."
+    )
+  )
+}
 usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
 
 prefix_pattern <- "^adni\\_"
@@ -187,6 +195,7 @@ if (EXISTED_CSVFILE) {
 rm(list = c("date_stamped_suffix", "csv_file_list", "csv_name_pattern"))
 
 # Create dataset category/groups ----
+## Get dataset category based on file path ----
 if (dir.exists(dataset_cat_dir)) unlink(dataset_cat_dir)
 dir.create(dataset_cat_dir)
 dataset_cat <- get_dataset_cat(
@@ -207,9 +216,7 @@ dataset_cat <- get_dataset_cat(
     TRUE ~ dir_cat
   ))
 
-# See line 360
-
-# Adding common columns and converting `-4` & `-1` value as missing values ----
+## Get dataset category based on study phase ----
 data_path_list <- list.files(
   path = data_dir,
   pattern = "\\.rda$",
@@ -217,6 +224,52 @@ data_path_list <- list.files(
   all.files = TRUE,
   recursive = FALSE
 )
+
+dataset_cat_phase <- lapply(data_path_list, function(x) {
+  dataset_name <- str_remove(basename(x), "\\.rda")
+  # Load dataset in new environment
+  new_env <- new.env()
+  load(file = x, envir = new_env)
+  get_study_phase_cat(
+    .data = new_env %>%
+      pluck(., dataset_name),
+    phase_vars = NULL
+  ) %>%
+    rename("dir_cat" = PHASE) %>%
+    mutate(
+      dir = raw_data_dir, # For simplicity
+      full_file_path = x, # Exact file path
+      file_list = dataset_name
+    ) %>%
+    relocate(dir_cat, .after = last_col())
+})
+
+dataset_cat_phase <- dataset_cat_phase %>%
+  bind_rows() %>%
+  # Adjust dataset category based on file name
+  filter(dir_cat %in% tolower(adni_phase())) %>%
+  group_by(file_list) %>%
+  mutate(dir_cat = toString(dir_cat)) %>%
+  ungroup() %>%
+  distinct()
+
+dataset_cat <- bind_rows(dataset_cat, dataset_cat_phase) %>%
+  group_by(file_list) %>%
+  mutate(dir_cat = toString(dir_cat)) %>%
+  ungroup() %>%
+  distinct() %>%
+  # Adjust the category for remotely collected data in ADNI4
+  mutate(across(
+    dir_cat,
+    ~ case_when(
+      str_detect(file_list, "^RMT\\_") & !str_detect(.x, "adni4") ~ paste0(.x, ", adni4"),
+      TRUE ~ .x
+    )
+  ))
+
+# See line 447 for additional data wrangling
+
+# Adding common columns and converting `-4` & `-1` value as missing values ----
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
 if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not existed")
 
@@ -394,10 +447,12 @@ dataset_stamped_date <- dataset_list_dd %>%
     UPDATED_TBLNAME = updated_short_tblname
   ) %>%
   select(ID, PREVIOUS_TBLNAME, STAMPED_DATE, UPDATED_TBLNAME)
+
 readr::write_csv(
   x = dataset_stamped_date,
   file = file.path(date_stamped_dir, "dataset_list_date_stamped.csv")
 )
+
 dataset_cat <- dataset_cat %>%
   left_join(
     dataset_stamped_date %>%
