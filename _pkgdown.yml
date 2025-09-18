@@ -182,8 +182,6 @@ navbar:
         href: articles/ADNI-Enrollment.html
       - text: ADNI Longitudinal Summaries
         href: articles/ADNI-Longitudinal.html
-      - text: ADNI Clinical Diagnostics Progression
-        href: articles/ADNI-Diagnostic-Progression.html
 footer:
   structure: 
     left: developed_by
