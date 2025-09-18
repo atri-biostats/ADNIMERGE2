@@ -37,12 +37,12 @@ if (length(args) != 2) {
   cli::cli_abort(
     message = c(
       "Input argument {.val arg} must be size of 2. \n",
-      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+      "{.val arg} is a length of {.val {length(arg)}} vector."
     )
   )
 }
 
-DATA_DOWNLOADED_DATE <- as.character(args[1])
+DATA_DOWNLOADED_DATE <- args[1]
 if (!is.character(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   cli::cli_abort(
     message = c(
@@ -63,6 +63,14 @@ if (!is.logical(UPDATE_DATADIC) | is.na(UPDATE_DATADIC)) {
 }
 
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
+if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
+  cli::cli_abort(
+    message = c(
+      "{.var DATA_DOWNLOADED_DATE} must not be missing. \n",
+      "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format."
+    )
+  )
+}
 usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
 
 prefix_pattern <- "^adni\\_"

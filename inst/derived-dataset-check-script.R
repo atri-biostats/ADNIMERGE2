@@ -43,9 +43,8 @@ run_check_derived_dataset <- function(pkg = "ADNIMERGE2",
   # Load required packages
   required_pkg <- c("tidyverse", "sdtmchecks", "testthat","cli", pkg)
   sapply(required_pkg[!required_pkg %in% "testthat"], require, character = TRUE)
-   
-  check_is_logical(export_report)
-  check_is_logical(apply_testthat)
+  check_object_type(export_report, "logical")
+  check_object_type(apply_testthat, "logical")
   # List of selected check list from sdtmchecksmeta as default values
   # Check list in DM
   dm_check_list <- c(
@@ -95,7 +94,7 @@ run_check_derived_dataset <- function(pkg = "ADNIMERGE2",
 
   if (export_report) {
     if (is.null(output_dir)) {
-      cli_abort(message = "{.path output_dir} must be not be missing.")
+      cli_abort(message = "{.path output_dir} must not be missing.")
     }
     if (!grepl(pattern = "\\.xlsx$", x = output_file)) {
       cli_abort(message = "{.file output_file} must be an excel file with {val. .xlsx} name extension.")

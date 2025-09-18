@@ -52,25 +52,41 @@ assert_non_missing <- function(...) {
   )
 }
 
-# Check A Boolean Value -----
-#' @title Check A Boolean Value
-#' @param x Input value
-#' @return A stop error if the value is not a Boolean value
-#' @examples
+# Check object type -----
+#' @title Check for Object Type Mismatch
+#' @param x Input Object
+#' @param type Object type
+#' @return A stop error if the input object and type does not match.
+#' @details
+#' 
+#' This function is used to check the object type of an input value based on 
+#' \code{base} R package. In \code{base} R package, object type functions are 
+#' specified in \code{is.ObjectType} format. For instance, \code{base::is.logical} 
+#' is used for checking a logical/Boolean value. Please see the examples how it 
+#' is translated in this function.
+#' 
+#' @examples 
 #' \dontrun{
-#' check_is_logical(x = "text")
-#' check_is_logical(x = TRUE)
+#' check_object_type(x = letters[1:12], type = "character")
+#' check_object_type(x = ADNIMERGE2::CDR, type = "data.frame")
+#' check_object_type(x = TRUE, type = "logical")
+#' # Error message
+#' check_object_type(x = letters[1:12], type = "numeric")
+#' check_object_type(x = letters[1:12], type = "factor")
 #' }
-#' @rdname check_is_logical
+#' @rdname check_object_type
 #' @family checks function
 #' @keywords utils_fun
+#' @export 
 #' @importFrom cli cli_abort
-#' @export
-check_is_logical <- function(x) {
-  if (!is.logical(x)) {
-    cli_abort(
+
+check_object_type <- function(x, type) {
+  new_envir <- new.env()
+  temp_funs <- paste0("is.", type)
+  if (!get(temp_funs, envir = new_envir)(x)) {
+    cli::cli_abort(
       message = c(
-        "{.var x} must be a Boolean value. \n",
+        "{.var x} must be a {.cls {type}} object. \n",
         "{.var x} is a {.cls {class(x)}} object."
       )
     )
@@ -78,10 +94,11 @@ check_is_logical <- function(x) {
   invisible(x)
 }
 
-# Check `is_datadict_tbl` Class Type -----
-#' @title Check `is_datadict_tbl` Object Class Type
+
+# Check is_datadict_tbl Class Type -----
+#' @title Check \code{is_datadict_tbl} Object Class Type
 #' @param x Object
-#' @return A stop error if the class object is not `is_datadict_tbl`.
+#' @return A stop error if the class object is not \code{is_datadict_tbl}.
 #' @rdname is_datadict_tbl
 #' @family checks function
 #' @keywords adni_datadic_fun

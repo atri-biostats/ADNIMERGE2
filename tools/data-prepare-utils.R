@@ -5,8 +5,10 @@
 #' @param dataset_name Dataset name
 #' @param dataset Actual dataset
 #' @param edit_type Edit type, Default: 'create'
-#'  \item{create}{To create a new script}
-#'  \item{modify}{To modify the existed files}
+#' \itemize{
+#'   \item {\code{create}}: To create a new script
+#'   \item {\code{modify}}: To modify the existed files
+#'  }
 #' @param run_script Indicator for running script, Default: TRUE
 #' @param add_text
 #'  Additional text that will appended in the script, Default: NULL
@@ -15,8 +17,8 @@
 #' @param clean If TRUE, remove script file
 #' @return
 #'  \itemize{
-#'    \item A file path if the script is not compiled for \code{\emph{run_script = FALSE}}
-#'    \item Otherwise \emph{TRUE} Boolean value
+#'    \item A file path if the script is not compiled for \code{run_script = FALSE}
+#'    \item Otherwise \code{TRUE} Boolean value
 #'  }
 #' @examples
 #' \dontrun{
@@ -44,9 +46,10 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
   require(rlang)
 
   arg_match0(edit_type, values = c("create", "modify"))
-  check_is_logical(run_script)
-  check_is_logical(include_pipe)
-  check_is_logical(clean)
+  check_object_type(run_script, "logical")
+  check_object_type(include_pipe, "logical")
+  check_object_type(clean, "logical")
+
   added_script <- paste0(dataset_name, " <- ", dataset_name)
 
   # Create data-preparation script in 'data-raw/dataset_name.R'
@@ -137,7 +140,7 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
 #'    The directory where the unzipped file is to be stored, Default: NULL.
 #'    Store the file in the same input directory if it is NULL.
 #' @param overwrite Indicator to overwrite file, Default: TRUE
-#' @return `TRUE` if the file is properly unzipped
+#' @return \code{TRUE} if the file is properly unzipped
 #' @rdname get_unzip_file
 #' @keywords utils_fun
 #' @importFrom utils unzip
@@ -158,7 +161,7 @@ get_unzip_file <- function(input_dir,
       message = "{.path {file.path(input_dir, file_name)}} file is not existed."
     )
   }
-  
+
   utils::unzip(
     zipfile = file_path, exdir = output_dir,
     files = NULL, list = FALSE, overwrite = overwrite,
@@ -168,7 +171,7 @@ get_unzip_file <- function(input_dir,
   cli::cli_alert_success(
     text = "Extracting data from {.path {file.path(input_dir, file_name)}}"
   )
-  
+
   return(TRUE)
 }
 
@@ -178,10 +181,10 @@ get_unzip_file <- function(input_dir,
 #' @param input_dir Directory location where the file is stored
 #' @param output_dir Output directory
 #' @param file_extension File extension, Default: ".csv"
-#' @param action Either `rename` or `copy`
+#' @param action Either \code{rename} or \code{copy}
 #' @param remove_name_pattern
-#'   Strings that will be removed from the file name, Default = `NULL`
-#' @return `TRUE` if the file action is properly renamed or copied
+#'   Strings that will be removed from the file name, Default = NULL
+#' @return \code{TRUE} if the file action is properly renamed or copied
 #' @rdname file_action
 #' @keywords utils_fun
 #' @importFrom stringr str_remove_all
@@ -223,10 +226,10 @@ file_action <- function(input_dir,
 
 # Generate .rda dataset in `data` directory ----
 #' @title Function to create .rda dataset
-#' @description This function is used to create .rda file in `data` directory.
+#' @description This function is used to create .rda file in \code{./data} directory.
 #' @param input_dir The directory where the .csv file is located.
 #' @param file_extension File extension, Default: ".csv"
-#' @return `TRUE` if the .rda dataset is created and stored in `data` directory
+#' @return \code{TRUE} if the .rda dataset is created and stored in \code{./data} directory
 #' @examples
 #' \dontrun{
 #' using_use_data(
@@ -298,7 +301,7 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 #' @param codeVar Variable name for field code. Default: "CODE"
 #' @param textVar Variable name for field text. Default: "TEXT"
 #' @return
-#'  A data.frame  that contains `field_value` and `field_label` variables.
+#'  A data.frame  that contains \code{field_value} and \code{field_label} variables.
 #' @rdname adjust_code_labels
 #' @keywords adni_datadic_fun
 #' @family data dictionary related functions
@@ -389,9 +392,9 @@ adjust_code_labels <- function(data_dict, phaseVar = "PHASE", codeVar = "CODE", 
 #'  This function is used to add description text for common columns in the DATADIC.
 #' @param tblname Dataset name (TBNAME)
 #' @param .datadic Data dictionary dataset
-#' @param fldname Common column names (usually "ORIGPROT" or "CORPORT")
+#' @param fldname Common column names, usually "ORIGPROT" or "CORPORT"
 #' @param description Description text
-#' @return A data frame the same as `.datadic`  with appended rows.
+#' @return A data frame the same as \code{./datadic} with appended rows.
 #' @examples
 #' \dontrun{
 #' common_cols_description_datadic(
@@ -445,7 +448,7 @@ common_cols_description_datadic <- function(.datadic, tblname, fldname, descript
   if (length(description) != length(fldname)) {
     cli_abort(
       message = c(
-        "The length of {.var description} and {.var fldname}  must be the same. \n",
+        "The length of {.var description} and {.var fldname} must be the same. \n",
         "The length of {.var description} is {.val {length(description)}}. \n",
         "The length of {.var fldname} is {.val {length(fldname)}}."
       )
@@ -488,7 +491,7 @@ common_cols_description_datadic <- function(.datadic, tblname, fldname, descript
 #' @param dir_path Directory path name
 #' @return
 #'  A stop message if directory is not existed or the last character is "/" .
-#'  Otherwise return `TRUE`.
+#'  Otherwise return \code{TRUE}.
 #' @rdname check_dir_path
 #' @keywords utils_fun
 #' @family checks function
@@ -501,7 +504,7 @@ check_dir_path <- function(dir_path) {
   }
   if (all(!dir.exists(dir_path))) {
     cli_abort(
-      message = c("{.path {dir_path}} is not existed.")
+      message = c("{.path {dir_path}} not existed.")
     )
   }
   return(TRUE)
@@ -515,10 +518,10 @@ check_dir_path <- function(dir_path) {
 #' @param .datadic Data Dictionary Dataset
 #' @param concat_phase
 #'  A character vector that contains study phase that concatenated with
-#'  \emph{concat_char} character.
+#'  \code{concat_char} character.
 #' @param concat_char Concatenate character
 #' @return
-#'  Updated data directory data frame with the same structure as \emph{data_dict}.
+#'  Updated data directory data frame with the same structure as \code{data_dict}.
 #' @rdname expand_data_dict
 #' @keywords adni_datadic_fun
 #' @family data dictionary related functions
@@ -543,7 +546,7 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
   }
   if (any(!str_detect(string = concat_phase, pattern = concat_char))) {
     cli::cli_abort(
-      message = "{.val {concat_char} must be presented."
+      message = "{.val {concat_char} not found."
     )
   }
   concat_phase_list <- str_split(
@@ -558,7 +561,7 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
     if (!any(str_detect(split_phase, "ADNI"))) {
       cli::cli_abort(
         message = c(
-          "At least one `ADNI` prefix is not presented. \n",
+          "At least one `ADNI` prefix is not foound. \n",
           "There are only {.val {split_phase}} values."
         )
       )
@@ -582,21 +585,21 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
 # Add Prefix for Coded Values Based DATADIC  ----
 #' @title Add Prefix for Coded Values Based DATADIC
 #' @description
-#'  This function is used to add prefix on the data dictionary (`DATADIC`)
+#'  This function is used to add prefix on the data dictionary (\code{DATADIC})
 #'  coded values to match values in the actual data.
 #' @param .datadic
 #'  Data dictionary dataset created using
-#'  `get_factor_levels_datadict` function.
+#'  \code{\link{get_factor_levels_datadict}()} function.
 #' @param prefix_char Prefix character, Default: "0"
 #' @param nested_value
 #'  A Boolean value to indicate the code and decode values are
-#'  nested in the `data_dict`. Default: TRUE
+#'  nested in the \code{data_dict}. Default: TRUE
 #' @param position Either in the beginning (first) or in the end (last), Default: "first"
 #' @param add_char
-#'  Character that will be concatenated with `prefix_char` character based on
-#'  the provided `position`.
+#'  Character that will be concatenated with \code{prefix_char} character based on
+#'  the provided \code{position}.
 #' @return
-#'  A same data.frame as `data_dict` with additional records if there coded
+#'  A same data.frame as \code{data_dict} with additional records if there coded
 #'  values that did not contains the specified prefix character.
 #' @rdname add_code_prefix
 #' @keywords adni_datadic_fun
@@ -612,7 +615,7 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
   require(assertr)
   CODES <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- NULL
   prefix_char <- as.character(prefix_char)
-  check_is_logical(nested_value)
+  check_object_type(nested_value, "logical")
   is_datadict_tbl(.datadic)
   if (nested_value) add_cols <- "CODES" else add_cols <- c("prefix", "suffix")
   check_colnames(
@@ -663,13 +666,13 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
 #'  coded values to match values in the actual data.
 #' @param .datadic
 #'  Data dictionary dataset created using
-#'  `get_factor_levels_datadict` function in long format (i.e. not in nested format).
-#' @param prefix_char Prefix character that will be concatenated with `prefix` or `CODED` values
+#'  \code{\link{get_factor_levels_datadict}()} function in long format (i.e. not in nested format).
+#' @param prefix_char Prefix character that will be concatenated with \code{prefix} or \code{CODED} values
 #' @param position Either in the beginning (first) or in the end (last), Default: "first"
 #' @param add_char
-#'  Character that will be concatenated with `prefix_char` character based on
+#'  Character that will be concatenated with \code{prefix_char} character based on
 #'  the provided `position`.
-#' @return A data.frame similar the provided data dictionary dataset `data_dict`.
+#' @return A data.frame similar the provided data dictionary dataset \code{data_dict}.
 #' @rdname update_code_prefix_char
 #' @keywords adni_datadic_fun internal
 #' @family data dictionary related internal functions
@@ -819,26 +822,16 @@ get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
   return(output_data)
 }
 
-
-
-# get_dataset_phase_cat <- function(dir.path,
-#                                   file_extension_pattern = "\\.rda",
-#                                   recursive = TRUE){
-#   check_dir_path(dir.path)
-#
-# }
 #' @title Get Dataset Category By Study Phase
 #' @param .data A data.frame
 #' @param phase_vars Study phase variables, Default: NULL
-#' @return A data.frame with `PHASE` variable
-#' @examples 
+#' @return A data.frame with \code{PHASE} variable
+#' @examples
 #' \dontrun{
 #' get_study_phase_cat(.data = ADNIMERGE2::ADAS)
 #' }
-#' @seealso 
-#'  \code{\link[cli]{cli_abort}}
 #' @rdname get_study_phase_cat
-#' @export 
+#' @export
 #' @importFrom cli cli_abort
 #' @importFrom dplyr rename mutate across select distinct
 #' @importFrom tidyselect all_of everything
@@ -853,7 +846,7 @@ get_study_phase_cat <- function(.data, phase_vars = NULL) {
     cli::cli_abort(
       message = paste0(
         "Only one {.val PHASE} variable must be in the data. \n ",
-        "{.val {phaseVar}} variables are found in the data."
+        "{.val {phaseVar}} variable{?s} {?is/are} found in the data."
       )
     )
   }
@@ -861,7 +854,7 @@ get_study_phase_cat <- function(.data, phase_vars = NULL) {
     names(phaseVar) <- "PHASE"
     output_data <- .data %>%
       rename(all_of(phaseVar)) %>%
-      mutate(across(all_of(names(phaseVar)), ~as.character(tolower(.x)))) %>%
+      mutate(across(all_of(names(phaseVar)), ~ as.character(tolower(.x)))) %>%
       select(all_of(names(phaseVar))) %>%
       distinct()
   } else {

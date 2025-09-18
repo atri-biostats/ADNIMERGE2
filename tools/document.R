@@ -141,7 +141,7 @@ temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   summarize_dataset(
     data = raw_data_list %>% pluck(., tb),
     dataset_name = tb,
-    wider_format = TRUE
+    wide_format = TRUE
   )
 }) %>%
   bind_rows() %>%
@@ -381,6 +381,7 @@ if (exists("derived_data_list")) {
   source_link <- function(tblname) {
     vignette_link <- case_when(
       nchar(tblname) == 2 ~ "ADNIMERGE2-Derived-Data",
+      nchar(tblname) >2 & tolower(tblname) %in% "pacc" ~ "ADNIMERGE2-PACC",
       nchar(tblname) > 2 ~ "ADNIMERGE2-Analysis-Data"
     )
     output_link <- c()
@@ -422,7 +423,7 @@ if (exists("derived_data_list")) {
     summarize_dataset(
       data = derived_data_list %>% pluck(., tb),
       dataset_name = tb,
-      wider_format = TRUE
+      wide_format = TRUE
     )
   }) %>%
     bind_rows() %>%

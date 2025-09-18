@@ -66,7 +66,7 @@ if (file.exists(cur_data_dict_path)) {
 } else {
   EXISTED_DATADTIC <- FALSE
   cli_alert_warning(
-    text = "No existed data dictionary with file name {.val {cur_data_dict_path}}"
+    text = "No existing data dictionary with file name {.val {cur_data_dict_path}}"
   )
   DECODE_VALUE <- FALSE
 }
@@ -152,7 +152,7 @@ if (EXISTED_DATADTIC) {
   } else {
     DECODE_VALUE <- FALSE
     cli_alert_warning(
-      text = "No existed data conatins variables with coded values"
+      text = "No existing data conatins variables with coded values"
     )
   }
 }
@@ -199,7 +199,7 @@ if (DECODE_VALUE) {
     if (length(unique_tb_fldname) == 0) {
       cli_alert_info(
         text = paste0(
-          "{.val {.emph {note_prefix}}} No existed unique columns with ",
+          "{.val {.emph {note_prefix}}} No existing unique columns with ",
           "coded values in {.val {cur_tblname_short}} data"
         )
       )
@@ -265,7 +265,7 @@ if (DECODE_VALUE) {
       if (is.na(phaseVar)) {
         cli_alert_warning(
           text = paste0(
-            "{.val {.emph {note_prefix}}} No existed phase column in ",
+            "{.val {.emph {note_prefix}}} No existing phase column in ",
             "{.val {cur_tblname_short}} data"
           )
         )

@@ -54,8 +54,13 @@ abbrev_list <- paste0(
     "CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; "
   ),
   paste0(
-    "SD: Standard Deviation; Q1: the 25th percentile; Q3: the 75th percentile"
-  )
+    "SD: Standard Deviation; Q1: the 25th percentile; Q3: the 75th percentile; "
+  ),
+  paste0(
+    "Baseline mPACCdigit score was based on subjects that were ",
+    "enrolled only in ADNI1 study phase. "
+  ),
+  collapse = "\n "
 )
 conts_statistic_label <- c("Mean (SD)", "Median (Q1, Q3)", "Range")
 # Adjust BMI variable labels
@@ -96,14 +101,17 @@ enroll_summary_plot
 ## Demographic Summaries: By Study Phase
 
 ```{r overall-summary}
+include_vars <- c(
+  "AGE", "SEX", "EDUC", "RACE", "ETHNIC", "MARISTAT", "BMI",
+  "DX", "APOE", "ADASTT13", "CDGLOBAL", "CDRSB", "MMSCORE",
+  "FAQTOTAL", "MPACCTRAILSB", "MPACCDIGIT"
+)
+
 tbl_summary(
   data = ADSL %>%
     filter(ENRLFL %in% "Y"),
   by = ORIGPROT,
-  include = c(
-    AGE, SEX, EDUC, RACE, ETHNIC, MARISTAT, BMI, DX, APOE,
-    ADASTT13, CDGLOBAL, CDRSB, MMSCORE, FAQTOTAL
-  ),
+  include = include_vars,
   type = all_continuous() ~ "continuous2",
   statistic = list(
     all_continuous() ~ c(
@@ -131,22 +139,40 @@ tbl_summary(
   bold_labels()
 ```
 
-```{r viloin-plot, fig.height = 8, fig.alt = "Distribution of response variables: Overall"}
+```{r viloin-plot, fig.height = 11, fig.alt = "Distribution of numeric characteristics: Overall"}
 var_label_list <- get_variable_labels(ADSL)
 cont_var_list <- c(
   "AGE", "EDUC", "BMI", "ADASTT13", "CDGLOBAL",
-  "CDRSB", "MMSCORE", "FAQTOTAL"
+  "CDRSB", "MMSCORE", "FAQTOTAL", "MPACCTRAILSB", "MPACCDIGIT"
 )
 cont_bl_violin_plot <- lapply(cont_var_list, function(x) {
-  ADSL %>%
+  graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
-    rename_with(~ paste0("yvalue"), all_of(x)) %>%
+    rename_with(~ paste0("yvalue"), all_of(x))
+
+  graph_data %>%
     ggplot(data = ., aes(x = yvalue)) +
     geom_histogram() +
-    labs(x = var_label_list[[x]], y = "Count")
+    labs(
+      x = var_label_list[[x]],
+      y = "Count",
+      title = paste0("n = ", sum(!is.na(graph_data$yvalue)))
+    ) +
+    theme(title = element_text(size = 11))
 })
+
 names(cont_bl_violin_plot) <- cont_var_list
-plots(cont_bl_violin_plot, n_columns = 2)
+
+plots(
+  cont_bl_violin_plot,
+  n_columns = 2,
+  caption = paste0(
+    "Baseline mPACCdigit score was based on subjects that were enrolled only ",
+    "in ADNI1 study phase. \n The remaining summary plots were based on ",
+    "subjects that enrolled in ADNI study."
+  ),
+  title = "ADNI - Plots of Numeric Characteristics: By Study Phase"
+)
 ``` 
 
 ## Demographic Summaries: By Baseline Diagnostics Status
@@ -156,10 +182,7 @@ tbl_summary(
   data = ADSL %>%
     filter(ENRLFL %in% "Y"),
   by = DX,
-  include = c(
-    AGE, SEX, EDUC, RACE, ETHNIC, MARISTAT, BMI, APOE,
-    ADASTT13, CDGLOBAL, CDRSB, MMSCORE, FAQTOTAL
-  ),
+  include = include_vars,
   type = all_continuous() ~ "continuous2",
   statistic = list(
     all_continuous() ~ c(
@@ -187,15 +210,22 @@ tbl_summary(
   bold_labels()
 ```
 
-```{r viloin-plot-bl-dx, fig.height = 10, fig.width = 8, fig.alt = "Distribution of response variables: By baseline diagnostics status"}
+```{r viloin-plot-bl-dx, fig.height = 13, fig.width = 8, fig.alt = "Distribution of numeric characteristics: By baseline diagnostics status"}
 dx_color_pal <- c("#73C186", "#F2B974", "#DF957C", "#999999")
 
 # Create density plot
 cont_violin_plot_bl_dx <- lapply(cont_var_list, function(x) {
-  ADSL %>%
+  graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
     filter(!is.na(DX)) %>%
-    rename_with(~ paste0("yvalue"), all_of(x)) %>%
+    rename_with(~ paste0("yvalue"), all_of(x))
+
+  n_obs <- graph_data %>%
+    select(yvalue, DX) %>%
+    na.omit() %>%
+    nrow()
+
+  graph_data %>%
     ggplot(data = ., aes(x = yvalue, fill = DX)) +
     geom_density(alpha = 0.5) +
     labs(
@@ -203,23 +233,31 @@ cont_violin_plot_bl_dx <- lapply(cont_var_list, function(x) {
       y = "Density",
       color = get_variable_labels(ADSL$DX),
       title = var_label_list[[x]],
-      subtitle = paste0(" By ", get_variable_labels(ADSL$DX)),
+      subtitle = paste0(" By ", get_variable_labels(ADSL$DX), ", n = ", n_obs),
       fill = get_variable_labels(ADSL$DX)
     ) +
     scale_fill_manual(values = dx_color_pal) +
     theme(
       legend.position = "bottom",
-      title = element_text(size = 11)
+      title = element_text(size = 10.5)
     )
 })
+
 names(cont_violin_plot_bl_dx) <- cont_var_list
+
 plots(
   cont_violin_plot_bl_dx,
   n_columns = 2,
   guides = "collect",
   caption = paste0(
-    "Based on subjects that have known ",
-    "diagnostics status at baseline visit."
+    "Based on subjects that had known diagnostics status at baseline visit. \n",
+    "Baseline mPACCdigit score was based on subjects that were enrolled only ",
+    "in ADNI1 study phase. \n The remaining summary plots were based on ",
+    "subjects that enrolled in ADNI study."
   ),
+  title = paste0(
+    "ADNI - Plots of Numeric Characteristics: ",
+    "By Baseline Diagnostics Status"
+  )
 ) & theme(legend.position = "bottom")
 ``` 

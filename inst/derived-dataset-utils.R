@@ -8,7 +8,7 @@
 #' @param .ptdemog PTDEMOG form data.frame, Default: get("PTDEMOG")
 #' @param varList Additional columns, Default: get("USUBJID")
 #' @return
-#' A data.frame appended with all columns that specified in the `varList` parameter.
+#' A data.frame appended with all columns that specified in the \code{varList} parameter.
 #' @rdname derive_usubjid
 #' @importFrom dplyr left_join select
 #' @importFrom assertr verify
@@ -43,8 +43,8 @@ derive_usubjid <- function(.data,
       by = join_col
     ) %>%
     verify(nrow(.) == nrow_input) %>%
-    # Will be removed after checking data entry
-    filter(if_all(all_of(varList), ~!is.na(.x))) %>%
+    # Will be removed after data-entry checking-in
+    filter(if_all(all_of(varList), ~ !is.na(.x))) %>%
     assert_non_missing(all_of(varList))
 
   return(.data)
@@ -55,7 +55,7 @@ derive_usubjid <- function(.data,
 #' @param .roster ROSTER form data.frame, Default: get("ROSTER")
 #' @param .ptdemog PTDEMOG form data.frame, Default: get("PTDEMOG")
 #' @return
-#'  A data.frame that contains `RID` and `SITEID` columns.
+#'  A data.frame that contains \code{RID} and \code{SITEID} columns.
 #' @rdname get_id_mapping_list
 #' @importFrom dplyr filter group_by ungroup select bind_rows distinct
 get_id_mapping_list <- function(.registry = get("REGISTRY"),
@@ -92,10 +92,10 @@ get_id_mapping_list <- function(.registry = get("REGISTRY"),
 # Add Enrollment/RFSTDTC Date ----
 #' @title Add Enrollment/RFSTDTC Date
 #' @description
-#'  This function is used to add enrollment/RFSTDTC date based on `RID`.
+#'  This function is used to add enrollment/RFSTDTC date based on \code{RID}.
 #' @param .data Data.frame
 #' @param .registry REGISTRY data.frame, Default: get("REGISTRY")
-#' @return A data.frame appended with `RFSTDTC` variable.
+#' @return A data.frame appended with \code{RFSTDTC} variable.
 #' @examples
 #' \dontrun{
 #' add_rfstdtc_date(
@@ -136,14 +136,15 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
 # Add VISITNUM and VISITNAME ----
 #' @title Add VISITNUM and VISIT Name ----
 #' @description
-#'  This function is used to add visit number (`VISITNUM`) and visit name (`VISIT`)
+#'  This function is used to add visit number (\code{VISITNUM}) and visit name (\code{VISIT})
 #'  based on a pre-generated visit record dataset per subject ID.
 #' @param .data Data.frame
 #' @param visit_record_data
-#'  A data.frame of visit record per subject ID generated based on `REGISTRY`
+#'  A data.frame of visit record per subject ID generated based on \code{REGISTRY}
 #'  and `ROSTER` forms, Default: get("ADNI_VISIT_RECORD")
-#' @param domain Domain abbreviation, Defualt: NULL
-#' @return A data frame appended with `VISIT` and `VISITNUM`.
+#' @param domain Domain abbreviation, Default: NULL
+#' @param check_missing_visnum A Boolean value to check missing \code{VISITNUM}
+#' @return A data frame appended with \code{VISIT} and \code{VISITNUM}.
 #' @rdname assign_visit_attr
 #' @keywords adni_visit_adjust
 #' @importFrom dplyr left_join select mutate across case_when
@@ -151,11 +152,11 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
 #' @importFrom tidyselect all_of
 assign_visit_attr <- function(.data,
                               visit_record_data = get("ADNI_VISIT_RECORD"),
-                              domain = NULL, check_missing = TRUE) {
+                              domain = NULL, check_missing_visnum = TRUE) {
   require(tidyverse)
   require(assertr)
   VISDTC <- VISTAT <- NULL
-  check_is_logical(check_missing)
+  check_object_type(check_missing_visnum, "logical")
   col_names <- c("RID", "ORIGPROT", "COLPROT", "VISCODE")
   join_cols <- get_cols_name(.data, col_names)
   check_colnames(
@@ -214,7 +215,7 @@ assign_visit_attr <- function(.data,
       }
     }
 
-  if (check_missing == TRUE) {
+  if (check_missing_visnum) {
     .data <- .data %>%
       assert_non_missing(VISITNUM, VISIT)
   }
@@ -229,8 +230,8 @@ assign_visit_attr <- function(.data,
 #'  from REGISTRY eCRF.
 #' @param .data Data.frame
 #' @param dtc_col Derived data specific date column
-#' @param visdtc_col Visit completion date based on `REGISTRY` eCRF, Default: 'VISDTC'
-#' @return A data.frame with adjusted value of `dtc_col` column.
+#' @param visdtc_col Visit completion date based on \code{REGISTRY} eCRF, Default: 'VISDTC'
+#' @return A data.frame with adjusted value of \code{dtc_col} column.
 #' @rdname adjust_visit_date
 #' @keywords adni_visit_adjust
 #' @importFrom dplyr mutate across case_when pull
@@ -296,8 +297,8 @@ adjust_visit_status <- function(.data, domain = NULL, vistat_col = "VISTAT") {
   } else {
     check_var_list <- paste0(domain, c("ORRES", "STRESC", "STRESN"))
     cli::cli_abort(message = paset0(
-      "At least on of {.val {check_var_list}} variable(s)",
-      " must be presented in the data."
+      "At least one of {.val {check_var_list}} variable{?s}",
+      " must be found in the data."
     ))
   }
 
@@ -326,7 +327,7 @@ adjust_visit_status <- function(.data, domain = NULL, vistat_col = "VISTAT") {
 #' @param .data Data.frame
 #' @param epoch_data
 #'  A data.frame that generated based on ADNI study phase visits, Default: get("EPOCH_LIST_LONG")
-#' @return A data.frame the same as input dataset `.data` appended with `EPOCH` variable.
+#' @return A data.frame appended with \code{EPOCH} variable.
 #' @rdname set_epoch
 #' @importFrom dplyr rename mutate left_join select
 #' @importFrom assertr verify
@@ -345,10 +346,16 @@ assign_epoch <- function(.data, .epoch = get("EPOCH_LIST_LONG")) {
   )
   nrow_input <- nrow(.data)
 
+  check_colnames(
+    .data = .epoch,
+    col_names = "PHASE",
+    strict = TRUE,
+    stop_message = TRUE
+  )
   .epoch <- .epoch %>%
     {
-      if ("Phase" %in% colnames(.)) {
-        rename(., "COLPROT" = Phase)
+      if ("PHASE" %in% colnames(.)) {
+        rename(., "COLPROT" = PHASE)
       } else {
         (.)
       }
@@ -372,8 +379,8 @@ assign_epoch <- function(.data, .epoch = get("EPOCH_LIST_LONG")) {
 #' @title Assign Visit Label for Unscheduled Visit (VISCODE)
 #' @description
 #'  This function used to assign visit label for unscheduled visit based on ADNI study VISCODE.
-#' @param .data A data.frame that contains at least `VISCODE` and `VISIT` variables.
-#' @return A data.frame the same as `.data`
+#' @param .data A data.frame that contains at least \code{VISCODE} and \code{VISIT} variables.
+#' @return A data.frame the same as \code{.data} with adjusted vist name/code label for unscheduled visit.
 #' @rdname assign_unsch_visit_label
 #' @importFrom tibble tibble
 #' @importFrom dplyr left_join mutate case_when cur_column select
@@ -535,7 +542,7 @@ adjust_vistnum_unsch <- function(.data, domain = NULL) {
 #' @param .data_list A data.frame that contains derived dataset specific test label
 #' @param merge_by Merging variables
 #' @return
-#'  A data.frame the same as the input dataset `.data` appended with the columns that are in `.data_list`.
+#'  A data.frame appended with the columns that are in \code{.data_list}.
 #' @rdname set_dom_test
 #' @importFrom dplyr left_join
 #' @importFrom assertr assert not_na
@@ -561,11 +568,11 @@ set_dom_test <- function(.data, .data_list, merge_by) {
 #' @param data2 Data.frame 2 that will be merged with the master dataset
 #' @param join_by Join columns
 #' @param check_cols Columns that will be added/merged, useful for inner checks
-#' @param main_cols Main join columns, a subset of `join_by`
+#' @param main_cols Main join columns, a subset of \code{join_by}
 #' @param date_col Date column names, Default = NULL
 #' @param relation Relationship, either "one-to-one" or "one-to-many", Default: "one-to-one"
 #' @param method Merging method, Default = "jw",
-#'    see \code{\link[fuzzyjoin]{stringdist_left_join}} and `stringdist::stringdist-metrics`
+#'    see \code{\link[fuzzyjoin]{stringdist_left_join}} and \code{stringdist::stringdist-metrics}
 #' @param max_dist Maximum distance for merging two datasets, Default: 1,
 #'  see \code{\link[fuzzyjoin]{stringdist_left_join}}
 #' @param distance_col Distance column, Default: 'DIST',
@@ -678,7 +685,7 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
   }
   if (relation %in% relation_lvls[1]) {
     if (nrow(data1) != nrow_data1) {
-      cli::cli_abort(message = "Set `one-to-many` relationship")
+      cli::cli_abort(message = "Set {.cls {'one-to-many'}} relationship")
     }
   } else {
     cli::cli_alert_warning(text = "Duplicated records in merged data")
@@ -694,7 +701,7 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
 #' @param .data Data.frame
 #' @param name_char List/named character column names
 #' @param by_name A Boolean value to rename the by list name, Default: TRUE
-#' @param .strict A Boolean to apply for all columns that are listed in `name_char`, Default: TRUE
+#' @param .strict A Boolean to apply for all columns that are listed in \code{name_char}, Default: TRUE
 #' @param prefix Prefix character, Default: NULL
 #' @param suffix Suffix character, Default: NULL
 #' @return A data.frame with the same result of \code{\link[dplyr]{renam_with}}.
@@ -706,10 +713,10 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
 #'   "Phase" = "COLPROT", "VISCODE" = "VISIT CODE",
 #'   "VISNAME" = "VSIT NAME", "VISORDER" = "VISIT ORDER"
 #' )
-#' # When a list/character name is presented in the data
+#' # When a list/character name is found in the data
 #' data1 <- ADNIMERGE2::VISITS %>%
 #'   rename_with_list(., name_char = name_char, by_name = FALSE, .strict = TRUE)
-#' # When a list/character name is not presented in the data
+#' # When a list/character name is not found in the data
 #' data2 <- data1 %>%
 #'   rename_with_list(., name_char = name_char, by_name = TRUE, .strict = TRUE, prefix = "RENAMED_")
 #' # Without strict method
@@ -730,8 +737,8 @@ rename_with_list <- function(.data, name_char, by_name = TRUE, .strict = TRUE,
   require(dplyr)
   require(tidyselect)
   require(cli)
-  check_is_logical(by_name)
-  check_is_logical(.strict)
+  check_object_type(by_name, "logical")
+  check_object_type(.strict, "logical")
   if (is.null(suffix)) suffix <- ""
   if (is.null(prefix)) prefix <- ""
   if (.strict) {
@@ -770,9 +777,9 @@ rename_with_list <- function(.data, name_char, by_name = TRUE, .strict = TRUE,
 # Use `dtplyr`/`data.table` Workflow ----
 #' @title Use dtplyr workflow
 #' @description
-#'  This function is used to apply `dtplyr` workflow to make fast computation within `dplyr` functions.
+#'  This function is used to apply \code{dtplyr} workflow to make fast computation within \code{dplyr} functions.
 #' @param .data Data.frame
-#' @return A `dtplyr_step_first` class object
+#' @return A \code{dtplyr_step_first} class object
 #' @seealso
 #'  \code{\link[dtplyr]{lazy_dt}}
 #' @rdname use_dtplyr
