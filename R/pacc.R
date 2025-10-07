@@ -38,7 +38,7 @@
 #' @param .data A data.frame either in wide or long format. Please see the other arguments.
 #'
 #' @param bl.summary Baseline component score summary
-#'  It can be created either using \code{\link{get_score_summary_stats}()} function.
+#'  It can be created either using \code{\link{compute_score_summary}()} function.
 #'  Or a data.frame of component score summary that contains the following variables:
 #' \itemize{
 #'   \item {\code{VAR}}: Contains PACC component variable names
@@ -445,7 +445,7 @@ compute_pacc_score <- function(.data,
 #'   #  Check there is only one baseline record per assessment type per subject
 #'   ADNIMERGE2::assert_uniq(USUBJID, PARAMCD)
 #'
-#' get_score_summary_stats(
+#' compute_score_summary(
 #'   .data = long_format_example,
 #'   wideFormat = FALSE,
 #'   scoreVar = "AVAL",
@@ -455,7 +455,7 @@ compute_pacc_score <- function(.data,
 #' )
 #'
 #' # For only cognitive normal (CN) subjects
-#' get_score_summary_stats(
+#' compute_score_summary(
 #'   .data = long_format_example,
 #'   wideFormat = FALSE,
 #'   scoreVar = "AVAL",
@@ -471,7 +471,7 @@ compute_pacc_score <- function(.data,
 #'   filter(ENRLFL %in% "Y")
 #'
 #' # By baseline diagnostics status
-#' get_score_summary_stats(
+#' compute_score_summary(
 #'   .data = wide_format_example,
 #'   wideFormat = TRUE,
 #'   scoreVar = c("AGE", "BMI", "ADASTT11", "ADASTT13"),
@@ -481,7 +481,7 @@ compute_pacc_score <- function(.data,
 #' )
 #'
 #'
-#' get_score_summary_stats(
+#' compute_score_summary(
 #'   .data = wide_format_example,
 #'   wideFormat = TRUE,
 #'   scoreVar = c("AGE", "BMI", "ADASTT11", "ADASTT13"),
@@ -491,7 +491,7 @@ compute_pacc_score <- function(.data,
 #' )
 #'
 #' # By SEX
-#' get_score_summary_stats(
+#' compute_score_summary(
 #'   .data = wide_format_example,
 #'   wideFormat = TRUE,
 #'   scoreVar = c("AGE", "BMI", "ADASTT11", "ADASTT13"),
@@ -501,9 +501,9 @@ compute_pacc_score <- function(.data,
 #' )
 #' }
 #' @seealso
-#'  \code{\link{get_baseline_score_summary_stats}()}
+#'  \code{\link{compute_baseline_score_summary}()}
 #'  \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
-#' @rdname get_score_summary_stats
+#' @rdname compute_score_summary
 #' @keywords pacc_score_utils_fun utils_fun
 #' @export
 #' @importFrom tibble as_tibble
@@ -512,7 +512,7 @@ compute_pacc_score <- function(.data,
 #' @importFrom tidyselect all_of
 #' @importFrom stats sd
 
-get_score_summary_stats <- function(.data,
+compute_score_summary <- function(.data,
                                     wideFormat = TRUE,
                                     scoreVar,
                                     groupVar = "DX",
@@ -596,15 +596,15 @@ get_score_summary_stats <- function(.data,
 #' A wrapper function to calculate baseline grouped summary statistic of
 #' numeric variable(s).
 #'
-#' @inheritParams get_score_summary_stats
+#' @inheritParams compute_score_summary
 #'
 #' @param filterBy Character vector of baseline record identifier variable
 #'
 #' @param filterValue Baseline record identifier values, Default: c("Y", "Yes", "bl")
 #'
-#' @param ... \code{\link{get_score_summary_stats}()} arguments
+#' @param ... \code{\link{compute_score_summary}()} arguments
 #'
-#' @return Similar to \code{\link{get_score_summary_stats}()} result
+#' @return Similar to \code{\link{compute_score_summary}()} result
 #'
 #' @examples
 #' \dontrun{
@@ -614,7 +614,7 @@ get_score_summary_stats <- function(.data,
 #' library(tidyverse)
 #' library(ADNIMERGE2)
 #'
-#' get_baseline_score_summary_stats(
+#' compute_baseline_score_summary(
 #'   .data = ADNIMERGE2::ADQS,
 #'   filterBy = "ABLFL",
 #'   filterValue = "Y",
@@ -625,7 +625,7 @@ get_score_summary_stats <- function(.data,
 #'   filterGroup = NULL
 #' )
 #'
-#' get_baseline_score_summary_stats(
+#' compute_baseline_score_summary(
 #'   .data = ADNIMERGE2::ADQS,
 #'   filterBy = "ABLFL",
 #'   filterValue = "Y",
@@ -637,8 +637,8 @@ get_score_summary_stats <- function(.data,
 #' )
 #' }
 #' @seealso
-#'  \code{\link{get_score_summary_stats}()}
-#' @rdname get_baseline_score_summary_stats
+#'  \code{\link{compute_score_summary}()}
+#' @rdname compute_baseline_score_summary
 #' @keywords pacc_score_utils_fun utils_fun
 #' @export
 #' @importFrom cli cli_abort
@@ -646,7 +646,7 @@ get_score_summary_stats <- function(.data,
 #' @importFrom dplyr filter if_all
 #' @importFrom tidyselect all_of
 
-get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y", "Yes", "bl"), ...) {
+compute_baseline_score_summary <- function(.data, filterBy, filterValue = c("Y", "Yes", "bl"), ...) {
   if (length(filterBy) != 1) {
     cli::cli_abort(
       message = c(
@@ -666,7 +666,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
     as_tibble() %>%
     filter(if_all(all_of(filterBy), ~ .x %in% filterValue))
 
-  bl_summary <- get_score_summary_stats(.data = .data, ...)
+  bl_summary <- compute_score_summary(.data = .data, ...)
 
   return(bl_summary)
 }
@@ -685,7 +685,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
 #' }
 #'
 #' The \code{baseline_summary} can be generated using
-#' \code{\link{get_baseline_score_summary_stats}()} function.
+#' \code{\link{compute_baseline_score_summary}()} function.
 #'
 #' @param varName Variable name
 #'
@@ -702,7 +702,7 @@ get_baseline_score_summary_stats <- function(.data, filterBy, filterValue = c("Y
 #' library(ADNIMERGE2)
 #'
 #' bl.summary <- ADNIMERGE2::ADSL %>%
-#'   get_baseline_score_summary_stats(
+#'   compute_baseline_score_summary(
 #'     .data = ADNIMERGE2::ADSL,
 #'     filterBy = "ENRLFL",
 #'     filterValue = "Y",

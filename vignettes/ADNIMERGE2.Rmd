@@ -78,11 +78,11 @@ ADNIMERGE2::METACORES
 
 ## Coded Values
 
-Majority of the study raw data contains variable with numerically coded values. In *``r pkgName``*, these variable values are mapped based on the data dictionary with corresponding study phase-specific mapping values. The variables which values are mapped accordingly have a *`Decoded Value: `*` `**`Yes`** tag in data documentations. For instance, `CDSOURCE` variable in the [``r "ADNIMERGE2::CDR"``]("../reference/CDR.html") have such tags as shown in Figure below within the red box. 
+Majority of the study raw data contain variables with numerically coded values. In *``r pkgName``*, these variable values are mapped based on the data dictionary with corresponding study phase-specific mapping values. The variables which values are mapped accordingly have a *`Decoded Value: `*` `**`Yes`** tag in data documentations. For instance, `CDSOURCE` variable in the [``r "ADNIMERGE2::CDR"``]("../reference/CDR.html") have such tags as shown in Figure below highlighted in red box. 
 
 <img src="../man/figures/cdr_code_value.png" align="center" height="70" alt = " "/>
 
-It is recommended to verify the values of numerically coded variables that are not mapped/decoded using the data dictionary file either in this package [``r "ADNIMERGE2::DATADIC"``]("../reference/DATADIC.html") or from the data-sharing platform.
+It is recommended to verify numerically coded variable values that are not yet mapped/decoded using the data dictionary file either in this package [``r "ADNIMERGE2::DATADIC"``]("../reference/DATADIC.html") or from the data-sharing platform.
 
 To get all variables with code values: 
 
@@ -110,7 +110,7 @@ data_dict_codes %>%
 
 Furthermore, *`-4`* value in majority of the ADNI study phases and *`-1`* value in the *`ADNI1`* study phase were be considered as a missing value. Therefore, these values are converted into a missing character value `NA` in the package. 
 
-*NOTE: * `ℹ No variable that contains this value "-4"` message in the following two r chunks tells us there are no variables with the specified values in the [``r "ADNIMERGE2::DXSUM"``]("../reference/DXSUM.html") dataset since these values are already converted into missing value prior to the package build [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R). 
+*NOTE: * `ℹ No variable contains "-4" value` message in the following two r chunks implies that there are no variables with the specified values in the [``r "ADNIMERGE2::DXSUM"``]("../reference/DXSUM.html") dataset since these values are already converted into missing value prior to the package build [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R). 
 
 ```{r replace-missing-values-4}
 # Convert "-4" into missing value
@@ -122,7 +122,7 @@ convert_to_missing_value(
   phase = adni_phase()
 ) %>%
   select(-PTID) %>%
-  head()
+  head(.,0)
 ```
 
 ```{r replace-missing-values-1}
@@ -135,7 +135,7 @@ convert_to_missing_value(
   phase = "ADNI1"
 ) %>%
   select(-PTID) %>%
-  head()
+  head(.,0)
 ```
 
 ## Derived Datasets 
@@ -150,7 +150,7 @@ As part of the study data R package development, some derived datasets are creat
 
 **NOTE: ** 
 
-* *It is recommended to learn more about how these data are generated and the corresponding raw data source before using those derived data in any analysis.*
+* *It is recommended to learn more about how these data are generated and see the corresponding raw data source before using those derived data in an analysis.*
 
 * *Some of the derived datasets in the package may not be fully complied with the [CDISC](https://www.cdisc.org/) standardization, and those data are generated for illustration purpose.*
 
@@ -158,7 +158,7 @@ Furthermore, a derived data for modified version of the Preclinical Alzheimer Co
 
 ## Articles 
 
-There are few articles included in the package vignettes to demonstrate how to use the study data R package for creating simple summaries or analysis results.
+There are few articles included in the package as a vignette to demonstrate how to use the study data R package for creating simple summaries or analysis results.
 
 * [Enrollment Summaries]('./ADNI-Enrollment.html'): Includes enrollment summary by calender month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
 

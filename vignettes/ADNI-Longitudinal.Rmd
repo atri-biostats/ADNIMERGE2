@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 5,
   class.source = "fold-show",
-  result = "asis", 
-  dpi = 100, 
+  result = "asis",
+  dpi = 100,
   dev = "png"
 )
 ```
@@ -107,6 +107,8 @@ consort::consort_plot(
 )
 ```
 
+*NOTE: * Records with missing time variable (`TIME`) are also excluded from the analysis population as shown in the following r chunk.
+
 ```{r data-prep}
 # Prepare analysis dataset of ADAS-cog item-13 score
 ADADAS <- ADQS %>%
@@ -115,9 +117,10 @@ ADADAS <- ADQS %>%
   # ADAS-cog item-13 total score
   filter(PARAMCD %in% "ADASTT13") %>%
   # Compute time variable in month
-  mutate(TIME = convert_number_days(AVISITN, bin = month_bin)) %>%
-  # visit date data imputation from registry
-  # filter(is.na(TIME), !is.na(DX), !is.na(AVAL))
+  mutate(
+    TIME = convert_number_days(AVISITN, bin = month_bin),
+    DX = factor(DX, levels = levels(ADSL$DX))
+  ) %>%
   # For spline term in the model
   filter(!if_any(all_of(c("TIME", "DX", "AVAL")), ~ is.na(.x)))
 ```
@@ -200,8 +203,7 @@ assign("ns22", ns22, envir = .GlobalEnv)
 
 # With a random slope term ----
 lmer_mod_fit <- lme4::lmer(
-  formula = AVAL ~ DX + I(ns21(TIME)) + I(ns22(TIME)) +
-    (I(ns21(TIME)) + I(ns22(TIME))):DX + (TIME | USUBJID),
+  formula = AVAL ~ (I(ns21(TIME)) + I(ns22(TIME)))*DX + (TIME | USUBJID),
   data = ADADAS,
   control = lmerControl(optimizer = "Nelder_Mead")
 )
@@ -228,9 +230,9 @@ model_check$PP_CHECK +
 
 *NOTE: * 
 
- * The prediction timeline for Dementia (DEM) diagnostics status was limited to 24 months\n due to the anticipated follow-up collection of ADAS cognitive behaviour assessment\n which is up-to 2 years due to the study design. However, ADAS-cog assessment might have been collected for rollover subjects with DEM baseline diagnostics status during their initial visit. 
+ * The prediction timeline for Dementia (DEM) diagnostics status was limited to 24 months\n due to the anticipated follow-up collection of ADAS cognitive behavior assessment\n which is up-to 2 years due to the study design. However, ADAS-cog assessment might have been collected for rollover subjects with DEM baseline diagnostics status during their initial visit. 
       
-```{r model-predict, fig.width = 7, fig.alt = "Estimated score by baseline diagnostics status"}
+```{r model-predict, fig.width = 7, fig.alt = "Predicted score by baseline diagnostics status"}
 # Population level prediction
 pred_value <- marginaleffects::predictions(
   model = lmer_mod_fit,
@@ -256,13 +258,13 @@ predicted_plot <- pred_value %>%
   scale_color_manual(values = dx_color_pal) +
   labs(
     x = "Months since baseline visit",
-    y = "Estimated ADAS-cog Item-13 \n Total Score with 95% CI",
+    y = "Predicted ADAS-cog Item-13 \n Total Score with 95% CI",
     color = "Baseline Diagnostics Status",
     fill = NULL,
     caption = paste0(
       "The prediction timeline for Dementia (DEM) diagnostics status was limited",
-      " to 24 months due to the\n anticipated follow-up assessment collection",
-      " due to study design."
+      " to 24 months due to the\n anticipated follow-up assessment collection ",
+      "in the study."
     )
   ) +
   theme(

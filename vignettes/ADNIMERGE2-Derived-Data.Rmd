@@ -30,7 +30,7 @@ datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ..
 
 # Introduction {#sec-intro}
 
-This article describes creating derived datasets from raw data (eCRFs) for the ADNI study. The purpose of generating such standardized dataset is to create analysis ready dataset using the [PHARMERVERSE](https://pharmaverse.org/) workflow, which required standardized dataset as input. In `ADNIMERGE2` R data package, the following derived datasets will be created for illustration purpose, and more information about of each dataset is presented in the corresponding subsections.
+This article describes creating derived datasets from raw data (eCRFs) for ADNI study. The purpose of generating such standardized dataset is to create analysis ready dataset using the [PHARMERVERSE](https://pharmaverse.org/) workflow, which required standardized dataset as input. In `ADNIMERGE2` R data package, the following derived datasets will be created for illustration purpose, and more information about of each dataset is presented in the corresponding subsections.
 
 * Demographic (DM)
 * Subject Characteristics (SC)
@@ -78,7 +78,7 @@ In the study, subjects are categorized into two groups:
 
 ## Study Visit and Visit Number {#sec-visitnum .unlisted}
 
-Some data wrangling was performed prior creating the pre-specified derived datasets. First, study epoch (*EPOCH*) with corresponding study visit number (*VISITNUM*) was created based on the [`VISITS`](../reference/VISITS.html) data, and stored as `EPOCH_LIST_LONG`. Next, subject-specific study visit with corresponding study epoch was created based on the [`REGISTRY`](../reference/REGISTRY.html) and [`ROSTER`](../reference/ROSTER.html) eCRFs along with the `EPOCH_LIST_LONG` data. Then, the result output named as `ADNI_VISIT_RECORD`. Here, rollover subjects may not have sequential *VISITNUM* due to the study design which allows rollovers to enroll in the next study phase before completing a given study phase. As a result, *VISITNUM* records can be used for data merging and sorting purpose with corresponding study visit date/form completion date.
+Some data wrangling were performed prior to creating the pre-specified derived datasets. First, study epoch (*EPOCH*) with corresponding study visit number (*VISITNUM*) was created based on the [`VISITS`](../reference/VISITS.html) data, and stored as `EPOCH_LIST_LONG`. Next, subject-specific study visit with corresponding study epoch was created based on the [`REGISTRY`](../reference/REGISTRY.html) and [`ROSTER`](../reference/ROSTER.html) eCRFs along with the `EPOCH_LIST_LONG` data. Then, the result output named as `ADNI_VISIT_RECORD`. Here, rollover subjects may not have sequential *VISITNUM* due to the study design which allows rollovers to enroll in the next study phase before completing a given study phase. As a result, *VISITNUM* records can be used for data merging and sorting purpose with corresponding study visit date/form completion date.
 
 For more information, please refer to the source script of package vignettes `vignette(topic = 'ADNIMERGE2-Derived-Data', package = 'ADNIMERGE2')`.
 
@@ -90,13 +90,18 @@ A study visit date from the [`REGISTRY`](../reference/REGISTRY.html) eCRF will b
 
 A baseline flag is included in some of the derived dataset to identify records that are closest to subject enrollment date or collected at baseline visit. A record is flagged as baseline if one of the following criteria is met: 
 
-* Record collected at baseline visits regardless the baseline visit/collection date.  from the enrollment date 
+* Record collected at baseline visits regardless the baseline visit/collection date.
 
 * Any record collected prior to the baseline visit and closest to the enrollment window period end date if the baseline record value is missing or not collected. Enrollment window period is defined as 90 days after the actual enrollment date.
 
 The assessment baseline flag is created using the [`derive_blfl_adni`](https://github.com/atri-biostats/ADNIMERGE2/tree/inst/derived-dataset-sdtmoak-utils.R) function which is based the `sdtm.oak::derive_blfl` function with minor study-specific modification. 
-
 *NOTE: * However, there might be more than one baseline flags per assessment per subject in a given derived dataset. For future work, `derive_blfl_adni` function will be updated to account such cases.
+
+## Subject Identifier {#sec-subjid, .unlisted}
+
+In ADNI derived dataset, subject identifier variable (`USUBJID`) was created based on subject identification number in the raw dataset with corresponding site id. The subject identifier variable will have `ADNI-XXX-XXXXX` format. The first three digits represents site id (`SITEID`) variable that obtained either from the [`REGISTRY`](../reference/REGISTRY.html) or [`PTDEMOG`](../reference/PTDEMOG.html) or [`ROSTER`](../reference/ROSTER.html) eCRFs, and the last five digits represents the subject identification number in the raw dataset (`RID`). A preceding `0` value was added for any values that have less number of digits. 
+
+*NOTE: * Please see `create_usubjid()` and [`derive_usubjid()`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/inst/derived-dataset-utils.R) functions to learn more about how the subject identifier variable was created.
 
 ```{r system-utils, purl = FALSE, echo = TRUE, eval = TRUE}
 # Load utils function from package system file
@@ -308,7 +313,7 @@ ADNI_VISIT_RECORD <- ADNI_VISIT_RECORD %>%
 
 ## Demographic (DM) {#sec-dm}
 
-[`DM`](../reference/DM.html) dataset contains one records per subject when they were enrolled or screened in the ADNI study for the first time (i.e. as new-enrollee). The [`DM`](../reference/DM.html) dataset will contains the following characteristics:
+[`DM`](../reference/DM.html) dataset contains one records per subject when subjects were enrolled or screened in the ADNI study for the first time (i.e. as new-enrollee).
 
 ```{r dm-data-dic, echo = FALSE}
 dm_data_dic <- bind_rows(
@@ -571,7 +576,7 @@ DM <- DM %>%
 
 ## Subject Characteristics (SC) {#sec-sc}
 
-[`SC`](../reference/SC.html) dataset contains subject-related data that are not collected in [`DM`](../reference/DM.html) domain and/or characteristics that are collected over time (i.e. across the study phases: ADNI1, ADNIGO, ADNI2, ADNI3, and ADNI4). The [`SC`](../reference/SC.html) dataset will contains the following characteristics collected from three source datasets: [`PTDEMOG`](../reference/PTDEMOG.html), [`ADI`](../reference/ADI.html) 
+[`SC`](../reference/SC.html) dataset contains subject-related data that are not collected in [`DM`](../reference/DM.html) domain and/or characteristics that are collected over time. In ADNI study, subject characteristics that are collected across the study phases: ADNI1, ADNIGO, ADNI2, ADNI3, and ADNI4 can be stored in [`SC`](../reference/SC.html). The [`SC`](../reference/SC.html) dataset will contains characteristics collected from three source datasets: [`PTDEMOG`](../reference/PTDEMOG.html), [`ADI`](../reference/ADI.html) 
  and [`RURALITY`](../reference/RURALITY.html).
 
 ```{r sc-data-dic, echo = FALSE}
@@ -828,7 +833,7 @@ SC <- SC %>%
 
 [`AE`](../reference/AE.html) dataset contains one records per adverse event per subject. The [`AE`](../reference/AE.html) dataset will includes the following characteristics for subjects that have at least one adverse events experience during the study.
 
-*NOTE: * Currently, only includes records that are collected in *ADNI3* and *ADNI4* study phases.
+*NOTE: * Currently, `AE` only includes records that are collected in *ADNI3* and *ADNI4* study phases.
 
 ```{r ae-data-dic, echo = FALSE}
 ae_data_dic <- bind_rows(
@@ -1139,7 +1144,7 @@ AE <- AE %>%
 
 ## Questionnaires (QS) {#sec-qs}
 
-[`QS`](../reference/QS.html) dataset contains one record per parameter finding (i.e. total score) per visit per subject. The [`QS`](../reference/QS.html) dataset will contains the following characteristics:
+[`QS`](../reference/QS.html) dataset contains one record per parameter finding (i.e. total score) per visit per subject.
 
 ```{r qs-data-dic, echo = FALSE}
 qs_data_dic <- bind_rows(
@@ -1626,7 +1631,7 @@ QS <- mget(score_data_names) %>%
 
 ## Clinical Classification (RS) {#sec-rs}
 
-[`RS`](../reference/RS.html) dataset will contains one record per instrument status per visit per subject.  The [`RS`](../reference/RS.html) dataset will contains the following variables:
+[`RS`](../reference/RS.html) dataset will contains one record per instrument status per visit per subject.
 
 ```{r rs-data-dic, echo = FALSE}
 rs_data_dic <- bind_rows(
@@ -1727,7 +1732,7 @@ rs_data_dic %>%
 
 </details>
 
-The [`RS`](../reference/RS.html) dataset will contains clinical diagnostics summary of subject per study visit. The clinical diagnostics status (i.e. either Cognitive Normal (CN), Mild Cognitive Impairment (MCI) or Dementia/Alzheimer's (DEM/AD)) of a subject was determined by clinicians' judgment.
+The [`RS`](../reference/RS.html) dataset will contains clinical diagnostics summary of subject per study visit. The clinical diagnostics status either Cognitive Normal (CN), Mild Cognitive Impairment (MCI) or Dementia/Alzheimer's (DEM/AD) of a subject was determined by clinicians' judgment.
 
 ```{r rs-testcd-list, eval = TRUE, echo = FALSE}
 # Recommended to check variable name length and test labels
@@ -1794,7 +1799,7 @@ RS <- RS %>%
 
 ## Nervous System Finding (NV) {#sec-nv}
 
-[`NV`](../reference/NV.html) dataset contains one record of physiological and morphological finding related to the nervous system (including brain) per visit per subject. The [`NV`](../reference/NV.html) dataset will contains the following variables:
+[`NV`](../reference/NV.html) dataset contains one record of physiological and morphological finding related to the nervous system (including brain) per visit per subject.
 
 ```{r nv-data-dic, echo = FALSE}
 nv_data_dic <- bind_rows(
@@ -2381,7 +2386,7 @@ NV <- bind_rows(FDG_PET_DATA, PIB_PET_DATA, AMYREAD_DATA, PET_DATA) %>%
 
 ## Laboratory Test Results (LB) {#sec-lb}
 
-[`LB`](../reference/LB.html) dataset contains laboratory test data such as hematology, clinical chemistry and urinalysis per visit per subject. Additionally, the [`LB`](../reference/LB.html) dataset contains blood plasma biomarkers results with the following variables:
+[`LB`](../reference/LB.html) dataset contains laboratory test data such as hematology, clinical chemistry and urinalysis per visit per subject. Additionally, the [`LB`](../reference/LB.html) dataset contains blood plasma biomarkers results.
 
 ```{r lb-data-dic, echo = FALSE}
 lb_data_dic <- bind_rows(
@@ -2613,9 +2618,13 @@ CLINICAL_LB_TESTCD_LIST <- DATADIC %>%
   filter(LBTESTCD %in% ADNI34_CLINICAL_LABDATA$LBTESTCD)
 ```
 
-The [`LB`](../reference/LB.html) dataset contains the following blood plasma biomarker results in addition to the safety lab data. 
+The [`LB`](../reference/LB.html) dataset contains the following blood plasma biomarker results in addition to the safety laboratory data. 
 
-*NOTE: * For future work, to include the sample batch of `UPENNBIOMK_MASTER` and `UPENNBIOMK_ROCHE_ELECSYS`.
+*NOTE: *
+
+* As a future work, to include the sample batch of `UPENNBIOMK_MASTER` and `UPENNBIOMK_ROCHE_ELECSYS`.
+
+* Also to harmonized the safety laboratory data across different study phase.
 
 ```{r lb-testcd-list, eval = TRUE, echo = FALSE}
 LB_TESTCD_LIST <- bind_rows(
@@ -2858,8 +2867,7 @@ LB <- bind_rows(
 
 [`GF`](../reference/GF.html) dataset contains data related to genomic material of interest. The [`GF`](../reference/GF.html) dataset will contains subjects' APOE genotype that collected once during the study period. 
 
-*NOTE: * There might be some instance with duplicated  APOE genotype records per subject. 
-
+*NOTE: * There might be some instance with duplicated APOE genotype records per subject. 
 ```{r gf-data-dic, echo = FALSE}
 gf_data_dic <- bind_rows(
   c(
@@ -2974,7 +2982,7 @@ GF <- APOERES %>%
 
 ## Vital Sign (VS) {#sec-vs}
 
-[`VS`](../reference/VS.html) dataset contains measurement finding of blood pressure, heart beat, respiratory rate, temperature, weight and height per visit per subject. The [`VS`](../reference/VS.html) dataset will contains the following variables:
+[`VS`](../reference/VS.html) dataset contains measurement finding of blood pressure, heart beat, respiratory rate, temperature, weight and height per visit per subject.
 
 ```{r vs-data-dic, echo = FALSE}
 vs_data_dic <- bind_rows(
