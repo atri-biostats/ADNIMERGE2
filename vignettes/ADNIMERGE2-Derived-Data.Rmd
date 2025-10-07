@@ -97,7 +97,7 @@ A baseline flag is included in some of the derived dataset to identify records t
 The assessment baseline flag is created using the [`derive_blfl_adni`](https://github.com/atri-biostats/ADNIMERGE2/tree/inst/derived-dataset-sdtmoak-utils.R) function which is based the `sdtm.oak::derive_blfl` function with minor study-specific modification. 
 *NOTE: * However, there might be more than one baseline flags per assessment per subject in a given derived dataset. For future work, `derive_blfl_adni` function will be updated to account such cases.
 
-## Subject Identifier {#sec-subjid, .unlisted}
+## Subject Identifier {#sec-subjid .unlisted}
 
 In ADNI derived dataset, subject identifier variable (`USUBJID`) was created based on subject identification number in the raw dataset with corresponding site id. The subject identifier variable will have `ADNI-XXX-XXXXX` format. The first three digits represents site id (`SITEID`) variable that obtained either from the [`REGISTRY`](../reference/REGISTRY.html) or [`PTDEMOG`](../reference/PTDEMOG.html) or [`ROSTER`](../reference/ROSTER.html) eCRFs, and the last five digits represents the subject identification number in the raw dataset (`RID`). A preceding `0` value was added for any values that have less number of digits. 
 
