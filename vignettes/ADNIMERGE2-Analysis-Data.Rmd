@@ -125,6 +125,9 @@ meta_data_dic <- convert_metacore_to_tibble(METACORES) %>%
 
 [`ADSL`](../reference/ADSL.html) dataset contains one record per subject. In the ADNI study, [`ADSL`](../reference/ADSL.html) dataset includes only the first record/baseline characteristics of subject when they were enrolled in the study as newly-enrollee or screened to the study for the first time.
 
+<details>
+<summary>Show `ADSL` Variables</summary>
+
 ```{r adsl-data-dic-print, class.source = NULL, echo = FALSE}
 adsl_data_dic <- meta_data_dic %>%
   filter(TBLNAME == "ADSL")
@@ -133,6 +136,8 @@ adsl_data_dic %>%
   select(FLDNAME, LABEL, TYPE) %>%
   datatable(data, paging = TRUE)
 ```
+
+</details>
 
 ```{r adsl-data-dic, echo = FALSE}
 adsl_metacore <- METACORES %>%
@@ -390,6 +395,9 @@ ADSL <- ADSL %>%
 
 [`ADAE`](../reference/ADAE.html) dataset contains one record per adverse events per subject with the following characteristics.
 
+<details>
+<summary>Show `ADAE` Variables</summary>
+
 ```{r adae-data-dic-print, class.source = NULL, echo = FALSE}
 adae_data_dic <- meta_data_dic %>%
   filter(TBLNAME == "ADAE")
@@ -398,6 +406,8 @@ adae_data_dic %>%
   select(FLDNAME, LABEL, TYPE) %>%
   datatable(data, paging = TRUE)
 ```
+
+</details>
 
 ```{r adae-data-dic}
 adae_metacore <- METACORES %>%
@@ -528,6 +538,9 @@ ADAE <- ADAE %>%
 
 [`ADQS`](../reference/ADQS.html) dataset contains one record per questionnaire parameter per visit per subject with the following characteristics. 
 
+<details>
+<summary>Show `ADQS` Variables</summary>
+
 ```{r adqs-data-dic-print, class.source = NULL, echo = FALSE}
 adqs_data_dic <- meta_data_dic %>%
   filter(TBLNAME == "ADQS")
@@ -536,6 +549,8 @@ adqs_data_dic %>%
   select(FLDNAME, LABEL, TYPE) %>%
   datatable(data, paging = TRUE)
 ```
+
+</details>
 
 ```{r adqs-data-dic}
 adqs_metacore <- METACORES %>%
@@ -684,6 +699,9 @@ ADADAS <- ADQS %>%
 
 [`ADRS`](../reference/ADRS.html) dataset contains subject's clinical diagnostics summary per visits including death records. 
 
+<details>
+<summary>Show `ADRS` Variables</summary>
+
 ```{r adrs-data-dic-print, class.source = NULL, echo = FALSE}
 adrs_data_dic <- meta_data_dic %>%
   filter(TBLNAME == "ADRS")
@@ -693,23 +711,13 @@ adrs_data_dic %>%
   datatable(data, paging = TRUE)
 ```
 
+</details>
+
 ```{r adrs-data-dic}
 adrs_metacore <- METACORES %>%
   select_dataset(dataset = "ADRS", simplify = FALSE)
 ```
 
-```{r adrs-utils}
-# Functions to convert character values into numeric
-create_rs_aval <- function(x) {
-  x <- dplyr::case_when(
-    x %in% "CN" ~ 1,
-    x %in% "MCI" ~ 2,
-    x %in% "DEM" ~ 3,
-    x %in% "DEATH" ~ 4
-  )
-  return(x)
-}
-```
 
 ```{r adrs-data-prep}
 # Merge ADSL to RS
@@ -730,7 +738,7 @@ ADRS_PREP <- RS %>%
     PARAMCD = RSTESTCD,
     PARAM = RSTEST,
     AVALC = RSSTRESC,
-    AVAL = create_rs_aval(RSSTRESC),
+    AVAL = get_numeric_dx_status(RSSTRESC),
     ABLFL = RSBLFL,
     ADT = as.Date(RSDTC),
     ADY = RSDY,

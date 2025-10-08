@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The document describes the procedure to build an R data package from source `.csv` files with similar workflow of `ADNIMERGE2` package. 
+The document describes the procedure to build an R data package from source `.csv` files with similar workflow of `ADNIMERGE2` R package. 
 
 # Building an R Package from csv files
 
@@ -43,7 +43,7 @@ Clone the [https://github.com/atri-biostats/ADNIMERGE2](https://github.com/atri-
    + [`inst`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/inst): to store any files that will not be exported to the package, and that will be stored as system file including any external data that is not in R data format (i.e., `.rda`/`.Rdata`) 
    + [`tools`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools): to store auxiliary files that needed during package configuration
    
-Or create an R package project locally, which can be created using [usethis::create_package](https://usethis.r-lib.org/reference/create_package.html) function, and add package-specific metadata into the local package directory, please refer to  [https://r-pkgs.org/description.html](https://r-pkgs.org/description.html) for more information. Once the package-specific metadata is created , copy the pre-defined scripts/functions as necessary from the [ADNIMERGE2 github repository](https://github.com/atri-biostats/ADNIMERGE2) with the same file path to your local package project directory.
+Or create an R package project locally, which can be created using [usethis::create_package](https://usethis.r-lib.org/reference/create_package.html) function, and add package-specific metadata into the local package directory, please refer to  [https://r-pkgs.org/description.html](https://r-pkgs.org/description.html) for more information. Once the package-specific metadata is created, copy the pre-defined scripts/functions as necessary from the [ADNIMERGE2 github repository](https://github.com/atri-biostats/ADNIMERGE2) with the same file path to your local package project directory.
 
 ## Download the ADNI Study Data
 
@@ -51,7 +51,7 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
 
  + Required to download a data dictionary `*.csv` file
  
- + It is recommended to download files from the data-sharing platform on the same date. If the data is download from `Analysis Ready Cohort (ARC) Build`, it is recommended to download the file without adding any prefix to the file name as highlighted in the following figure.
+ + It is recommended to download files from the data-sharing platform on the same date. If the data is download from `Analysis Ready Cohort (ARC) Build/Table`, it is recommended to download the file without adding any prefix to the file name as highlighted in the following figure.
    
 <img src="../man/figures/arc_table_template.png" align="center" height="70" alt = " " />
 
@@ -67,7 +67,7 @@ The next step is start building the package by sourcing [`./tools/build.R`](http
          
      + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R) for more information. 
          
-     + Required to specify two input arguments: the data downloaded date (`DATA_DOWNLOADED_DATE`) in `YYYY-MM-DD` format and indicator of whether to update any existing data dictionary file (`UPDATE_DATADIC`)
+     + Required to specify two input arguments: the data downloaded date (`DATA_DOWNLOADED_DATE`) in `YYYY-MM-DD` format and a Boolean value to update any existing data dictionary file (`UPDATE_DATADIC`)
          
   - [`./data-raw/data-prep-recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R): 
          
@@ -87,12 +87,11 @@ The next step is start building the package by sourcing [`./tools/build.R`](http
    
    - [`./tools/document.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools/document.R):
         
-      + To generate documentations for both the raw data and the derived data based on the actual data values, and data dictionary
+      + To generate documentations for both raw and derived data based on the actual data values, and data dictionary
         
-      + Required two input arguments: indicator of whether to use the updated data dictionary (`USE_UPDATED_DATADIC`) if it is existed, and name of derived dataset list (`DERIVED_DATASET_LIST`).
+      + Required two input arguments: a Boolean value to use the updated data dictionary (`USE_UPDATED_DATADIC`) if it is existed, and name of derived dataset list (`DERIVED_DATASET_LIST`).
           
 + Build the data package: using [devtools R package](https://devtools.r-lib.org/)
-
 
 # References {-}
 

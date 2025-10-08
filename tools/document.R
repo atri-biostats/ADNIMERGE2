@@ -103,9 +103,9 @@ rm(list = as.character(str_remove_all(
 prefix_patterns <- "^adni\\_"
 string_removed_pattern <- str_c(c(prefix_patterns), collapse = "|")
 
-# Documentations for the raw datasets ----
+# Documentation for the raw datasets ----
 cli::cli_alert_info(
-  text = "Generating documentations for raw datasets"
+  text = "Generating documentation for raw datasets"
 )
 source(file.path(".", "tools", "data-prepare-utils.R"))
 source(file.path(".", "tools", "data-dictionary-utils.R"))
@@ -125,7 +125,8 @@ authors <- paste0(
   "{adni-data@googlegroups.com}"
 )
 
-adjust_value_datadict <- function(.data, datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
+adjust_value_datadict <- function(.data, 
+                                  datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
   col_names <- c("field_values", "field_notes")
   .data <- .data %>%
     mutate(across(any_of(col_names), ~ case_when(
@@ -139,7 +140,8 @@ adjust_value_datadict <- function(.data, datadict_name = c("DATADIC", "REMOTE_DA
 ### Generate data dictionary from actual raw dataset ----
 temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   summarize_dataset(
-    data = raw_data_list %>% pluck(., tb),
+    data = raw_data_list %>% 
+      pluck(., tb),
     dataset_name = tb,
     wide_format = TRUE
   )
@@ -326,7 +328,7 @@ temp_data_dict <- temp_data_dict %>%
     TRUE ~ field_notes
   ))
 
-## Finalize documentations ------
+## Finalize documentation ------
 if (dir.exists(file.path(".", "R")) == FALSE) {
   cli::cli_abort(
     message = "{.val {file.path('.', 'R')}} directory is not existed."
@@ -369,10 +371,10 @@ cat("#' ADNI Study Data Downloaded Date",
   file = data_document_path, sep = "\n", append = TRUE
 )
 cli::cli_alert_success(
-  text = "Completed generating documentations for raw datasets"
+  text = "Completed generating documentation for raw datasets"
 )
 
-# Documentations for the derived dataset ----
+# Documentation for the derived dataset ----
 ## Prepare data dictionary for derived dataset ----
 
 if (exists("derived_data_list")) {
@@ -470,7 +472,7 @@ if (exists("derived_data_list")) {
     ) %>%
     assert_non_missing(field_label, field_notes)
 
-  ## Finalize documentations ----
+  ## Finalize documentation ----
   generate_roxygen_document(
     dataset_name_list = unique(temp_data_dict_derived$dd_name),
     data_list = NULL,
@@ -507,6 +509,6 @@ if (exists("derived_data_list")) {
     file = data_document_path, sep = "\n", append = TRUE
   )
   cli::cli_alert_success(
-    text = "Completed generating documentations for derived datasets"
+    text = "Completed generating documentation for derived datasets"
   )
 }

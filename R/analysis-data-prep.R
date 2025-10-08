@@ -7,6 +7,7 @@
 #' @param unit Unit of measurements: either \code{week}, \code{month} or \code{year}, Default: 'month'
 #' @param bin Bin value, Default: 1
 #' @param digits Rounding decimal digits, Default: 52
+#' @param adjust_negative_value Indicator to adjust for negative value
 #' @return A numeric vector
 #' @details
 #'  A small positive values will be added to zero numeric value, specially to
@@ -24,11 +25,13 @@
 #' }
 #' @rdname convert_number_days
 #' @keywords utils_fun
+#' @family Utility functions used for preparing analysis data
 #' @export
 #' @importFrom rlang arg_match0
 #' @importFrom cli cli_abort
-convert_number_days <- function(x, unit = "month", bin = 1, digits = 2L) {
+convert_number_days <- function(x, unit = "month", bin = 1, digits = 2L, adjust_negative_value = FALSE) {
   rlang::arg_match0(arg = unit, values = c("week", "month", "year"))
+  check_object_type(adjust_negative_value, "logical")
   if (unit %in% "week") intv <- 7
   if (unit %in% "month") intv <- 30
   if (unit %in% "year") intv <- 365.25
@@ -49,9 +52,99 @@ convert_number_days <- function(x, unit = "month", bin = 1, digits = 2L) {
   y <- round(y / (intv * bin), digits)
   # adjust for baseline visit (zero values)
   y[x == 0] <- round(1 / (intv * bin), max(c(5, digits)))
+  if (adjust_negative_value) {
+    y[x < 0] <- round(1 / (intv * bin), max(c(5, digits)))
+  }
   return(y)
 }
 
+# Convert DX status ------
+#' @title Get/ Convert DX Status
+#' @description
+#'  `get_numeric_dx_status` and `convert_numeric_dx_status` functions are used to
+#'  convert either character diagnostics status into numeric values or
+#'  numeric values into the corresponding diagnostics status, respectively.
+#' @param x String
+#' @return
+#'  Returns a numeric vector for `get_numeric_dx_status` and a character vector for
+#'  `convert_numeric_dx_status`.
+#' @details
+#'  The input value, `x`, must be a string value for `get_numeric_dx_status` and
+#'  numeric value for `convert_numeric_dx_status`.
+#' @examples
+#' \dontrun{
+#' get_numeric_dx_status(x = c("CN", "MCI", "DEM"))
+#' convert_numeric_dx_status(x = c(1, 2, 3, 5))
+#' }
+#' @rdname dx_status_levels
+#' @keywords utils_fun
+#' @family Utility functions used for preparing analysis data
+#' @export
+#' @importFrom dplyr case_when
+#' @importFrom cli cli_abort
+get_numeric_dx_status <- function(x) {
+  if (!any(is.character(x) | is.factor(x))) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must be a character/factor string object. \n",
+        "{.val x} is a {.cls {class(x)}} object."
+      )
+    )
+  }
+
+  value <- unique(x)
+  value <- value[!is.na(value)]
+  value <- value[!value %in% c("CN", "MCI", "DEM", "DEATH")]
+  if (all(!is.na(value)) & length(value) > 0) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must be either {.val {c('CN', 'MCI', 'DEM', 'DEATH')}} values. \n",
+        "{.var x} contain {.val {value}} values."
+      )
+    )
+  }
+
+  x <- dplyr::case_when(
+    x == "CN" ~ 1,
+    x == "MCI" ~ 2,
+    x == "DEM" ~ 3,
+    x == "DEATH" ~ 4,
+    TRUE ~ NA_real_
+  )
+  return(x)
+}
+
+#' @rdname dx_status_levels
+#' @export
+convert_numeric_dx_status <- function(x) {
+  if (!is.numeric(x)) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must be a numeric object. \n",
+        "{.val x} is a {.cls {class(x)}} object."
+      )
+    )
+  }
+  value <- unique(x)
+  value <- value[!is.na(value)]
+  value <- value[!value %in% 1:4]
+  if (all(!is.na(value)) & length(value) > 0) {
+    cli::cli_abort(
+      message = c(
+        "{.var x} must be either {.val {1:4}} values. \n",
+        "{.var x} contain {.val {value}} values."
+      )
+    )
+  }
+  x <- dplyr::case_when(
+    x == 1 ~ "CN",
+    x == 2 ~ "MCI",
+    x == 3 ~ "DEM",
+    x == 4 ~ "DEATH",
+    TRUE ~ NA_character_
+  )
+  return(x)
+}
 
 # Detect Closest Baseline Score -----
 #' @title Detect Closest Baseline Score
@@ -62,7 +155,7 @@ convert_number_days <- function(x, unit = "month", bin = 1, digits = 2L) {
 #' @param enroll_date Enrollment date (i.e. baseline visit date)
 #' @param time_interval Minimum window period (in days) from baseline visit date, Default: 30
 #' @return
-#'  A character vector with the same length as \code{cur_record_date} and 
+#'  A character vector with the same length as \code{cur_record_date} and
 #'  contain a flag value, \code{Yes}, for the closest record
 #'  within the specified window period. Otherwise, missing value.
 #' @rdname detect_baseline_score
