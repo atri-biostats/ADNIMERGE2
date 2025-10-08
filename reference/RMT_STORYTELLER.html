@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -64,7 +65,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 10486 observations and 219 variables.</p>
+    <p>A data frame with 12310 observations and 219 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -76,11 +77,11 @@
 <ul><li><p><strong>RMT_PHASE</strong> <em>character</em> Phase of the study in which this observation was collected , with options: ADNI4</p></li>
 <li><p><strong>ADNIOnlineID</strong> <em>character</em> Participant Identifier for the Remote Cohort</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant Identifier for the in-clinic ADNI study (if applicable)</p></li>
-<li><p><strong>RMT_Timepoint</strong> <em>character</em> Timepoint of observation , with options: m00, m06, m12, m18</p></li>
+<li><p><strong>RMT_Timepoint</strong> <em>character</em> Timepoint of observation , with options: m00, m06, m12, m18, m24</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Date of examination Date: YYY-MM-DD</p></li>
 <li><p><strong>SCREENER_SCORE</strong> <em>numeric</em> Overall G-match score for the screener Range value: 0, ..., 100</p></li>
 <li><p><strong>SCREENER_RECOMMEND</strong> <em>numeric</em> Overall recommendation for the screener 0=No ; 1=Yes</p></li>
-<li><p><strong>QC_ATTEMPTS</strong> <em>numeric</em> Number of attempts at the quality control task Range value: 1, ..., 5</p></li>
+<li><p><strong>QC_ATTEMPTS</strong> <em>numeric</em> Number of attempts at the quality control task Range value: 1, ..., 11</p></li>
 <li><p><strong>QC_PASSED</strong> <em>numeric</em> Whether the quality control task was passed 0=No ; 1=Yes</p></li>
 <li><p><strong>USER_AGENT</strong> <em>character</em> User agent string</p></li>
 <li><p><strong>STORY1IMM_LANGUAGE</strong> <em>character</em> Language for story 1 immediate recall , with options: en-US</p></li>
@@ -91,34 +92,34 @@
 <li><p><strong>STORY1IMM_NUM_PROPER_NOUNS</strong> <em>numeric</em> Number of proper nouns for story 1 immediate recall Range value: 0, ..., 13</p></li>
 <li><p><strong>STORY1IMM_NUM_VERBS</strong> <em>numeric</em> Number of verbs for story 1 immediate recall Range value: 0, ..., 56</p></li>
 <li><p><strong>STORY1IMM_NUM_ADVERBS</strong> <em>numeric</em> Number of adverbs for story 1 immediate recall Range value: 0, ..., 28</p></li>
-<li><p><strong>STORY1IMM_NUM_ADJECTIVES</strong> <em>numeric</em> Number of adjectives for story 1 immediate recall Range value: 0, ..., 16</p></li>
+<li><p><strong>STORY1IMM_NUM_ADJECTIVES</strong> <em>numeric</em> Number of adjectives for story 1 immediate recall Range value: 0, ..., 18</p></li>
 <li><p><strong>STORY1IMM_NUM_WORDS</strong> <em>numeric</em> Number of words for story 1 immediate recall Range value: 0, ..., 350</p></li>
 <li><p><strong>STORY1IMM_IDEA_DENSITY</strong> <em>numeric</em> Idea density for story 1 immediate recall Range value: 0, ..., 1</p></li>
-<li><p><strong>STORY1IMM_UNIQUE_WORDS_RATIO</strong> <em>numeric</em> Unique words ratio for story 1 immediate recall Range value: 0.3984375, ..., 1</p></li>
+<li><p><strong>STORY1IMM_UNIQUE_WORDS_RATIO</strong> <em>numeric</em> Unique words ratio for story 1 immediate recall Range value: 0.357142857142857, ..., 1</p></li>
 <li><p><strong>STORY1IMM_MEAN_LETTER_PER_WORD</strong> <em>numeric</em> Mean number of letters per word for story 1 immediate recall Range value: 2, ..., 9</p></li>
 <li><p><strong>STORY1IMM_GMATCH</strong> <em>numeric</em> G-match score (source text vs transcript) for story 1 immediate recall Range value: 0, ..., 100</p></li>
 <li><p><strong>STORY1IMM_SPEECH_DURATION</strong> <em>numeric</em> Speech duration for story 1 immediate recall Range value: 0, ..., 112.6</p></li>
-<li><p><strong>STORY1IMM_NONSPEECH_PROPORTION</strong> <em>numeric</em> Non-speech proportion of time for story 1 immediate recall Range value: 0, ..., 0.879775280898876</p></li>
-<li><p><strong>STORY1IMM_SPEECH_RATE</strong> <em>numeric</em> Speech rate for story 1 immediate recall Range value: 0.0606060606060606, ..., 5</p></li>
-<li><p><strong>STORY1IMM_ARTICULATION_RATE</strong> <em>numeric</em> Articulation rate for story 1 immediate recall Range value: 0.0606060606060606, ..., 5</p></li>
+<li><p><strong>STORY1IMM_NONSPEECH_PROPORTION</strong> <em>numeric</em> Non-speech proportion of time for story 1 immediate recall Range value: 0, ..., 0.912912912912913</p></li>
+<li><p><strong>STORY1IMM_SPEECH_RATE</strong> <em>numeric</em> Speech rate for story 1 immediate recall Range value: 0.0338983050847458, ..., 5</p></li>
+<li><p><strong>STORY1IMM_ARTICULATION_RATE</strong> <em>numeric</em> Articulation rate for story 1 immediate recall Range value: 0.0338983050847458, ..., 5.29411764705882</p></li>
 <li><p><strong>STORY1IMM_NUM_PAUSES</strong> <em>numeric</em> Number of pauses for story 1 immediate recall Range value: 0, ..., 35</p></li>
 <li><p><strong>STORY1IMM_MEAN_PAUSE_LENGTH</strong> <em>numeric</em> Mean length of pauses for story 1 immediate recall Range value: 0.3, ..., 39.8</p></li>
 <li><p><strong>STORY1IMM_AMPLITUDE_SD</strong> <em>numeric</em> Standard deviation of the amplitude for story 1 immediate recall Range value: 0, ..., 0.295156925916672</p></li>
 <li><p><strong>STORY1IMM_F0_MEAN</strong> <em>numeric</em> Formant F0 mean for story 1 immediate recall Range value: 61.038, ..., 240.867</p></li>
-<li><p><strong>STORY1IMM_F0_SD</strong> <em>numeric</em> Formant F0 standard deviation for story 1 immediate recall Range value: 0, ..., 76.1606532666212</p></li>
-<li><p><strong>STORY1IMM_INTENSITY_MEAN</strong> <em>numeric</em> Intensity mean for story 1 immediate recall Range value: 0, ..., 0.206212475895882</p></li>
+<li><p><strong>STORY1IMM_F0_SD</strong> <em>numeric</em> Formant F0 standard deviation for story 1 immediate recall Range value: 0, ..., 77.268382971904</p></li>
+<li><p><strong>STORY1IMM_INTENSITY_MEAN</strong> <em>numeric</em> Intensity mean for story 1 immediate recall Range value: 0, ..., 0.415349274873734</p></li>
 <li><p><strong>STORY1IMM_INTENSITY_SD</strong> <em>numeric</em> Intensity standard deviation for story 1 immediate recall Range value: 0, ..., 0.249458640813828</p></li>
-<li><p><strong>STORY1IMM_MFCC_1_MEAN</strong> <em>numeric</em> MFCC 1 mean for story 1 immediate recall Range value: -1131.37109375, ..., -11.1690130233765</p></li>
+<li><p><strong>STORY1IMM_MFCC_1_MEAN</strong> <em>numeric</em> MFCC 1 mean for story 1 immediate recall Range value: -1131.37109375, ..., -6.6077995300293</p></li>
 <li><p><strong>STORY1IMM_MFCC_2_MEAN</strong> <em>numeric</em> MFCC 2 mean for story 1 immediate recall Range value: -87.7940826416016, ..., 222.893661499023</p></li>
 <li><p><strong>STORY1IMM_MFCC_3_MEAN</strong> <em>numeric</em> MFCC 3 mean for story 1 immediate recall Range value: -101.829521179199, ..., 93.3259811401367</p></li>
-<li><p><strong>STORY1IMM_MFCC_4_MEAN</strong> <em>numeric</em> MFCC 4 mean for story 1 immediate recall Range value: -28.9113693237305, ..., 85.1343612670898</p></li>
+<li><p><strong>STORY1IMM_MFCC_4_MEAN</strong> <em>numeric</em> MFCC 4 mean for story 1 immediate recall Range value: -34.630313873291, ..., 85.1343612670898</p></li>
 <li><p><strong>STORY1IMM_MFCC_5_MEAN</strong> <em>numeric</em> MFCC 5 mean for story 1 immediate recall Range value: -48.5658760070801, ..., 52.7833595275879</p></li>
-<li><p><strong>STORY1IMM_MFCC_6_MEAN</strong> <em>numeric</em> MFCC 6 mean for story 1 immediate recall Range value: -37.5547523498535, ..., 50.5791549682617</p></li>
+<li><p><strong>STORY1IMM_MFCC_6_MEAN</strong> <em>numeric</em> MFCC 6 mean for story 1 immediate recall Range value: -44.1751670837402, ..., 50.5791549682617</p></li>
 <li><p><strong>STORY1IMM_MFCC_7_MEAN</strong> <em>numeric</em> MFCC 7 mean for story 1 immediate recall Range value: -40.6176223754883, ..., 28.9599151611328</p></li>
-<li><p><strong>STORY1IMM_MFCC_8_MEAN</strong> <em>numeric</em> MFCC 8 mean for story 1 immediate recall Range value: -28.8923740386963, ..., 38.9434051513672</p></li>
+<li><p><strong>STORY1IMM_MFCC_8_MEAN</strong> <em>numeric</em> MFCC 8 mean for story 1 immediate recall Range value: -29.060604095459, ..., 38.9434051513672</p></li>
 <li><p><strong>STORY1IMM_MFCC_9_MEAN</strong> <em>numeric</em> MFCC 9 mean for story 1 immediate recall Range value: -36.2972297668457, ..., 30.849494934082</p></li>
 <li><p><strong>STORY1IMM_MFCC_10_MEAN</strong> <em>numeric</em> MFCC 10 mean for story 1 immediate recall Range value: -31.7630462646484, ..., 34.6205101013184</p></li>
-<li><p><strong>STORY1IMM_MFCC_11_MEAN</strong> <em>numeric</em> MFCC 11 mean for story 1 immediate recall Range value: -31.6346836090088, ..., 16.3060512542725</p></li>
+<li><p><strong>STORY1IMM_MFCC_11_MEAN</strong> <em>numeric</em> MFCC 11 mean for story 1 immediate recall Range value: -31.6346836090088, ..., 16.9060173034668</p></li>
 <li><p><strong>STORY1IMM_MFCC_12_MEAN</strong> <em>numeric</em> MFCC 12 mean for story 1 immediate recall Range value: -21.5977916717529, ..., 30.8843936920166</p></li>
 <li><p><strong>STORY1IMM_MFCC_13_MEAN</strong> <em>numeric</em> MFCC 13 mean for story 1 immediate recall Range value: -50.1643333435059, ..., 12.4952554702759</p></li>
 <li><p><strong>STORY1IMM_MFCC_1_SD</strong> <em>numeric</em> MFCC 1 standard deviation for story 1 immediate recall Range value: 0, ..., 194.822341918945</p></li>
@@ -139,27 +140,27 @@
 <li><p><strong>STORY1IMM_FORMANTS_3_MEAN</strong> <em>numeric</em> Formant F3 mean for story 1 immediate recall Range value: 0, ..., 4135.35</p></li>
 <li><p><strong>STORY1IMM_FORMANTS_4_MEAN</strong> <em>numeric</em> Formant F4 mean for story 1 immediate recall Range value: 0, ..., 5116.33</p></li>
 <li><p><strong>STORY1IMM_FORMANTS_1_SD</strong> <em>numeric</em> Formant F1 standard deviation for story 1 immediate recall Range value: 0, ..., 1012.03</p></li>
-<li><p><strong>STORY1IMM_FORMANTS_2_SD</strong> <em>numeric</em> Formant F2 standard deviation for story 1 immediate recall Range value: 0, ..., 1226.62</p></li>
+<li><p><strong>STORY1IMM_FORMANTS_2_SD</strong> <em>numeric</em> Formant F2 standard deviation for story 1 immediate recall Range value: 0, ..., 1264.5</p></li>
 <li><p><strong>STORY1IMM_FORMANTS_3_SD</strong> <em>numeric</em> Formant F3 standard deviation for story 1 immediate recall Range value: 0, ..., 1614.17</p></li>
-<li><p><strong>STORY1IMM_FORMANTS_4_SD</strong> <em>numeric</em> Formant F4 standard deviation for story 1 immediate recall Range value: 0, ..., 1983.29</p></li>
+<li><p><strong>STORY1IMM_FORMANTS_4_SD</strong> <em>numeric</em> Formant F4 standard deviation for story 1 immediate recall Range value: 0, ..., 2014.44</p></li>
 <li><p><strong>STORY1IMM_LOCAL_JITTER</strong> <em>numeric</em> Jitter (local) for story 1 immediate recall Range value: 0, ..., 0.0413245443276597</p></li>
 <li><p><strong>STORY1IMM_LOCAL_ABS_JITTER</strong> <em>numeric</em> Jitter (local, absolute) for story 1 immediate recall Range value: 0, ..., 0.00041727400262465</p></li>
 <li><p><strong>STORY1IMM_RAP_JITTER</strong> <em>numeric</em> Jitter (rap) for story 1 immediate recall Range value: 0, ..., 0.0265944777953175</p></li>
-<li><p><strong>STORY1IMM_PPQ5_JITTER</strong> <em>numeric</em> Jitter (PPQ5) for story 1 immediate recall Range value: 0, ..., 0.016915053962935</p></li>
+<li><p><strong>STORY1IMM_PPQ5_JITTER</strong> <em>numeric</em> Jitter (PPQ5) for story 1 immediate recall Range value: 0, ..., 0.0174450080485077</p></li>
 <li><p><strong>STORY1IMM_DDP_JITTER</strong> <em>numeric</em> Jitter (DDP) for story 1 immediate recall Range value: 0, ..., 0.0797834333859526</p></li>
 <li><p><strong>STORY1IMM_LOCAL_SHIMMER</strong> <em>numeric</em> Shimmer (local) for story 1 immediate recall Range value: 0, ..., 8.11020828635767</p></li>
 <li><p><strong>STORY1IMM_LOCAL_DB_SHIMMER</strong> <em>numeric</em> Shimmer (local, dB) for story 1 immediate recall Range value: 0, ..., 2.49877482652664</p></li>
 <li><p><strong>STORY1IMM_APQ3_SHIMMER</strong> <em>numeric</em> Shimmer (APQ3) for story 1 immediate recall Range value: 0, ..., 3.26254028119208</p></li>
-<li><p><strong>STORY1IMM_APQ5_SHIMMER</strong> <em>numeric</em> Shimmer (APQ5) for story 1 immediate recall Range value: 0.00138558822768699, ..., 4.28702720374124</p></li>
-<li><p><strong>STORY1IMM_APQ11_SHIMMER</strong> <em>numeric</em> Shimmer (APQ11) for story 1 immediate recall Range value: 0.00565219446815486, ..., 7.7851804203585</p></li>
+<li><p><strong>STORY1IMM_APQ5_SHIMMER</strong> <em>numeric</em> Shimmer (APQ5) for story 1 immediate recall Range value: 0, ..., 4.28702720374124</p></li>
+<li><p><strong>STORY1IMM_APQ11_SHIMMER</strong> <em>numeric</em> Shimmer (APQ11) for story 1 immediate recall Range value: 0, ..., 7.7851804203585</p></li>
 <li><p><strong>STORY2IMM_LANGUAGE</strong> <em>character</em> Language for story 2 immediate recall , with options: en-US</p></li>
 <li><p><strong>STORY2IMM_PLAYBACK_COUNT</strong> <em>numeric</em> Audio stimulus playback count for story 2 immediate recall Range value: 0, ..., 5</p></li>
-<li><p><strong>STORY2IMM_AUDIO_LENGTH</strong> <em>numeric</em> Participant audio length for story 2 immediate recall Range value: 2.64, ..., 240.28</p></li>
+<li><p><strong>STORY2IMM_AUDIO_LENGTH</strong> <em>numeric</em> Participant audio length for story 2 immediate recall Range value: 0.08, ..., 305.44</p></li>
 <li><p><strong>STORY2IMM_NUM_PRONOUNS</strong> <em>numeric</em> Number of pronouns for story 2 immediate recall Range value: 0, ..., 62</p></li>
 <li><p><strong>STORY2IMM_NUM_NOUNS</strong> <em>numeric</em> Number of nouns for story 2 immediate recall Range value: 0, ..., 70</p></li>
 <li><p><strong>STORY2IMM_NUM_PROPER_NOUNS</strong> <em>numeric</em> Number of proper nouns for story 2 immediate recall Range value: 0, ..., 17</p></li>
 <li><p><strong>STORY2IMM_NUM_VERBS</strong> <em>numeric</em> Number of verbs for story 2 immediate recall Range value: 0, ..., 69</p></li>
-<li><p><strong>STORY2IMM_NUM_ADVERBS</strong> <em>numeric</em> Number of adverbs for story 2 immediate recall Range value: 0, ..., 27</p></li>
+<li><p><strong>STORY2IMM_NUM_ADVERBS</strong> <em>numeric</em> Number of adverbs for story 2 immediate recall Range value: 0, ..., 34</p></li>
 <li><p><strong>STORY2IMM_NUM_ADJECTIVES</strong> <em>numeric</em> Number of adjectives for story 2 immediate recall Range value: 0, ..., 22</p></li>
 <li><p><strong>STORY2IMM_NUM_WORDS</strong> <em>numeric</em> Number of words for story 2 immediate recall Range value: 0, ..., 363</p></li>
 <li><p><strong>STORY2IMM_IDEA_DENSITY</strong> <em>numeric</em> Idea density for story 2 immediate recall Range value: 0, ..., 1</p></li>
@@ -167,20 +168,20 @@
 <li><p><strong>STORY2IMM_MEAN_LETTER_PER_WORD</strong> <em>numeric</em> Mean number of letters per word for story 2 immediate recall Range value: 2, ..., 12</p></li>
 <li><p><strong>STORY2IMM_GMATCH</strong> <em>numeric</em> G-match score (source text vs transcript) for story 2 immediate recall Range value: 0, ..., 100</p></li>
 <li><p><strong>STORY2IMM_SPEECH_DURATION</strong> <em>numeric</em> Speech duration for story 2 immediate recall Range value: 0, ..., 116.5</p></li>
-<li><p><strong>STORY2IMM_NONSPEECH_PROPORTION</strong> <em>numeric</em> Non-speech proportion of time for story 2 immediate recall Range value: 0, ..., 0.852354349561053</p></li>
+<li><p><strong>STORY2IMM_NONSPEECH_PROPORTION</strong> <em>numeric</em> Non-speech proportion of time for story 2 immediate recall Range value: 0, ..., 0.898190045248869</p></li>
 <li><p><strong>STORY2IMM_SPEECH_RATE</strong> <em>numeric</em> Speech rate for story 2 immediate recall Range value: 0.0925925925925926, ..., 5</p></li>
 <li><p><strong>STORY2IMM_ARTICULATION_RATE</strong> <em>numeric</em> Articulation rate for story 2 immediate recall Range value: 0.0925925925925926, ..., 5</p></li>
 <li><p><strong>STORY2IMM_NUM_PAUSES</strong> <em>numeric</em> Number of pauses for story 2 immediate recall Range value: 0, ..., 38</p></li>
-<li><p><strong>STORY2IMM_MEAN_PAUSE_LENGTH</strong> <em>numeric</em> Mean length of pauses for story 2 immediate recall Range value: 0.3, ..., 19.7</p></li>
+<li><p><strong>STORY2IMM_MEAN_PAUSE_LENGTH</strong> <em>numeric</em> Mean length of pauses for story 2 immediate recall Range value: 0.3, ..., 36.65</p></li>
 <li><p><strong>STORY2IMM_AMPLITUDE_SD</strong> <em>numeric</em> Standard deviation of the amplitude for story 2 immediate recall Range value: 0, ..., 0.291553527116776</p></li>
 <li><p><strong>STORY2IMM_F0_MEAN</strong> <em>numeric</em> Formant F0 mean for story 2 immediate recall Range value: 61.0378759895198, ..., 237.99677681199</p></li>
 <li><p><strong>STORY2IMM_F0_SD</strong> <em>numeric</em> Formant F0 standard deviation for story 2 immediate recall Range value: 0, ..., 79.0865961852582</p></li>
-<li><p><strong>STORY2IMM_INTENSITY_MEAN</strong> <em>numeric</em> Intensity mean for story 2 immediate recall Range value: 0, ..., 0.261335730552673</p></li>
+<li><p><strong>STORY2IMM_INTENSITY_MEAN</strong> <em>numeric</em> Intensity mean for story 2 immediate recall Range value: 0, ..., 0.413347005844116</p></li>
 <li><p><strong>STORY2IMM_INTENSITY_SD</strong> <em>numeric</em> Intensity standard deviation for story 2 immediate recall Range value: 0, ..., 0.246163427829742</p></li>
 <li><p><strong>STORY2IMM_MFCC_1_MEAN</strong> <em>numeric</em> MFCC 1 mean for story 2 immediate recall Range value: -1131.37109375, ..., -3.91779088973999</p></li>
 <li><p><strong>STORY2IMM_MFCC_2_MEAN</strong> <em>numeric</em> MFCC 2 mean for story 2 immediate recall Range value: -87.0389022827148, ..., 229.237380981445</p></li>
-<li><p><strong>STORY2IMM_MFCC_3_MEAN</strong> <em>numeric</em> MFCC 3 mean for story 2 immediate recall Range value: -94.6879272460938, ..., 76.8616561889648</p></li>
-<li><p><strong>STORY2IMM_MFCC_4_MEAN</strong> <em>numeric</em> MFCC 4 mean for story 2 immediate recall Range value: -33.4880447387695, ..., 89.1925354003906</p></li>
+<li><p><strong>STORY2IMM_MFCC_3_MEAN</strong> <em>numeric</em> MFCC 3 mean for story 2 immediate recall Range value: -95.5741119384766, ..., 77.5792846679688</p></li>
+<li><p><strong>STORY2IMM_MFCC_4_MEAN</strong> <em>numeric</em> MFCC 4 mean for story 2 immediate recall Range value: -37.4888496398926, ..., 89.1925354003906</p></li>
 <li><p><strong>STORY2IMM_MFCC_5_MEAN</strong> <em>numeric</em> MFCC 5 mean for story 2 immediate recall Range value: -48.589672088623, ..., 49.888256072998</p></li>
 <li><p><strong>STORY2IMM_MFCC_6_MEAN</strong> <em>numeric</em> MFCC 6 mean for story 2 immediate recall Range value: -39.4962539672851, ..., 50.9638519287109</p></li>
 <li><p><strong>STORY2IMM_MFCC_7_MEAN</strong> <em>numeric</em> MFCC 7 mean for story 2 immediate recall Range value: -42.2606010437012, ..., 27.3637104034424</p></li>
@@ -193,7 +194,7 @@
 <li><p><strong>STORY2IMM_MFCC_1_SD</strong> <em>numeric</em> MFCC 1 standard deviation for story 2 immediate recall Range value: 0, ..., 192.498779296875</p></li>
 <li><p><strong>STORY2IMM_MFCC_2_SD</strong> <em>numeric</em> MFCC 2 standard deviation for story 2 immediate recall Range value: 0, ..., 105.969032287598</p></li>
 <li><p><strong>STORY2IMM_MFCC_3_SD</strong> <em>numeric</em> MFCC 3 standard deviation for story 2 immediate recall Range value: 0, ..., 60.7693977355957</p></li>
-<li><p><strong>STORY2IMM_MFCC_4_SD</strong> <em>numeric</em> MFCC 4 standard deviation for story 2 immediate recall Range value: 0, ..., 50.1306533813477</p></li>
+<li><p><strong>STORY2IMM_MFCC_4_SD</strong> <em>numeric</em> MFCC 4 standard deviation for story 2 immediate recall Range value: 0, ..., 50.8089256286621</p></li>
 <li><p><strong>STORY2IMM_MFCC_5_SD</strong> <em>numeric</em> MFCC 5 standard deviation for story 2 immediate recall Range value: 0, ..., 37.9265098571777</p></li>
 <li><p><strong>STORY2IMM_MFCC_6_SD</strong> <em>numeric</em> MFCC 6 standard deviation for story 2 immediate recall Range value: 0, ..., 30.2504787445068</p></li>
 <li><p><strong>STORY2IMM_MFCC_7_SD</strong> <em>numeric</em> MFCC 7 standard deviation for story 2 immediate recall Range value: 0, ..., 31.9191837310791</p></li>
@@ -201,7 +202,7 @@
 <li><p><strong>STORY2IMM_MFCC_9_SD</strong> <em>numeric</em> MFCC 9 standard deviation for story 2 immediate recall Range value: 0, ..., 25.6944770812988</p></li>
 <li><p><strong>STORY2IMM_MFCC_10_SD</strong> <em>numeric</em> MFCC 10 standard deviation for story 2 immediate recall Range value: 0, ..., 21.327579498291</p></li>
 <li><p><strong>STORY2IMM_MFCC_11_SD</strong> <em>numeric</em> MFCC 11 standard deviation for story 2 immediate recall Range value: 0, ..., 18.3624801635742</p></li>
-<li><p><strong>STORY2IMM_MFCC_12_SD</strong> <em>numeric</em> MFCC 12 standard deviation for story 2 immediate recall Range value: 0, ..., 16.2685737609863</p></li>
+<li><p><strong>STORY2IMM_MFCC_12_SD</strong> <em>numeric</em> MFCC 12 standard deviation for story 2 immediate recall Range value: 0, ..., 16.8758640289307</p></li>
 <li><p><strong>STORY2IMM_MFCC_13_SD</strong> <em>numeric</em> MFCC 13 standard deviation for story 2 immediate recall Range value: 0, ..., 19.2984504699707</p></li>
 <li><p><strong>STORY2IMM_FORMANTS_1_MEAN</strong> <em>numeric</em> Formant F1 mean for story 2 immediate recall Range value: 0, ..., 2249.13</p></li>
 <li><p><strong>STORY2IMM_FORMANTS_2_MEAN</strong> <em>numeric</em> Formant F2 mean for story 2 immediate recall Range value: 0, ..., 3144.03</p></li>
@@ -217,30 +218,30 @@
 <li><p><strong>STORY2IMM_PPQ5_JITTER</strong> <em>numeric</em> Jitter (PPQ5) for story 2 immediate recall Range value: 0, ..., 0.0332189871466471</p></li>
 <li><p><strong>STORY2IMM_DDP_JITTER</strong> <em>numeric</em> Jitter (DDP) for story 2 immediate recall Range value: 0, ..., 0.0329183776476296</p></li>
 <li><p><strong>STORY2IMM_LOCAL_SHIMMER</strong> <em>numeric</em> Shimmer (local) for story 2 immediate recall Range value: 0, ..., 4.214980693118</p></li>
-<li><p><strong>STORY2IMM_LOCAL_DB_SHIMMER</strong> <em>numeric</em> Shimmer (local, dB) for story 2 immediate recall Range value: 0, ..., 1.85636579990387</p></li>
+<li><p><strong>STORY2IMM_LOCAL_DB_SHIMMER</strong> <em>numeric</em> Shimmer (local, dB) for story 2 immediate recall Range value: 0, ..., 1.85643725097179</p></li>
 <li><p><strong>STORY2IMM_APQ3_SHIMMER</strong> <em>numeric</em> Shimmer (APQ3) for story 2 immediate recall Range value: 0, ..., 1.86314556953646</p></li>
 <li><p><strong>STORY2IMM_APQ5_SHIMMER</strong> <em>numeric</em> Shimmer (APQ5) for story 2 immediate recall Range value: 0, ..., 3.88903059903243</p></li>
-<li><p><strong>STORY2IMM_APQ11_SHIMMER</strong> <em>numeric</em> Shimmer (APQ11) for story 2 immediate recall Range value: 0.00455195838508511, ..., 9.35855869683073</p></li>
+<li><p><strong>STORY2IMM_APQ11_SHIMMER</strong> <em>numeric</em> Shimmer (APQ11) for story 2 immediate recall Range value: 0, ..., 9.35855869683073</p></li>
 <li><p><strong>STORY1DEL_LANGUAGE</strong> <em>character</em> Language for story 1 delayed recall , with options: en-US, en</p></li>
 <li><p><strong>STORY1DEL_PLAYBACK_COUNT</strong> <em>numeric</em> Audio stimulus playback count for story 1 delayed recall Range value: 0, ..., 3</p></li>
-<li><p><strong>STORY1DEL_AUDIO_LENGTH</strong> <em>numeric</em> Participant audio length for story 1 delayed recall Range value: 2.28, ..., 282.26</p></li>
-<li><p><strong>STORY1DEL_NUM_PRONOUNS</strong> <em>numeric</em> Number of pronouns for story 1 delayed recall Range value: 0, ..., 62</p></li>
-<li><p><strong>STORY1DEL_NUM_NOUNS</strong> <em>numeric</em> Number of nouns for story 1 delayed recall Range value: 0, ..., 71</p></li>
-<li><p><strong>STORY1DEL_NUM_PROPER_NOUNS</strong> <em>numeric</em> Number of proper nouns for story 1 delayed recall Range value: 0, ..., 14</p></li>
-<li><p><strong>STORY1DEL_NUM_VERBS</strong> <em>numeric</em> Number of verbs for story 1 delayed recall Range value: 0, ..., 65</p></li>
-<li><p><strong>STORY1DEL_NUM_ADVERBS</strong> <em>numeric</em> Number of adverbs for story 1 delayed recall Range value: 0, ..., 27</p></li>
-<li><p><strong>STORY1DEL_NUM_ADJECTIVES</strong> <em>numeric</em> Number of adjectives for story 1 delayed recall Range value: 0, ..., 24</p></li>
-<li><p><strong>STORY1DEL_NUM_WORDS</strong> <em>numeric</em> Number of words for story 1 delayed recall Range value: 0, ..., 358</p></li>
+<li><p><strong>STORY1DEL_AUDIO_LENGTH</strong> <em>numeric</em> Participant audio length for story 1 delayed recall Range value: 0.1, ..., 305.46</p></li>
+<li><p><strong>STORY1DEL_NUM_PRONOUNS</strong> <em>numeric</em> Number of pronouns for story 1 delayed recall Range value: 0, ..., 116</p></li>
+<li><p><strong>STORY1DEL_NUM_NOUNS</strong> <em>numeric</em> Number of nouns for story 1 delayed recall Range value: 0, ..., 109</p></li>
+<li><p><strong>STORY1DEL_NUM_PROPER_NOUNS</strong> <em>numeric</em> Number of proper nouns for story 1 delayed recall Range value: 0, ..., 21</p></li>
+<li><p><strong>STORY1DEL_NUM_VERBS</strong> <em>numeric</em> Number of verbs for story 1 delayed recall Range value: 0, ..., 75</p></li>
+<li><p><strong>STORY1DEL_NUM_ADVERBS</strong> <em>numeric</em> Number of adverbs for story 1 delayed recall Range value: 0, ..., 60</p></li>
+<li><p><strong>STORY1DEL_NUM_ADJECTIVES</strong> <em>numeric</em> Number of adjectives for story 1 delayed recall Range value: 0, ..., 28</p></li>
+<li><p><strong>STORY1DEL_NUM_WORDS</strong> <em>numeric</em> Number of words for story 1 delayed recall Range value: 0, ..., 668</p></li>
 <li><p><strong>STORY1DEL_IDEA_DENSITY</strong> <em>numeric</em> Idea density for story 1 delayed recall Range value: 0, ..., 1</p></li>
-<li><p><strong>STORY1DEL_UNIQUE_WORDS_RATIO</strong> <em>numeric</em> Unique words ratio for story 1 delayed recall Range value: 0.388059701492537, ..., 1</p></li>
+<li><p><strong>STORY1DEL_UNIQUE_WORDS_RATIO</strong> <em>numeric</em> Unique words ratio for story 1 delayed recall Range value: 0.366766467065868, ..., 1</p></li>
 <li><p><strong>STORY1DEL_MEAN_LETTER_PER_WORD</strong> <em>numeric</em> Mean number of letters per word for story 1 delayed recall Range value: 1, ..., 12</p></li>
 <li><p><strong>STORY1DEL_GMATCH</strong> <em>numeric</em> G-match score (source text vs transcript) for story 1 delayed recall Range value: 0, ..., 100</p></li>
 <li><p><strong>STORY1DEL_GMATCH_IMM_DEL</strong> <em>numeric</em> G-match score (immediate transcript vs delayed transcript) for story 1 delayed recall Range value: 0, ..., 100</p></li>
-<li><p><strong>STORY1DEL_SPEECH_DURATION</strong> <em>numeric</em> Speech duration for story 1 delayed recall Range value: 0, ..., 128.1</p></li>
+<li><p><strong>STORY1DEL_SPEECH_DURATION</strong> <em>numeric</em> Speech duration for story 1 delayed recall Range value: 0, ..., 231.5</p></li>
 <li><p><strong>STORY1DEL_NONSPEECH_PROPORTION</strong> <em>numeric</em> Non-speech proportion of time for story 1 delayed recall Range value: 0, ..., 0.934402332361516</p></li>
 <li><p><strong>STORY1DEL_SPEECH_RATE</strong> <em>numeric</em> Speech rate for story 1 delayed recall Range value: 0.0551724137931034, ..., 7.5</p></li>
 <li><p><strong>STORY1DEL_ARTICULATION_RATE</strong> <em>numeric</em> Articulation rate for story 1 delayed recall Range value: 0.0840336134453782, ..., 7.5</p></li>
-<li><p><strong>STORY1DEL_NUM_PAUSES</strong> <em>numeric</em> Number of pauses for story 1 delayed recall Range value: 0, ..., 47</p></li>
+<li><p><strong>STORY1DEL_NUM_PAUSES</strong> <em>numeric</em> Number of pauses for story 1 delayed recall Range value: 0, ..., 48</p></li>
 <li><p><strong>STORY1DEL_MEAN_PAUSE_LENGTH</strong> <em>numeric</em> Mean length of pauses for story 1 delayed recall Range value: 0.3, ..., 64.2</p></li>
 <li><p><strong>STORY1DEL_AMPLITUDE_SD</strong> <em>numeric</em> Standard deviation of the amplitude for story 1 delayed recall Range value: 0, ..., 0.275285631418228</p></li>
 <li><p><strong>STORY1DEL_F0_MEAN</strong> <em>numeric</em> Formant F0 mean for story 1 delayed recall Range value: 61.0377, ..., 241.025</p></li>
@@ -250,12 +251,12 @@
 <li><p><strong>STORY1DEL_MFCC_1_MEAN</strong> <em>numeric</em> MFCC 1 mean for story 1 delayed recall Range value: -1131.37109375, ..., -6.73255968093872</p></li>
 <li><p><strong>STORY1DEL_MFCC_2_MEAN</strong> <em>numeric</em> MFCC 2 mean for story 1 delayed recall Range value: -86.9030990600586, ..., 219.768463134766</p></li>
 <li><p><strong>STORY1DEL_MFCC_3_MEAN</strong> <em>numeric</em> MFCC 3 mean for story 1 delayed recall Range value: -94.8164138793945, ..., 87.6731414794922</p></li>
-<li><p><strong>STORY1DEL_MFCC_4_MEAN</strong> <em>numeric</em> MFCC 4 mean for story 1 delayed recall Range value: -33.1602478027344, ..., 104.859107971191</p></li>
+<li><p><strong>STORY1DEL_MFCC_4_MEAN</strong> <em>numeric</em> MFCC 4 mean for story 1 delayed recall Range value: -36.1702308654785, ..., 104.859107971191</p></li>
 <li><p><strong>STORY1DEL_MFCC_5_MEAN</strong> <em>numeric</em> MFCC 5 mean for story 1 delayed recall Range value: -59.839168548584, ..., 50.9919586181641</p></li>
 <li><p><strong>STORY1DEL_MFCC_6_MEAN</strong> <em>numeric</em> MFCC 6 mean for story 1 delayed recall Range value: -41.1012496948242, ..., 50.9464225769043</p></li>
 <li><p><strong>STORY1DEL_MFCC_7_MEAN</strong> <em>numeric</em> MFCC 7 mean for story 1 delayed recall Range value: -40.8954391479492, ..., 31.0081806182861</p></li>
-<li><p><strong>STORY1DEL_MFCC_8_MEAN</strong> <em>numeric</em> MFCC 8 mean for story 1 delayed recall Range value: -29.7669086456299, ..., 34.873104095459</p></li>
-<li><p><strong>STORY1DEL_MFCC_9_MEAN</strong> <em>numeric</em> MFCC 9 mean for story 1 delayed recall Range value: -36.4466285705566, ..., 24.6565589904785</p></li>
+<li><p><strong>STORY1DEL_MFCC_8_MEAN</strong> <em>numeric</em> MFCC 8 mean for story 1 delayed recall Range value: -31.3429355621338, ..., 34.873104095459</p></li>
+<li><p><strong>STORY1DEL_MFCC_9_MEAN</strong> <em>numeric</em> MFCC 9 mean for story 1 delayed recall Range value: -36.9382019042969, ..., 24.6565589904785</p></li>
 <li><p><strong>STORY1DEL_MFCC_10_MEAN</strong> <em>numeric</em> MFCC 10 mean for story 1 delayed recall Range value: -28.2096557617188, ..., 33.9763984680176</p></li>
 <li><p><strong>STORY1DEL_MFCC_11_MEAN</strong> <em>numeric</em> MFCC 11 mean for story 1 delayed recall Range value: -38.313362121582, ..., 18.4537830352783</p></li>
 <li><p><strong>STORY1DEL_MFCC_12_MEAN</strong> <em>numeric</em> MFCC 12 mean for story 1 delayed recall Range value: -23.663948059082, ..., 27.1914901733398</p></li>
@@ -265,13 +266,13 @@
 <li><p><strong>STORY1DEL_MFCC_3_SD</strong> <em>numeric</em> MFCC 3 standard deviation for story 1 delayed recall Range value: 0, ..., 63.4312400817871</p></li>
 <li><p><strong>STORY1DEL_MFCC_4_SD</strong> <em>numeric</em> MFCC 4 standard deviation for story 1 delayed recall Range value: 0, ..., 50.8623428344727</p></li>
 <li><p><strong>STORY1DEL_MFCC_5_SD</strong> <em>numeric</em> MFCC 5 standard deviation for story 1 delayed recall Range value: 0, ..., 43.9329948425293</p></li>
-<li><p><strong>STORY1DEL_MFCC_6_SD</strong> <em>numeric</em> MFCC 6 standard deviation for story 1 delayed recall Range value: 0, ..., 29.3257389068604</p></li>
+<li><p><strong>STORY1DEL_MFCC_6_SD</strong> <em>numeric</em> MFCC 6 standard deviation for story 1 delayed recall Range value: 0, ..., 29.9269313812256</p></li>
 <li><p><strong>STORY1DEL_MFCC_7_SD</strong> <em>numeric</em> MFCC 7 standard deviation for story 1 delayed recall Range value: 0, ..., 30.547571182251</p></li>
-<li><p><strong>STORY1DEL_MFCC_8_SD</strong> <em>numeric</em> MFCC 8 standard deviation for story 1 delayed recall Range value: 0, ..., 23.3195705413818</p></li>
+<li><p><strong>STORY1DEL_MFCC_8_SD</strong> <em>numeric</em> MFCC 8 standard deviation for story 1 delayed recall Range value: 0, ..., 26.5493087768555</p></li>
 <li><p><strong>STORY1DEL_MFCC_9_SD</strong> <em>numeric</em> MFCC 9 standard deviation for story 1 delayed recall Range value: 0, ..., 24.248218536377</p></li>
-<li><p><strong>STORY1DEL_MFCC_10_SD</strong> <em>numeric</em> MFCC 10 standard deviation for story 1 delayed recall Range value: 0, ..., 20.9825630187988</p></li>
+<li><p><strong>STORY1DEL_MFCC_10_SD</strong> <em>numeric</em> MFCC 10 standard deviation for story 1 delayed recall Range value: 0, ..., 21.4484958648682</p></li>
 <li><p><strong>STORY1DEL_MFCC_11_SD</strong> <em>numeric</em> MFCC 11 standard deviation for story 1 delayed recall Range value: 0, ..., 20.0861186981201</p></li>
-<li><p><strong>STORY1DEL_MFCC_12_SD</strong> <em>numeric</em> MFCC 12 standard deviation for story 1 delayed recall Range value: 0, ..., 16.3401355743408</p></li>
+<li><p><strong>STORY1DEL_MFCC_12_SD</strong> <em>numeric</em> MFCC 12 standard deviation for story 1 delayed recall Range value: 0, ..., 18.094799041748</p></li>
 <li><p><strong>STORY1DEL_MFCC_13_SD</strong> <em>numeric</em> MFCC 13 standard deviation for story 1 delayed recall Range value: 0, ..., 19.0477294921875</p></li>
 <li><p><strong>STORY1DEL_FORMANTS_1_MEAN</strong> <em>numeric</em> Formant F1 mean for story 1 delayed recall Range value: 0, ..., 2243.04</p></li>
 <li><p><strong>STORY1DEL_FORMANTS_2_MEAN</strong> <em>numeric</em> Formant F2 mean for story 1 delayed recall Range value: 0, ..., 3160.56</p></li>
@@ -288,7 +289,7 @@
 <li><p><strong>STORY1DEL_DDP_JITTER</strong> <em>numeric</em> Jitter (DDP) for story 1 delayed recall Range value: 0, ..., 0.0695614252887149</p></li>
 <li><p><strong>STORY1DEL_LOCAL_SHIMMER</strong> <em>numeric</em> Shimmer (local) for story 1 delayed recall Range value: 0, ..., 3.65037231263716</p></li>
 <li><p><strong>STORY1DEL_LOCAL_DB_SHIMMER</strong> <em>numeric</em> Shimmer (local, dB) for story 1 delayed recall Range value: 0, ..., 3.27713578939438</p></li>
-<li><p><strong>STORY1DEL_APQ3_SHIMMER</strong> <em>numeric</em> Shimmer (APQ3) for story 1 delayed recall Range value: 0, ..., 1.02536571956303</p></li>
+<li><p><strong>STORY1DEL_APQ3_SHIMMER</strong> <em>numeric</em> Shimmer (APQ3) for story 1 delayed recall Range value: 0, ..., 1.15465222648567</p></li>
 <li><p><strong>STORY1DEL_APQ5_SHIMMER</strong> <em>numeric</em> Shimmer (APQ5) for story 1 delayed recall Range value: 0, ..., 2.3392710108845</p></li>
 <li><p><strong>STORY1DEL_APQ11_SHIMMER</strong> <em>numeric</em> Shimmer (APQ11) for story 1 delayed recall Range value: 0.00464633656313258, ..., 5.23005269083713</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>

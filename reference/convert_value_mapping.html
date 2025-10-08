@@ -25,6 +25,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -106,17 +107,17 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="va">data_dict_dd</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_factor_levels_datadict.html">get_factor_levels_datadict</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  .datadic <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="DATADIC.html">DATADIC</a></span>,</span></span>
-<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"ADAS"</span>,</span></span>
+<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"CDR"</span>,</span></span>
 <span class="r-in"><span>  nested_value <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tbl_unique_fldname</span> <span class="op">&lt;-</span> <span class="fu"><a href="get_factor_fldname.html">get_factor_fldname</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  .datadic <span class="op">=</span> <span class="va">data_dict_dd</span>,</span></span>
-<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"ADAS"</span>,</span></span>
-<span class="r-in"><span>  dd_fldnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"CDR"</span>,</span></span>
+<span class="r-in"><span>  dd_fldnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="CDR.html">CDR</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">coded_value</span> <span class="op">&lt;-</span> <span class="fu"><a href="collect_value_mapping.html">collect_value_mapping</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  .datadic <span class="op">=</span> <span class="va">data_dict_dd</span>,</span></span>
-<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"ADAS"</span>,</span></span>
+<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"CDR"</span>,</span></span>
 <span class="r-in"><span>  all_fld_name <span class="op">=</span> <span class="va">tbl_unique_fldname</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">convert_value_mapping</span><span class="op">(</span>coded_value <span class="op">=</span> <span class="va">coded_value</span><span class="op">)</span></span></span>

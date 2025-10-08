@@ -27,6 +27,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -105,17 +106,17 @@
 <span class="r-in"><span>  nested_value <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># List of available factor columns in data dictionary</span></span></span>
-<span class="r-in"><span><span class="co"># \code{\link{DATADIC}()} for the \code{\link{ADAS_ADNIGO23}()} dataset</span></span></span>
+<span class="r-in"><span><span class="co"># \code{\link{DATADIC}()} for the \code{\link{CDR}()} dataset</span></span></span>
 <span class="r-in"><span><span class="fu">get_factor_fldname</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  .datadic <span class="op">=</span> <span class="va">data_dict_dd</span>,</span></span>
-<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"ADAS"</span>,</span></span>
+<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"CDR"</span>,</span></span>
 <span class="r-in"><span>  dd_fldnames <span class="op">=</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># List of factor columns that available in \code{\link{ADAS_ADNIGO23}()} and data dictionary DATADIC</span></span></span>
+<span class="r-in"><span><span class="co"># List of factor columns that available in \code{\link{CDR}()} and data dictionary DATADIC</span></span></span>
 <span class="r-in"><span><span class="fu">get_factor_fldname</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  .datadic <span class="op">=</span> <span class="va">data_dict_dd</span>,</span></span>
-<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"ADAS"</span>,</span></span>
-<span class="r-in"><span>  dd_fldnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  tbl_name <span class="op">=</span> <span class="st">"CDR"</span>,</span></span>
+<span class="r-in"><span>  dd_fldnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="CDR.html">CDR</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

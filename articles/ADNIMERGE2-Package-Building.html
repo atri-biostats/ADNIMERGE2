@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -82,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNIMERGE2-Package-Building</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: July 25,
+            <h4 data-toc-skip class="date">Last Updated: October 08,
 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNIMERGE2-Package-Building.Rmd" class="external-link"><code>vignettes/ADNIMERGE2-Package-Building.Rmd</code></a></small>
@@ -96,7 +97,7 @@
 </h2>
 <p>The document describes the procedure to build an R data package from
 source <code>.csv</code> files with similar workflow of
-<code>ADNIMERGE2</code> package.</p>
+<code>ADNIMERGE2</code> R package.</p>
 </div>
 <div class="section level2">
 <h2 id="building-an-r-package-from-csv-files">Building an R Package from csv files<a class="anchor" aria-label="anchor" href="#building-an-r-package-from-csv-files"></a>
@@ -136,7 +137,7 @@ to store auxiliary files that needed during package configuration</li>
 <p>Or create an R package project locally, which can be created using <a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">usethis::create_package</a>
 function, and add package-specific metadata into the local package
 directory, please refer to <a href="https://r-pkgs.org/description.html" class="external-link">https://r-pkgs.org/description.html</a>
-for more information. Once the package-specific metadata is created ,
+for more information. Once the package-specific metadata is created,
 copy the pre-defined scripts/functions as necessary from the <a href="https://github.com/atri-biostats/ADNIMERGE2" class="external-link">ADNIMERGE2 github
 repository</a> with the same file path to your local package project
 directory.</p>
@@ -153,8 +154,8 @@ directory</p>
 file</p></li>
 <li><p>It is recommended to download files from the data-sharing
 platform on the same date. If the data is download from
-<code>Analysis Ready Cohort (ARC) Build</code>, it is recommended to
-download the file without adding any prefix to the file name as
+<code>Analysis Ready Cohort (ARC) Build/Table</code>, it is recommended
+to download the file without adding any prefix to the file name as
 highlighted in the following figure.</p></li>
 </ul>
 <p><img src="../reference/figures/arc_table_template.png" align="center" height="70" alt=" "></p>
@@ -163,7 +164,7 @@ highlighted in the following figure.</p></li>
 <h3 id="build-package">Build Package<a class="anchor" aria-label="anchor" href="#build-package"></a>
 </h3>
 <p>The next step is start building the package by sourcing <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R" class="external-link"><code>./tools/build.R</code></a>
-script file. The <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R" class="external-link">./tools/build.R`</a>
+script file. The <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R" class="external-link">./tools/build.R</a>
 script file is used to prepare dataset, generate documentations and
 finalize package building. The main procedures in this script are
 presented as follows:</p>
@@ -180,7 +181,7 @@ using <a href="https://usethis.r-lib.org/reference/use_data.html" class="externa
 for more information.</p></li>
 <li><p>Required to specify two input arguments: the data downloaded date
 (<code>DATA_DOWNLOADED_DATE</code>) in <code>YYYY-MM-DD</code> format
-and indicator of whether to update any existing data dictionary file
+and a Boolean value to update any existing data dictionary file
 (<code>UPDATE_DATADIC</code>)</p></li>
 </ul>
 </li>
@@ -214,11 +215,11 @@ directory.</p></li>
 <li>
 <p><a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools/document.R" class="external-link"><code>./tools/document.R</code></a>:</p>
 <ul>
-<li><p>To generate documentations for both the raw data and the derived
-data based on the actual data values, and data dictionary</p></li>
-<li><p>Required two input arguments: indicator of whether to use the
-updated data dictionary (<code>USE_UPDATED_DATADIC</code>) if it is
-existed, and name of derived dataset list
+<li><p>To generate documentations for both raw and derived data based on
+the actual data values, and data dictionary</p></li>
+<li><p>Required two input arguments: a Boolean value to use the updated
+data dictionary (<code>USE_UPDATED_DATADIC</code>) if it is existed, and
+name of derived dataset list
 (<code>DERIVED_DATASET_LIST</code>).</p></li>
 </ul>
 </li>

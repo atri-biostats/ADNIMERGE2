@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -64,7 +65,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 6788 observations and 28 variables.</p>
+    <p>A data frame with 7326 observations and 28 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -76,30 +77,30 @@
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>COLPROT</strong> <em>character</em> Study protocol of data collection , with options: ADNI2, ADNI3, ADNIGO, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Patient ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10389</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 21, ..., 10649</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>EXAMDATE</strong> <em> </em> Examination Date Date: YYY-MM-DD</p></li>
-<li><p><strong>IMAGEUID</strong> <em>numeric</em> LONI image ID Range value: 179557, ..., 11088081</p></li>
+<li><p><strong>IMAGEUID</strong> <em>numeric</em> LONI image ID Range value: 179557, ..., 11200559</p></li>
 <li><p><strong>RUNDATE</strong> <em> </em> Date results generated Date: YYY-MM-DD</p></li>
 <li><p><strong>STATUS</strong> <em>character</em> Analysis Status , with options: BAD FLAIR</p></li>
 <li><p><strong>MANUFACTURER</strong> <em>character</em> MRI Scanner Manufacturers , with options: Philips Medical Systems, SIEMENS, GE MEDICAL SYSTEMS, Philips, Siemens Healthineers, Philips Healthcare, Siemens</p></li>
 <li><p><strong>MANUFACTURERSMODELNAME</strong> <em>character</em> MRI Scanner Model Names</p></li>
 <li><p><strong>MAGNETICFIELDSTRENGTH</strong> <em>numeric</em> MRI Scanner Magnetic Field Strength (1.5 or 3.0 Tesla) Range value: 3, ..., 3</p></li>
 <li><p><strong>MRACQUISITIONTYPEFLAIR</strong> <em>numeric</em> Flair Acquisition Type (2D or 3D) Range value: 2, ..., 3</p></li>
-<li><p><strong>CEREBRUM_TCV</strong> <em>numeric</em> Total Cerebrum Cranial Volume (supratentorial portion) Range value: 880.368, ..., 1643.73</p></li>
-<li><p><strong>CEREBRUM_TCB</strong> <em>numeric</em> Total Cerebrum Brain Volume Range value: 665.492, ..., 1284.6</p></li>
-<li><p><strong>CEREBRUM_TCC</strong> <em>numeric</em> Total Cerebrum Cerebrospinal Fluid Volume Range value: 149.054, ..., 526.299</p></li>
+<li><p><strong>CEREBRUM_TCV</strong> <em>numeric</em> Total Cerebrum Cranial Volume (supratentorial portion) Range value: 780.078, ..., 1688.14</p></li>
+<li><p><strong>CEREBRUM_TCB</strong> <em>numeric</em> Total Cerebrum Brain Volume Range value: 640.623, ..., 1284.6</p></li>
+<li><p><strong>CEREBRUM_TCC</strong> <em>numeric</em> Total Cerebrum Cerebrospinal Fluid Volume Range value: 139.01, ..., 526.299</p></li>
 <li><p><strong>CEREBRUM_GRAY</strong> <em>numeric</em> Total Cerebrum Gray Matter Volume Range value: 311.958, ..., 723.72</p></li>
 <li><p><strong>CEREBRUM_WHITE</strong> <em>numeric</em> Total Cerebrum White Matter Volume Range value: 235.784, ..., 639.017</p></li>
 <li><p><strong>LEFT_HIPPO</strong> <em>numeric</em> Segmented Left Hippocampus Volume Range value: 1.07321, ..., 4.9068</p></li>
 <li><p><strong>RIGHT_HIPPO</strong> <em>numeric</em> Segmented Right Hippocampus Volume Range value: 1.229, ..., 4.7508</p></li>
 <li><p><strong>TOTAL_HIPPO</strong> <em>numeric</em> Segmented Total Hippocampi Volume Range value: 2.44542, ..., 9.6504</p></li>
-<li><p><strong>TOTAL_CSF</strong> <em>numeric</em> Total Brain Cerebrospinal Fluid Volume Range value: 187.782, ..., 626.027</p></li>
+<li><p><strong>TOTAL_CSF</strong> <em>numeric</em> Total Brain Cerebrospinal Fluid Volume Range value: 167.735, ..., 626.027</p></li>
 <li><p><strong>TOTAL_GRAY</strong> <em>numeric</em> Total Brain Gray Matter Volume Range value: 378.749, ..., 862.618</p></li>
 <li><p><strong>TOTAL_WHITE</strong> <em>numeric</em> Total Brain White Matter Volume Range value: 256.075, ..., 702.226</p></li>
 <li><p><strong>TOTAL_WMH</strong> <em>numeric</em> Total White Matter Hyperintensity Volume Range value: 0, ..., 129.837</p></li>
-<li><p><strong>TOTAL_BRAIN</strong> <em>numeric</em> Total Brain Volume (includes both cerebrum and infratentorial region) Range value: 1048.79, ..., 1900.46</p></li>
+<li><p><strong>TOTAL_BRAIN</strong> <em>numeric</em> Total Brain Volume (includes both cerebrum and infratentorial region) Range value: 913.145, ..., 1913.59</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>
     <div class="section level2">

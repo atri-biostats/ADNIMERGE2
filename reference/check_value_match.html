@@ -25,6 +25,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -86,13 +87,13 @@
 
 
 <dt id="arg-excluded-na">excluded.na<a class="anchor" aria-label="anchor" href="#arg-excluded-na"></a></dt>
-<dd><p>A Boolean to skip <em>NA</em> from the existed variable values <em>values</em>,
-Default: <em>TRUE</em></p></dd>
+<dd><p>A Boolean to skip <code>NA</code> from the existed variable values <code>values</code>,
+Default: <code>TRUE</code></p></dd>
 
 
 <dt id="arg-stop-message">stop_message<a class="anchor" aria-label="anchor" href="#arg-stop-message"></a></dt>
 <dd><p>A Boolean value to return a stop message if one of the existed values
-does not match with the check list, Default: <em>FALSE</em></p></dd>
+does not match with the check list, Default: <code>FALSE</code></p></dd>
 
 
 <dt id="arg-add-stop-message">add_stop_message<a class="anchor" aria-label="anchor" href="#arg-add-stop-message"></a></dt>
@@ -100,7 +101,7 @@ does not match with the check list, Default: <em>FALSE</em></p></dd>
 
 
 <dt id="arg-value-split">value_split<a class="anchor" aria-label="anchor" href="#arg-value-split"></a></dt>
-<dd><p>A Boolean value whether to split the values with specified split pattern <em>split_pattern</em></p></dd>
+<dd><p>A Boolean value whether to split the values with specified split pattern <code>split_pattern</code></p></dd>
 
 
 <dt id="arg-split-pattern">split_pattern<a class="anchor" aria-label="anchor" href="#arg-split-pattern"></a></dt>
@@ -110,20 +111,16 @@ does not match with the check list, Default: <em>FALSE</em></p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
 
-
-<dl><dt> <em>TRUE</em></dt>
-<dd><p>If all the existed variable values are matched with the input values</p></dd>
-
-  <dt> <em>FALSE</em></dt>
-<dd><p>Otherwise and with a stop message if <code>stop_message = TRUE</code></p></dd>
-
-</dl></div>
+<ul><li><p><code>TRUE</code>: If all the existed variable values are matched with the input values</p></li>
+<li><p><code>FALSE</code>: Otherwise and with a stop message if <code>stop_message</code> is <code>TRUE</code></p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other checks function:
 <code><a href="check_colnames.html">check_colnames</a>()</code>,
 <code><a href="check_duplicate_records.html">check_duplicate_records</a>()</code>,
-<code><a href="check_is_logical.html">check_is_logical</a>()</code>,
+<code><a href="check_non_missing_value.html">check_non_missing_value</a>()</code>,
+<code><a href="check_object_type.html">check_object_type</a>()</code>,
 <code><a href="detect_decimal_value.html">detect_decimal_value</a>()</code>,
 <code><a href="detect_numeric_value.html">detect_numeric_value</a>()</code>,
 <code><a href="is_datadict_tbl.html">is_datadict_tbl</a>()</code></p></div>

@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -64,7 +65,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 5 observations and 21 variables.</p>
+    <p>A data frame with 18 observations and 21 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -75,8 +76,8 @@
 
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI4, ADNI3</p></li>
 <li><p><strong>COLPROT</strong> <em>factor</em> Study protocol of data collection , with levels: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
-<li><p><strong>PTID</strong> <em>character</em> Participant ID , with options: 011_S_10033, 941_S_10003, 011_S_10257, 023_S_6702</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 6702, ..., 10257</p></li>
+<li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 6702, ..., 10871</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code , with options: 4_sc, 4_m12, 4_bl</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code , with options: sc, m12, m66, bl</p></li>
 <li><p><strong>TXREC</strong> <em>character</em> This Participant received an Anti-Amyloid treatment. 1=Yes - I confirm this participant has received an Anti-Amyloid Treatment.
@@ -85,15 +86,15 @@
 <li><p><em>ADNI4:</em> 1=Aducanumab ; 2=Lecanumab ; 3=Donanemab</p></li>
 </ul><p><em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>STARTDATE</strong> <em> </em> Treatment Start Date Date: YYY-MM-DD</p></li>
-<li><p><strong>ENDDATE</strong> <em>logical</em> Treatment End Date A Boolean value: TRUE/ FALSE</p></li>
+<li><p><strong>ENDDATE</strong> <em> </em> Treatment End Date Date: YYY-MM-DD</p></li>
 <li><p><strong>TXUNITS</strong> <em>character</em> Units 1=milligram (mg) / milliliter (mL) ; 99=other (OT)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>TXFREQNC</strong> <em>character</em> Frequency 1=every 4 weeks (q4w) ; 99=other (OT)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
 <li><p><strong>TXROUTE</strong> <em>character</em> Route 1=intravenous (iv) ; 99=other (OT)
 <em>Decoded Value: </em><strong>Yes</strong></p></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 6236, ..., 58116</p></li>
-<li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 11, ..., 941</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 6236, ..., 118282</p></li>
+<li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 10, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>
 <li><p><strong>DD_CRF_VERSION_LABEL</strong> <em>character</em> CRF Version Label , with options: v1</p></li>

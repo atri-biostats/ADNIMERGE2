@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -82,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNIMERGE2</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: July 25,
+            <h4 data-toc-skip class="date">Last Updated: October 08,
 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNIMERGE2.Rmd" class="external-link"><code>vignettes/ADNIMERGE2.Rmd</code></a></small>
@@ -129,11 +130,11 @@ Agreement.</p>
 <p>The ADNIMERGE2 package contains a data stamped date of which the raw
 data is downloaded from the data-sharing platform. For instance, the
 current package contains data that downloaded from the data-sharing
-platform as of 2025-07-10. To get the data stamped date:</p>
+platform as of 2025-09-16. To get the data stamped date:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Data source downloaded date</span></span>
 <span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DATA_DOWNLOADED_DATE.html">DATA_DOWNLOADED_DATE</a></span></span>
-<span><span class="co">#&gt; [1] "2025-07-10"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "2025-09-16"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="data-dictionary">Data Dictionary<a class="anchor" aria-label="anchor" href="#data-dictionary"></a>
@@ -175,23 +176,31 @@ learn more how these data are generated.</p></li>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Data dictionary for derived data based on R6-class object</span></span>
 <span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/METACORES.html">METACORES</a></span></span>
-<span><span class="co">#&gt; Metacore object contains metadata for 4 datasets</span></span></code></pre></div>
+<span><span class="co">#&gt; ── Metacore object contains metadata for 4 datasets ────────────────────────────</span></span>
+<span><span class="co">#&gt; → ADSL (Subject-Level Analysis Dataset)</span></span>
+<span><span class="co">#&gt; → ADAE (Analysis Dataset of Adverse Events)</span></span>
+<span><span class="co">#&gt; → ADQS (Analysis Dataset of Questionnaires)</span></span>
+<span><span class="co">#&gt; → ADRS (Response Analysis Dataset)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; To use the Metacore object with <span style="color: #0000BB;">metatools</span> package, first subset a dataset using</span></span>
+<span><span class="co">#&gt; `metacore::select_dataset()`</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="coded-values">Coded Values<a class="anchor" aria-label="anchor" href="#coded-values"></a>
 </h3>
-<p>Majority of the study raw data contains variable with numerically
-coded values. As a result, these variable values are mapped based on the
-data dictionary with corresponding study phase-specific mapping values.
-The variables which values are mapped accordingly have a
+<p>Majority of the study raw data contain variables with numerically
+coded values. In <em><code>ADNIMERGE2</code></em>, these variable values
+are mapped based on the data dictionary with corresponding study
+phase-specific mapping values. The variables which values are mapped
+accordingly have a
 <em><code>Decoded Value:</code></em><code></code><strong><code>Yes</code></strong>
 tag in data documentations. For instance, <code>CDSOURCE</code> variable
 in the <a href="%22../reference/CDR.html%22"><code>ADNIMERGE2::CDR</code></a> have
-such tags as shown in Figure below within the red box.</p>
+such tags as shown in Figure below highlighted in red box.</p>
 <p><img src="../reference/figures/cdr_code_value.png" align="center" height="70" alt=" "></p>
-<p>It is recommended to verify the values of numerically coded variables
-that are not mapped/decoded using the data dictionary file either in
-this package <a href="%22../reference/DATADIC.html%22"><code>ADNIMERGE2::DATADIC</code></a>
+<p>It is recommended to verify numerically coded variable values that
+are not yet mapped/decoded using the data dictionary file either in this
+package <a href="%22../reference/DATADIC.html%22"><code>ADNIMERGE2::DATADIC</code></a>
 or from the data-sharing platform.</p>
 <p>To get all variables with code values:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -227,14 +236,13 @@ or from the data-sharing platform.</p>
 <h3 id="missing-values">Missing Values<a class="anchor" aria-label="anchor" href="#missing-values"></a>
 </h3>
 <p>Furthermore, <em><code>-4</code></em> value in majority of the ADNI
-study phases and <em><code>-1</code></em> values in the
+study phases and <em><code>-1</code></em> value in the
 <em><code>ADNI1</code></em> study phase were be considered as a missing
 value. Therefore, these values are converted into a missing character
 value <code>NA</code> in the package.</p>
-<p><em>NOTE: </em>
-<code>ℹ No variable that contains this value "-4"</code> message in the
-following two r chunks tells us there are no variables with the
-specified values in the <a href="%22../reference/DXSUM.html%22"><code>ADNIMERGE2::DXSUM</code></a>
+<p><em>NOTE: </em> <code>ℹ No variable contains "-4" value</code>
+message in the following two r chunks implies that there are no
+variables with the specified values in the <a href="%22../reference/DXSUM.html%22"><code>ADNIMERGE2::DXSUM</code></a>
 dataset since these values are already converted into missing value
 prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -247,24 +255,16 @@ prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/
 <span>  phase <span class="op">=</span> <span class="fu"><a href="../reference/adni_phase.html">adni_phase</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">PTID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No variable that contains this value <span style="color: #0000BB;">"-4"</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 41</span></span></span>
-<span><span class="co">#&gt;   ORIGPROT COLPROT   RID VISCODE VISCODE2 EXAMDATE   DIAGNOSIS DXNORM DXNODEP</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ADNI1    ADNI1       2 bl      bl       2005-09-29 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ADNI1    ADNI1       3 bl      bl       2005-09-30 Dementia  <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ADNI1    ADNI1       5 bl      bl       2005-09-30 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ADNI1    ADNI1       8 bl      bl       2005-09-30 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ADNI1    ADNI1       7 bl      bl       2005-10-06 Dementia  <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ADNI1    ADNI1      15 bl      bl       2005-10-18 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more variables: DXMCI &lt;chr&gt;, DXMDES &lt;chr&gt;, DXMPTR1 &lt;chr&gt;, DXMPTR2 &lt;chr&gt;,</span></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">.</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No variable contains <span style="color: #0000BB;">"-4"</span> value</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 41</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 variables: ORIGPROT &lt;chr&gt;, COLPROT &lt;fct&gt;, RID &lt;dbl&gt;, VISCODE &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   VISCODE2 &lt;chr&gt;, EXAMDATE &lt;date&gt;, DIAGNOSIS &lt;chr&gt;, DXNORM &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   DXNODEP &lt;chr&gt;, DXMCI &lt;chr&gt;, DXMDES &lt;chr&gt;, DXMPTR1 &lt;chr&gt;, DXMPTR2 &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXMPTR3 &lt;chr&gt;, DXMPTR4 &lt;chr&gt;, DXMPTR5 &lt;chr&gt;, DXMPTR6 &lt;chr&gt;, DXMDUE &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXMOTHET &lt;chr&gt;, DXDSEV &lt;chr&gt;, DXDDUE &lt;chr&gt;, DXAD &lt;chr&gt;, DXAPP &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXAPROB &lt;chr&gt;, DXAPOSS &lt;chr&gt;, DXPARK &lt;chr&gt;, DXPDES &lt;chr&gt;, DXPCOG &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   DXPATYP &lt;chr&gt;, DXDEP &lt;chr&gt;, DXOTHDEM &lt;chr&gt;, DXODES &lt;chr&gt;, DXCONFID &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ID &lt;dbl&gt;, SITEID &lt;dbl&gt;, USERDATE &lt;date&gt;, USERDATE2 &lt;date&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   DD_CRF_VERSION_LABEL &lt;chr&gt;, LANGUAGE_CODE &lt;chr&gt;, HAS_QC_ERROR &lt;chr&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   DXPATYP &lt;chr&gt;, DXDEP &lt;chr&gt;, DXOTHDEM &lt;chr&gt;, DXODES &lt;chr&gt;, DXCONFID &lt;chr&gt;, …</span></span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert "-1" into missing value in ADNI1 phase only</span></span>
 <span><span class="fu"><a href="../reference/convert_to_missing_value.html">convert_to_missing_value</a></span><span class="op">(</span></span>
@@ -275,24 +275,16 @@ prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/
 <span>  phase <span class="op">=</span> <span class="st">"ADNI1"</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">PTID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No variable that contains this value <span style="color: #0000BB;">"-1"</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 41</span></span></span>
-<span><span class="co">#&gt;   ORIGPROT COLPROT   RID VISCODE VISCODE2 EXAMDATE   DIAGNOSIS DXNORM DXNODEP</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ADNI1    ADNI1       2 bl      bl       2005-09-29 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ADNI1    ADNI1       3 bl      bl       2005-09-30 Dementia  <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ADNI1    ADNI1       5 bl      bl       2005-09-30 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ADNI1    ADNI1       8 bl      bl       2005-09-30 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ADNI1    ADNI1       7 bl      bl       2005-10-06 Dementia  <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ADNI1    ADNI1      15 bl      bl       2005-10-18 CN        Yes    <span style="color: #BB0000;">NA</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 32 more variables: DXMCI &lt;chr&gt;, DXMDES &lt;chr&gt;, DXMPTR1 &lt;chr&gt;, DXMPTR2 &lt;chr&gt;,</span></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">.</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No variable contains <span style="color: #0000BB;">"-1"</span> value</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 41</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 variables: ORIGPROT &lt;chr&gt;, COLPROT &lt;fct&gt;, RID &lt;dbl&gt;, VISCODE &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   VISCODE2 &lt;chr&gt;, EXAMDATE &lt;date&gt;, DIAGNOSIS &lt;chr&gt;, DXNORM &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   DXNODEP &lt;chr&gt;, DXMCI &lt;chr&gt;, DXMDES &lt;chr&gt;, DXMPTR1 &lt;chr&gt;, DXMPTR2 &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXMPTR3 &lt;chr&gt;, DXMPTR4 &lt;chr&gt;, DXMPTR5 &lt;chr&gt;, DXMPTR6 &lt;chr&gt;, DXMDUE &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXMOTHET &lt;chr&gt;, DXDSEV &lt;chr&gt;, DXDDUE &lt;chr&gt;, DXAD &lt;chr&gt;, DXAPP &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXAPROB &lt;chr&gt;, DXAPOSS &lt;chr&gt;, DXPARK &lt;chr&gt;, DXPDES &lt;chr&gt;, DXPCOG &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   DXPATYP &lt;chr&gt;, DXDEP &lt;chr&gt;, DXOTHDEM &lt;chr&gt;, DXODES &lt;chr&gt;, DXCONFID &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ID &lt;dbl&gt;, SITEID &lt;dbl&gt;, USERDATE &lt;date&gt;, USERDATE2 &lt;date&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   DD_CRF_VERSION_LABEL &lt;chr&gt;, LANGUAGE_CODE &lt;chr&gt;, HAS_QC_ERROR &lt;chr&gt;, …</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;">#   DXPATYP &lt;chr&gt;, DXDEP &lt;chr&gt;, DXOTHDEM &lt;chr&gt;, DXODES &lt;chr&gt;, DXCONFID &lt;chr&gt;, …</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="derived-datasets">Derived Datasets<a class="anchor" aria-label="anchor" href="#derived-datasets"></a>
@@ -314,29 +306,33 @@ specifications and derived datasets.</p></li>
 <p><strong>NOTE: </strong></p>
 <ul>
 <li><p><em>It is recommended to learn more about how these data are
-generated and the corresponding raw data source prior using those
-derived data in any analysis.</em></p></li>
+generated and see the corresponding raw data source before using those
+derived data in an analysis.</em></p></li>
 <li><p><em>Some of the derived datasets in the package may not be fully
 complied with the <a href="https://www.cdisc.org/" class="external-link">CDISC</a>
 standardization, and those data are generated for illustration
 purpose.</em></p></li>
 </ul>
+<p>Furthermore, a derived data for modified version of the Preclinical
+Alzheimer Cognitive Composite (PACC) score is also included. <a href="vignette(topic%20=%20%22ADNIMERGE2-PACC%22,%20package%20=%20%22ADNIMERGE2%22)">ADNIMERGE2-PACC</a>
+shows creating PACC score from raw datasets.</p>
 </div>
 <div class="section level3">
 <h3 id="articles">Articles<a class="anchor" aria-label="anchor" href="#articles"></a>
 </h3>
-<p>There are few articles included in the package vignettes to
+<p>There are few articles included in the package as a vignette to
 demonstrate how to use the study data R package for creating simple
 summaries or analysis results.</p>
 <ul>
-<li><p><a href="">Enrollment Summaries</a>: Includes enrollment summary
-by calender month, enrolled subject demographic/characteristics summary
-by study phases and baseline diagnostics status (Cognitive Normal (CN),
-Mild Cognitive Impairment (MCI) and Dementia (DEM)).</p></li>
-<li><p><a href="">Longitudinal Clinical Cognitive Outcome Summaries</a>:
-Currently, includes summary of the ADAS Cognitive Behavior assessment
-item-13 total score (ADAS-cog) overtime across the baseline diagnostics
-status.</p></li>
+<li><p><a href="'./ADNI-Enrollment.html'">Enrollment
+Summaries</a>: Includes enrollment summary by calender month, enrolled
+subject demographic/characteristics summary by study phases and baseline
+diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment
+(MCI) and Dementia (DEM)).</p></li>
+<li><p><a href="'./ADNI-Longitudinal.html'">Longitudinal
+Clinical Cognitive Outcome Summaries</a>: Currently, includes summary of
+the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog)
+overtime across the baseline diagnostics status.</p></li>
 </ul>
 <p><strong>NOTE: </strong> <em>The analysis results that presented in
 the package vignettes are not pre-planned and only included for

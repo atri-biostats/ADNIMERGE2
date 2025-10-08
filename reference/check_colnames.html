@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -85,14 +86,15 @@
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
 
-<ul><li><p>`TRUE` if the provided column names are existed in the dataset based on the `strict` argument.</p></li>
-<li><p>Otherwise list of column names that are not existed in the dataset or a stop message if `stop_message` is TRUE.</p></li>
+<ul><li><p><code>TRUE</code> if the provided column names are existed in the dataset based on the <code>strict</code> argument.</p></li>
+<li><p>Otherwise list of column names that are not existed in the dataset or a stop message if <code>stop_message</code> is <code>TRUE</code>.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other checks function:
 <code><a href="check_duplicate_records.html">check_duplicate_records</a>()</code>,
-<code><a href="check_is_logical.html">check_is_logical</a>()</code>,
+<code><a href="check_non_missing_value.html">check_non_missing_value</a>()</code>,
+<code><a href="check_object_type.html">check_object_type</a>()</code>,
 <code><a href="check_value_match.html">check_value_match</a>()</code>,
 <code><a href="detect_decimal_value.html">detect_decimal_value</a>()</code>,
 <code><a href="detect_numeric_value.html">detect_numeric_value</a>()</code>,
@@ -103,12 +105,12 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu">check_colnames</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span>,</span></span>
+<span class="r-in"><span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="CDR.html">CDR</a></span>,</span></span>
 <span class="r-in"><span>  col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Phase"</span>, <span class="st">"VISCODE"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  strict <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">check_colnames</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span>,</span></span>
+<span class="r-in"><span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="CDR.html">CDR</a></span>,</span></span>
 <span class="r-in"><span>  col_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RID"</span>, <span class="st">"VISCODE"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  strict <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

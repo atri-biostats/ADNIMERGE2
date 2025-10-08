@@ -1,4 +1,4 @@
-pandoc: '3.6'
+pandoc: 3.6.3
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
@@ -7,9 +7,10 @@ articles:
   ADNIMERGE2-Analysis-Data: ADNIMERGE2-Analysis-Data.html
   ADNIMERGE2-Analysis-Meta-Specs: ADNIMERGE2-Analysis-Meta-Specs.html
   ADNIMERGE2-Derived-Data: ADNIMERGE2-Derived-Data.html
+  ADNIMERGE2-PACC: ADNIMERGE2-PACC.html
   ADNIMERGE2-Package-Building: ADNIMERGE2-Package-Building.html
   ADNIMERGE2: ADNIMERGE2.html
-last_built: 2025-07-25T23:07Z
+last_built: 2025-10-08T22:02Z
 urls:
   reference: https://atri-biostats.github.io/ADNIMERGE2/reference
   article: https://atri-biostats.github.io/ADNIMERGE2/articles

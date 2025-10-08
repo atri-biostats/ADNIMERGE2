@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -64,7 +65,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 75738 observations and 31 variables.</p>
+    <p>A data frame with 76915 observations and 36 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -76,30 +77,34 @@
 <ul><li><p><strong>ORIGPROT</strong> <em>character</em> Original study protocol , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>COLPROT</strong> <em>character</em> Study protocol of data collection , with options: ADNI1, ADNIGO, ADNI2, ADNI3, ADNI4</p></li>
 <li><p><strong>PTID</strong> <em>character</em> Participant ID</p></li>
-<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 10894</p></li>
+<li><p><strong>RID</strong> <em>numeric</em> Participant roster ID Range value: 2, ..., 10898</p></li>
 <li><p><strong>VISCODE</strong> <em>character</em> Visit code</p></li>
 <li><p><strong>VISCODE2</strong> <em>character</em> Translated visit code</p></li>
 <li><p><strong>VISDATE</strong> <em> </em> Registry EXAMDATE on matching VISCODE Date: YYY-MM-DD</p></li>
 <li><p><strong>RECNO</strong> <em>numeric</em>   Range value: 1, ..., 104</p></li>
 <li><p><strong>CMMED</strong> <em>character</em> Concurrent Medication</p></li>
 <li><p><strong>CMMEDID</strong> <em>numeric</em> medlist ID Range value: 1, ..., 1544</p></li>
+<li><p><strong>CMDOSE</strong> <em>character</em> Dose</p></li>
 <li><p><strong>CMUNITSID</strong> <em>character</em></p></li>
 <li><p><strong>CMUNITS</strong> <em>numeric</em> Units</p><ul><li><p><em>ADNI2:</em> 1=drop (gtt) ; 2=gram (gm) ; 3=international units (IU) ; 4=microgram (mcg) ; 5=milligram (mg) ;  6=milliliter (ml) ; 7=percent (%) ; 8=puff ; 9=spray (spray) ; 10=tablespoon (15mL) (tbsp) ; 11=tablets (tabs) ; 12=teaspoon (5mL) (tsp) ; 13=other (OT)</p></li>
 <li><p><em>ADNI3:</em> 1=drop (gtt) ; 2=gram (gm) ; 3=international units (IU) ; 4=microgram (mcg) ; 5=milligram (mg) ; 6=milliliter (ml) ; 7=percent (%) ; 8=puff ; 9=spray (spray) ; 10=tablespoon (15mL) (tbsp) ; 11=tablets (tabs) ; 12=teaspoon (5mL) (tsp) ; 13=other (OT)</p></li>
 <li><p><em>ADNI4:</em> 1=drop (gtt) ; 10=tablespoon (15mL) (tbsp) ; 11=tablets (tabs) ; 12=teaspoon (5mL) (tsp) ; 13=other (OT) ; 2=gram (gm) ; 3=international units (IU) ; 4=microgram (mcg) ; 5=milligram (mg) ; 6=milliliter (ml) ; 7=percent (%) ; 8=puff ; 9=spray (spray)</p></li>
 </ul></li>
+<li><p><strong>CMUNITO</strong> <em>character</em> If other, specify:</p></li>
 <li><p><strong>CMFREQID</strong> <em>character</em></p></li>
 <li><p><strong>CMFREQNC</strong> <em>numeric</em> Frequency</p><ul><li><p><em>ADNI1</em></p></li>
 <li><p><em>ADNI2:</em> 1=2 times a day (bid) ; 2=3 times a day (tid) ; 3=as needed (prn) ; 4=continuous (cont) ; 5=every 12 hours (q12h) ; 6=every 4 hours (q4h) ; 7=every morning (qam) ; 8=every night at bedtime (qhs) ; 9=every other day (qod) ; 10= once a day (daily) (qd) ; 11=once (1x) ; 12=once a month (1xm) ; 13=other (OT)</p></li>
 <li><p><em>ADNI3:</em> 1=2 times a day (bid) ; 2=3 times a day (tid) ; 3=as needed (prn) ; 4=continuous (cont) ; 5=every 12 hours (q12h) ; 6=every 4 hours (q4h) ; 7=every morning (qam) ; 8=every night at bedtime (qhs) ; 9=every other day (qod) ; 10=once a day (daily) (qd) ; 11=once (1x) ; 12=once a month (1xm) ; 13=other (OT)</p></li>
 <li><p><em>ADNI4:</em> 1=2 times a day (bid) ; 10=once a day (daily) (qd) ; 11=once (1x) ; 12=once a month (1xm) ; 13=other (OT) ; 2=3 times a day (tid) ; 3=as needed (prn) ; 4=continuous (cont) ; 5=every 12 hours (q12h) ; 6=every 4 hours (q4h) ; 7=every morning (qam) ; 8=every night at bedtime (qhs) ; 9=every other day (qod)</p></li>
 </ul></li>
+<li><p><strong>CMFREQNCO</strong> <em>character</em> If other, specify:</p></li>
 <li><p><strong>CMROUTEID</strong> <em>character</em></p></li>
 <li><p><strong>CMROUTE</strong> <em>numeric</em> Route</p><ul><li><p><em>ADNI1</em></p></li>
 <li><p><em>ADNI2:</em> 1=both ears (au) ; 2=each eye (oe) ; 3=intramuscular (im) ; 4=intravenous (iv) ; 5=nasal (nas, ns) ; 6=oral (po) ; 7=subcutaneous (sc, sq) ; 8=sublingual (sl, subling) ; 11=topical (top, tp) ; 9=transdermal (td, tdrm) ; 10=other (OT)</p></li>
 <li><p><em>ADNI3:</em> 1=both ears (au) ; 2=each eye (oe) ; 3=intramuscular (im) ; 4=intravenous (iv) ; 5=nasal (nas, ns) ; 6=oral (po) ; 7=subcutaneous (sc, sq) ; 8=sublingual (sl, subling) ; 9=transdermal (td, tdrm) ; 10=other (OT) ; 11=topical (top, tp)</p></li>
 <li><p><em>ADNI4:</em> 1=both ears (au) ; 10=other (OT) ; 11=topical (top, tp) ; 2=each eye (oe) ; 3=intramuscular (im) ; 4=intravenous (iv) ; 5=nasal (nas, ns) ; 6=oral (po) ; 7=subcutaneous (sc, sq) ; 8=sublingual (sl, subling) ; 9=transdermal (td, tdrm)</p></li>
 </ul></li>
+<li><p><strong>CMROUTEO</strong> <em>character</em> If other, specify:</p></li>
 <li><p><strong>CMREASON</strong> <em>numeric</em> Reason Prescribed</p><ul><li><p><em>ADNI1</em></p></li>
 <li><p><em>ADNIGO, ADNI2, ADNI3, ADNI4:</em> 1=Adverse Event ; 2=Therapeutic Use ; 3=Prophylaxis/Non-therapeutic Use</p></li>
 </ul></li>
@@ -111,7 +116,8 @@
 </ul></li>
 <li><p><strong>CMEND</strong> <em>character</em> Date Ended</p></li>
 <li><p><strong>CMENDYR_DRVD</strong> <em>numeric</em> Year Ended (Derived from CMEND) Range value: 1985, ..., 2918</p></li>
-<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 6, ..., 182286</p></li>
+<li><p><strong>CMCOMM</strong> <em>character</em> Comments</p></li>
+<li><p><strong>ID</strong> <em>numeric</em> Record ID Range value: 6, ..., 186563</p></li>
 <li><p><strong>SITEID</strong> <em>numeric</em> Site ID Range value: 1, ..., 941</p></li>
 <li><p><strong>USERDATE</strong> <em> </em> User Create Date Date: YYY-MM-DD</p></li>
 <li><p><strong>USERDATE2</strong> <em> </em> User Last Modify Date Date: YYY-MM-DD</p></li>

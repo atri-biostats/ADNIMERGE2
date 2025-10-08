@@ -23,6 +23,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -75,19 +76,19 @@
 
 
 <dt id="arg-col-name">col_name<a class="anchor" aria-label="anchor" href="#arg-col-name"></a></dt>
-<dd><p>Character vector of columns, Default: `NULL` to check for all available columns.</p></dd>
+<dd><p>Character vector of columns, Default: <code>NULL</code> to check for all available columns.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A character vector of column names that contains the provided specific value.
- Otherwise return `NA`.</p>
+ Otherwise return <code>NA</code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="fu">get_cols_value</span><span class="op">(</span>data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va">ADAS_ADNIGO23</span>, value <span class="op">=</span> <span class="st">"Letter"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">get_cols_value</span><span class="op">(</span>data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="CDR.html">CDR</a></span>, value <span class="op">=</span> <span class="st">"Telephone Call"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

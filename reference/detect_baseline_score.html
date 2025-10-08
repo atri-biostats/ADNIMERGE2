@@ -25,6 +25,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -51,7 +52,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Detect Closest Baseline Score</h1>
-      <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/R/enrollment-utils.R" class="external-link"><code>R/enrollment-utils.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/R/analysis-data-prep.R" class="external-link"><code>R/analysis-data-prep.R</code></a></small>
       <div class="d-none name"><code>detect_baseline_score.Rd</code></div>
     </div>
 
@@ -74,7 +75,7 @@
 
 
 <dt id="arg-enroll-date">enroll_date<a class="anchor" aria-label="anchor" href="#arg-enroll-date"></a></dt>
-<dd><p>Enrollment date (i.e. Baseline visit date)</p></dd>
+<dd><p>Enrollment date (i.e. baseline visit date)</p></dd>
 
 
 <dt id="arg-time-interval">time_interval<a class="anchor" aria-label="anchor" href="#arg-time-interval"></a></dt>
@@ -83,15 +84,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A character vector with the same length as the input values `cur_record_date`.
- The returned vector will contains `Yes` flag for the closest record
+    <p>A character vector with the same length as <code>cur_record_date</code> and
+ contain a flag value, <code>Yes</code>, for the closest record
  within the specified window period. Otherwise, missing value.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Other ADNI enrollment:
-<code><a href="get_adni_blscreen_dxsum.html">get_adni_blscreen_dxsum</a>()</code>,
-<code><a href="get_adni_enrollment.html">get_adni_enrollment</a>()</code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

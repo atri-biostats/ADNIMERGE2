@@ -44,6 +44,7 @@
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Package-Building.html">Building an R Package from Raw Dataset</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Derived Data</h6></li>
+    <li><a class="dropdown-item" href="../articles/ADNIMERGE2-PACC.html">PACC Score - Modified Version</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2 Derived Data</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2 Analysis Metadata Specs</a></li>
     <li><a class="dropdown-item" href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2 Analysis Data</a></li>
@@ -82,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNI-Longitudinal</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: July 25,
+            <h4 data-toc-skip class="date">Last Updated: October 08,
 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNI-Longitudinal.Rmd" class="external-link"><code>vignettes/ADNI-Longitudinal.Rmd</code></a></small>
@@ -137,6 +138,9 @@ known baseline diagnostics summary and that have at least one assessment
 score. The analysis population is summarized in the following
 diagram.</p>
 <p><img src="ADNI-Longitudinal_files/figure-html/consort-diagram-1.png" alt="Analysis Population Diagram" width="850"></p>
+<p><em>NOTE: </em> Records with missing time variable
+(<code>TIME</code>) are also excluded from the analysis population as
+shown in the following r chunk.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Prepare analysis dataset of ADAS-cog item-13 score</span></span>
 <span><span class="va">ADADAS</span> <span class="op">&lt;-</span> <span class="va">ADQS</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -145,9 +149,10 @@ diagram.</p>
 <span>  <span class="co"># ADAS-cog item-13 total score</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">PARAMCD</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"ADASTT13"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Compute time variable in month</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>TIME <span class="op">=</span> <span class="fu"><a href="../reference/convert_number_days.html">convert_number_days</a></span><span class="op">(</span><span class="va">AVISITN</span>, bin <span class="op">=</span> <span class="va">month_bin</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="co"># visit date data imputation from registry</span></span>
-<span>  <span class="co"># filter(is.na(TIME), !is.na(DX), !is.na(AVAL))</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    TIME <span class="op">=</span> <span class="fu"><a href="../reference/convert_number_days.html">convert_number_days</a></span><span class="op">(</span><span class="va">AVISITN</span>, bin <span class="op">=</span> <span class="va">month_bin</span><span class="op">)</span>,</span>
+<span>    DX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">DX</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">DX</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># For spline term in the model</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">if_any</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TIME"</span>, <span class="st">"DX"</span>, <span class="st">"AVAL"</span><span class="op">)</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -229,8 +234,7 @@ the model).</p></li>
 <span></span>
 <span><span class="co"># With a random slope term ----</span></span>
 <span><span class="va">lmer_mod_fit</span> <span class="op">&lt;-</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span></span>
-<span>  formula <span class="op">=</span> <span class="va">AVAL</span> <span class="op">~</span> <span class="va">DX</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns21</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns22</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns21</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns22</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">:</span><span class="va">DX</span> <span class="op">+</span> <span class="op">(</span><span class="va">TIME</span> <span class="op">|</span> <span class="va">USUBJID</span><span class="op">)</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">AVAL</span> <span class="op">~</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns21</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns22</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="va">DX</span> <span class="op">+</span> <span class="op">(</span><span class="va">TIME</span> <span class="op">|</span> <span class="va">USUBJID</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">ADADAS</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmerControl.html" class="external-link">lmerControl</a></span><span class="op">(</span>optimizer <span class="op">=</span> <span class="st">"Nelder_Mead"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -239,23 +243,22 @@ the model).</p></li>
 <span></span>
 <span><span class="va">lmer_mod_fit</span></span>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
-<span><span class="co">#&gt; Formula: AVAL ~ DX + I(ns21(TIME)) + I(ns22(TIME)) + (I(ns21(TIME)) +  </span></span>
-<span><span class="co">#&gt;     I(ns22(TIME))):DX + (TIME | USUBJID)</span></span>
+<span><span class="co">#&gt; Formula: AVAL ~ (I(ns21(TIME)) + I(ns22(TIME))) * DX + (TIME | USUBJID)</span></span>
 <span><span class="co">#&gt;    Data: ADADAS</span></span>
-<span><span class="co">#&gt; REML criterion at convergence: 72928.55</span></span>
+<span><span class="co">#&gt; REML criterion at convergence: 76398.27</span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;  Groups   Name        Std.Dev. Corr</span></span>
-<span><span class="co">#&gt;  USUBJID  (Intercept) 5.5581       </span></span>
-<span><span class="co">#&gt;           TIME        0.1763   0.51</span></span>
-<span><span class="co">#&gt;  Residual             3.3815       </span></span>
-<span><span class="co">#&gt; Number of obs: 11922, groups:  USUBJID, 2810</span></span>
+<span><span class="co">#&gt;  USUBJID  (Intercept) 5.5690       </span></span>
+<span><span class="co">#&gt;           TIME        0.1773   0.52</span></span>
+<span><span class="co">#&gt;  Residual             3.3729       </span></span>
+<span><span class="co">#&gt; Number of obs: 12490, groups:  USUBJID, 2987</span></span>
 <span><span class="co">#&gt; Fixed Effects:</span></span>
-<span><span class="co">#&gt;         (Intercept)                DXMCI                DXDEM  </span></span>
-<span><span class="co">#&gt;               8.806                7.298               21.044  </span></span>
-<span><span class="co">#&gt;       I(ns21(TIME))        I(ns22(TIME))  DXMCI:I(ns21(TIME))  </span></span>
-<span><span class="co">#&gt;              11.435               21.456               28.298  </span></span>
-<span><span class="co">#&gt; DXDEM:I(ns21(TIME))  DXMCI:I(ns22(TIME))  DXDEM:I(ns22(TIME))  </span></span>
-<span><span class="co">#&gt;              69.289               32.062               48.478  </span></span>
+<span><span class="co">#&gt;         (Intercept)        I(ns21(TIME))        I(ns22(TIME))  </span></span>
+<span><span class="co">#&gt;               8.774               11.624               21.913  </span></span>
+<span><span class="co">#&gt;               DXMCI                DXDEM  I(ns21(TIME)):DXMCI  </span></span>
+<span><span class="co">#&gt;               7.356               20.959               28.074  </span></span>
+<span><span class="co">#&gt; I(ns21(TIME)):DXDEM  I(ns22(TIME)):DXMCI  I(ns22(TIME)):DXDEM  </span></span>
+<span><span class="co">#&gt;              62.749               31.349               35.937  </span></span>
 <span><span class="co">#&gt; optimizer (Nelder_Mead) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings</span></span></code></pre></div>
 <ul>
 <li>
@@ -283,7 +286,7 @@ diagnostic) plots.</li>
 <ul>
 <li>The prediction timeline for Dementia (DEM) diagnostics status was
 limited to 24 monthsdue to the anticipated follow-up collection of ADAS
-cognitive behaviour assessmentwhich is up-to 2 years due to the study
+cognitive behavior assessmentwhich is up-to 2 years due to the study
 design. However, ADAS-cog assessment might have been collected for
 rollover subjects with DEM baseline diagnostics status during their
 initial visit.</li>
@@ -314,13 +317,13 @@ initial visit.</li>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">dx_color_pal</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="st">"Months since baseline visit"</span>,</span>
-<span>    y <span class="op">=</span> <span class="st">"Estimated ADAS-cog Item-13 \n Total Score with 95% CI"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Predicted ADAS-cog Item-13 \n Total Score with 95% CI"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Baseline Diagnostics Status"</span>,</span>
 <span>    fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>      <span class="st">"The prediction timeline for Dementia (DEM) diagnostics status was limited"</span>,</span>
-<span>      <span class="st">" to 24 months due to the\n anticipated follow-up assessment collection"</span>,</span>
-<span>      <span class="st">" due to study design."</span></span>
+<span>      <span class="st">" to 24 months due to the\n anticipated follow-up assessment collection "</span>,</span>
+<span>      <span class="st">"in the study."</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
@@ -328,7 +331,7 @@ initial visit.</li>
 <span>    plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="va">predicted_plot</span></span></code></pre></div>
-<p><img src="ADNI-Longitudinal_files/figure-html/model-predict-1.png" alt="Estimated score by baseline diagnostics status" width="700"></p>
+<p><img src="ADNI-Longitudinal_files/figure-html/model-predict-1.png" alt="Predicted score by baseline diagnostics status" width="700"></p>
 </div>
 </div>
 </div>
