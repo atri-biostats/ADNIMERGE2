@@ -139,7 +139,7 @@ adjust_value_datadict <- function(.data, datadict_name = c("DATADIC", "REMOTE_DA
 ### Generate data dictionary from actual raw dataset ----
 temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   summarize_dataset(
-    data = raw_data_list %>% pluck(., tb),
+    .data = raw_data_list %>% pluck(., tb),
     dataset_name = tb,
     wide_format = TRUE
   )
@@ -220,17 +220,17 @@ temp_data_dict <- temp_data_dict %>%
   ) %>%
   mutate(prefix_char = str_remove(string = prefix_char, pattern = "_")) %>%
   mutate(
-    dataset_label = case_when(
+    data_label = case_when(
       !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
       is.na(prefix_char) ~ CRFNAME
     ),
-    add_authors = authors,
-    short_description = case_when(
+    authors = authors,
+    description = case_when(
       !tblname %in% common_data_names ~ str_c(CRFNAME, common_description, sep = " "),
       tblname %in% common_data_names ~ str_c(CRFNAME, str_remove(common_description, "^data"), sep = " ")
     ),
-    dataset_source_type = "raw",
-    add_source = loni_url_link
+    source_type = "raw",
+    source = loni_url_link
   ) %>%
   # Add field code and labels from DATADIC dataset
   left_join(
@@ -257,9 +257,8 @@ temp_data_dict <- temp_data_dict %>%
   mutate(field_notes = str_replace_all(field_notes, "Character variable with", ", with")) %>%
   mutate(field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with levels")) %>%
   select(
-    dd_name, num_rows, num_cols, field_name, field_class, field_label,
-    field_values, field_notes, dataset_label, add_authors, short_description,
-    dataset_source_type, add_source
+    dd_name, num_rows, num_cols, field_name, field_class, field_label, field_values, field_notes,
+    data_label, source_type, authors, description, source
   )
 
 ### Add dataset category/keywords ----
@@ -285,7 +284,7 @@ temp_data_dict <- temp_data_dict %>%
     by = c("dd_name" = "TBLNAME")
   ) %>%
   verify(nrow(.) == nrow(temp_data_dict)) %>%
-  mutate(add_keywords = case_when(
+  mutate(keywords = case_when(
     is.na(dir_cat) ~ "other_raw_dataset",
     !is.na(dir_cat) ~ dir_cat
   )) %>%
@@ -341,10 +340,10 @@ if (file.exists(data_document_path) == TRUE) {
 generate_roxygen_document(
   dataset_name_list = unique(temp_data_dict$dd_name),
   data_list = NULL,
-  data_dict = temp_data_dict,
+  .data_dict = temp_data_dict,
   roxygen_source_type = "data_dictionary",
-  output_file_name = data_document_path,
-  existed_append = FALSE
+  output_path = data_document_path,
+  overwrite = FALSE
 )
 
 # Documentation for DATA_DOWNLOADED_DATE data ----
@@ -381,7 +380,7 @@ if (exists("derived_data_list")) {
   source_link <- function(tblname) {
     vignette_link <- case_when(
       nchar(tblname) == 2 ~ "ADNIMERGE2-Derived-Data",
-      nchar(tblname) >2 & tolower(tblname) %in% "pacc" ~ "ADNIMERGE2-PACC",
+      nchar(tblname) > 2 & tolower(tblname) %in% "pacc" ~ "ADNIMERGE2-PACC",
       nchar(tblname) > 2 ~ "ADNIMERGE2-Analysis-Data"
     )
     output_link <- c()
@@ -421,7 +420,7 @@ if (exists("derived_data_list")) {
 
   temp_data_dict_derived <- lapply(derived_data_name, function(tb) {
     summarize_dataset(
-      data = derived_data_list %>% pluck(., tb),
+      .data = derived_data_list %>% pluck(., tb),
       dataset_name = tb,
       wide_format = TRUE
     )
@@ -437,14 +436,14 @@ if (exists("derived_data_list")) {
     assert_uniq(dd_name, field_name) %>%
     assert_non_missing(dd_name, field_name, CRFNAME) %>%
     mutate(
-      dataset_label = CRFNAME,
-      add_authors = authors,
-      short_description = str_c(
+      data_label = CRFNAME,
+      authors = authors,
+      description = str_c(
         str_to_sentence(str_remove_all(CRFNAME, "\\[ Derived \\]")),
         " derived dataset."
       ),
-      dataset_source_type = "derived",
-      add_source = case_when(
+      source_type = "derived",
+      source = case_when(
         dd_name %in% "DERIVED_DATADIC" ~ "For more details see the help vignettes",
         TRUE ~ source_link(tblname = dd_name)
       ),
@@ -452,7 +451,7 @@ if (exists("derived_data_list")) {
         TEXT %in% " " | is.na(TEXT) ~ field_notes,
         TRUE ~ paste0(TEXT, "; ", field_notes)
       ),
-      add_keywords = "derived_dataset"
+      keywords = "derived_dataset"
     ) %>%
     mutate(across(
       c(field_label, field_notes, field_values),
@@ -464,9 +463,9 @@ if (exists("derived_data_list")) {
       field_notes = str_replace_all(field_notes, "Factor variable with levels", ", with factor levels")
     ) %>%
     select(
-      dd_name, dataset_label, num_rows, num_cols, field_name, field_class,
-      field_label, field_values, field_notes, add_authors, short_description,
-      dataset_source_type, add_source, add_keywords
+      dd_name, num_rows, num_cols, field_name, field_class,
+      field_label, field_values, field_notes,
+      data_label, source_type, authors, description, source, keywords
     ) %>%
     assert_non_missing(field_label, field_notes)
 
@@ -474,10 +473,10 @@ if (exists("derived_data_list")) {
   generate_roxygen_document(
     dataset_name_list = unique(temp_data_dict_derived$dd_name),
     data_list = NULL,
-    data_dict = temp_data_dict_derived,
+    .data_dict = temp_data_dict_derived,
     roxygen_source_type = "data_dictionary",
-    output_file_name = data_document_path,
-    existed_append = TRUE
+    output_path = data_document_path,
+    overwrite = TRUE
   )
 
   # Documentation for METACORES meta-specs ----

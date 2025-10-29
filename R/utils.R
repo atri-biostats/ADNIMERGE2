@@ -1710,9 +1710,9 @@ set_datadict_tbl <- function(.data) {
 #'
 #' @param input_dir Directory path, Default: NULL
 #' @param full_file_path Full file path, Default: NULL
-#' @param .envr Environment for loading the data, Default: NULL
-#'   By default, it load the data into global environment,
-#'   please \code{\link[rlang]{caller_env}}
+#' @param .envr Environment for loading the data, Default: NULL.
+#'    By default, it loads the data into global environment,
+#'   please see \code{\link[rlang]{caller_env}}
 #' @return Load imported CSV data.
 #' @examples
 #' \dontrun{
