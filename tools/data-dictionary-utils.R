@@ -13,8 +13,8 @@
 #'   \item{summary_type}{Summary type either 'min' or 'max' for numeric variable}
 #' @details
 #' This function is used to summarize single variable with variable attributes.
-#' The variable attributes includes variable name, labels, class, notes and possible variable values
-#' such as factor levels and range values of numeric variable.
+#' The variable attribute includes variable name, labels, class, notes and possible values
+#' such as levels for factor variable and range values for numeric variable.
 #' The output result can be used to create a data dictionary file.
 #'
 #' @examples
@@ -385,7 +385,7 @@ set_var_class <- function(.data, var_name) {
   var_class <- .data %>%
     rename_with(~ paste0("temp_var"), all_of(var_name))
   var_class <- class(var_class$temp_var)
-  if (var_class %in% "factor") var_class <- "fct"
+  if (any("factor" %in% var_class)) var_class <- "fct"
   .data <- structure(.data, class = c(class(.data), var_class))
   return(.data)
 }
@@ -470,10 +470,10 @@ summarize_dataset <- function(.data, dataset_name = NULL, wide_format = FALSE) {
 #' @param .data Data.frame and only applicable if \code{.data_dict} is missing, Default: NULL
 #' @param .data_dict A data dictionary and only applicable if \code{.data} or \code{data_list} is missing, Default: NULL
 #' @param source_type Data source type either 'raw', 'derived' or 'external', Default: 'raw'
-#' @param field_nameVar Variable name that contains field names, Default: NULL
-#' @param field_classVar Variable name that contains field class, Default: NULL
-#' @param field_labelVar Variable name that contains field label, Default: NULL
-#' @param field_notesVar Variable name that contains field notes, Default: NULL
+#' @param field_nameVar Variable name that contains field names and only applicable if \code{.data_dict} is non-missing, Default: NULL
+#' @param field_classVar Variable name that contains field class and only applicable if \code{.data_dict} is non-missing, Default: NULL
+#' @param field_labelVar Variable name that contains field label and only applicable if \code{.data_dict} is non-missing, Default: NULL
+#' @param field_notesVar Variable name that contains field notes and only applicable if \code{.data_dict} is non-missing, Default: NULL
 #' @param tag_list
 #'   A list object that contains roxygen2 tag names with corresponding values, Default: list()
 #'   \code{tag_list} should be a named list object.
@@ -771,14 +771,11 @@ generate_roxygen_document <- function(data_names,
 
   # If a data dictionary (data_dict) is provided
   if (roxygen_source %in% "data_dict") {
-    if (is.null(.data_dict)) {
-      cli_abort(
-        message = c("{.var .data_dict} must not be missing.")
-      )
-    }
+    if (is.null(.data_dict)) cli_abort(message = c("{.var .data_dict} must not be missing."))
 
+    temp_arg_list <- c("dd_name", field_nameVar, field_classVar, field_labelVar, field_notesVar)
     arg_match(
-      arg = c("dd_name", field_nameVar, field_classVar, field_labelVar, field_notesVar),
+      arg = temp_arg_list,
       values = colnames(.data_dict),
       multiple = TRUE
     )
@@ -819,10 +816,10 @@ generate_roxygen_document <- function(data_names,
 
     # Current data label
     temp_data_label <- data_label_list[[data_name]]
-    temp_data_label <- convert_na_into_null(temp_data_label)
+    temp_data_label <- convert_na_into_null(as.character(temp_data_label))
     # Current data source type
     temp_data_source <- source_type_list[[data_name]]
-    temp_data_source <- convert_na_into_null(temp_data_source)
+    temp_data_source <- convert_na_into_null(as.character(temp_data_source))
 
     temp_single_dd <- generate_roxygen_single_dataset(
       data_name = data_name,
@@ -892,14 +889,23 @@ get_prep_list <- function(data_dict, var_name = NULL, is_tag_list = FALSE,
     select(any_of(c("dd_name", col_names))) %>%
     distinct() %>%
     assert(is_uniq, all_of("dd_name")) %>%
-    group_by(all_of("dd_name"), .add = TRUE) %>%
+    group_by(across(all_of("dd_name")), .add = TRUE) %>%
     group_nest() %>%
     ungroup() %>%
     mutate(data = map(data, as.list))
 
-  names(output_data) <- output_data$dd_name
+  names(output_data$data) <- output_data$dd_name
 
   return(output_data$data)
+}
+
+#' @title Get tag list from a data dictionary
+#' @inheritParams get_prep_list
+#' @return A list object for data name specific tag name and tag value
+#' @rdname get_tag_list
+
+get_tag_list <- function(data_dict) {
+  get_prep_list(data_dict = data_dict, var_name = NULL, is_tag_list = TRUE)
 }
 
 #' @title Add Missing Variable
@@ -956,15 +962,6 @@ create_vars <- function(.data, var_name) {
   return(.data)
 }
 
-#' @title Get tag list from a data dictionary
-#' @inheritParams get_prep_list
-#' @return A list object for data name specific tag name and tag value
-#' @rdname get_tag_list
-
-get_tag_list <- function(data_dict) {
-  get_prep_list(data_dict = data_dict, var_name = NULL, is_tag_list = TRUE)
-}
-
 #' @title Concatenate roxygen2 tags
 #' @param x Single character
 #' @param tag_name Tag name, see \code{roxygen2::tags_list(built_in = FALSE)}
@@ -985,10 +982,12 @@ get_tag_list <- function(data_dict) {
 concat_tag <- function(x, tag_name, tag_value = NULL, error_call = TRUE) {
   require(stringr)
   if (length(tag_name) != 1) {
-    cli::cli_abort(c(
-      "{.var tag_name} must be size of one. \n",
-      "{.var tag_name} is a size of {.val {length(tag_name)}} object"
-    ))
+    cli::cli_abort(
+      message = c(
+        "{.var tag_name} must be size of one. \n",
+        "{.var tag_name} is a size of {.val {length(tag_name)}} object"
+      )
+    )
   }
   status <- ifelse(!is.null(tag_value), TRUE, FALSE)
   status <- ifelse(!is.na(tag_value), TRUE, FALSE)
@@ -997,13 +996,9 @@ concat_tag <- function(x, tag_name, tag_value = NULL, error_call = TRUE) {
     x <- str_c(x, str_c("#' @", tag_name, " ", tag_value, "\n"), collapse = "")
   }
   if (status) {
-    if (error_call) {
-      cli::cli_abort("{.var tag_value} must not be missing.")
-    }
+    if (error_call) cli::cli_abort(message = "{.var tag_value} must not be missing.")
   }
-  if (is.na(x)) {
-    cli::cli_abort("{.var x} must not be missing.")
-  }
+  if (is.na(x)) cli::cli_abort(message = "{.var x} must not be missing.")
   return(x)
 }
 

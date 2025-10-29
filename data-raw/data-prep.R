@@ -226,7 +226,7 @@ data_path_list <- list.files(
 )
 
 dataset_cat_phase <- lapply(data_path_list, function(x) {
-  dataset_name <- str_remove(basename(x), "\\.rda")
+  dataset_name <- str_remove(basename(x), "\\.rda$")
   # Load dataset in new environment
   new_env <- new.env()
   load(file = x, envir = new_env)
@@ -239,8 +239,13 @@ dataset_cat_phase <- lapply(data_path_list, function(x) {
     mutate(
       dir = raw_data_dir, # For simplicity
       full_file_path = x, # Exact file path
-      file_list = dataset_name
+      file_list = dataset_name,
     ) %>%
+    # Adjust for remotely collected dataset
+    mutate(dir_cat = case_when(
+      str_detect(file_list, "$RMT\\_") ~ adni_phase()[5],
+      TRUE ~ dir_cat
+    )) %>%
     relocate(dir_cat, .after = last_col())
 })
 
@@ -313,6 +318,12 @@ if (UPDATE_MISSING_VALUE) {
       load, .GlobalEnv
     )
     assign("dd", get(tb))
+
+    # Removing state names from ADI dataset
+    if (tb %in% c("ADI", "adi")) {
+      dd <- dd %>%
+        select(-any_of(c("STATE")))
+    }
 
     if ("RID" %in% names(dd)) check_RID_col <- TRUE else check_RID_col <- FALSE
     ## Adding common columns -----

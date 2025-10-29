@@ -120,7 +120,7 @@ loni_url_link <- paste0(
 ### Common data description
 common_description <- str_c("data. More information is available at ", loni_url_link)
 ### Authors
-authors <- paste0(
+authors_list <- paste0(
   "\\href{adni-data@googlegroups.com}",
   "{adni-data@googlegroups.com}"
 )
@@ -224,7 +224,7 @@ temp_data_dict <- temp_data_dict %>%
       !is.na(prefix_char) ~ str_c(prefix_char, CRFNAME, sep = " - "),
       is.na(prefix_char) ~ CRFNAME
     ),
-    authors = authors,
+    authors = authors_list,
     description = case_when(
       !tblname %in% common_data_names ~ str_c(CRFNAME, common_description, sep = " "),
       tblname %in% common_data_names ~ str_c(CRFNAME, str_remove(common_description, "^data"), sep = " ")
@@ -338,10 +338,10 @@ if (file.exists(data_document_path) == TRUE) {
   file.create(data_document_path, showWarnings = TRUE)
 }
 generate_roxygen_document(
-  dataset_name_list = unique(temp_data_dict$dd_name),
+  data_names = unique(temp_data_dict$dd_name),
   data_list = NULL,
   .data_dict = temp_data_dict,
-  roxygen_source_type = "data_dictionary",
+  roxygen_source = "data_dict",
   output_path = data_document_path,
   overwrite = FALSE
 )
@@ -437,7 +437,7 @@ if (exists("derived_data_list")) {
     assert_non_missing(dd_name, field_name, CRFNAME) %>%
     mutate(
       data_label = CRFNAME,
-      authors = authors,
+      authors = authors_list,
       description = str_c(
         str_to_sentence(str_remove_all(CRFNAME, "\\[ Derived \\]")),
         " derived dataset."
@@ -471,10 +471,10 @@ if (exists("derived_data_list")) {
 
   ## Finalize documentations ----
   generate_roxygen_document(
-    dataset_name_list = unique(temp_data_dict_derived$dd_name),
+    data_names = unique(temp_data_dict_derived$dd_name),
     data_list = NULL,
     .data_dict = temp_data_dict_derived,
-    roxygen_source_type = "data_dictionary",
+    roxygen_source = "data_dict",
     output_path = data_document_path,
     overwrite = TRUE
   )
