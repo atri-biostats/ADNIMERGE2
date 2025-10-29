@@ -243,7 +243,7 @@ dataset_cat_phase <- lapply(data_path_list, function(x) {
     ) %>%
     # Adjust for remotely collected dataset
     mutate(dir_cat = case_when(
-      str_detect(file_list, "$RMT\\_") ~ adni_phase()[5],
+      str_detect(file_list, "$RMT\\_") ~ tolower(adni_phase()[5]),
       TRUE ~ dir_cat
     )) %>%
     relocate(dir_cat, .after = last_col())
