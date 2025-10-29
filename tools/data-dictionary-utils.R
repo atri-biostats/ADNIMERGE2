@@ -481,6 +481,7 @@ summarize_dataset <- function(.data, dataset_name = NULL, wide_format = FALSE) {
 #'   For \code{\link{}(generate_roxygen_document)}, \code{tag_list} will be a list object with a format of \code{list("data_name" = list(tag_name = tag_value))}.
 #' @param output_path Output file path. It must be non-missing (i.e., `NULL`) if the interest is to save the script in local directory.
 #' @param output_path Output file path. It must not be missing (i.e., `NULL`) if the interest is to write the roxygen2 script in local directory.
+#' @param create_local_path A Boolean value to create the \code{output_path} if it is not existing, and only applicable for non missing \code{output_path}, Default: FALSE
 #' @return
 #'  Both \code{\link{generate_single_dataset_roxygen}()} and \code{\link{generate_roxygen_document}()} functions return the following values:
 #' \itemize{
@@ -524,7 +525,7 @@ NULL
 #' }
 #' @importFrom rlang arg_match
 #' @importFrom stringr str_c str_remove_all str_to_upper
-#' @importFrom cli cli_abort
+#' @importFrom cli cli_abort cli_alert_info
 #' @importFrom dplyr select distinct
 #' @importFrom roxygen2 tags_list
 #' @importFrom tibble tibble
@@ -536,13 +537,14 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
                                             field_nameVar = NULL, field_classVar = NULL,
                                             field_labelVar = NULL, field_notesVar = NULL,
                                             tag_list = list(),
-                                            output_path = NULL) {
+                                            output_path = NULL, create_local_path = FALSE) {
   rlang::arg_match(
     arg = source_type,
     values = c("raw", "derived", "external"),
     multiple = TRUE
   )
   check_object_type(tag_list, "list")
+  check_object_type(create_local_path, "logical")
 
   source_type <- str_to_upper(source_type)
   if (is.null(data_label)) data_label <- data_name
@@ -677,6 +679,17 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
 
   # To write in script file
   if (!is.null(output_path)) {
+    if (!file.exists(output_path)) {
+      if (create_local_path) {
+        file.create(output_path)
+        cli_alert_info("{.path {output_path}} is created!")
+      } else {
+        cli_abort(message = c(
+          "{.path {output_path}} is not found \n",
+          "Either set {.val create_local_path == TRUE} or create {.path {output_path}} mannualy"
+        ))
+      }
+    }
     if (file.exists(output_path) == TRUE) readr::write_lines(x = "", output_path)
     cat(str_c(data_doc, collapse = "\n"),
       file = output_path,
@@ -751,9 +764,11 @@ generate_roxygen_document <- function(data_names,
                                       field_nameVar = NULL, field_classVar = NULL,
                                       field_labelVar = NULL, field_notesVar = NULL,
                                       output_path = NULL, overwrite = FALSE,
-                                      tag_list = list()) {
+                                      tag_list = list(),
+                                      create_local_path = FALSE) {
   arg_match0(arg = roxygen_source, values = c("data_list", "data_dict"))
   check_object_type(overwrite, "logical")
+  check_object_type(create_local_path, "logical")
   if (is.null(field_nameVar)) field_nameVar <- "field_name"
   if (is.null(field_classVar)) field_classVar <- "field_class"
   if (is.null(field_labelVar)) field_labelVar <- "field_label"
@@ -845,7 +860,17 @@ generate_roxygen_document <- function(data_names,
   }
 
   if (!is.null(output_path)) {
-    if (!file.exists(output_path)) cli_abort(message = "{.path {output_path}} not found")
+    if (!file.exists(output_path)) {
+      if (create_local_path) {
+        file.create(output_path)
+        cli_alert_info("{.path {output_path}} is created!")
+      } else {
+        cli_abort(message = c(
+          "{.path {output_path}} is not found \n",
+          "Either set {.val create_local_path == TRUE} or create {.path {output_path}} mannualy"
+        ))
+      }
+    }
     if (overwrite == FALSE) readr::write_lines(x = "", output_path)
     output_scripts <- paste0(output_result$data_doc, collapse = "\n")
     if (is.na(output_scripts)) cli_abort(message = "{.file output_path} has not been updated/created.")
