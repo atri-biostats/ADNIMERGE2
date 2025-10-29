@@ -71,7 +71,7 @@ summarize_variable <- function(.data, var_name, wide_format = FALSE) {
 #'  This function is used in \code{\link[summarize_variable]()} function.
 #' @inheritParams summarize_variable
 #' @inherit summarize_variable return details examples importFrom
-#' @rdname summarize_var
+#' @name summarize_var
 #' @family summarize variable
 
 summarize_var <- function(.data, var_name, wide_format = FALSE) {
@@ -487,7 +487,7 @@ summarize_dataset <- function(.data, dataset_name = NULL, wide_format = FALSE) {
 #'   \item A data.frame of two columns: dataset name (\code{data_name}) and roxygen script (\code{data_doc}) if \code{output_path} is missing (i.e., `NULL`)
 #'   \item Otherwise created an \code{output_path} R script in local directory that contains the roxygen document
 #'  }
-#' @rdname roxygen2-doc
+#' @name roxygen2-doc
 #' @keywords roxygen_utils
 #' @export
 NULL
