@@ -854,7 +854,7 @@ check_non_missing_value <- function(x) {
 
 
 ## Get variable common date -----
-#' @title Get Variables Common Date
+#' @title Get Common Date Across Variables
 #'
 #' @param .data A wide format data.frame
 #'
@@ -1014,8 +1014,11 @@ get_vars_common_date <- function(.data,
 
 ## Rename columns, convert into character type and tibble object ----
 #' @title Make Similar Format
+#' @description
+#' A function to convert a data.frame object into tibble format with upper-case 
+#' column name and character type.
 #' @param .data Data.frame
-#' @return A tibble/data.frame object with upper-case column names and character type.
+#' @return A tibble/data.frame object with upper-case column name and character type.
 #' @rdname set_as_tibble
 #' @keywords utils_fun
 #' @importFrom tibble as_tibble

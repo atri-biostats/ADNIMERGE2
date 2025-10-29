@@ -275,7 +275,11 @@ create_col_protocol <- function(.data, phaseVar = NULL) {
 #' @examples
 #' \dontrun{
 #' input_string <- "1=BUTTER; 2=ARM; 3=SHORE; 4=LETTER; 5=QUEEN; 6=CABIN"
-#' split_strings(input_string = input_string)
+#' split_strings(
+#'   input_string = input_string,
+#'   spliter1 = "; ",
+#'   spliter2 = "="
+#' )
 #' }
 #' @rdname split_strings
 #' @family Split strings
@@ -283,7 +287,7 @@ create_col_protocol <- function(.data, phaseVar = NULL) {
 #' @seealso \code{\link{get_factor_levels_datadict}()}
 #' @importFrom cli cli_abort
 #' @export
-split_strings <- function(input_string, spliter1, spliter2) {
+split_strings <- function(input_string, spliter1 = '; |;', spliter2 = '=| = ') {
   # Splitting the input_string with spliter1
   split_pairs <- unlist(strsplit(x = input_string, split = spliter1))
   if (length(split_pairs) > 0) {
@@ -895,8 +899,8 @@ replace_multiple_values <- function(input_string, code, decode) {
 #' @param value Input string
 #' @param num_type Numeric value type: \code{"any"}, \code{"positive"} or \code{"negative"}, Default: 'any'
 #' @param stop_message
-#'  A Boolean value to return a stop message when there is the specified numeric
-#'  value type \code{num_type}, Default: \code{FALSE}
+#'  A Boolean value to return a stop message when the specified numeric
+#'  value type is detected \code{num_type}, Default: \code{FALSE}
 #' @return A Boolean value or a stop message if \code{stop_message} is \code{TRUE}:
 #'   \item{TRUE }{If any of the specified numeric type value is presented.}
 #'   \item{FALSE }{Otherwise}
@@ -952,6 +956,19 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 #' @description This function is used to detect decimal values.
 #' @param value Input string
 #' @return A Boolean value
+#' @examples
+#' \dontrun{
+#' # No decimal value is presented: return FALSE
+#' detect_decimal_value(1:5)
+#' detect_decimal_value(NA)
+#' 
+#' # Detect a decimal value: return TRUE
+#'  detect_decimal_value(seq(1, 5, by = 0.5))
+#'  
+#' # Detect a decimal value in a mixed string: return TRUE
+#'  detect_decimal_value(c("1", "2.0", "3", "999"))
+#'
+#' }
 #' @rdname detect_decimal_value
 #' @family checks function
 #' @keywords utils_fun
@@ -1361,11 +1378,11 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
 ## Gets columns that contains specific values ------
 #' @title Get Columns With Specific Values
 #' @description
-#'  This function is used to list columns that contains the provided specific value.
+#'  This function is used to list columns that contains a specific value.
 #' @param .data Data.frame
 #' @param value Specific value
 #' @param col_name
-#'  Character vector of columns, Default: \code{NULL} to check for all available columns.
+#'  Character vector of columns, Default: \code{NULL}. By default, all available columns will be checked.
 #' @return
 #'  A character vector of column names that contains the provided specific value.
 #'  Otherwise return \code{NA}.
@@ -1597,7 +1614,7 @@ check_duplicate_records <- function(.data,
     )
   }
   check_object_type(col_names, "character")
-  
+
   check_records <- .data %>%
     select(all_of(col_names), any_of(extra_cols)) %>%
     filter(if_all(all_of(col_names), ~ !is.na(.x))) %>%
@@ -1709,7 +1726,7 @@ set_datadict_tbl <- function(.data) {
 #' the file(s) from a specific directory or providing the full file path.
 #'
 #' @param input_dir Directory path, Default: NULL
-#' @param full_file_path Full file path, Default: NULL
+#' @param full_file_path Full file path, Default: NULL.
 #' @param .envr Environment for loading the data, Default: NULL.
 #'    By default, it loads the data into global environment,
 #'   please see \code{\link[rlang]{caller_env}}
