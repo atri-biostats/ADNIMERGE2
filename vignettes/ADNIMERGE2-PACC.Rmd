@@ -48,7 +48,7 @@ According to @donohue2014preclinical, the `PACC` score is a baseline standardize
 
 * Mini-Mental State Examination (MMSE) total score
 
-Each of component score is required to be standardized by the corresponding baseline score prior to computing the composite score. Higher values of the composite score indicate better performance.
+Each of component score is required to be standardized by a corresponding baseline score prior to computing the composite score. Higher values of the composite score indicate better performance.
 
 In ADNI study, some of these components are either collected partially during certain study phase or not available at all. Since FSCRT is not available at all, the Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS), which is called `ADAS-Cog Q4 score`, will be used as a proxy. The ADAS-Cog Q4 score ranges from `0 to 10` points where higher value indicates worse condition. Similarly, a logarithm scale of `Trails B` score will be used as a proxy for DSST. Therefore, there will have two modified version of `PACC` composite score: 
 
@@ -78,67 +78,83 @@ pacc_data_dic <- bind_rows(
   c(
     FLDNAME = "ORIGPROT",
     LABEL = "Original Study Protocol",
+    TYPE = "character",
     TEXT = "First time participation in ADNI study phase"
   ),
   c(
     FLDNAME = "COLPROT",
-    LABEL = "Study Data Collection Protocol"
+    LABEL = "Study Data Collection Protocol",
+    TYPE = "character"
   ),
   c(
     FLDNAME = "RID",
-    LABEL = "Subject Identifier"
+    LABEL = "Subject Identifier",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "VISCODE",
-    LABEL = "Study visit code"
+    LABEL = "Study visit code",
+    TYPE = "character"
   ),
   c(
     FLDNAME = "ADASQ4SCORE",
-    LABEL = "Delayed Word Recall Score - portion of ADAS-Cog"
+    LABEL = "Delayed Word Recall Score - portion of ADAS-Cog",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "ADASQ4SCORE_VISDATE",
-    LABEL = "ADAS-Cog Collection/Visit Date"
+    LABEL = "ADAS-Cog Collection/Visit Date",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "MMSE",
-    LABEL = "Mini-Mental Examination Total Score"
+    LABEL = "Mini-Mental Examination Total Score",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "MMSE_VISDATE",
-    LABEL = "MMSE Collection/Visit Date"
+    LABEL = "MMSE Collection/Visit Date",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "LDELTOTL",
-    LABEL = "Logical Memory - Delayed RecallScore"
+    LABEL = "Logical Memory - Delayed RecallScore",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "LDELTOTL_VISDATE",
-    LABEL = "LDELTOTL Collection/Visit Date"
+    LABEL = "LDELTOTL Collection/Visit Date",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "DIGITSCR",
-    LABEL = "Digit Symbol Substitution Score"
+    LABEL = "Digit Symbol Substitution Score",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "DIGITSCR_VISDATE",
-    LABEL = "DIGITSCR Collection/Visit Date"
+    LABEL = "DIGITSCR Collection/Visit Date",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "TRABSCOR",
-    LABEL = "Trial B score"
+    LABEL = "Trial B score",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "LOG.TRABSCOR",
-    LABEL = "Trial B score - Log Scale"
+    LABEL = "Trial B score - Log Scale",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "TRABSCOR_VISDATE",
-    LABEL = "TRABSCOR Collection/Visit Date"
+    LABEL = "TRABSCOR Collection/Visit Date",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "PACC_VISDATE",
     LABEL = "PACC Collection/Visit Date",
+    TYPE = "date",
     TEXT = paste0(
       "Either common date across non-missing PACC component ",
       "collection date, the maximum relative date or the corresponding ",
@@ -148,6 +164,7 @@ pacc_data_dic <- bind_rows(
   c(
     FLDNAME = "ADASQ4SCOREZ",
     LABEL = "ADAS Q4 Standardized Score",
+    TYPE = "numeric",
     TEXT = paste0(
       "Standardized by corresponding baseline score among ",
       "cognitive normal (CN) new enrollee in ADNI study. ",
@@ -157,6 +174,7 @@ pacc_data_dic <- bind_rows(
   c(
     FLDNAME = "MMSEZ",
     LABEL = "Mini-Mental State Examiniation Standardized Score",
+    TYPE = "numeric",
     TEXT = paste0(
       "Standardized by corresponding baseline score among ",
       "cognitive normal (CN) new enrollee in ADNI study."
@@ -165,6 +183,7 @@ pacc_data_dic <- bind_rows(
   c(
     FLDNAME = "LDELTOTLZ",
     LABEL = "Logical Memory - Delayed Recall Standardized Score",
+    TYPE = "numeric",
     TEXT = paste0(
       "Standardized by corresponding baseline score among ",
       "cognitive normal (CN) new enrollee in ADNI study."
@@ -173,6 +192,7 @@ pacc_data_dic <- bind_rows(
   c(
     FLDNAME = "DIGITSCRZ",
     LABEL = "Digit Symbol Substitution Standardized Score",
+    TYPE = "numeric",
     TEXT = paste0(
       "Standardized by corresponding baseline score among ",
       "cognitive normal (CN) new enrollee in ADNI1 study phase."
@@ -181,6 +201,7 @@ pacc_data_dic <- bind_rows(
   c(
     FLDNAME = "LOG.TRABSCORZ",
     LABEL = "Logical Memory - Delayed Recall Log Standardized Score",
+    TYPE = "numeric",
     TEXT = paste0(
       "Standardized by corresponding log transformed baseline score among ",
       "cognitive normal (CN) new enrollee in ADNI study. ",
@@ -189,35 +210,33 @@ pacc_data_dic <- bind_rows(
   ),
   c(
     FLDNAME = "mPACCdigit",
-    LABEL = "Modified PACC Digit Score"
+    LABEL = "Modified PACC Digit Score",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "mPACCtrailsB",
-    LABEL = "Modified PACC Trials B Score"
+    LABEL = "Modified PACC Trials B Score",
+    TYPE = "numeric"
   ),
   c(
     FLDNAME = "ENRLDT",
-    LABEL = "Enrollment Date"
+    LABEL = "Enrollment Date",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "ENRLFG",
-    LABEL = "Enrollment Flag"
+    LABEL = "Enrollment Flag",
+    TYPE = "date"
   ),
   c(
     FLDNAME = "DX",
     LABEL = "Baseline Diagnostics Status",
+    TYPE = "character",
     TEXT = paste0(
-      "Either baseline or screening diagnostics status and require to use enrollment flag."
+      "Based on DXSUM eCRF and require to use enrollment flag. Please see ",
+      "`get_adni_blscreen_dxsum` function for more information."
     )
   )
-  # c(
-  #   FLDNAME = "BLFG_MPD",
-  #   LABEL = "Baseline Flag for mPACCdigit score"
-  # ),
-  #  c(
-  #   FLDNAME = "BLFG_MPTB",
-  #   LABEL = "Baseline Flag for mPACCtrialsB score"
-  # )
 ) %>%
   tibble::as_tibble() %>%
   relocate(c(FLDNAME, LABEL, TEXT)) %>%
@@ -233,7 +252,7 @@ names(pacc_data_dic$LABEL) <- pacc_data_dic$FLDNAME
 
 ## Import Raw Datasets
 
-First, we import pre-processed raw datasets that contain PACC component from the `ADNIMERGE2` package. These raw datasets were stored in `csv` format as external data in the package. The reasons for sourcing those dataset is 1) not all PACC component score are yet available at the data-sharing platform, particularly the ADAS-Cog Q4 score, and 2) to reduced any potential additional package dependency.
+First, we import pre-processed raw datasets that contain PACC component from the `ADNIMERGE2` package. These raw datasets were stored in `csv` format as external data in the package. The main rational of sourcing those as external data is 1) not all PACC component score are yet available at the data-sharing platform, particularly the ADAS-Cog Q4 score, and 2) to reduce any potential additional package dependency during the `ADNIMERGE2` package building.
 
 In the next r chunk, all raw datasets will be loaded to the current working environment using `load_csv_files()` function. 
 
@@ -257,11 +276,11 @@ These raw datasets are in a long format and presented as follow:
    
    + Current study phase EDC portal
    
-   + Old version of ADNI study R data package `ADNIMERGE`, which is also available at the data-sharing platform, that contain records from ADNI1 to ADNI3 study phases.
+   + Old version of ADNI study R data package `ADNIMERGE` from the data-sharing platform that contain records from ADNI1 to ADNI3 study phases.
 
 ## Data Preparation Assumption
 
-* During the raw dataset preparation, the screening fail visit code in `ADNI1` study phase was remapped to the actual screening visit code.
+* During the raw dataset preparation, the screening fail visit code in `ADNI1` study phase was mapped to the actual screening visit code.
 
 * Since some of the PACC component assessments were either not collected at baseline visit during the whole study or partially collected at baseline visit in certain study phase. It is reasonable to carrying forward the screening visit record of an assessment as a corresponding baseline record if the baseline assessment result is missing/unknown. For instance, `MMSE` was not collected at any baseline visit, and the other neuropsychological assessments (i.e., `LDELTOTL`, `DIGITSCR`, and `TRABSCOR`) are partially collected at baseline visit in certain study phase. 
 
@@ -398,7 +417,7 @@ The next step is to calculate component specific baseline summaries that will be
 
 * Subjects with baseline Cognitive Normal (`CN`) diagnostics status
 
-The following r chunk shows how the PACC component baseline score is summarized across the baseline diagnostics status based on the standardization population defined in the above. The summary result is generated using `compute_score_summary()` function.
+The following r chunk shows how the PACC component baseline score is summarized across the baseline diagnostics status based on the above defined standardization population. The summary result is generated using `get_score_summary_stats()` function.
 
 **NOTE: ** It is recommended to apply a logarithm transformation of `Trials B` score if the score is not already in a logarithm scale. 
 
@@ -433,11 +452,11 @@ pacc_component_bl.summary %>%
 
 The composite PACC score is the sum of the standardized component score adjusted by the number of components. The following two conditions should be checked before computing the PACC score.
 
-* `Trials B` Measurement Scale: To identify whether the score is in a logarithm scale. For instance, here the `Trials B` score is not in a logarithm scale. We need either to map the raw score values to logarithm scale prior to using a scoring function or to specify an argument that allows to perform a logarithm transformation inside a scoring function.
+* `Trials B` Measurement Scale: To identify whether the score is in a logarithm scale. For example, here, the `Trials B` score is not in a logarithm scale. We need either to map the raw score values to logarithm scale prior to using a scoring function or to specify an argument that allows us to perform a logarithm transformation inside a scoring function.
 
 * Standardized Component Directional Effect: To verify the same directional effect across standardized component score, and reoriented standardized component score since the composite score will be the sum of the standardized scores. In ADNI study, `ADAS-cog Q4` and `Trials B` scores have opposite directional effect compared to the remaining PACC component scores. Higher values of those two components indicates worse condition. It is required to convert the direction effect of those two standardized components. Therefore, higher values of the composite score indicates better performance.
 
-Moreover, the composite score will only be calculated if there are at least two non-missing component scores at a given study visit per subject.
+Moreover, the composite score will only be calculated if there are at least *two non-missing* component scores at a given study visit per subject.
 
 Then, we use `compute_pacc_score()` function to compute the two modified composite PACC scores in ADNI study. 
 
@@ -458,6 +477,8 @@ PACC <- compute_pacc_score(
 
 PACC <- PACC %>%
   select(all_of(pacc_data_dic$FLDNAME)) %>%
+  mutate(across(all_of(pacc_component), as.numeric)) %>%
+  mutate(across(ends_with("_VISDATE"), ~ as.Date(.x))) %>%
   labelled::set_variable_labels(
     .labels = pacc_data_dic$LABEL,
     .strict = TRUE
@@ -469,7 +490,8 @@ PACC <- PACC %>%
 
 ```{r pacc-data-dic-print, echo = FALSE}
 pacc_data_dic %>%
-  select(FLDNAME, LABEL, TEXT) %>%
+  mutate(TYPE = toupper(TYPE)) %>%
+  select(FLDNAME, LABEL, TYPE, TEXT) %>%
   datatable(., paging = TRUE)
 ```
 
@@ -477,7 +499,7 @@ pacc_data_dic %>%
 
 # Baseline Modified-PACC Score
 
-The following r chunks show how to get baseline PACC composite score based on the `PACC` dataset. Similar result can be obtained using [`ADSL`](../reference/ADSL.html) or [`ADQS`](../reference/ADQS.html) datasets. For more information on how to use those datasets, please refer to [ADNI-Enrollment]() and [ADNIMERGE2-Analysis-Data]() articles.
+The following r chunks show how to get baseline PACC composite score based on the `PACC` dataset. Similar result can be obtained using [`ADSL`](../reference/ADSL.html) or [`ADQS`](../reference/ADQS.html) datasets. Please refer to [ADNI-Enrollment]() and [ADNIMERGE2-Analysis-Data]() articles for more information about how get the baseline PACC score from these dataset.
 
 ```{r bl-pacc}
 # Modified PACC using DSS score
@@ -513,9 +535,9 @@ baseline_PACC <- baseline_mPACCtrailsB %>%
         SCORE = mPACCdigit,
         SCORE_NAME = "mPACCdigit"
       )
-  ) %>% 
-  group_by(SCORE_NAME) %>% 
-  mutate(SCORE_NAME = paste0(SCORE_NAME, " (n = ", sum(!is.na(SCORE)), ")")) %>% 
+  ) %>%
+  group_by(SCORE_NAME) %>%
+  mutate(SCORE_NAME = paste0(SCORE_NAME, " (n = ", sum(!is.na(SCORE)), ")")) %>%
   ungroup()
 
 baseline_PACC %>%

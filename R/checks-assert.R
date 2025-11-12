@@ -1,7 +1,7 @@
 #' @title Checks Duplicated Values/Records
 #' @description
-#'  This function is used to check any duplicated records within the provided column.
-#'  Either a single column or multiple columns.
+#'  This function is used to check any duplicated records within provided column(s).
+#'  Either a single column or across multiple columns.
 #' @param ... \code{\link[assertr]{assert_rows}} arguments
 #' @examples
 #' \dontrun{
@@ -9,7 +9,7 @@
 #' ADNIMERGE2::REGISTRY %>%
 #'   assert_uniq(RID, VISCODE)
 #' }
-#' @return A stop message if there is at least one duplicated records.
+#' @return An assertr error message if there is any duplicated records.
 #' @rdname assert_uniq
 #' @family assert checks
 #' @keywords utils_fun
@@ -28,7 +28,7 @@ assert_uniq <- function(...) {
 }
 #' @title Checks Missing Values
 #' @description
-#'  This function is used to check any missing values within the provided column.
+#'  This function is used to check any missing values within a provided column.
 #' @param ... \code{\link[assertr]{assert}} arguments
 #' @examples
 #' \dontrun{
@@ -36,7 +36,7 @@ assert_uniq <- function(...) {
 #' ADNIMERGE2::REGISTRY %>%
 #'   assert_non_missing(RID)
 #' }
-#' @return A stop message if there is at least one duplicated records.
+#' @return An assertr error message if there is record with missing values.
 #' @rdname assert_non_missing
 #' @family assert checks
 #' @keywords utils_fun
@@ -56,7 +56,7 @@ assert_non_missing <- function(...) {
 #' @title Check for Object Type Mismatch
 #' @param x Input Object
 #' @param type Object type
-#' @return A stop error if the input object and type does not match.
+#' @return An error message if the input object and type does not match.
 #' @details
 #' 
 #' This function is used to check the object type of an input value based on 
@@ -98,7 +98,7 @@ check_object_type <- function(x, type) {
 # Check is_datadict_tbl Class Type -----
 #' @title Check \code{is_datadict_tbl} Object Class Type
 #' @param x Object
-#' @return A stop error if the class object is not \code{is_datadict_tbl}.
+#' @return An error message if the class object is not \code{is_datadict_tbl}.
 #' @rdname is_datadict_tbl
 #' @family checks function
 #' @keywords adni_datadic_fun

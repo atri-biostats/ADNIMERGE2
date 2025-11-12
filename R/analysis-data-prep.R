@@ -1,8 +1,8 @@
 # Convert Number of Days ------
 #' @title Convert Number of Days
 #' @description
-#'  A function to convert number of days into one of specified time unit measurements,
-#'  either into number of \code{weeks}, \code{months} or \code{years} with specific bin values.
+#'  A function to convert number of days into either number of \code{weeks}, 
+#'  \code{months} or \code{years} with specific bin values.
 #' @param x Numeric vector
 #' @param unit Unit of measurements: either \code{week}, \code{month} or \code{year}, Default: 'month'
 #' @param bin Bin value, Default: 1
@@ -11,7 +11,8 @@
 #' @return A numeric vector
 #' @details
 #'  A small positive values will be added to zero numeric value, specially to
-#'  adjust time interval for baseline visits.
+#'  adjust time interval for baseline visits. 
+#'  Furthermore, all negative value will be ceiling to zero if \code{adjust_negative_value} is set to \code{TRUE}
 #' @examples
 #' \dontrun{
 #' set.seed(123456)
@@ -150,7 +151,7 @@ convert_numeric_dx_status <- function(x) {
 #' @title Detect Closest Baseline Score
 #' @description
 #'  This function is used to flag the closest assessment record score to the
-#'  baseline visit date (i.e enrollment date) within a certain window period.
+#'  baseline visit date (i.e., enrollment date) within a certain window period.
 #' @param cur_record_date Date of current assessment record collected
 #' @param enroll_date Enrollment date (i.e. baseline visit date)
 #' @param time_interval Minimum window period (in days) from baseline visit date, Default: 30

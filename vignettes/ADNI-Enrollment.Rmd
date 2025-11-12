@@ -63,8 +63,6 @@ abbrev_list <- paste0(
   collapse = "\n "
 )
 conts_statistic_label <- c("Mean (SD)", "Median (Q1, Q3)", "Range")
-# Adjust BMI variable labels
-var_label(ADSL$BMI) <- paste0("Baseline ", get_variable_labels(ADSL)$BMI)
 ```
 
 # ADNI Enrollment Summaries
@@ -102,7 +100,7 @@ enroll_summary_plot
 
 ```{r overall-summary}
 include_vars <- c(
-  "AGE", "SEX", "EDUC", "RACE", "ETHNIC", "MARISTAT", "BMI",
+  "AGE", "SEX", "EDUC", "RACE", "ETHNIC", "MARISTAT",
   "DX", "APOE", "ADASTT13", "CDGLOBAL", "CDRSB", "MMSCORE",
   "FAQTOTAL", "MPACCTRAILSB", "MPACCDIGIT"
 )
@@ -142,7 +140,7 @@ tbl_summary(
 ```{r viloin-plot, fig.height = 11, fig.alt = "Distribution of numeric characteristics: Overall"}
 var_label_list <- get_variable_labels(ADSL)
 cont_var_list <- c(
-  "AGE", "EDUC", "BMI", "ADASTT13", "CDGLOBAL",
+  "AGE", "EDUC", "ADASTT13", "CDGLOBAL",
   "CDRSB", "MMSCORE", "FAQTOTAL", "MPACCTRAILSB", "MPACCDIGIT"
 )
 cont_bl_violin_plot <- lapply(cont_var_list, function(x) {

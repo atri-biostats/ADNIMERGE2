@@ -127,6 +127,7 @@ if (EXISTED_DATADTIC) {
       (TBLNAME %in% c("RECCMEDS", "TREATDIS") |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
+        (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIK") |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
         (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS")
       ) ~ "Yes"

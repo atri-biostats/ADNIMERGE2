@@ -420,13 +420,13 @@ check_overall_phase <- function(phase) {
 #' @title Death Flag
 #' @description
 #' This function is used to extract death records in the study based on the
-#' adverse events and final disposition records.
+#' adverse events and disposition records.
 #' @param .adverse
-#'  Adverse events record data.frame for ADNI3-4 study phase, see \code{\link{ADVERSE}()}
+#'  Adverse events record for ADNI3-4 study phase, see \code{\link{ADVERSE}()}
 #' @param .recadv
-#'  Adverse events record data frame for ADNI1-GO-2, see \code{\link{RECADV}()}
+#'  Adverse events record for ADNI1-GO-2, see \code{\link{RECADV}()}
 #' @param .studysum
-#'  Final dispositions record for ADNI3-4, see \code{\link{STUDYSUM}()}
+#'   Dispositions record for ADNI3-4, see \code{\link{STUDYSUM}()}
 #' @return A data.frame with the following columns:
 #' \itemize{
 #'  \item {\code{RID}}: Subject ID
@@ -533,8 +533,8 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
 #' @description This function is used to get early discontinuation list in ADNI study.
 #'   Based on the \code{\link{REGISTRY}()} eCRF for ADNI1-GO-2 and
 #'   \code{\link{STUDYSUM}} eCRF for ADNI3-4.
-#' @param .registry Registry record data.frame for ADNI1-GO-2, see \code{\link{REGISTRY}()}
-#' @param .studysum Adverse events record data frame for ADNI1-GO-2, see \code{\link{STUDYSUM}()}
+#' @param .registry Registry record for ADNI1-GO-2, see \code{\link{REGISTRY}()}
+#' @param .studysum Disposition record for ADNI3-4, see \code{\link{STUDYSUM}()}
 #' @return A data.frame with the following columns:
 #' \itemize{
 #'  \item {\code{RID}}: Subject ID
@@ -688,4 +688,3 @@ get_screen_vistcode <- function(type = "all") {
 get_baseline_vistcode <- function() {
   return(c("bl", "v03", "4_bl"))
 }
-
