@@ -50,9 +50,9 @@ According to @donohue2014preclinical, the `PACC` score is a baseline standardize
 
 Each of component score is required to be standardized by a corresponding baseline score prior to computing the composite score. Higher values of the composite score indicate better performance.
 
-In ADNI study, some of these components are either collected partially during certain study phase or not available at all. Since FSCRT is not available at all, the Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS), which is called `ADAS-Cog Q4 score`, will be used as a proxy. The ADAS-Cog Q4 score ranges from `0 to 10` points where higher value indicates worse condition. Similarly, a logarithm scale of `Trails B` score will be used as a proxy for DSST. Therefore, we will have two modified version of `PACC` composite score: 
+In ADNI study, some of these components are either collected partially during certain study phase or not available at all. Since FSCRT is not available at all, the Delayed Recall portion of the Alzheimer's Disease Assessment Scale (ADAS), which is called `ADAS-Cog Q4 score`, will be used as a proxy. The ADAS-Cog Q4 score ranges from `0 to 10` points where higher value indicates worse condition. Similarly, a logarithm scale of `Trails B` score will be used as a proxy for DSST. Therefore, there will have two modified version of `PACC` composite score: 
 
-a. **mPACCdigit: ** It will only be computed in ADNI1 study phase since DSST was collected in the early phase of ADNI study.
+a. **mPACCdigit: ** It will only be computed in `ADNI1` study phase since DSST was collected in the early phase of ADNI study.
 
 b. **mPACCtrailsB: ** It will be computed across all ADNI study phases using `Trails B` score as a proxy for DSST.
 
@@ -270,7 +270,7 @@ These raw datasets are in a long format and presented as follow:
 
 * `pacc_mmse_long`: A dataset contains the `MMSE` score downloaded from the data-sharing platform.
 
-* `pacc_neurobat`: A dataset contains Logical Memory - Delayed Recall (`LDELTOTL`), Digit Symbol Substitution (`DIGITSCR`), and Trials B (`TRABSCOR`) raw scores from Neuropsychological Battery (`NEUROBAT`) data. The `NEUROBAT` data is also downloaded from the data-sharing platform.
+* `pacc_neurobat`: A dataset contains Logical Memory - Delayed Recall (`LDELTOTL`), Digit Symbol Substitution (`DIGITSCR`), and Trials B (`TRABSCOR`) raw scores from Neuropsychological Battery (`NEUROBAT`) data. The `NEUROBAT()` data is also downloaded from the data-sharing platform.
 
 * `pacc_adas_q4score_long`: A dataset contains the raw `ADAS-Cog Q4` score that obtained from two sources: 
    
@@ -282,7 +282,7 @@ These raw datasets are in a long format and presented as follow:
 
 * During the raw dataset preparation, the screening fail visit code in `ADNI1` study phase was mapped to the actual screening visit code.
 
-* Since some of the PACC component assessments were either not collected at baseline visit during the whole study or partially collected at baseline visit in certain study phase. It is reasonable to carrying forward the screening visit record of an assessment as a corresponding baseline record if the baseline assessment result is missing/unknown. For instance, `MMSE` was not collected at all during baseline visit, and the other neuropsychological assessments (i.e., `LDELTOTL`, `DIGITSCR`, and `TRABSCOR`) are partially collected at baseline visit in certain study phase. 
+* Since some of the PACC component assessments were either not collected at baseline visit during the whole study or partially collected at baseline visit in certain study phase. It is reasonable to carrying forward the screening visit record of an assessment as a corresponding baseline record if the baseline assessment result is missing/unknown. For instance, `MMSE` was not collected at any baseline visit, and the other neuropsychological assessments (i.e., `LDELTOTL`, `DIGITSCR`, and `TRABSCOR`) are partially collected at baseline visit in certain study phase. 
 
 The following r chuck demonstrate how the screening-baseline visit adjustment is preformed by carrying forward any screening visit record as a baseline record using `adjust_scbl_record()` function.
 
@@ -419,7 +419,7 @@ The next step is to calculate component specific baseline summaries that will be
 
 The following r chunk shows how the PACC component baseline score is summarized across the baseline diagnostics status based on the above defined standardization population. The summary result is generated using `get_score_summary_stats()` function.
 
-**NOTE: ** Required to apply a logarithm transformation of `Trials B` score if the score is not already in a logarithm scale. 
+**NOTE: ** It is recommended to apply a logarithm transformation of `Trials B` score if the score is not already in a logarithm scale. 
 
 ```{r pacc-component-bl-summary}
 pacc_component_bl <- pacc_input_data_wide %>%
@@ -432,7 +432,7 @@ pacc_component_bl <- pacc_input_data_wide %>%
   ungroup() %>%
   assert_uniq(RID)
 
-pacc_component_bl.summary <- get_score_summary_stats(
+pacc_component_bl.summary <- compute_score_summary(
   .data = pacc_component_bl,
   wideFormat = TRUE,
   scoreVar = pacc_component,

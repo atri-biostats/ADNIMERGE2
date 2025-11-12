@@ -20,7 +20,8 @@ reference:
     
   - subtitle: Enrollment
     desc: > 
-          Includes amyloid status and amyloid disclosure results, and enrollment-related dataset
+          Includes amyloid status and amyloid disclosure results, and 
+          enrollment related datasets
     contents:
     - has_keyword("enrollment")
     
@@ -33,14 +34,16 @@ reference:
 
   - subtitle: Assessments
     desc: > 
-         Includes clinical diagnostics summary, neuropsychological assessment results, and 
-         non-clinical assessments such as result from the Brain Health Registry (BHR)
+         Includes clinical diagnostics summary, neuropsychological assessment 
+         results, and non-clinical assessments such as result from 
+         Brain Health Registry (BHR)
     contents:
     - has_keyword("assessments")
   
   - subtitle: Imaging
     desc: > 
-         Includes image acquisition, image analysis result, image quality for both MIR Scan and PET Scan
+         Includes image acquisition, image analyses results, image quality for 
+         both MIR Scan and PET Scan
     contents:
     - has_keyword("imaging")   
     
@@ -68,34 +71,41 @@ reference:
   
   - subtitle: ADNI1 Phase
     desc: >
-        Datasets which contains records that were collected in ADNI1 study phase/protocol
+        Datasets with records that were collected in ADNI1 study phase/protocol
     contents:
     - has_keyword("adni1")
   
   - subtitle: ADNIGO Phase
     desc: >
-        Datasets which contains records that were collected in ADNIGO study phase/protocol
+        Datasets with records that were collected in ADNIGO study phase/protocol
     contents:
     - has_keyword("adnigo")
   
   - subtitle: ADNI2 Phase
     desc: >
-        Datasets which contains records that were collected in ADNI2 study phase/protocol
+        Datasets with records that were collected in ADNI2 study phase/protocol
     contents:
     - has_keyword("adni2")
   
   - subtitle: ADNI3 Phase
     desc: >
-        Datasets which contains records that were collected in ADNI3 study phase/protocol
+        Datasets with records that were collected in ADNI3 study phase/protocol
     contents:
     - has_keyword("adni3")
   
   - subtitle: ADNI4 Phase
     desc: >
-        Datasets which contains records that are collected in ADNI4 study phase/protocol
+        Datasets with records that are collected in ADNI4 study phase/protocol
     contents:
     - has_keyword("adni4")
-  
+    
+  - subtitle: Required Manual Phase Identification
+    desc: >
+        Datasets that might contain collected records at any of the ADNI study 
+        phases/protocol and required manual phase identification.
+    contents:
+    - has_keyword("undefined_phase")
+    
   - title: ADNI Derived Datasets
     desc: > 
       Derived datasets that are grenerated based on the package vignettes.

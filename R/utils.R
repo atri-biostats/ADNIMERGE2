@@ -1306,7 +1306,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
 
   if (all(is.na(column_list))) {
     cli_alert_info(
-      text = c("No variable that contains this value {.val {value}}.")
+      text = c("No variable contains {.val {value}} value")
     )
   }
 

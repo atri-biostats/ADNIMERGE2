@@ -251,9 +251,23 @@ dataset_cat_phase <- lapply(data_path_list, function(x) {
 
 dataset_cat_phase <- dataset_cat_phase %>%
   bind_rows() %>%
-  # Adjust dataset category based on file name
-  filter(dir_cat %in% tolower(adni_phase())) %>%
+  filter(!str_detect(dir_cat, "\\["))
+
+# Adjust dataset category based on file name
+dataset_cat_file_name <- dataset_cat_phase %>%
+  filter(str_detect(tolower(file_list), "adni[1-9]|adnigo")) %>%
+  filter(!str_detect(dir_cat, "^adni")) %>%
+  mutate(dir_cat = str_extract(tolower(file_list), "adni[1-9]|adnigo")) %>%
+  assert_non_missing(dir_cat)
+
+dataset_cat_phase <- bind_rows(dataset_cat_phase, dataset_cat_file_name) %>%
   group_by(file_list) %>%
+  group_by(file_list) %>%
+  filter(
+    (n() == 1 & row_number() == 1) |
+      (n() > 1 & any(dir_cat %in% "undefined_phase") & !dir_cat %in% "undefined_phase") |
+      (n() > 1 & all(!dir_cat %in% "undefined_phase"))
+  ) %>%
   mutate(dir_cat = toString(dir_cat)) %>%
   ungroup() %>%
   distinct()
