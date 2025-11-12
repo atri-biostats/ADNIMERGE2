@@ -287,7 +287,7 @@ create_col_protocol <- function(.data, phaseVar = NULL) {
 #' @seealso \code{\link{get_factor_levels_datadict}()}
 #' @importFrom cli cli_abort
 #' @export
-split_strings <- function(input_string, spliter1 = '; |;', spliter2 = '=| = ') {
+split_strings <- function(input_string, spliter1 = "; |;", spliter2 = "=| = ") {
   # Splitting the input_string with spliter1
   split_pairs <- unlist(strsplit(x = input_string, split = spliter1))
   if (length(split_pairs) > 0) {
@@ -422,7 +422,6 @@ get_factor_levels_datadict <- function(.datadic,
 #' @export
 extract_codelist_datadict <- function(.datadic) {
   CODE <- TYPE <- TBLNAME <- FLDNAME <- NULL
-
   check_colnames(
     .data = .datadic,
     col_names = c("PHASE", "TYPE", "TBLNAME", "FLDNAME", "CODE"),
@@ -751,15 +750,7 @@ collect_value_mapping <- function(.datadic, tbl_name, all_fld_name) {
 #' @importFrom cli cli_abort
 convert_value_mapping <- function(coded_values, tbl_name = NULL) {
   TBLNAME <- FLDNAME <- PHASE <- CODES <- NULL
-  if (!is.list(coded_values)) {
-    cli_abort(
-      message = c(
-        "{.var coded_values} must be a list object.",
-        "{.var coded_values} is a {.cls {class(coded_values)}} object."
-      )
-    )
-  }
-
+  check_object_type(coded_values, "list")
   output_data <- lapply(coded_values, convert_value_mapping_phase_specific) %>%
     bind_rows(., .id = "FLDNAME") %>%
     mutate(TBLNAME = tbl_name) %>%
@@ -786,14 +777,7 @@ convert_value_mapping <- function(coded_values, tbl_name = NULL) {
 #' @importFrom cli cli_abort
 convert_value_mapping_phase_specific <- function(coded_values) {
   PHASE <- CODES <- NULL
-  if (!is.list(coded_values)) {
-    cli_abort(
-      message = c(
-        "{.var coded_values} must be a list object.",
-        "{.var coded_values} is a {.cls {class(coded_values)}} object."
-      )
-    )
-  }
+  check_object_type(coded_values, "list")
   names(coded_values) <- replace_na(names(coded_values), "NA")
   output_data <- lapply(coded_values, bind_rows) %>%
     bind_rows(., .id = "PHASE") %>%
@@ -961,13 +945,12 @@ detect_numeric_value <- function(value, num_type = "any", stop_message = FALSE) 
 #' # No decimal value is presented: return FALSE
 #' detect_decimal_value(1:5)
 #' detect_decimal_value(NA)
-#' 
-#' # Detect a decimal value: return TRUE
-#'  detect_decimal_value(seq(1, 5, by = 0.5))
-#'  
-#' # Detect a decimal value in a mixed string: return TRUE
-#'  detect_decimal_value(c("1", "2.0", "3", "999"))
 #'
+#' # Detect a decimal value: return TRUE
+#' detect_decimal_value(seq(1, 5, by = 0.5))
+#'
+#' # Detect a decimal value in a mixed string: return TRUE
+#' detect_decimal_value(c("1", "2.0", "3", "999"))
 #' }
 #' @rdname detect_decimal_value
 #' @family checks function
@@ -1162,14 +1145,7 @@ replace_values_phase_specific <- function(.data, fld_name, phase,
 #' @keywords adni_replace_fun
 #' @importFrom cli cli_abort cli_alert_warning
 replace_values_single_var <- function(.data, fld_name, phaseVar = "PHASE", input_values) {
-  if (!is.list(input_values)) {
-    cli_abort(
-      message = c(
-        "{.var input_values} must be a list object.",
-        "{.var input_values} is a {.cls {class(input_values)}} object."
-      )
-    )
-  }
+  check_object_type(input_values, "list")
   phase_name_list <- names(input_values)
   # Adjust for non-phase specific replacements
   phase_name_list_no_na <- phase_name_list[!is.na(phase_name_list)]
@@ -1258,15 +1234,7 @@ replace_values_single_var <- function(.data, fld_name, phaseVar = "PHASE", input
 #' @importFrom cli cli_abort
 #' @export
 replace_values_dataset <- function(.data, phaseVar = "PHASE", input_values) {
-  if (!is.list(input_values)) {
-    arg_name <- rlang::call_args(input_values)
-    cli_abort(
-      message = c(
-        "{.arg {arg_name}} must be a list object",
-        "The input value is a {.cls {class(input_values)}} object."
-      )
-    )
-  }
+  check_object_type(input_values, "list")
   check_colnames(
     .data = .data,
     col_names = phaseVar,
@@ -1560,7 +1528,7 @@ check_value_match <- function(values,
       )
     }
     cli_abort(
-      message = paste0("{.val {toString(non_existed_values)}} value{?s} {?is/are} not found ", add_stop_message)
+      message = paste0("{.val {non_existed_values}} value{?s} {?is/are} not found ", add_stop_message)
     )
   }
   return(result)
@@ -1695,9 +1663,7 @@ convert_usubjid_to_rid <- function(x, studyID = "ADNI") {
 #' @importFrom tibble as_tibble
 #' @export
 datadict_as_tibble <- function(.data) {
-  .data <- .data %>%
-    as_tibble()
-  return(.data)
+  return(as_tibble(.data))
 }
 
 #' @title Set \code{datadict_tbl} object class
@@ -1708,14 +1674,7 @@ datadict_as_tibble <- function(.data) {
 #' @importFrom cli cli_abort
 #' @export
 set_datadict_tbl <- function(.data) {
-  if (!is.data.frame(.data)) {
-    cli::cli_abort(
-      message = c(
-        "{.var .data} must be data.frame object. \n",
-        "{.var .data} is a class of {.cls class(.data)} object."
-      )
-    )
-  }
+  check_object_type(.data, "data.frame")
   .data <- structure(.data, class = c(class(.data), "datadict_tbl"))
   return(.data)
 }
