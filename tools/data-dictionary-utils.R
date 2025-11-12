@@ -611,7 +611,7 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
   tag_list <- tag_list[!names(tag_list) %in% exclude_tags]
   tag_list <- tag_list[names(tag_list) %in% roxygen2::tags_list(built_in = FALSE)]
 
-  if (!"keyword" %in% names(tag_list)) {
+  if (!"keywords" %in% names(tag_list)) {
     tag_list$keywords <- str_c(tolower(source_type), "_dataset")
   }
 
