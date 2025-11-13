@@ -87,7 +87,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNIMERGE2-PACC-SCORE</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: October 08,
+            <h4 data-toc-skip class="date">Last Updated: November 12,
 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNIMERGE2-PACC.Rmd" class="external-link"><code>vignettes/ADNIMERGE2-PACC.Rmd</code></a></small>
@@ -110,7 +110,7 @@ ADNI study based on <span class="citation">Donohue et al. (<a href="#ref-donohue
 <li><p>Digit Symbol Substitution Test (DSST) score, and</p></li>
 <li><p>Mini-Mental State Examination (MMSE) total score</p></li>
 </ul>
-<p>Each of component score is required to be standardized by the
+<p>Each of component score is required to be standardized by a
 corresponding baseline score prior to computing the composite score.
 Higher values of the composite score indicate better performance.</p>
 <p>In ADNI study, some of these components are either collected
@@ -153,10 +153,11 @@ DSST.</p></li>
 <p>First, we import pre-processed raw datasets that contain PACC
 component from the <code>ADNIMERGE2</code> package. These raw datasets
 were stored in <code>csv</code> format as external data in the package.
-The reasons for sourcing those dataset is 1) not all PACC component
-score are yet available at the data-sharing platform, particularly the
-ADAS-Cog Q4 score, and 2) to reduced any potential additional package
-dependency.</p>
+The main rational of sourcing those as external data is 1) not all PACC
+component score are yet available at the data-sharing platform,
+particularly the ADAS-Cog Q4 score, and 2) to reduce any potential
+additional package dependency during the <code>ADNIMERGE2</code> package
+building.</p>
 <p>In the next r chunk, all raw datasets will be loaded to the current
 working environment using <code><a href="../reference/load_csv_files.html">load_csv_files()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -183,9 +184,9 @@ platform.</p></li>
 <code>ADAS-Cog Q4</code> score that obtained from two sources:</p>
 <ul>
 <li><p>Current study phase EDC portal</p></li>
-<li><p>Old version of ADNI study R data package <code>ADNIMERGE</code>,
-which is also available at the data-sharing platform, that contain
-records from ADNI1 to ADNI3 study phases.</p></li>
+<li><p>Old version of ADNI study R data package <code>ADNIMERGE</code>
+from the data-sharing platform that contain records from ADNI1 to ADNI3
+study phases.</p></li>
 </ul>
 </li>
 </ul>
@@ -195,7 +196,7 @@ records from ADNI1 to ADNI3 study phases.</p></li>
 </h3>
 <ul>
 <li><p>During the raw dataset preparation, the screening fail visit code
-in <code>ADNI1</code> study phase was remapped to the actual screening
+in <code>ADNI1</code> study phase was mapped to the actual screening
 visit code.</p></li>
 <li><p>Since some of the PACC component assessments were either not
 collected at baseline visit during the whole study or partially
@@ -348,9 +349,9 @@ standardization population as follows:</p>
 diagnostics status</p></li>
 </ul>
 <p>The following r chunk shows how the PACC component baseline score is
-summarized across the baseline diagnostics status based on the
-standardization population defined in the above. The summary result is
-generated using <code><a href="../reference/compute_score_summary.html">compute_score_summary()</a></code> function.</p>
+summarized across the baseline diagnostics status based on the above
+defined standardization population. The summary result is generated
+using <code>get_score_summary_stats()</code> function.</p>
 <p><strong>NOTE: </strong> It is recommended to apply a logarithm
 transformation of <code>Trials B</code> score if the score is not
 already in a logarithm scale.</p>
@@ -381,7 +382,7 @@ already in a logarithm scale.</p>
 <span>    caption <span class="op">=</span> <span class="st">"PACC Compoonent Standardization Baseline Summary"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"caption":"<caption>PACC Compoonent Standardization Baseline Summary<\/caption>","data":[["1","2","3","4","5"],["CN","CN","CN","CN","CN"],["ADASQ4SCORE","DIGITSCR","LDELTOTL","MMSE","LOG.TRABSCOR"],[1200,229,1208,1209,1194],[2.8275,45.7467,12.7599,29.024,4.3141],[1.912012,10.201331,3.486081,1.168114,0.406683]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Baseline DX<\/th>\n      <th>Component<\/th>\n      <th>N<\/th>\n      <th>MEAN<\/th>\n      <th>SD<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searchable":true,"bInfo":false,"colnames":{"Baseline DX":2,"Component":3},"caption":"PACC Compoonent Standardization Baseline Summary","columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"DX","targets":1},{"name":"VAR","targets":2},{"name":"N","targets":3},{"name":"MEAN","targets":4},{"name":"SD","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"caption":"<caption>PACC Compoonent Standardization Baseline Summary<\/caption>","data":[["1","2","3","4","5"],["CN","CN","CN","CN","CN"],["ADASQ4SCORE","DIGITSCR","LDELTOTL","MMSE","LOG.TRABSCOR"],[1209,229,1214,1215,1205],[2.8404,45.7467,12.7446,29.0181,4.3142],[1.924096,10.201331,3.49453,1.175534,0.407729]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Baseline DX<\/th>\n      <th>Component<\/th>\n      <th>N<\/th>\n      <th>MEAN<\/th>\n      <th>SD<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searchable":true,"bInfo":false,"colnames":{"Baseline DX":2,"Component":3},"caption":"PACC Compoonent Standardization Baseline Summary","columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"DX","targets":1},{"name":"VAR","targets":2},{"name":"N","targets":3},{"name":"MEAN","targets":4},{"name":"SD","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="compute-pacc-score">Compute PACC Score<a class="anchor" aria-label="anchor" href="#compute-pacc-score"></a>
@@ -391,10 +392,10 @@ score adjusted by the number of components. The following two conditions
 should be checked before computing the PACC score.</p>
 <ul>
 <li><p><code>Trials B</code> Measurement Scale: To identify whether the
-score is in a logarithm scale. For instance, here the
+score is in a logarithm scale. For example, here, the
 <code>Trials B</code> score is not in a logarithm scale. We need either
 to map the raw score values to logarithm scale prior to using a scoring
-function or to specify an argument that allows to perform a logarithm
+function or to specify an argument that allows us to perform a logarithm
 transformation inside a scoring function.</p></li>
 <li><p>Standardized Component Directional Effect: To verify the same
 directional effect across standardized component score, and reoriented
@@ -407,8 +408,8 @@ direction effect of those two standardized components. Therefore, higher
 values of the composite score indicates better performance.</p></li>
 </ul>
 <p>Moreover, the composite score will only be calculated if there are at
-least two non-missing component scores at a given study visit per
-subject.</p>
+least <em>two non-missing</em> component scores at a given study visit
+per subject.</p>
 <p>Then, we use <code><a href="../reference/compute_pacc_score.html">compute_pacc_score()</a></code> function to compute
 the two modified composite PACC scores in ADNI study.</p>
 <p>The next r chunk shows how to calculate the PACC composite score
@@ -430,6 +431,8 @@ score inside in the function.</p>
 <span></span>
 <span><span class="va">PACC</span> <span class="op">&lt;-</span> <span class="va">PACC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">pacc_data_dic</span><span class="op">$</span><span class="va">FLDNAME</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"_VISDATE"</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">labelled</span><span class="fu">::</span><span class="fu"><a href="https://larmarange.github.io/labelled/reference/var_label.html" class="external-link">set_variable_labels</a></span><span class="op">(</span></span>
 <span>    .labels <span class="op">=</span> <span class="va">pacc_data_dic</span><span class="op">$</span><span class="va">LABEL</span>,</span>
 <span>    .strict <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -437,7 +440,7 @@ score inside in the function.</p>
 <details><summary>
 Show <a href="../reference/PACC.html"><code>PACC</code></a> Variables
 </summary><div class="datatables html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"],["ORIGPROT","COLPROT","RID","VISCODE","ADASQ4SCORE","ADASQ4SCORE_VISDATE","MMSE","MMSE_VISDATE","LDELTOTL","LDELTOTL_VISDATE","DIGITSCR","DIGITSCR_VISDATE","TRABSCOR","LOG.TRABSCOR","TRABSCOR_VISDATE","PACC_VISDATE","ADASQ4SCOREZ","MMSEZ","LDELTOTLZ","DIGITSCRZ","LOG.TRABSCORZ","mPACCdigit","mPACCtrailsB","ENRLDT","ENRLFG","DX"],["Original Study Protocol","Study Data Collection Protocol","Subject Identifier","Study visit code","Delayed Word Recall Score - portion of ADAS-Cog","ADAS-Cog Collection/Visit Date","Mini-Mental Examination Total Score","MMSE Collection/Visit Date","Logical Memory - Delayed RecallScore","LDELTOTL Collection/Visit Date","Digit Symbol Substitution Score","DIGITSCR Collection/Visit Date","Trial B score","Trial B score - Log Scale","TRABSCOR Collection/Visit Date","PACC Collection/Visit Date","ADAS Q4 Standardized Score","Mini-Mental State Examiniation Standardized Score","Logical Memory - Delayed Recall Standardized Score","Digit Symbol Substitution Standardized Score","Logical Memory - Delayed Recall Log Standardized Score","Modified PACC Digit Score","Modified PACC Trials B Score","Enrollment Date","Enrollment Flag","Baseline Diagnostics Status"],["First time participation in ADNI study phase"," "," "," "," "," "," "," "," "," "," "," "," "," "," ","Either common date across non-missing PACC component collection date, the maximum relative date or the corresponding study visit date when all component collection date is not available.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI1 study phase.","Standardized by corresponding log transformed baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)"," "," "," "," ","Either baseline or screening diagnostics status and require to use enrollment flag."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>FLDNAME<\/th>\n      <th>LABEL<\/th>\n      <th>TEXT<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":true,"searchable":true,"bInfo":false,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"FLDNAME","targets":1},{"name":"LABEL","targets":2},{"name":"TEXT","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script></details>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"],["ORIGPROT","COLPROT","RID","VISCODE","ADASQ4SCORE","ADASQ4SCORE_VISDATE","MMSE","MMSE_VISDATE","LDELTOTL","LDELTOTL_VISDATE","DIGITSCR","DIGITSCR_VISDATE","TRABSCOR","LOG.TRABSCOR","TRABSCOR_VISDATE","PACC_VISDATE","ADASQ4SCOREZ","MMSEZ","LDELTOTLZ","DIGITSCRZ","LOG.TRABSCORZ","mPACCdigit","mPACCtrailsB","ENRLDT","ENRLFG","DX"],["Original Study Protocol","Study Data Collection Protocol","Subject Identifier","Study visit code","Delayed Word Recall Score - portion of ADAS-Cog","ADAS-Cog Collection/Visit Date","Mini-Mental Examination Total Score","MMSE Collection/Visit Date","Logical Memory - Delayed RecallScore","LDELTOTL Collection/Visit Date","Digit Symbol Substitution Score","DIGITSCR Collection/Visit Date","Trial B score","Trial B score - Log Scale","TRABSCOR Collection/Visit Date","PACC Collection/Visit Date","ADAS Q4 Standardized Score","Mini-Mental State Examiniation Standardized Score","Logical Memory - Delayed Recall Standardized Score","Digit Symbol Substitution Standardized Score","Logical Memory - Delayed Recall Log Standardized Score","Modified PACC Digit Score","Modified PACC Trials B Score","Enrollment Date","Enrollment Flag","Baseline Diagnostics Status"],["CHARACTER","CHARACTER","NUMERIC","CHARACTER","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","NUMERIC","DATE","DATE","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","DATE","DATE","CHARACTER"],["First time participation in ADNI study phase"," "," "," "," "," "," "," "," "," "," "," "," "," "," ","Either common date across non-missing PACC component collection date, the maximum relative date or the corresponding study visit date when all component collection date is not available.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI1 study phase.","Standardized by corresponding log transformed baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)"," "," "," "," ","Based on DXSUM eCRF and require to use enrollment flag. Please see `get_adni_blscreen_dxsum` function for more information."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>FLDNAME<\/th>\n      <th>LABEL<\/th>\n      <th>TYPE<\/th>\n      <th>TEXT<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":true,"searchable":true,"bInfo":false,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"FLDNAME","targets":1},{"name":"LABEL","targets":2},{"name":"TYPE","targets":3},{"name":"TEXT","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script></details>
 </div>
 </div>
 <div class="section level2">
@@ -445,9 +448,9 @@ Show <a href="../reference/PACC.html"><code>PACC</code></a> Variables
 </h2>
 <p>The following r chunks show how to get baseline PACC composite score
 based on the <code>PACC</code> dataset. Similar result can be obtained
-using <a href="../reference/ADSL.html"><code>ADSL</code></a> or <a href="../reference/ADQS.html"><code>ADQS</code></a> datasets. For more
-information on how to use those datasets, please refer to <a href="">ADNI-Enrollment</a> and <a href="">ADNIMERGE2-Analysis-Data</a>
-articles.</p>
+using <a href="../reference/ADSL.html"><code>ADSL</code></a> or <a href="../reference/ADQS.html"><code>ADQS</code></a> datasets. Please
+refer to <a href="">ADNI-Enrollment</a> and <a href="">ADNIMERGE2-Analysis-Data</a> articles for more information about
+how get the baseline PACC score from these dataset.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Modified PACC using DSS score</span></span>
 <span><span class="va">baseline_mPACCdigit</span> <span class="op">&lt;-</span> <span class="va">PACC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -480,9 +483,9 @@ articles.</p>
 <span>        SCORE <span class="op">=</span> <span class="va">mPACCdigit</span>,</span>
 <span>        SCORE_NAME <span class="op">=</span> <span class="st">"mPACCdigit"</span></span>
 <span>      <span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SCORE_NAME</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>SCORE_NAME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">SCORE_NAME</span>, <span class="st">" (n = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">SCORE</span><span class="op">)</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SCORE_NAME</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>SCORE_NAME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">SCORE_NAME</span>, <span class="st">" (n = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">SCORE</span><span class="op">)</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">baseline_PACC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>

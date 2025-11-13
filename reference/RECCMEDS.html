@@ -65,7 +65,7 @@
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>A data frame with 76915 observations and 36 variables.</p>
+    <p>A data frame with 77466 observations and 38 variables.</p>
     </div>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
@@ -83,6 +83,7 @@
 <li><p><strong>VISDATE</strong> <em> </em> Registry EXAMDATE on matching VISCODE Date: YYY-MM-DD</p></li>
 <li><p><strong>RECNO</strong> <em>numeric</em>   Range value: 1, ..., 104</p></li>
 <li><p><strong>CMMED</strong> <em>character</em> Concurrent Medication</p></li>
+<li><p><strong>CMMEDO</strong> <em>character</em> If medication not found in search list, hand enter for approval</p></li>
 <li><p><strong>CMMEDID</strong> <em>numeric</em> medlist ID Range value: 1, ..., 1544</p></li>
 <li><p><strong>CMDOSE</strong> <em>character</em> Dose</p></li>
 <li><p><strong>CMUNITSID</strong> <em>character</em></p></li>
@@ -108,9 +109,10 @@
 <li><p><strong>CMREASON</strong> <em>numeric</em> Reason Prescribed</p><ul><li><p><em>ADNI1</em></p></li>
 <li><p><em>ADNIGO, ADNI2, ADNI3, ADNI4:</em> 1=Adverse Event ; 2=Therapeutic Use ; 3=Prophylaxis/Non-therapeutic Use</p></li>
 </ul></li>
+<li><p><strong>CMREASONO</strong> <em>character</em> If other, specify:</p></li>
 <li><p><strong>CMEVNUM</strong> <em>character</em> If Adverse Event, enter event number:</p></li>
 <li><p><strong>CMBGN</strong> <em>character</em> Date Began</p></li>
-<li><p><strong>CMBGNYR_DRVD</strong> <em>numeric</em> Year Began (Derived from CMBGN) Range value: 1011, ..., 2924</p></li>
+<li><p><strong>CMBGNYR_DRVD</strong> <em>numeric</em> Year Began (Derived from CMBGN) Range value: 1930, ..., 2924</p></li>
 <li><p><strong>CMCONT</strong> <em>numeric</em> Is the medication continuing?</p><ul><li><p><em>ADNI1, ADNIGO, ADNI2:</em> 1=Yes ; 0=No</p></li>
 <li><p><em>ADNI3, ADNI4:</em> 0=No ; 1=Yes</p></li>
 </ul></li>
@@ -126,10 +128,6 @@
 <li><p><strong>HAS_QC_ERROR</strong> <em>numeric</em> Has Quality Check Error 0=Does not have QC error or QC error has been approved ; 1=Has QC error</p></li>
 <li><p><strong>update_stamp</strong> <em> </em>   POSIXct: YYY-MM-DD</p></li>
 </ul></div>
-    <div class="section level2">
-    <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
-    <p><a href="adni-data@googlegroups.com">adni-data@googlegroups.com</a></p>
-    </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -83,7 +83,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNI-Longitudinal</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: October 08,
+            <h4 data-toc-skip class="date">Last Updated: November 12,
 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNI-Longitudinal.Rmd" class="external-link"><code>vignettes/ADNI-Longitudinal.Rmd</code></a></small>
@@ -238,6 +238,8 @@ the model).</p></li>
 <span>  data <span class="op">=</span> <span class="va">ADADAS</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmerControl.html" class="external-link">lmerControl</a></span><span class="op">(</span>optimizer <span class="op">=</span> <span class="st">"Nelder_Mead"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :</span></span>
+<span><span class="co">#&gt; Model failed to converge with max|grad| = 0.00301848 (tol = 0.002, component 1)</span></span>
 <span><span class="co">#&gt; Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: very large eigenvalue</span></span>
 <span><span class="co">#&gt;  - Rescale variables?</span></span>
 <span></span>
@@ -245,21 +247,21 @@ the model).</p></li>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
 <span><span class="co">#&gt; Formula: AVAL ~ (I(ns21(TIME)) + I(ns22(TIME))) * DX + (TIME | USUBJID)</span></span>
 <span><span class="co">#&gt;    Data: ADADAS</span></span>
-<span><span class="co">#&gt; REML criterion at convergence: 76398.27</span></span>
+<span><span class="co">#&gt; REML criterion at convergence: 76867.12</span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
 <span><span class="co">#&gt;  Groups   Name        Std.Dev. Corr</span></span>
-<span><span class="co">#&gt;  USUBJID  (Intercept) 5.5690       </span></span>
-<span><span class="co">#&gt;           TIME        0.1773   0.52</span></span>
+<span><span class="co">#&gt;  USUBJID  (Intercept) 5.5981       </span></span>
+<span><span class="co">#&gt;           TIME        0.1776   0.53</span></span>
 <span><span class="co">#&gt;  Residual             3.3729       </span></span>
-<span><span class="co">#&gt; Number of obs: 12490, groups:  USUBJID, 2987</span></span>
+<span><span class="co">#&gt; Number of obs: 12561, groups:  USUBJID, 3009</span></span>
 <span><span class="co">#&gt; Fixed Effects:</span></span>
 <span><span class="co">#&gt;         (Intercept)        I(ns21(TIME))        I(ns22(TIME))  </span></span>
-<span><span class="co">#&gt;               8.774               11.624               21.913  </span></span>
+<span><span class="co">#&gt;               8.802               12.095               22.805  </span></span>
 <span><span class="co">#&gt;               DXMCI                DXDEM  I(ns21(TIME)):DXMCI  </span></span>
-<span><span class="co">#&gt;               7.356               20.959               28.074  </span></span>
+<span><span class="co">#&gt;               7.315               20.881               28.333  </span></span>
 <span><span class="co">#&gt; I(ns21(TIME)):DXDEM  I(ns22(TIME)):DXMCI  I(ns22(TIME)):DXDEM  </span></span>
-<span><span class="co">#&gt;              62.749               31.349               35.937  </span></span>
-<span><span class="co">#&gt; optimizer (Nelder_Mead) convergence code: 0 (OK) ; 0 optimizer warnings; 1 lme4 warnings</span></span></code></pre></div>
+<span><span class="co">#&gt;              63.424               31.545               35.985  </span></span>
+<span><span class="co">#&gt; optimizer (Nelder_Mead) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings</span></span></code></pre></div>
 <ul>
 <li>
 <strong>Model Assumption Check: </strong> <a href="https://easystats.github.io/performance/reference/check_model.html" class="external-link"><code>performance::check_model</code></a>
