@@ -1846,6 +1846,10 @@ nv_data_dic <- bind_rows(
     LABEL = "Subcategory for Nervous System"
   ),
   c(
+    FLDNAME = "NVORRES",
+    LABEL = "Result or Finding in Original Units"
+  ),
+  c(
     FLDNAME = "NVSTRESC",
     LABEL = "Character Result/Finding in Std Format"
   ),
@@ -2115,6 +2119,7 @@ FDG_PET_DATA <- UCBERKELEYFDG_8mm %>%
   mutate(
     NVMETHOD = "FDG PET",
     NVTESTCD = "FDGMROI",
+    NVORRES = as.character(FDGMROI),
     NVSTRESC = as.character(FDGMROI),
     NVSTRESN = FDGMROI,
     NVDRVFL = "Yes",
@@ -2164,6 +2169,7 @@ PIB_PET_DATA <- PIBPETSUVR %>%
     NVMETHOD = "PET SCAN",
     NVTESTCD = "PIB",
     NVSTRESU = NA_character_,
+    NVORRES = as.character(NVSTRESN),
     NVSTRESC = as.character(NVSTRESN),
     NVDRVFL = "Yes",
     NVDTC = as.character(EXAMDATE),
@@ -2341,6 +2347,7 @@ PET_DATA <- bind_rows(AMYPET_DATA, TAUPET_DATA, TAUPET_PVC_DATA) %>%
     NVMETHOD = "PET",
     NVDTC = as.character(SCANDATE),
     NVLNKID = as.character(LONIUID),
+    NVORRES = as.character(NVSTRESC),
     NVSTRESN = as.numeric(NVSTRESC),
     NVSTAT = case_when(qc_flag %in% -2:0 ~ "NOT DONE"),
     NVREASND = case_when(
@@ -2956,6 +2963,7 @@ gf_data_dic %>%
 
 ```{r generate-gf}
 GF <- APOERES %>%
+  assert_uniq(RID) %>%
   generate_oak_id_vars_adni(raw_src = "APOERES") %>%
   mutate(
     GFTESTCD = "APOE",

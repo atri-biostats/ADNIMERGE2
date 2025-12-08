@@ -147,13 +147,7 @@ adsl_metacore <- METACORES %>%
 ```{r generate-adsl0}
 ADSL <- build_from_derived(
   metacore = adsl_metacore,
-  ds_list = list(
-    "DM" = DM,
-    "GF" = GF %>%
-      group_by(USUBJID) %>%
-      filter(row_number() == 1) %>%
-      ungroup()
-  ),
+  ds_list = list("DM" = DM, "GF" = GF),
   predecessor_only = TRUE,
   keep = "ALL"
 ) %>%
