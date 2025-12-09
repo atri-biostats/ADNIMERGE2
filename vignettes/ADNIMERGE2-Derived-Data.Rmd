@@ -2375,11 +2375,19 @@ NV <- bind_rows(FDG_PET_DATA, PIB_PET_DATA, AMYREAD_DATA, PET_DATA) %>%
   derive_usubjid() %>%
   assign_studyid_domain(domain = "NV") %>%
   assign_visit_attr() %>%
-  assign_epoch() %>%
+  assign_epoch()
+
+# Adjusting for the same NVTESTCD that comes from multiple raw sources
+NV <- NV %>%
+  mutate(NVTESTCD = paste0(NVTESTCD, "-/", NVCAT, "-/", NVSCAT, "-/", IMAGE_RESOLUTION, "-/", TRACER)) %>%
   derive_blfl_adni(
+    sdtm_in = .,
     dm_domain = DM,
     tgt_var = "NVBLFL"
   ) %>%
+  separate(NVTESTCD, into = c("NVTESTCD", "NVCAT", "NVSCAT", "IMAGE_RESOLUTION", "TRACER"), sep = "-/")
+
+NV <- NV %>%
   derive_study_day_adni(
     dm_domain = DM,
     domain = "NV"
