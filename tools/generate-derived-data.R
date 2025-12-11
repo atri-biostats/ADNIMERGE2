@@ -10,8 +10,8 @@ args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 1) {
   cli::cli_abort(
     message = c(
-      "Input argument {.val DERIVED_DATASET_LIST} must be size of 1. \n",
-      "{.val arg} is a length of {.val {length(DERIVED_DATASET_LIST)}}"
+      "Input argument {.var args} must be size of 1. \n",
+      "{.val arg} is a length of {.val {length(args)}}"
     )
   )
 }

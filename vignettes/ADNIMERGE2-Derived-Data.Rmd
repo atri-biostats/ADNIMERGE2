@@ -1963,7 +1963,7 @@ AMYPET_TESTCD <- bind_rows(
   c(
     NVCAT = "AMYLOIDPET",
     NVTESTCD = "SUVRSM",
-    NVTEST = "Summary cortical SUVR",
+    NVTEST = "Summary Cortical SUVR",
     TEXT = paste0(
       "Summary cortical SUVR normalized by whole cerebellum. ",
       "UC Berkeley - Amyloid PET 6mm Res analysis."
@@ -1972,7 +1972,7 @@ AMYPET_TESTCD <- bind_rows(
   c(
     NVCAT = "AMYLOIDPET",
     NVTESTCD = "SUVRCR",
-    NVTEST = "Summary cortical SUVR Composite Ref",
+    NVTEST = "Summary Cortical SUVR Composite Ref",
     TEXT = paste0(
       "Summary cortical SUVR normalized by composite reference region. ",
       "UC Berkeley - Amyloid PET 6mm Res analysis."
@@ -2045,7 +2045,7 @@ TAUPETPVC_TESTCD <- bind_rows(
   )
 ) %>%
   mutate(SOURCE = "UCBERKELEY_TAUPVC_6MM") %>%
-  expand_grid(NVSCAT = c("FTP", "MK6240", "PI2620"))
+  expand_grid(NVSCAT = c("FTP-NONE", "MK6240-NONE", "PI2620-NONE"))
 
 NV_TESTCD_LIST <- bind_rows(
   c(
@@ -2166,7 +2166,7 @@ PIB_PET_DATA <- PIBPETSUVR %>%
   select(RID, ORIGPROT, VISCODE, EXAMDATE, NVSTRESN = PIB, LONIUID) %>%
   check_duplicate_records(col_names = c("RID", "EXAMDATE")) %>%
   mutate(
-    NVMETHOD = "PET SCAN",
+    NVMETHOD = "PET",
     NVTESTCD = "PIB",
     NVSTRESU = NA_character_,
     NVORRES = as.character(NVSTRESN),
@@ -2365,21 +2365,42 @@ NV <- bind_rows(FDG_PET_DATA, PIB_PET_DATA, AMYREAD_DATA, PET_DATA) %>%
     NVGRPID = COLPROT,
     NVDTC = create_iso8601(NVDTC, .format = "y-m-d")
   ) %>%
+  mutate(NVSCAT_MAPID = case_when(
+    str_detect(raw_source, "^UCBERKELEY_") ~ toupper(paste0(TRACER, "-", IMAGE_RESOLUTION)),
+    !str_detect(raw_source, "^UCBERKELEY_") ~ "-"
+  ))
+
+NV <- NV %>%
   left_join(
     NV_TESTCD_LIST %>%
-      select(NVCAT, NVSCAT, NVTESTCD, NVTEST, SOURCE),
-    by = c("NVTESTCD" = "NVTESTCD", "raw_source" = "SOURCE"),
+      select(NVCAT, NVSCAT, NVTESTCD, NVTEST, SOURCE) %>%
+      mutate(NVSCAT_MAPID = case_when(
+        str_detect(SOURCE, "^UCBERKELEY_") ~ NVSCAT,
+        !str_detect(SOURCE, "^UCBERKELEY_") ~ "-"
+      )),
+    by = c("NVTESTCD" = "NVTESTCD", "raw_source" = "SOURCE", "NVSCAT_MAPID" = "NVSCAT_MAPID"),
     relationship = "many-to-many"
   ) %>%
+  verify(nrow(.) == nrow(NV)) %>%
   assert_non_missing(NVTEST, NVSCAT, NVCAT) %>%
   derive_usubjid() %>%
   assign_studyid_domain(domain = "NV") %>%
   assign_visit_attr() %>%
-  assign_epoch() %>%
+  assign_epoch()
+
+# Adjusting for the same NVTESTCD that comes from multiple raw sources
+nv_grp_cols <- c("NVTESTCD", "NVCAT", "NVSCAT", "IMAGE_RESOLUTION", "TRACER")
+NV <- NV %>%
+  unite("NVTESTCD", all_of(nv_grp_cols), sep = "-/") %>%
   derive_blfl_adni(
+    sdtm_in = .,
     dm_domain = DM,
     tgt_var = "NVBLFL"
   ) %>%
+  separate(NVTESTCD, into = nv_grp_cols, sep = "-/") %>%
+  assert_non_missing(NVTESTCD)
+
+NV <- NV %>%
   derive_study_day_adni(
     dm_domain = DM,
     domain = "NV"

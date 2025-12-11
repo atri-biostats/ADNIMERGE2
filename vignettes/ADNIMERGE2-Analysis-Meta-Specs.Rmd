@@ -209,7 +209,27 @@ adsl_dic <- bind_rows(
   ),
   c(
     variable = "AMYSTAT", type = "text", length = "20", label = "Baseline Amyloid Status", code_id = "AMYSTAT",
-    origin = "Predecessor", derivation = "NV.NVSTRESC where NV.NVCAT=AMYLOIDPET, NV.NVSCAT=FBB-6MM, NV.NVTESTCD=AMYSTAT, and NVBLFL = 'Y'."
+    origin = "Predecessor",
+    derivation = paste0(
+      "Common amyloid status from NV.NVSTRESC where ",
+      "NV.NVCAT=AMYLOIDPET & NV.NVTESTCD=AMYSTAT and NVBLFL = 'Y'."
+    )
+  ),
+  c(
+    variable = "AMYSTATC", type = "text", length = "20", label = "Baseline Amyloid Status - Composite Ref", code_id = "AMYSTAT",
+    origin = "Predecessor",
+    derivation = paste0(
+      "Common amyloid status from NV.NVSTRESC where ",
+      "NV.NVCAT=AMYLOIDPET & NV.NVTESTCD=AMYSTATC and NVBLFL = 'Y'."
+    )
+  ),
+  c(
+    variable = "TRACER", type = "text", length = "8", label = "Image Tracer Type",
+    origin = "Predecessor", derivation = "Image tracer corresponding to both ADSL.AMYSTAT and ADSL.AMYSTATC"
+  ),
+  c(
+    variable = "IMAGERES", type = "text", length = "8", label = "Image Resolution",
+    origin = "Predecessor", derivation = "Image resolution corresponding to both ADSL.AMYSTAT and ADSL.AMYSTATC"
   ),
   c(
     variable = "ADASTT11", type = "float", length = "2", label = "Baseline ADAS-Cog Item 11 Total Score", sig_dig = 2,
@@ -298,8 +318,8 @@ adsl_dic <- bind_rows(
   c(
     variable = "APOE", type = "text", length = "8", label = "APOE Genotype",
     origin = "Predecessor", derivation = "GF.GFSTRESC"
-  ), 
-   c(
+  ),
+  c(
     variable = "MPACCDIGIT", type = "float", length = "3", label = "Baseline mPACCdigit", sig_dig = 8,
     origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCDIGIT and QSBLFL = 'Y'."
   ),
@@ -884,11 +904,11 @@ AESEV_CODEDLIST <- tibble(
 
 # Parameter code list ----
 QSTESTCD_LIST <- c(
-  "ADASTT11", "ADASTT13", "CDGLOBAL", "CDRSB", "DIGITSCR", 
-  "ECOGPTTT", "ECOGSPTT", "FAQTOTAL","FCISCORE", "GDTOTAL", "LDELTOTL", 
+  "ADASTT11", "ADASTT13", "CDGLOBAL", "CDRSB", "DIGITSCR",
+  "ECOGPTTT", "ECOGSPTT", "FAQTOTAL", "FCISCORE", "GDTOTAL", "LDELTOTL",
   "LIMMTOTL", "MMSCORE", "MOCA", "MPACCDIGIT", "MPACCTRAILSB",
   "NPIQTOTL", "NPITOTAL", "RAVLTFG", "RAVLTFGP", "RAVLTIMM",
-  "RAVLTLRN",  "TRABSCOR"
+  "RAVLTLRN", "TRABSCOR"
 )
 # To apply with data flow
 # QSTESTCD_LIST <- QS %>%

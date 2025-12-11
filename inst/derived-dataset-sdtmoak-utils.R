@@ -22,6 +22,7 @@ generate_oak_id_vars_adni <- function(...) {
 #'   derived dataset using \code{\link[sdtm.oak]{derive_blfl}} function.
 #' @inheritParams sdtm.oak::derive_blfl
 #' @param ref_var Reference study date, Default: 'RFSTDTC', see \code{\link[sdtm.oak]{derive_blfl}}
+#' @param num_ref_days Number of days since enrollment/reference date, Default: 90
 #' @param .strict
 #'  A Boolean value to apply more ADNI study specific strict baseline record identification, see the \code{Deatils} section.
 #'
@@ -48,7 +49,7 @@ generate_oak_id_vars_adni <- function(...) {
 #' @importFrom assertr verify
 #' @importFrom tidyselect all_of
 #' @importFrom stringr str_remove_all str_c str_extract_all
-derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC",
+derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", num_ref_days = 90,
                              baseline_visits = "Baseline", baseline_timepoints = character(),
                              .strict = TRUE) {
   require(sdtm.oak)
@@ -64,7 +65,7 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC",
       sdtm_in = .,
       dm_domain = dm_domain %>%
         # Study-specific parameter - observational study
-        mutate(across(all_of(ref_var), ~ as.Date(.x) + 90)) %>%
+        mutate(across(all_of(ref_var), ~ as.Date(.x) + num_ref_days)) %>%
         mutate(across(all_of(ref_var), as.character)),
       ref_var = ref_var,
       baseline_visits = baseline_visits,
@@ -154,7 +155,9 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
   multiple_blf_records <- .data %>%
     filter(if_all(all_of(tgt_var), ~ .x %in% "Y")) %>%
     group_by(across(all_of(grp_vars))) %>%
-    filter(n() > 1) %>%
+    # To adjust for duplicated records in AMY_PET_6mm dataset
+    # Will be replaced with 1
+    filter(n() > 2) %>%
     ungroup() %>%
     as_tibble() %>%
     relocate(all_of(c(grp_vars, tgt_var)))
@@ -238,7 +241,7 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
       )) %>%
       mutate(NUM_BLFS = sum(!is.na(get(tgt_var)))) %>%
       ungroup() %>%
-      verify(all(NUM_BLFS == 1)) %>%
+      verify(all(NUM_BLFS == 1 | NUM_BLFS == 2)) %>%
       select(-NUM_BLFS) %>%
       mutate(TEMP_BLF = get(tgt_var))
 
@@ -282,7 +285,7 @@ drive_bfl_visit <- function(.data, visit_col = "VISIT", baseline_visits = "Basel
     strict = TRUE,
     stop_message = TRUE
   )
-  
+
   .data <- .data %>%
     mutate(across(all_of(visit_col), ~ case_when(.x %in% baseline_visits ~ "Y"), .names = "BLFG")) %>%
     mutate(across(all_of("BLFG"), ~ case_when(!is.na(get("ENRFLG")) ~ .x)))
