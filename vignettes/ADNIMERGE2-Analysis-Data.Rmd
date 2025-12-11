@@ -86,6 +86,11 @@ bind_rows(
     source = "metatools",
     text = "Convert multiple variables into factor - a wrapper function of `convert_var_to_fct`"
   ),
+  c(
+    fun_name = "create_amystatus_cols",
+    source = "internal",
+    text = "Create a common baseline amyloid status from multiple image tracer and resolutions"
+  )
 ) %>%
   select(
     `Internal Function` = fun_name,
@@ -192,22 +197,6 @@ ADSL <- build_from_derived(
     metacore = adsl_metacore,
     var = c("ORIGPROT", "DX", "RACE")
   ) %>%
-  # Add baseline amyloid status
-  call_derivation(
-    dataset = .,
-    dataset_add = NV,
-    derivation = derive_vars_merged,
-    variable_params = list(
-      params(
-        filter_add = NVCAT == "AMYLOIDPET" & NVSCAT == "FBB-6MM" &
-          NVTESTCD == "AMYSTAT" & NVBLFL == "Y",
-        new_vars = exprs(AMYSTAT = NVSTRESC)
-      )
-    ),
-    by_vars = exprs(USUBJID),
-    check_type = "error",
-    relationship = "one-to-one"
-  ) %>%
   # Add baseline education level and marital status
   call_derivation(
     dataset = .,
@@ -257,9 +246,56 @@ ADSL <- build_from_derived(
   )
 ```
 
+
 ```{r generate-adsl1}
+# Add baseline amyloid status
+NV_AMYSTAT_COLS <- NV %>%
+  select(NVTESTCD, NVTEST, NVCAT, NVSCAT) %>%
+  distinct() %>%
+  filter(str_detect(NVTESTCD, "AMYSTAT")) %>%
+  mutate(IMAGE_RES = str_extract_all(NVSCAT, "8MM$|6MM$")) %>%
+  filter(str_detect(IMAGE_RES, "8|6")) %>%
+  mutate(NVTESTCD_NVSCAT = paste0(NVTESTCD, "0", str_replace_all(NVSCAT, "-", "_")))
+
+nv_params <- lapply(NV_AMYSTAT_COLS$NVTESTCD_NVSCAT, function(param) {
+  params_cond <- admiral::params(
+    filter_add = NVCAT == "AMYLOIDPET" &
+      NVSCAT == stringr::str_replace(stringr::str_split(!!param, "0", simplify = TRUE)[2], "_", "-") &
+      NVTESTCD == stringr::str_split(!!param, "0", simplify = TRUE)[1] &
+      NVBLFL == "Y",
+    new_vars = exprs(!!!exprs(param = NVSTRESC))
+  )
+  params_cond$new_vars <- substitute(
+    exprs(param := NVSTRESC),
+    list(param = as.name(param))
+  )
+  return(params_cond)
+})
+
+ADSL <- ADSL %>%
+  call_derivation(
+    dataset = .,
+    dataset_add = NV %>%
+      filter(!USUBJID %in% c("ADNI-014-06757", "ADNI-049-06830")),
+    derivation = derive_vars_merged,
+    variable_params = nv_params,
+    order = exprs(VISITNUM), # For duplicated cases
+    mode = "first",
+    by_vars = exprs(USUBJID),
+    check_type = "error",
+    relationship = "one-to-one"
+  )
+
+# Required to create a common amyloid status variable from
+# multiple image tracers and resolutions
+ADSL <- ADSL %>%
+  create_amystatus_cols(.) %>%
+  select(-any_of(NV_AMYSTAT_COLS$NVTESTCD_NVSCAT))
+```
+
+```{r generate-adsl2}
 # Add baseline questionnaire/assessment score
-params_list <- lapply(unique(QS$QSTESTCD), function(param) {
+qs_params <- lapply(unique(QS$QSTESTCD), function(param) {
   params_cond <- admiral::params(
     filter_add = QSTESTCD == !!param & QSBLFL == "Y",
     new_vars = exprs(!!!exprs(param = QSORRES))
@@ -276,7 +312,8 @@ ADSL <- ADSL %>%
     dataset = .,
     dataset_add = QS,
     derivation = derive_vars_merged,
-    variable_params = params_list,
+    variable_params = qs_params,
+    order = exprs(VISITNUM),
     mode = "first",
     by_vars = exprs(USUBJID),
     check_type = "error",
@@ -284,7 +321,7 @@ ADSL <- ADSL %>%
   )
 ```
 
-```{r generate-adsl2}
+```{r generate-adsl3}
 ADSL <- ADSL %>%
   # Create enrollment flag
   derive_var_merged_ef_msrc(
@@ -335,7 +372,7 @@ ADSL <- ADSL %>%
   )
 ```
 
-```{r checks-adsl0}
+```{r checks-adsl1}
 ADSL <- ADSL %>%
   # Check all variables specified are present and no more
   check_variables(
@@ -366,7 +403,7 @@ ADSL <- ADSL %>%
   )
 ```
 
-```{r checks-adsl1}
+```{r checks-adsl0}
 ADSL <- ADSL %>%
   xportr_metadata(
     .df = .,
@@ -829,14 +866,14 @@ ADRS_PREP <- ADRS_PREP %>%
     )
   ) %>%
   select(-DTHDT, -DHDY) %>%
-  # Remove missing DEATH paramters
+  # Remove missing DEATH param
   filter(!(PARAMCD %in% "DEATH" & is.na(DTHFL))) %>%
   mutate(PARAMN = case_when(
     PARAMCD == "DX" ~ 1,
     PARAMCD == "DEATH" ~ 2
   ))
 
-# Flag subjects that have at least one followup diagnostics summary after baseline visit
+# Flag subjects that have at least one follow-up diagnostics summary after baseline visit
 #  Or had death records
 ADRS_PREP <- ADRS_PREP %>%
   derive_var_merged_exist_flag(
