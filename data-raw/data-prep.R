@@ -36,14 +36,14 @@ args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 2) {
   cli::cli_abort(
     message = c(
-      "Input argument {.val arg} must be size of 2. \n",
-      "{.val arg} is a length of {.val {length(arg)}} vector."
+      "Input argument {.val args} must be size of 2. \n",
+      "{.val args} is a length of {.val {length(args)}} vector."
     )
   )
 }
 
 DATA_DOWNLOADED_DATE <- args[1]
-if (!is.character(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
+if (!str_detect(DATA_DOWNLOADED_DATE, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
   cli::cli_abort(
     message = c(
       "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format. \n",
@@ -62,15 +62,8 @@ if (!is.logical(UPDATE_DATADIC) | is.na(UPDATE_DATADIC)) {
   )
 }
 
+## Data download stamped date
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
-if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
-  cli::cli_abort(
-    message = c(
-      "{.var DATA_DOWNLOADED_DATE} must not be missing. \n",
-      "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format."
-    )
-  )
-}
 usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
 
 prefix_pattern <- "^adni\\_"
@@ -251,17 +244,16 @@ dataset_cat_phase <- lapply(data_path_list, function(x) {
 
 dataset_cat_phase <- dataset_cat_phase %>%
   bind_rows() %>%
-  filter(!str_detect(dir_cat, "\\["))
+  filter(!str_detect(file_list, "^DATADIC$"))
 
 # Adjust dataset category based on file name
 dataset_cat_file_name <- dataset_cat_phase %>%
   filter(str_detect(tolower(file_list), "adni[1-9]|adnigo")) %>%
-  filter(!str_detect(dir_cat, "^adni")) %>%
   mutate(dir_cat = str_extract(tolower(file_list), "adni[1-9]|adnigo")) %>%
-  assert_non_missing(dir_cat)
+  filter(str_detect(dir_cat, "^adni")) %>%
+  filter(!is.na(dir_cat))
 
 dataset_cat_phase <- bind_rows(dataset_cat_phase, dataset_cat_file_name) %>%
-  group_by(file_list) %>%
   group_by(file_list) %>%
   filter(
     (n() == 1 & row_number() == 1) |
