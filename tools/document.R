@@ -8,8 +8,8 @@ args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 2) {
   cli::cli_abort(
     message = c(
-      "Input argument {.val arg} must be size of 2. \n",
-      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+      "Input argument {.val args} must be size of 2. \n",
+      "{.val args} is a length of contains {.val {length(args)}} vector."
     )
   )
 }

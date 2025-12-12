@@ -11,7 +11,7 @@ if (length(args) != 1) {
   cli::cli_abort(
     message = c(
       "Input argument {.var args} must be size of 1. \n",
-      "{.val arg} is a length of {.val {length(args)}}"
+      "{.val args} is a length of {.val {length(args)}}"
     )
   )
 }
