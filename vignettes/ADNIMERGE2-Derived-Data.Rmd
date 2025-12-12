@@ -1801,11 +1801,9 @@ RS <- RS %>%
 
 [`NV`](../reference/NV.html) dataset contains one record of physiological and morphological finding related to the nervous system (including brain) per visit per subject.
 
-**NOTE: ** 
+**NOTE: **
 
-* Records in the raw dataset of [`Amyloid PET`](../reference/UCBERKELEY_AMY_6MM.html) and [`Tau PET`](../reference/UCBERKELEY_TAU_6MM.html) may include a QC flag. Records that contain `Fail` and `Not assessed` or `Cannot be processed` QC flag will be indicated as `NOT DONE` status in the `NV` derived dataset with those flags as reasons.
-
-* We recommended to check this variable value before using `ADNIMERGE2::NV` derived dataset in any analysis. For examples, records that were collected at baseline but contained a QC flag of `Fail` and `Not assessed` or `Cannot be processed` will not be flagged as a baseline record in `NV`. To learn more about about the QC flag, please refer to the the manual documentation at data sharing platform. Moreover, please see the following r chunks about how these QC flags were incorporated in the `NV` derived dataset.
+* Records in the raw dataset of [`Amyloid PET`](../reference/UCBERKELEY_AMY_6MM.html) and [`Tau PET`](../reference/UCBERKELEY_TAU_6MM.html) may include a QC flag. Records that contain `Fail`, `Not assessed` or `Cannot be processed` QC flag will be indicated as `NOT DONE` status in the `NV` derived dataset with those flags as a reason. We suggest to check this variable value before using `ADNIMERGE2::NV` data in any analysis. For examples, records that were collected at baseline but contained a QC flag of `Fail`, `Not assessed` or `Cannot be processed` will not be flagged as a baseline record in `NV`. To learn more about about the QC flag, please refer to the the manual documentation at data sharing platform. Moreover, please see the following r chunks about how these QC flags were translated in the `NV` derived data.
 
 ```{r nv-data-dic, echo = FALSE}
 nv_data_dic <- bind_rows(
