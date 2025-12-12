@@ -155,9 +155,7 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
   multiple_blf_records <- .data %>%
     filter(if_all(all_of(tgt_var), ~ .x %in% "Y")) %>%
     group_by(across(all_of(grp_vars))) %>%
-    # To adjust for duplicated records in AMY_PET_6mm dataset
-    # Will be replaced with 1
-    filter(n() > 2) %>%
+    filter(n() > 1) %>%
     ungroup() %>%
     as_tibble() %>%
     relocate(all_of(c(grp_vars, tgt_var)))
@@ -241,7 +239,7 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
       )) %>%
       mutate(NUM_BLFS = sum(!is.na(get(tgt_var)))) %>%
       ungroup() %>%
-      verify(all(NUM_BLFS == 1 | NUM_BLFS == 2)) %>%
+      verify(all(NUM_BLFS == 1)) %>%
       select(-NUM_BLFS) %>%
       mutate(TEMP_BLF = get(tgt_var))
 

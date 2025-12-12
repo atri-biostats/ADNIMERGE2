@@ -1801,6 +1801,12 @@ RS <- RS %>%
 
 [`NV`](../reference/NV.html) dataset contains one record of physiological and morphological finding related to the nervous system (including brain) per visit per subject.
 
+**NOTE: ** 
+
+* Records in the raw dataset of [`Amyloid PET`](../reference/UCBERKELEY_AMY_6MM.html) and [`Tau PET`](../reference/UCBERKELEY_TAU_6MM.html) may include a QC flag. Records that contain `Fail` and `Not assessed` or `Cannot be processed` QC flag will be indicated as `NOT DONE` status in the `NV` derived dataset with those flags as reasons.
+
+* We recommended to check this variable value before using `ADNIMERGE2::NV` derived dataset in any analysis. For examples, records that were collected at baseline but contained a QC flag of `Fail` and `Not assessed` or `Cannot be processed` will not be flagged as a baseline record in `NV`. To learn more about about the QC flag, please refer to the the manual documentation at data sharing platform. Moreover, please see the following r chunks about how these QC flags were incorporated in the `NV` derived dataset.
+
 ```{r nv-data-dic, echo = FALSE}
 nv_data_dic <- bind_rows(
   c(
@@ -2275,6 +2281,7 @@ AMYPET_DATA <- UCBERKELEY_AMY_6MM %>%
   rename_with_list(., name_char = amypet_cols, by_name = TRUE) %>%
   select(all_of(c(pet_data_common_cols, names(amypet_cols)))) %>%
   mutate(across(all_of(names(amypet_cols)), as.character)) %>%
+  distinct() %>%
   generate_oak_id_vars_adni(raw_src = "UCBERKELEY_AMY_6MM") %>%
   pivot_longer(
     cols = all_of(names(amypet_cols)),
