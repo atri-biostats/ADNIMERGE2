@@ -296,7 +296,7 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 #' @title Function to adjust for field code and text
 #' @description
 #'  This function is used to adjust the field code and text from DATADIC
-#' @param data_dict A data.frame (i.e. from DATADIC)
+#' @param .datadic A data.frame (i.e. from DATADIC)
 #' @param phaseVar Variable name for study phase. Default: "PHASE"
 #' @param codeVar Variable name for field code. Default: "CODE"
 #' @param textVar Variable name for field text. Default: "TEXT"
@@ -309,18 +309,18 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
 #' @importFrom dplyr mutate rename_with across pull row_number
 #' @importFrom tidyselect where all_of
 #' @importFrom rlang arg_match0
-adjust_code_labels <- function(data_dict, phaseVar = "PHASE", codeVar = "CODE", textVar = "TEXT") {
+adjust_code_labels <- function(.datadic, phaseVar = "PHASE", codeVar = "CODE", textVar = "TEXT") {
   require(tidyverse)
-  arg_match0(arg = phaseVar, values = colnames(data_dict))
-  arg_match0(arg = codeVar, values = colnames(data_dict))
-  arg_match0(arg = textVar, values = colnames(data_dict))
+  arg_match0(arg = phaseVar, values = colnames(.datadic))
+  arg_match0(arg = codeVar, values = colnames(.datadic))
+  arg_match0(arg = textVar, values = colnames(.datadic))
 
   column_list_dd <- tibble::tibble(
     specified_name_list = c(phaseVar, codeVar, textVar),
     renamed_list = c("phase_var", "code_var", "text_var")
   )
 
-  data_dict <- data_dict %>%
+  .datadic <- .datadic %>%
     mutate(across(all_of(column_list_dd$specified_name_list) & where(is.factor), as.character)) %>%
     rename_with(
       ~ paste0(
@@ -331,15 +331,15 @@ adjust_code_labels <- function(data_dict, phaseVar = "PHASE", codeVar = "CODE", 
       all_of(column_list_dd$specified_name_list)
     )
 
-  if (nrow(data_dict) > 1) {
-    unique_rows <- data_dict %>%
+  if (nrow(.datadic) > 1) {
+    unique_rows <- .datadic %>%
       distinct(code_var) %>%
       nrow()
     if (unique_rows == 1) {
-      data_dict <- data_dict %>%
+      .datadic <- .datadic %>%
         filter(row_number() %in% n())
-      temp_code <- data_dict$code_var
-      temp_text <- data_dict$text_var
+      temp_code <- .datadic$code_var
+      temp_text <- .datadic$text_var
       output_data <- tibble::tibble(
         field_value = temp_code,
         field_label = temp_text
@@ -348,13 +348,13 @@ adjust_code_labels <- function(data_dict, phaseVar = "PHASE", codeVar = "CODE", 
 
     if (unique_rows > 1) {
       # Last row records for variable description
-      temp_text <- data_dict %>%
+      temp_text <- .datadic %>%
         distinct(phase_var, text_var) %>%
         filter(row_number() %in% n()) %>%
         pull(text_var)
 
       # Coded values
-      temp_code_list <- data_dict %>%
+      temp_code_list <- .datadic %>%
         group_by(code_var) %>%
         mutate(phase_var = toString(phase_var)) %>%
         ungroup() %>%
@@ -373,10 +373,10 @@ adjust_code_labels <- function(data_dict, phaseVar = "PHASE", codeVar = "CODE", 
     }
   }
 
-  if (nrow(data_dict) == 1) {
+  if (nrow(.datadic) == 1) {
     output_data <- tibble::tibble(
-      field_value = data_dict$code_var,
-      field_label = data_dict$text_var
+      field_value = .datadic$code_var,
+      field_label = .datadic$text_var
     )
   }
 
@@ -751,14 +751,19 @@ update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = 
 #' @param file_extension_pattern File extension pattern, Default: '\\.csv$'
 #' @param recursive \code{\link[base]{list.files}}
 #' @return A data.frame that contains the following columns:
+#'  \item \code{dir} Top level directory name
+#'  \item \code{sub_dir} Sub-directory name
+#'  \item \code{full_file_path} Full file path
+#'  \item \code{file_list} Abbreviated/short data file name
+#'  \item \code{dir_cat} Dataset category
 #' @examples
 #' \dontrun{
-#' get_dataset_cat(
+#' get_dataset_category(
 #'   dir.path = file.path(".", "data-raw"),
 #'   extension_pattern = "\\.csv$"
 #' )
 #' }
-#' @rdname get_dataset_cat
+#' @rdname get_dataset_category
 #' @family utility function
 #' @keywords utils_fun
 #' @importFrom stringr str_remove_all str_detect str_to_lower
@@ -766,8 +771,7 @@ update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = 
 #' @importFrom dplyr bind_rows mutate case_when select
 #' @importFrom assertr assert within_bounds
 #' @export
-get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
-                            recursive = TRUE) {
+get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$",recursive = TRUE) {
   require(tidyverse)
   dir <- main_dir <- dir_cat <- NULL
   full_file_path <- file_list <- file_list_temp <- num_dash_char <- NULL
@@ -815,9 +819,10 @@ get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
         tolower(file_name) %in% tolower("REMOTE_DATADIC") ~ "data_dict, remotely_collected_data",
         TRUE ~ dir_cat
       ),
-      full_file_path = file.path(dir, file_list)
+      full_file_path = file.path(dir, file_list), 
+      sub_dir = file.path(dir, str_remove_all(file_list, paste0("/",file_name,"$")))
     ) %>%
-    select(dir, full_file_path, file_list = file_name, dir_cat)
+    select(dir, sub_dir, full_file_path, file_list = file_name, dir_cat)
 
   return(output_data)
 }
@@ -828,14 +833,14 @@ get_dataset_cat <- function(dir.path, file_extension_pattern = "\\.csv$",
 #' @return A data.frame with \code{PHASE} variable
 #' @examples
 #' \dontrun{
-#' get_study_phase_cat(.data = ADNIMERGE2::ADAS)
+#' get_study_phase_category(.data = ADNIMERGE2::ADAS)
 #' }
-#' @rdname get_study_phase_cat
+#' @rdname get_study_phase_category
 #' @export
 #' @importFrom cli cli_abort
 #' @importFrom dplyr rename mutate across select distinct
 #' @importFrom tidyselect all_of everything
-get_study_phase_cat <- function(.data, phase_vars = NULL) {
+get_study_phase_category <- function(.data, phase_vars = NULL) {
   require(dplyr)
   # Checking for study phase variable
   if (is.null(phase_vars)) {

@@ -122,7 +122,7 @@ convert_to_missing_value(
   phase = adni_phase()
 ) %>%
   select(-PTID) %>%
-  head(.,0)
+  head(., 0)
 ```
 
 ```{r replace-missing-values-1}
@@ -135,7 +135,7 @@ convert_to_missing_value(
   phase = "ADNI1"
 ) %>%
   select(-PTID) %>%
-  head(.,0)
+  head(., 0)
 ```
 
 ## Derived Datasets 

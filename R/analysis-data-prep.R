@@ -1,7 +1,7 @@
 # Convert Number of Days ------
 #' @title Convert Number of Days
 #' @description
-#'  A function to convert number of days into either number of \code{weeks}, 
+#'  A function to convert number of days into either number of \code{weeks},
 #'  \code{months} or \code{years} with specific bin values.
 #' @param x Numeric vector
 #' @param unit Unit of measurements: either \code{week}, \code{month} or \code{year}, Default: 'month'
@@ -11,7 +11,7 @@
 #' @return A numeric vector
 #' @details
 #'  A small positive values will be added to zero numeric value, specially to
-#'  adjust time interval for baseline visits. 
+#'  adjust time interval for baseline visits.
 #'  Furthermore, all negative value will be ceiling to zero if \code{adjust_negative_value} is set to \code{TRUE}
 #' @examples
 #' \dontrun{

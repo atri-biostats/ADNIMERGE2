@@ -1,7 +1,7 @@
 # NEUROBAT Scoring Function -----
 #' @title Scoring Function for NEUROBAT Sub-items
-#' @description 
-#'  This function is used to compute item-level subscore in the \code{\link{NEUROBAT}()} eCRF.
+#' @description
+#'  This function is used to compute item-level subscore in \code{\link{NEUROBAT}()} eCRF.
 #'  Please see the \code{Value} section for item-level score description.
 #' @param .neurobat Data.frame of \code{\link{NEUROBAT}()} eCRF
 #' @return A data frame the same as \code{.neurobat} with the following appended columns

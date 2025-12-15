@@ -4,6 +4,8 @@ output:
    rmarkdown::html_vignette:
      toc: true
      code_folding: hide
+params: 
+  INCLUDE_PACC: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Analysis-Meta-Specs}
@@ -318,17 +320,32 @@ adsl_dic <- bind_rows(
   c(
     variable = "APOE", type = "text", length = "8", label = "APOE Genotype",
     origin = "Predecessor", derivation = "GF.GFSTRESC"
-  ),
-  c(
-    variable = "MPACCDIGIT", type = "float", length = "3", label = "Baseline mPACCdigit", sig_dig = 8,
-    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCDIGIT and QSBLFL = 'Y'."
-  ),
-  c(
-    variable = "MPACCTRAILSB", type = "float", length = "3", label = "Baseline mPACCtrialsB", sig_dig = 8,
-    origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCTRAILSB and QSBLFL = 'Y'."
-  ),
-) %>%
+  )
+)
+
+adsl_dic <- adsl_dic %>%
   as_tibble() %>%
+  {
+    if (params$INCLUDE_PACC) {
+      bind_rows(
+        .,
+        bind_rows(
+          ., c(
+            variable = "MPACCDIGIT", type = "float", length = "3", label = "Baseline mPACCdigit", sig_dig = 8,
+            origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCDIGIT and QSBLFL = 'Y'."
+          ),
+          c(
+            variable = "MPACCTRAILSB", type = "float", length = "3", label = "Baseline mPACCtrialsB", sig_dig = 8,
+            origin = "Predecessor", derivation = "QS.QSSTRESC where QS.QSTESTCD=MPACCTRAILSB and QSBLFL = 'Y'."
+          )
+        )
+      )
+    } else {
+      (.)
+    }
+  }
+
+adsl_dic <- adsl_dic %>%
   mutate(
     dataset = "ADSL",
     structure = "One record per subject",

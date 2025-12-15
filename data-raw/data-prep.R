@@ -10,24 +10,11 @@ library(assertr)
 library(rlang)
 library(cli)
 
-# Directories ----
-raw_data_dir <- "./data-raw"
-# Clear up directories ----
-updated_datadic_dir <- file.path(raw_data_dir, "updated_datadic")
-date_stamped_dir <- file.path(raw_data_dir, "date_stamped")
-common_columns_dir <- file.path(raw_data_dir, "common_columns")
-dataset_cat_dir <- file.path(raw_data_dir, "dataset_cat")
-coded_record_dir <- file.path(raw_data_dir, "coded_records")
-derived_datadic_dir <- file.path(raw_data_dir, "derived-datadic")
-data_dir <- "./data"
-specified_dir_list <- c(
-  data_dir, updated_datadic_dir, date_stamped_dir, common_columns_dir,
-  dataset_cat_dir, coded_record_dir, derived_datadic_dir
-)
-
-check_dir_list <- lapply(specified_dir_list, function(dir) {
+# Pre-specified directories name ----
+source(file.path(".", "data-raw", "dir-list.R"))
+check_dir_list <- lapply(dir_list, function(dir) {
   if (dir.exists(dir) == TRUE) unlink(dir, recursive = TRUE)
-  cli::cli_alert_info(text = "{.path {dir}} removed")
+  cli::cli_alert_warning(text = "{.path {dir}} removed")
 })
 
 # Data downloaded date arg parameter ----
@@ -83,7 +70,7 @@ if (length(zip_file_list) > 0) {
 } else {
   EXISTED_ZIPFILE <- FALSE
   cli::cli_alert_warning(
-    text = "No existed zip file existed in {.val './data-raw'} directory."
+    text = "No existing zip file in {.val {'./data-raw'}}"
   )
 }
 
@@ -141,7 +128,7 @@ if (EXISTED_ZIPFILE) {
 }
 rm(list = c("zip_file_list", "zip_name_pattern"))
 
-# Convert raw .csv dataset into .rda file format ----
+# Convert '.csv' file into '.rda' file format ----
 csv_file_list <- list.files(
   path = raw_data_dir,
   pattern = "\\.csv$",
@@ -155,7 +142,7 @@ if (length(csv_file_list) > 0) {
 } else {
   EXISTED_CSVFILE <- FALSE
   cli::cli_alert_warning(
-    text = "No existed csv file existed in {.path './data-raw'}."
+    text = "No existing csv file in {.path {'./data-raw'}}."
   )
 }
 
@@ -187,29 +174,10 @@ if (EXISTED_CSVFILE) {
 }
 rm(list = c("date_stamped_suffix", "csv_file_list", "csv_name_pattern"))
 
-# Create dataset category/groups ----
-## Get dataset category based on file path ----
-if (dir.exists(dataset_cat_dir)) unlink(dataset_cat_dir)
-dir.create(dataset_cat_dir)
-dataset_cat <- get_dataset_cat(
-  dir.path = raw_data_dir,
-  file_extension_pattern = "\\.csv$",
-  recursive = TRUE
-) %>%
-  group_by(file_list) %>%
-  filter((n() == 1 & row_number() == 1) |
-    (n() > 1 & any(dir_cat %in% "other_raw_dataset") & !dir_cat %in% "other_raw_dataset") |
-    (n() > 1 & all(!dir_cat %in% "other_raw_dataset"))) %>%
-  mutate(dir_cat = toString(dir_cat)) %>%
-  ungroup() %>%
-  # Adjust the Neuropathology dataset
-  mutate(dir_cat = case_when(
-    file_list %in% "NEUROPATH" & dir_cat %in% "other_raw_dataset" ~ "neuropath",
-    file_list %in% "DATADIC" & dir_cat %in% "other_raw_dataset" ~ "data_dict",
-    TRUE ~ dir_cat
-  ))
-
-## Get dataset category based on study phase ----
+# Converting `-4` & `-1` value as missing values ----
+data_dic_path <- file.path(data_dir, "DATADIC.rda")
+if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not found")
+data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
 data_path_list <- list.files(
   path = data_dir,
   pattern = "\\.rda$",
@@ -217,74 +185,6 @@ data_path_list <- list.files(
   all.files = TRUE,
   recursive = FALSE
 )
-
-dataset_cat_phase <- lapply(data_path_list, function(x) {
-  dataset_name <- str_remove(basename(x), "\\.rda$")
-  # Load dataset in new environment
-  new_env <- new.env()
-  load(file = x, envir = new_env)
-  get_study_phase_cat(
-    .data = new_env %>%
-      pluck(., dataset_name),
-    phase_vars = NULL
-  ) %>%
-    rename("dir_cat" = PHASE) %>%
-    mutate(
-      dir = raw_data_dir, # For simplicity
-      full_file_path = x, # Exact file path
-      file_list = dataset_name,
-    ) %>%
-    # Adjust for remotely collected dataset
-    mutate(dir_cat = case_when(
-      str_detect(file_list, "$RMT\\_") ~ tolower(adni_phase()[5]),
-      TRUE ~ dir_cat
-    )) %>%
-    relocate(dir_cat, .after = last_col())
-})
-
-dataset_cat_phase <- dataset_cat_phase %>%
-  bind_rows() %>%
-  filter(!str_detect(file_list, "^DATADIC$"))
-
-# Adjust dataset category based on file name
-dataset_cat_file_name <- dataset_cat_phase %>%
-  filter(str_detect(tolower(file_list), "adni[1-9]|adnigo")) %>%
-  mutate(dir_cat = str_extract(tolower(file_list), "adni[1-9]|adnigo")) %>%
-  filter(str_detect(dir_cat, "^adni")) %>%
-  filter(!is.na(dir_cat))
-
-dataset_cat_phase <- bind_rows(dataset_cat_phase, dataset_cat_file_name) %>%
-  group_by(file_list) %>%
-  filter(
-    (n() == 1 & row_number() == 1) |
-      (n() > 1 & any(dir_cat %in% "undefined_phase") & !dir_cat %in% "undefined_phase") |
-      (n() > 1 & all(!dir_cat %in% "undefined_phase"))
-  ) %>%
-  mutate(dir_cat = toString(dir_cat)) %>%
-  ungroup() %>%
-  distinct()
-
-dataset_cat <- bind_rows(dataset_cat, dataset_cat_phase) %>%
-  group_by(file_list) %>%
-  mutate(dir_cat = toString(dir_cat)) %>%
-  ungroup() %>%
-  distinct() %>%
-  # Adjust the category for remotely collected data in ADNI4
-  mutate(across(
-    dir_cat,
-    ~ case_when(
-      str_detect(file_list, "^RMT\\_") & !str_detect(.x, "adni4") ~ paste0(.x, ", adni4"),
-      TRUE ~ .x
-    )
-  ))
-
-# See line 447 for additional data wrangling
-
-# Adding common columns and converting `-4` & `-1` value as missing values ----
-data_dic_path <- file.path(data_dir, "DATADIC.rda")
-if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not existed")
-
-data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
 data_path_list <- data_path_list[!data_path_list %in% c(
   data_dic_path,
   data_downloaded_date_path
@@ -397,7 +297,6 @@ if (UPDATE_MISSING_VALUE) {
 }
 
 # Remove date stamp from file extension -----
-
 ## Some of the imaging dataset might have a date stamped file extension
 ## A summary of dataset list will be copied to `./data-raw/date_stamped` directory
 cli::cli_alert_info(text = "Start removing date stamped from file name")
@@ -468,23 +367,6 @@ dataset_stamped_date <- dataset_list_dd %>%
 readr::write_csv(
   x = dataset_stamped_date,
   file = file.path(date_stamped_dir, "dataset_list_date_stamped.csv")
-)
-
-dataset_cat <- dataset_cat %>%
-  left_join(
-    dataset_stamped_date %>%
-      select(PREVIOUS_TBLNAME, UPDATED_TBLNAME),
-    by = c("file_list" = "PREVIOUS_TBLNAME")
-  ) %>%
-  mutate(TBLNAME = case_when(
-    !is.na(UPDATED_TBLNAME) ~ UPDATED_TBLNAME,
-    TRUE ~ file_list
-  ))
-
-## Save dataset category ----
-readr::write_csv(
-  x = dataset_cat,
-  file = file.path(dataset_cat_dir, "dataset_category.csv")
 )
 
 ## Save the updated dataset with date stamped ----
@@ -558,7 +440,7 @@ if (nrow(dataset_list_dd) > 0) {
 rm(list = c("date_stamped_pattern", "dataset_list_dd"))
 cli::cli_alert_success(text = "Completed removing date stamped from file name")
 
-# Checking for common columns "COLPROT" and "ORIGPROT" across all dataset -----
+# Checking for common columns "COLPROT" and "ORIGPROT" across available datasets -----
 data_path_list <- list.files(
   path = data_dir,
   pattern = "\\.rda$",
@@ -761,7 +643,7 @@ if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
       str_detect(common_cols, "contains_colport_status") == TRUE ~ "COLPROT",
       str_detect(common_cols, "contains_origport_status") == TRUE ~ "ORIGPROT"
     )) %>%
-    # Only TBLNAME that are existed in the UPDATED_DATADIC
+    # Only TBLNAME that are existing in the UPDATED_DATADIC
     filter(short_tblname %in% unique(UPDATED_DATADIC$TBLNAME))
 
   # Description of common cols

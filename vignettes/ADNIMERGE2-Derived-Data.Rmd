@@ -4,6 +4,8 @@ output:
  rmarkdown::html_vignette:
   toc: true
   code_folding: hide
+params: 
+   INCLUDE_PACC: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Derived-Data}
@@ -66,6 +68,10 @@ library(sdtm.oak)
 ```{r study-library, purl = FALSE}
 # ADNI study R data package
 library(ADNIMERGE2)
+```
+
+```{r params-check, include = FALSE, echo = FALSE}
+check_object_type(params$INCLUDE_PACC, "logical")
 ```
 
 # Data Preparation {#sec-data-prep}
@@ -782,6 +788,7 @@ SC <- bind_rows(SC_DEMOG, SC_ADI, SC_RURALITY) %>%
     tgt_var = "SCBLFL"
   ) %>%
   derive_study_day_adni(
+    sdtm_in = .,
     dm_domain = DM,
     domain = "SC",
     refdt = "RFSTDTC"
@@ -1379,28 +1386,31 @@ NEUROBAT_TESTCD <- bind_rows(
     SOURCE = "NEUROBAT"
   )
 
-PACC_TESTCD <- bind_rows(
-  c(
-    QSTESTCD = "mPACCdigit",
-    QSTEST = "Modified PACC Digit Score"
-  ),
-  c(
-    QSTESTCD = "mPACCtrailsB",
-    QSTEST = "Modified PACC Trials B Score"
-  ),
-) %>%
-  mutate(
-    QSTESTCD = str_to_upper(QSTESTCD),
-    QSCAT = "PACC",
-    SOURCE = "PACC"
-  )
-
+if (params$INCLUDE_PACC) {
+  PACC_TESTCD <- bind_rows(
+    c(
+      QSTESTCD = "mPACCdigit",
+      QSTEST = "Modified PACC Digit Score"
+    ),
+    c(
+      QSTESTCD = "mPACCtrailsB",
+      QSTEST = "Modified PACC Trials B Score"
+    ),
+  ) %>%
+    mutate(
+      QSTESTCD = str_to_upper(QSTESTCD),
+      QSCAT = "PACC",
+      SOURCE = "PACC"
+    )
+}
 
 QS_TESTCD_LIST <- bind_rows(
   OTHER_QS_TESTCD_LIST,
-  NEUROBAT_TESTCD,
-  PACC_TESTCD
-)
+  NEUROBAT_TESTCD
+) %>%
+  {
+    if (params$INCLUDE_PACC) bind_rows(., PACC_TESTCD) else (.)
+  }
 ```
 
 
@@ -1565,24 +1575,26 @@ NEUROBAT_SCORE_DATA <- NEUROBAT %>%
   )
 
 # Composite modified PACC score
-pacc_cols <- c("mPACCdigit", "mPACCtrailsB")
+if (params$INCLUDE_PACC) {
+  pacc_cols <- c("mPACCdigit", "mPACCtrailsB")
 
-PACC_SCORE_DATA <- PACC %>%
-  rename("VISDATE" = PACC_VISDATE) %>%
-  select(any_of(qs_com_cols), all_of(pacc_cols)) %>%
-  mutate(RID = as.numeric(RID)) %>%
-  generate_oak_id_vars_adni(raw_src = "PACC") %>%
-  pivot_longer(
-    cols = all_of(pacc_cols),
-    names_to = "QSTESTCD",
-    values_to = "QSSTRESC"
-  ) %>%
-  mutate(
-    QSTESTCD = str_to_upper(QSTESTCD),
-    QSSTRESC = as.character(QSSTRESC),
-    QSDRVFL = "Yes",
-    QSSTAT = ifelse(is.na(QSSTRESC), "NOT DONE", NA_character_)
-  )
+  PACC_SCORE_DATA <- PACC %>%
+    rename("VISDATE" = PACC_VISDATE) %>%
+    select(any_of(qs_com_cols), all_of(pacc_cols)) %>%
+    mutate(RID = as.numeric(RID)) %>%
+    generate_oak_id_vars_adni(raw_src = "PACC") %>%
+    pivot_longer(
+      cols = all_of(pacc_cols),
+      names_to = "QSTESTCD",
+      values_to = "QSSTRESC"
+    ) %>%
+    mutate(
+      QSTESTCD = str_to_upper(QSTESTCD),
+      QSSTRESC = as.character(QSSTRESC),
+      QSDRVFL = "Yes",
+      QSSTAT = ifelse(is.na(QSSTRESC), "NOT DONE", NA_character_)
+    )
+}
 
 # Score data names
 score_data_names <- ls()[str_detect(ls(), "SCORE\\_DATA")]

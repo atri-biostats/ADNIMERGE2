@@ -9,7 +9,7 @@ library(cli)
 
 # Directory ----
 data_dir <- "./data"
-# All data from "./data" directory, except DATADIC if it is existed
+# List available data in './data' directory
 data_path_list <- list.files(
   path = data_dir,
   pattern = "\\.rda$",

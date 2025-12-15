@@ -58,14 +58,14 @@ assert_non_missing <- function(...) {
 #' @param type Object type
 #' @return An error message if the input object and type does not match.
 #' @details
-#' 
-#' This function is used to check the object type of an input value based on 
-#' \code{base} R package. In \code{base} R package, object type functions are 
-#' specified in \code{is.ObjectType} format. For instance, \code{base::is.logical} 
-#' is used for checking a logical/Boolean value. Please see the examples how it 
+#'
+#' This function is used to check the object type of an input value based on
+#' \code{base} R package. In \code{base} R package, object type functions are
+#' specified in \code{is.ObjectType} format. For instance, \code{base::is.logical}
+#' is used for checking a logical/Boolean value. Please see the examples how it
 #' is translated in this function.
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' check_object_type(x = letters[1:12], type = "character")
 #' check_object_type(x = ADNIMERGE2::CDR, type = "data.frame")
@@ -77,7 +77,7 @@ assert_non_missing <- function(...) {
 #' @rdname check_object_type
 #' @family checks function
 #' @keywords utils_fun
-#' @export 
+#' @export
 #' @importFrom cli cli_abort
 
 check_object_type <- function(x, type) {

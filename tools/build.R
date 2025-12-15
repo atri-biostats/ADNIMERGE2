@@ -10,7 +10,7 @@ setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
 DATA_DOWNLOADED_DATE <- "2025-11-12" # Data downloaded date YYYY-MM-DD format
-UPDATE_DATADIC <- TRUE # Please see line 630 in the `./data-raw/data_prep.R`
+UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
   wd = ".",
@@ -31,6 +31,16 @@ if (DECODE_VALUE) {
   )
 }
 
+### Create data category for pkgdown -----
+# Recommended to run this line for creating a website using pkgdown
+CREATE_DATA_CATEGORY <- TRUE
+if (CREATE_DATA_CATEGORY) {
+  callr::rscript(
+    script = "./data-raw/data-prep-category-pkgdown.R",
+    wd = "."
+  )
+}
+
 # Generate PACC score input data ----
 INCLUDE_PACC_DERIVED_DATA <- TRUE
 # NOTE:
@@ -42,10 +52,36 @@ if (INCLUDE_PACC_DERIVED_DATA) {
     wd = ".",
     cmdargs = list(DATA_DOWNLOADED_DATE = DATA_DOWNLOADED_DATE)
   )
+} else {
+  # Transfer PACC scoring article from "./vignettes" to "./tools"
+  # when PACC input raw data are not generated.
+  pacc_file_name <- "ADNIMERGE2-PACC.Rmd"
+  file.copy(
+    from = file.path(".", "vignettes", pacc_file_name),
+    to = file.path(".", "tools", pacc_file_name),
+    overwrite = TRUE
+  )
+  # Remove the existing file from vignettes directory
+  file.remove(file.path(".", "vignettes", pacc_file_name))
 }
 
 ## Generate derived/analysis dataset ----
 INCLUDE_DERIVED_DATASET <- TRUE
+
+# Required to change the default params yaml values in vignettes
+# Only applicable if you want to generate derived datasets other than PACC scores
+# For internal pkg build:
+# # CHANGE_VIGNETTES_YAML <- FALSE
+CHANGE_VIGNETTES_YAML <- FALSE
+CHANGE_VIGNETTES_YAML <- (INCLUDE_DERIVED_DATASET & !INCLUDE_PACC_DERIVED_DATA)
+if (CHANGE_VIGNETTES_YAML) {
+  callr::rscript(
+    script = "./tools/vignettes-yaml.R",
+    wd = ".",
+  )
+} else {
+  cli::cli_alert_info("No vignettes yaml change!")
+}
 
 if (INCLUDE_DERIVED_DATASET) {
   # List of derived dataset

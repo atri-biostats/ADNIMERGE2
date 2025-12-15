@@ -4,6 +4,8 @@ output:
    rmarkdown::html_vignette:
      toc: true
      code_folding: hide
+params: 
+  INCLUDE_PACC: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNI-Enrollment}
@@ -40,7 +42,11 @@ library(see)
 library(ADNIMERGE2)
 ```
 
-```{r, echo=FALSE}
+```{r params-check, include = FALSE, echo = FALSE}
+check_object_type(params$INCLUDE_PACC, "logical")
+```
+
+```{r global-param}
 # tbl_summary theme
 theme_gtsummary_compact()
 # ggplot2 theme
@@ -99,11 +105,16 @@ enroll_summary_plot
 ## Demographic Summaries: By Study Phase
 
 ```{r overall-summary}
+# Characteristics/variables
 include_vars <- c(
   "AGE", "SEX", "EDUC", "RACE", "ETHNIC", "MARISTAT",
   "DX", "APOE", "ADASTT13", "CDGLOBAL", "CDRSB", "MMSCORE",
-  "FAQTOTAL", "MPACCTRAILSB", "MPACCDIGIT"
+  "FAQTOTAL"
 )
+if (params$INCLUDE_PACC) {
+  pacc_vars <- c("MPACCTRAILSB", "MPACCDIGIT")
+  include_vars <- c(include_vars, pacc_vars)
+}
 
 tbl_summary(
   data = ADSL %>%
@@ -141,8 +152,11 @@ tbl_summary(
 var_label_list <- get_variable_labels(ADSL)
 cont_var_list <- c(
   "AGE", "EDUC", "ADASTT13", "CDGLOBAL",
-  "CDRSB", "MMSCORE", "FAQTOTAL", "MPACCTRAILSB", "MPACCDIGIT"
+  "CDRSB", "MMSCORE", "FAQTOTAL"
 )
+if (params$INCLUDE_PACC) {
+  cont_var_list <- c(cont_var_list, pacc_vars)
+}
 cont_bl_violin_plot <- lapply(cont_var_list, function(x) {
   graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
@@ -164,11 +178,11 @@ names(cont_bl_violin_plot) <- cont_var_list
 plots(
   cont_bl_violin_plot,
   n_columns = 2,
-  caption = paste0(
+  caption = ifelse(params$INCLUDE_PACC, paste0(
     "Baseline mPACCdigit score was based on subjects that were enrolled only ",
     "in ADNI1 study phase. \n The remaining summary plots were based on ",
     "subjects that enrolled in ADNI study."
-  ),
+  ), ""),
   title = "ADNI - Plots of Numeric Characteristics: By Study Phase"
 )
 ``` 

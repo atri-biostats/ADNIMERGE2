@@ -66,8 +66,14 @@ if (file.exists(dataset_date_stamped_file_path)) {
 }
 
 if (USE_UPDATED_DATADIC) {
-  lapply(data_path[!data_path %in% c(data_dict_path)], load, .GlobalEnv)
+  lapply(data_path[!data_path %in% data_dict_path], load, .GlobalEnv)
 
+  if (!file.exists(updated_data_dict_path)) {
+    cli::cli_abort(c(
+      "{.path {updated_data_dict_path}} is not found! \n",
+      "i" = "Did you forget to set {.val {'USE_UPDATED_DATADIC = FALSE?'}}"
+    ))
+  }
   if (file.exists(updated_data_dict_path)) load(updated_data_dict_path, .GlobalEnv)
   DATADIC <- UPDATED_DATADIC
 }
@@ -125,7 +131,7 @@ authors_list <- paste0(
   "{adni-data@googlegroups.com}"
 )
 
-adjust_value_datadict <- function(.data, 
+adjust_datadict_fieldvalue <- function(.data,
                                   datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
   col_names <- c("field_values", "field_notes")
   .data <- .data %>%
@@ -140,13 +146,14 @@ adjust_value_datadict <- function(.data,
 ### Generate data dictionary from actual raw dataset ----
 temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   summarize_dataset(
-    .data = raw_data_list %>% pluck(., tb),
+    .data = raw_data_list %>% 
+      pluck(., tb),
     dataset_name = tb,
     wide_format = TRUE
   )
 }) %>%
   bind_rows() %>%
-  adjust_value_datadict() %>%
+  adjust_datadict_fieldvalue() %>%
   mutate(tblname = str_remove_all(str_to_lower(dd_name), string_removed_pattern))
 
 unique_tblname <- unique(temp_data_dict$tblname)
@@ -172,7 +179,7 @@ temp_field_codetext <- bind_rows(DATADIC, REMOTE_DATADIC) %>%
   group_by(TBLNAME, FLDNAME) %>%
   nest() %>%
   ungroup() %>%
-  mutate(adjust_fldcodes = map(data, ~ adjust_code_labels(data_dict = .x))) %>%
+  mutate(adjust_fldcodes = map(data, adjust_code_labels)) %>%
   unnest(cols = adjust_fldcodes) %>%
   assert_uniq(TBLNAME, FLDNAME)
 
@@ -263,22 +270,22 @@ temp_data_dict <- temp_data_dict %>%
   )
 
 ### Add dataset category/keywords ----
-dataset_cat_path <- file.path(".", "data-raw", "dataset_cat", "dataset_category.csv")
-if (file.exists(dataset_cat_path)) {
-  dataset_cat <- readr::read_csv(
-    file = dataset_cat_path,
+dataset_category_path <- file.path(".", "data-raw", "dataset_cat", "dataset_category.csv")
+if (file.exists(dataset_category_path)) {
+  dataset_category <- readr::read_csv(
+    file = dataset_category_path,
     col_names = TRUE,
     show_col_types = FALSE,
     guess_max = Inf
   ) %>%
     select(dir_cat, TBLNAME)
 } else {
-  dataset_cat <- create_tibble0(c("dir_cat", "TBLNAME"))
+  dataset_category <- create_tibble0(c("dir_cat", "TBLNAME"))
 }
 
 temp_data_dict <- temp_data_dict %>%
   left_join(
-    dataset_cat %>%
+     dataset_category %>%
       mutate(dir_cat = str_remove_all(string = dir_cat, ",")) %>%
       select(TBLNAME, dir_cat) %>%
       distinct(),
@@ -329,7 +336,7 @@ temp_data_dict <- temp_data_dict %>%
 ## Finalize documentation ------
 if (dir.exists(file.path(".", "R")) == FALSE) {
   cli::cli_abort(
-    message = "{.val {file.path('.', 'R')}} directory is not existed."
+    message = "{.path {file.path('.', 'R')}} directory is not found!"
   )
 }
 data_document_path <- file.path(".", "R", "data.R")
@@ -427,7 +434,7 @@ if (exists("derived_data_list")) {
     )
   }) %>%
     bind_rows() %>%
-    adjust_value_datadict() %>%
+    adjust_datadict_fieldvalue() %>%
     mutate(tblname = str_remove_all(dd_name, string_removed_pattern)) %>%
     left_join(
       DERIVED_DATADIC %>%
