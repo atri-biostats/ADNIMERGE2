@@ -26,4 +26,4 @@ To install the package locally, run
 ## Usage
 
 Learn more about `ADNIMERGE2` at
-[`Get Started`](./articles/ADNIMERGE2.html) page
+[`Get Started`](https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2.html) page

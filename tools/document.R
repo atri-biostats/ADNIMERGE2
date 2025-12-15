@@ -132,7 +132,7 @@ authors_list <- paste0(
 )
 
 adjust_datadict_fieldvalue <- function(.data,
-                                  datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
+                                       datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
   col_names <- c("field_values", "field_notes")
   .data <- .data %>%
     mutate(across(any_of(col_names), ~ case_when(
@@ -146,7 +146,7 @@ adjust_datadict_fieldvalue <- function(.data,
 ### Generate data dictionary from actual raw dataset ----
 temp_data_dict <- lapply(names(raw_data_list), function(tb) {
   summarize_dataset(
-    .data = raw_data_list %>% 
+    .data = raw_data_list %>%
       pluck(., tb),
     dataset_name = tb,
     wide_format = TRUE
@@ -285,7 +285,7 @@ if (file.exists(dataset_category_path)) {
 
 temp_data_dict <- temp_data_dict %>%
   left_join(
-     dataset_category %>%
+    dataset_category %>%
       mutate(dir_cat = str_remove_all(string = dir_cat, ",")) %>%
       select(TBLNAME, dir_cat) %>%
       distinct(),
@@ -438,7 +438,8 @@ if (exists("derived_data_list")) {
     mutate(tblname = str_remove_all(dd_name, string_removed_pattern)) %>%
     left_join(
       DERIVED_DATADIC %>%
-        select(TBLNAME, FLDNAME, TEXT, CRFNAME),
+        select(TBLNAME, FLDNAME, TEXT, CRFNAME) %>%
+        distinct(),
       by = c("dd_name" = "TBLNAME", "field_name" = "FLDNAME")
     ) %>%
     assert_uniq(dd_name, field_name) %>%
