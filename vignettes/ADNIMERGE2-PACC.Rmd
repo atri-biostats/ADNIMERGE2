@@ -442,10 +442,9 @@ pacc_component_bl.summary <- compute_score_summary(
 
 pacc_component_bl.summary %>%
   mutate(VAR = ifelse(VAR == "TRABSCOR", "LOG.TRABSCOR", VAR)) %>%
-  # rename("Baseline DX" = DX, "Component" = VAR) %>%
+  rename(`Baseline DX` = DX, `Component` = VAR) %>%
   datatable(
-    colnames = c("Baseline DX" = 2, "Component" = 3),
-    caption = "PACC Compoonent Standardization Baseline Summary"
+    caption = "PACC Component Standardization Baseline Summary"
   )
 ```
 ## Compute PACC Score 

@@ -38,6 +38,10 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
 
  <img src="../man/figures/arc_table_template.png" align="center" height="130">
 
+### Required ADNI Study Data
+
+A data dictionary file is required to build a package similar to `ADNIMERGE2` R data package. To replicate exactly the `ADNIMERGE2` R package, please refer to [`./inst/dataset-list.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/package_build/inst/dataset-list.R) for the list of minimum required datasets.
+
 ## Build Package 
 
 Run `source('tools/build.R')` to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
@@ -88,7 +92,7 @@ Run `source('tools/build.R')` to prepare dataset, generate documentations and bu
           
 + Build the data package: using [devtools R package](https://devtools.r-lib.org/)
 
-# References {-}
+# References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 

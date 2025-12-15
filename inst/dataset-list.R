@@ -145,7 +145,7 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
       data_code = "ADAS",
       label = "ADAS-Cognitive Behavior",
       article_list = derived_data_artc,
-      source_derived_data = "QS, PACC",
+      source_derived_data = "QS", # Since ADAS contains only total scores
       script_list = pacc_input_url,
       use_article = TRUE,
       use_prep_script = TRUE
@@ -338,14 +338,14 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
     ),
     c(
       data_code = "LABDATA",
-      label = "Laboratory Data for ADNI1, ADNI-G0, and ADNI2 study phases",
+      label = "Laboratory Data for ADNI1, ADNI-G0, and ADNI2 Study Phases",
       article_list = derived_data_artc,
       source_derived_data = "LB",
       use_article = TRUE
     ),
     c(
       data_code = "URMC_LABDATA",
-      label = "Laboratory Data for ADNI3, and ADNI4 study phases",
+      label = "Laboratory Data for ADNI3, and ADNI4 Study Phases",
       article_list = derived_data_artc,
       source_derived_data = "LB",
       use_article = TRUE
