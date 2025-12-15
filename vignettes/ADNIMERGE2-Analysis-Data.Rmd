@@ -275,8 +275,7 @@ nv_params <- lapply(NV_AMYSTAT_COLS$NVTESTCD_NVSCAT, function(param) {
 ADSL <- ADSL %>%
   call_derivation(
     dataset = .,
-    dataset_add = NV %>%
-      filter(!USUBJID %in% c("ADNI-014-06757", "ADNI-049-06830")),
+    dataset_add = NV,
     derivation = derive_vars_merged,
     variable_params = nv_params,
     order = exprs(VISITNUM), # For duplicated cases

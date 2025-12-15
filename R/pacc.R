@@ -513,11 +513,11 @@ compute_pacc_score <- function(.data,
 #' @importFrom stats sd
 
 compute_score_summary <- function(.data,
-                                    wideFormat = TRUE,
-                                    scoreVar,
-                                    groupVar = "DX",
-                                    filterGroup = NULL,
-                                    groupVar1 = NULL) {
+                                  wideFormat = TRUE,
+                                  scoreVar,
+                                  groupVar = "DX",
+                                  filterGroup = NULL,
+                                  groupVar1 = NULL) {
   N <- MEAN <- SD <- VAR <- SCORE <- NULL
   check_object_type(wideFormat, "logical")
   if (wideFormat) {
@@ -958,9 +958,9 @@ get_vars_common_date <- function(.data,
     group_by(TEMP_ID) %>%
     {
       if (select_method %in% "max") {
-        mutate(., COMMON_DATE = min(DATES))
-      } else {
         mutate(., COMMON_DATE = max(DATES))
+      } else {
+        mutate(., COMMON_DATE = min(DATES))
       }
     } %>%
     mutate(NUM_RECORDS = n()) %>%
@@ -1015,7 +1015,7 @@ get_vars_common_date <- function(.data,
 ## Rename columns, convert into character type and tibble object ----
 #' @title Make Similar Format
 #' @description
-#' A function to convert a data.frame object into tibble format with upper-case 
+#' A function to convert a data.frame object into tibble format with upper-case
 #' column name and character type.
 #' @param .data Data.frame
 #' @return A tibble/data.frame object with upper-case column name and character type.

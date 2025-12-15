@@ -25,5 +25,5 @@ To install the package locally, run ``r paste0("install.packages(\"path/to/", pk
 
 ## Usage 
 
-Learn more about ``r pkgName`` at [`Get Started`](./articles/ADNIMERGE2.html) page
+Learn more about ``r pkgName`` at [`Get Started`](https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2.html) page
 

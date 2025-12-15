@@ -9,7 +9,7 @@ library(cli)
 
 # Directory ----
 data_dir <- "./data"
-# All data from "./data" directory, except DATADIC if it is existed
+# List available data in './data' directory
 data_path_list <- list.files(
   path = data_dir,
   pattern = "\\.rda$",
@@ -27,8 +27,8 @@ args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 1) {
   cli::cli_abort(
     message = c(
-      "Input argument {.val arg} must be size of 1. \n",
-      "{.val arg} is a length of contains {.val {length(arg)}} vector."
+      "Input argument {.val args} must be size of 1. \n",
+      "{.val args} is a length of contains {.val {length(args)}} vector."
     )
   )
 }

@@ -48,9 +48,6 @@ library(ADNIMERGE2)
 theme_set(theme_bw(base_size = 12))
 # Color for DX group
 dx_color_pal <- c("#73C186", "#F2B974", "#DF957C", "#999999")
-month_bin <- 1
-# Anticipated ADAS-cog assessment collection timeline for DEM - 2 years
-year2 <- 12 * 2 / month_bin
 ```
 
 # ADNI Longitudinal Summaries - Clinical Cognitive Outcomes
@@ -116,9 +113,9 @@ ADADAS <- ADQS %>%
   filter(ENRLFL %in% "Y") %>%
   # ADAS-cog item-13 total score
   filter(PARAMCD %in% "ADASTT13") %>%
-  # Compute time variable in month
+  # Compute time variable in years
   mutate(
-    TIME = convert_number_days(AVISITN, bin = month_bin),
+    TIME = convert_number_days(AVISITN, unit = "year"),
     DX = factor(DX, levels = levels(ADSL$DX))
   ) %>%
   # For spline term in the model
@@ -130,6 +127,7 @@ ADADAS <- ADQS %>%
 num_final_popu_consort <- consort_data %>%
   filter(!is.na(bl_dx) & !is.na(known_score_value)) %>%
   nrow()
+
 # Total analysis population - ADADAS data
 num_final_popu_adadas <- ADADAS %>%
   distinct(USUBJID) %>%
@@ -149,11 +147,11 @@ The individual profile of ADAS-Cog item-13 total score over time by baseline dia
 individual_profile_plot <- ADADAS %>%
   ggplot(aes(x = TIME, y = AVAL, group = USUBJID, color = DX)) +
   geom_line(alpha = 0.75) +
-  scale_x_continuous(breaks = seq(0, max(ADADAS$TIME, na.rm = TRUE), year2)) +
+  scale_x_continuous(breaks = seq(0, max(ADADAS$TIME, na.rm = TRUE), 2)) +
   scale_color_manual(values = dx_color_pal) +
   labs(
     y = "ADAS-cog Item-13 Total Score",
-    x = "Months since baseline visit",
+    x = "Timeline since baseline visit (in years)",
     color = "Baseline Diagnostics Status",
     caption = paste0(
       "Based on known baseline diagnostics status ",
@@ -203,7 +201,7 @@ assign("ns22", ns22, envir = .GlobalEnv)
 
 # With a random slope term ----
 lmer_mod_fit <- lme4::lmer(
-  formula = AVAL ~ (I(ns21(TIME)) + I(ns22(TIME)))*DX + (TIME | USUBJID),
+  formula = AVAL ~ (I(ns21(TIME)) + I(ns22(TIME))) * DX + (TIME | USUBJID),
   data = ADADAS,
   control = lmerControl(optimizer = "Nelder_Mead")
 )
@@ -230,7 +228,7 @@ model_check$PP_CHECK +
 
 *NOTE: * 
 
- * The prediction timeline for Dementia (DEM) diagnostics status was limited to 24 months\n due to the anticipated follow-up collection of ADAS cognitive behavior assessment\n which is up-to 2 years due to the study design. However, ADAS-cog assessment might have been collected for rollover subjects with DEM baseline diagnostics status during their initial visit. 
+ * The prediction timeline for Dementia (DEM) diagnostics status was limited to two years due to the anticipated follow-up collection of ADAS cognitive behavior assessment which is up-to 2 years in the study. However, ADAS-cog assessment might have been collected for rollover subjects with DEM baseline diagnostics status during their initial visit in the next study phase. 
       
 ```{r model-predict, fig.width = 7, fig.alt = "Predicted score by baseline diagnostics status"}
 # Population level prediction
@@ -243,7 +241,7 @@ pred_value <- marginaleffects::predictions(
     DX = levels(ADSL$DX),
     USUBJID = NA
   ) %>%
-    filter(!(DX %in% "DEM" & TIME > year2))
+    filter(!(DX %in% "DEM" & TIME > 2))
 )
 
 predicted_plot <- pred_value %>%
@@ -253,17 +251,17 @@ predicted_plot <- pred_value %>%
     aes(ymin = conf.low, ymax = conf.high, fill = DX),
     alpha = 0.15, linetype = 0, show.legend = FALSE
   ) +
-  scale_x_continuous(breaks = seq(0, max(pred_value$TIME, na.rm = TRUE), year2)) +
+  scale_x_continuous(breaks = seq(0, max(pred_value$TIME, na.rm = TRUE), 2)) +
   scale_fill_manual(values = dx_color_pal) +
   scale_color_manual(values = dx_color_pal) +
   labs(
-    x = "Months since baseline visit",
+    x = "Timeline since baseline visit (in years)",
     y = "Predicted ADAS-cog Item-13 \n Total Score with 95% CI",
     color = "Baseline Diagnostics Status",
     fill = NULL,
     caption = paste0(
       "The prediction timeline for Dementia (DEM) diagnostics status was limited",
-      " to 24 months due to the\n anticipated follow-up assessment collection ",
+      " to 2 years due to the\n anticipated follow-up assessment collection ",
       "in the study."
     )
   ) +

@@ -38,6 +38,10 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
 
  <img src="../man/figures/arc_table_template.png" align="center" height="130">
 
+### Required ADNI Study Data
+
+A data dictionary file is required to build a package similar to `ADNIMERGE2` R data package. To replicate exactly the `ADNIMERGE2` R package, please refer to [`./inst/dataset-list.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/package_build/inst/dataset-list.R) for the list of minimum required datasets.
+
 ## Build Package 
 
 Run `source('tools/build.R')` to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
@@ -50,19 +54,31 @@ Run `source('tools/build.R')` to prepare dataset, generate documentations and bu
          
      + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R) for more information. 
          
-     + Required to specify two input arguments: the data downloaded date (`DATA_DOWNLOADED_DATE`) in `YYYY-MM-DD` format and indicator of whether to update any existing data dictionary file (`UPDATE_DATADIC`)
-         
+     + Required to specify two input arguments:  data download date (`DATA_DOWNLOADED_DATE`) in `YYYY-MM-DD` format and a Boolean value to update any existing data dictionary file (`UPDATE_DATADIC`)
+     
   - [`./data-raw/data-prep-recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R): 
          
      + To map numerically coded values of a dataset based on existing data dictionary as necessary
          
-     + Required to specify indicator argument regarding whether to use the updated data dictionary (`USE_UPDATED_DATADIC`) if the data dictionary is updated in previous step
-         
+     + Required to specify indicator argument regarding whether to use an updated data dictionary (`USE_UPDATED_DATADIC`) if the data dictionary was updated in previous step
+  
+  - [`./data-raw/data-prep-category-pkgdown.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep-category-pkgdown.R): 
+   
+       + To create dataset category based on file path, file name or file content
+    
+       + Useful for data documentation and organizing dataset list in the [Reference](https://atri-biostats.github.io/ADNIMERGE2/reference/index.html) section of a package website that will be created using [pkgdown](https://pkgdown.r-lib.org/) R package.
+       
   - [`./tools/generate-derived-data.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools/generate-derived-data.R):  
       
-      + To generate some derived dataset based on the files in the [`vignettes`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/vignettes) directory
+      + To generate some derived dataset based on files in the [`vignettes`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/vignettes) directory
          
-      + Required to specify the name of derived dataset (`DERIVED_DATASET_LIST`) as an input argument 
+      + Required to specify the name of derived dataset (`DERIVED_DATASET_LIST`) as an input argument
+      
+      + **NOTE:** At this moment, Preclinical Alzheimer Cognitive Composite (PACC) scores derived data will only be created internally due to not all required raw-input data are available at the data-sharing platform. Please refer to [ADNIMERGE2-PACC](https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-PACC.html#import-raw-datasets) and [`./tools/generate-pacc-input-data.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/generate-pacc-input-data.R) for more information. 
+       
+          * We suggest to set the `INCLUDE_PACC_DERIVED_DATA` value to `FALSE` for not generating PACC scores data. 
+          
+          * Moreover, [`vignettes-yaml.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/vignettes-yaml.R) script will allows to change the default parameter yaml value related to PACC in package vignettes.
     
 + Generate data-related documentations:
     
@@ -76,7 +92,7 @@ Run `source('tools/build.R')` to prepare dataset, generate documentations and bu
           
 + Build the data package: using [devtools R package](https://devtools.r-lib.org/)
 
-# References {-}
+# References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 

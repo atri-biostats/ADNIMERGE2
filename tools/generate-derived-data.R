@@ -11,7 +11,7 @@ if (length(args) != 1) {
   cli::cli_abort(
     message = c(
       "Input argument {.var args} must be size of 1. \n",
-      "{.val arg} is a length of {.val {length(args)}}"
+      "{.val args} is a length of {.val {length(args)}}"
     )
   )
 }
@@ -42,13 +42,17 @@ load_result <- lapply(utils_file_list, source)
 vignette_dir <- file.path(".", "vignettes")
 
 ## PACC derived data ----
-if (any(str_detect(DERIVED_DATASET_LIST, "PACC"))) {
+INCLUDE_PACC_DERIVED_DATA <- any(str_detect(DERIVED_DATASET_LIST, "PACC"))
+
+if (INCLUDE_PACC_DERIVED_DATA) {
   pacc_raw_data_dir <- "./inst/extradata/pacc-raw-input"
   load_csv_files(input_dir = pacc_raw_data_dir)
   temp_file <- tempfile()
   pacc_vignette_path <- file.path(vignette_dir, "ADNIMERGE2-PACC.Rmd")
   knitr::purl(input = pacc_vignette_path, output = temp_file)
   source(file = temp_file)
+} else {
+  cli::cli_alert_info(text = "{.val PACC} score derived dataset will not be generated!")
 }
 
 ## Other derived datasets ----
@@ -82,14 +86,13 @@ save_derived_data <- lapply(
   }
 )
 
-save_derived_data <- unlist(save_derived_data)
-if (!all(save_derived_data == TRUE)) {
+names(save_derived_data) <- DERIVED_DATASET_LIST
+save_derived_data <- save_derived_data[!save_derived_data %in% TRUE]
+if (length(save_derived_data) > 0) {
   cli::cli_abort(
     message = c(
-      paste0(
-        "At least one of the derived datasets {.val {DERIVED_DATASET_LIST}} ",
-        "is not saved in the `./data` directory."
-      )
+      "{.val {length(save_derived_data)}} derived dataset{?s} {?is/are} not saved to {.path {'./data'}}. \n",
+      "i" = "Derived dataset: {.val {names(save_derived_data)}}."
     )
   )
 }
