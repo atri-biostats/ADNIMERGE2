@@ -63,7 +63,7 @@ Here are some of the datasets that would be required to replicate `ADNIMERGE2` R
 <details>
 <summary>Show ADNIMERGE2 Required Datasets</summary>
 
-```{r dataset-list, include = FALSE, echo = FALSE}
+```{r dataset-list, echo = FALSE}
 # Libraries
 library(tidyverse)
 library(ADNIMERGE2)
