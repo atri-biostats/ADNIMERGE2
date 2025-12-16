@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-11-12" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2025-12-15" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -42,7 +42,7 @@ if (CREATE_DATA_CATEGORY) {
 }
 
 # Generate PACC score input data ----
-INCLUDE_PACC_DERIVED_DATA <- TRUE
+INCLUDE_PACC_DERIVED_DATA <- FALSE
 # NOTE:
 #  Required to install the latest version of `ADNIMERGE` and `ADNI4 `study R packages
 #  `ADNI4` R package is only available internally
@@ -66,7 +66,7 @@ if (INCLUDE_PACC_DERIVED_DATA) {
 }
 
 ## Generate derived/analysis dataset ----
-INCLUDE_DERIVED_DATASET <- TRUE
+INCLUDE_DERIVED_DATASET <- FALSE
 
 # Required to change the default params yaml values in vignettes
 # Only applicable if you want to generate derived datasets other than PACC scores
@@ -80,7 +80,7 @@ if (CHANGE_VIGNETTES_YAML) {
     wd = ".",
   )
 } else {
-  cli::cli_alert_info("No vignettes yaml change!")
+  cli::cli_alert_info("Not required to change vignettes yaml!")
 }
 
 if (INCLUDE_DERIVED_DATASET) {
@@ -99,6 +99,20 @@ if (INCLUDE_DERIVED_DATASET) {
   )
 } else {
   DERIVED_DATASET_LIST <- NULL
+  vignettes_dir <- "./vignettes"
+  tools_dir <- "./tools"
+  rmd_file_list <- list.files(
+    path = vignettes_dir,
+    pattern = ".Rmd$",
+    all.files = TRUE,
+    full.names = TRUE
+  )
+  file.copy(
+    from = rmd_file_list,
+    to = str_replace_all(rmd_file_list, vignettes_dir, tools_dir),
+    overwrite = TRUE
+  )
+  file.remove(rmd_file_list)
 }
 
 ## Generate documentations ----

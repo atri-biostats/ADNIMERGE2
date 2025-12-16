@@ -1,3 +1,8 @@
+# Data documtations -----
+source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "tools", "data-dictionary-utils.R"))
+source(file.path(".", "R", "checks-assert.R"))
+
 # Libraries ----
 library(tidyverse)
 library(assertr)
@@ -113,9 +118,6 @@ string_removed_pattern <- str_c(c(prefix_patterns), collapse = "|")
 cli::cli_alert_info(
   text = "Generating documentation for raw datasets"
 )
-source(file.path(".", "tools", "data-prepare-utils.R"))
-source(file.path(".", "tools", "data-dictionary-utils.R"))
-source(file.path(".", "R", "checks-assert.R"))
 
 ## Common texts ----
 ### Data source link
@@ -516,5 +518,9 @@ if (exists("derived_data_list")) {
   )
   cli::cli_alert_success(
     text = "Completed generating documentation for derived datasets"
+  )
+} else {
+  cli::cli_alert_info(
+    text = "Documentation of derived datasets was not generated since there are none!"
   )
 }

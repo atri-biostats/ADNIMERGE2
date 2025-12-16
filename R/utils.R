@@ -221,10 +221,20 @@ create_orig_protocol <- function(.data) {
 #' specified columns. It also checks whether the renamed columns contains only ADNI study phase.
 #' @param .data Data.frame
 #' @param phaseVar Phase column
+#' @param .strict_check A Boolean value to apply strict check-in for missing or known values in \code{COLPOROT} variables
 #' @return A data.frame the same as \code{data} with appended column of \code{COLPROT}.
 #' @examples
 #' \dontrun{
-#' create_col_protocol(data = ADNIMERGE2::VISITS, phaseVar = "Phase")
+#' create_col_protocol(
+#'   data = ADNIMERGE2::REGISTRY,
+#'   phaseVar = "Phase",
+#'   .strict_check = TRUE
+#' )
+#' create_col_protocol(
+#'   data = ADNIMERGE2::VISITS,
+#'   phaseVar = "Phase",
+#'   .strict_check = FALSE
+#' )
 #' }
 #' @rdname create_col_protocol
 #' @family ADNI study protocol/phase
@@ -234,28 +244,34 @@ create_orig_protocol <- function(.data) {
 #' @importFrom dplyr rename_with relocate
 #' @importFrom assertr verify
 #' @export
-create_col_protocol <- function(.data, phaseVar = NULL) {
+create_col_protocol <- function(.data, phaseVar = NULL, .strict_check = TRUE) {
   COLPROT <- NULL
+  check_object_type(.strict_check, "logical")
   if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE", "ProtocolID", "COLPROT")
-  existed_column <- get_cols_name(.data = .data, col_name = phaseVar)
-  if (length(existed_column) > 1) {
+  exst_cols <- get_cols_name(.data = .data, col_name = phaseVar)
+  if (length(exst_cols) > 1) {
     cli_abort(
       message = c(
         "The provided Phase/PHASE columns must be length of one. \n",
-        "{.val {existed_column}} are presented in the data."
+        "{.val {exst_cols}} are presented in the data."
       )
     )
   }
 
+  value_list <- adni_phase()
+  if (!.strict_check) value_list <- c(value_list, NA_character_)
+
   .data <- .data %>%
     {
-      if (!is.na(existed_column)) {
-        mutate(., across(all_of(existed_column), as.character)) %>%
-          rename_with(., ~ paste0("COLPROT"), all_of(existed_column)) %>%
+      if (!is.na(exst_cols)) {
+        mutate(., across(all_of(exst_cols), as.character)) %>%
+          rename_with(., ~ paste0("COLPROT"), all_of(exst_cols)) %>%
           # mutate(., COLPROT = factor(COLPROT, levels = adni_phase())) %>%
           relocate(., COLPROT) %>%
-          assert_non_missing(., COLPROT) %>%
-          verify(all(COLPROT %in% adni_phase()))
+          {
+            if (.strict_check) assert_non_missing(., COLPROT) else (.)
+          } %>%
+          verify(., all(COLPROT %in% value_list))
       } else {
         (.)
       }

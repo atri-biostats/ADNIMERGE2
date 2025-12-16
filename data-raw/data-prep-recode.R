@@ -58,7 +58,7 @@ if (file.exists(cur_data_dict_path)) {
     DATADIC <- UPDATED_DATADIC
     rm(list = "UPDATED_DATADIC", envir = .GlobalEnv)
   }
-  load(file = data_dic_path_remote, envir = .GlobalEnv)
+  if (file.exists(data_dic_path_remote)) load(file = data_dic_path_remote, envir = .GlobalEnv)
   if (!exists("REMOTE_DATADIC")) {
     REMOTE_DATADIC <- tibble(PHASE = NA_character_) %>%
       na.omit()
@@ -324,6 +324,7 @@ if (DECODE_VALUE) {
   )
 
   rm(list = c("UPDATED_DATADIC", "DATADIC", "dataset_data_dict", "coded_tblname", "tblname_list_dd"))
+  cli_alert_success(text = paste0("Completed mapping coded values"))
+} else {
+  cli_alert_info(text = paste0("No mapping coded values!"))
 }
-
-cli_alert_success(text = paste0("Completed mapping coded values"))

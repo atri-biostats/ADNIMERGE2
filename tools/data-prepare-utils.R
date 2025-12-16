@@ -181,10 +181,10 @@ get_unzip_file <- function(input_dir,
 #' @param input_dir Directory location where the file is stored
 #' @param output_dir Output directory
 #' @param file_extension File extension, Default: ".csv"
-#' @param action Either \code{rename} or \code{copy}
+#' @param action Either \code{rename}, \code{copy}, or \code{remove}
 #' @param remove_name_pattern
 #'   Strings that will be removed from the file name, Default = NULL
-#' @return \code{TRUE} if the file action is properly renamed or copied
+#' @return \code{TRUE} if the file action is properly renamed, copied or removed
 #' @rdname file_action
 #' @keywords utils_fun
 #' @importFrom stringr str_remove_all
@@ -197,7 +197,7 @@ file_action <- function(input_dir,
                         remove_name_pattern = NULL) {
   require(rlang)
   require(stringr)
-  arg_match0(arg = action, values = c("rename", "copy"))
+  arg_match0(arg = action, values = c("rename", "copy", "remove"))
   # file list
   old_file_name <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
   new_file_name <- old_file_name
@@ -221,7 +221,78 @@ file_action <- function(input_dir,
     )
   }
 
+  if (action %in% "remove") {
+    file.remove(file.path(input_dir, old_file_name))
+  }
+
   return(TRUE)
+}
+
+#' @title Detect Files Started With Underscore Name
+#' @param input_dir Input directory
+#' @param file_extension File extension patterns, Default: '\.csv$'
+#' @return A Boolean value if there is at least one file that started with underscore character.
+#' @examples
+#' \dontrun{
+#' detect_file_underscore(
+#'   input_dir = "./data-raw/ADSP_PHC",
+#'   file_extension = "\\.csv$"
+#' )
+#' }
+#' @rdname detect_file_underscore
+#' @importFrom stringr str_detect
+
+detect_file_underscore <- function(input_dir, file_extension = "\\.csv$") {
+  file_list <- list.files(
+    path = input_dir,
+    pattern = file_extension,
+    all.files = TRUE
+  )
+  status <- any(stringr::str_detect(file_list, "^\\_"))
+  return(status)
+}
+
+#' @title Removing Underscore Character From A File Name
+#' @param input_dir Input directory
+#' @param output_dir Output directory
+#' @param file_extension File extension patterns
+#' @return Renamed all files that started with underscore character
+#' @examples
+#' \dontrun{
+#' adjust_file_underscore(
+#'   input_dir = "./data-raw/ADSP_PHC",
+#'   output_dir = ".",
+#'   file_extension = "\\.csv$"
+#' )
+#' }
+#' @rdname adjust_file_underscore
+#' @export
+#' @importFrom cli cli_alert_info
+
+adjust_file_underscore <- function(input_dir, output_dir = ".", file_extension = "\\.csv$") {
+  status <- detect_file_underscore(
+    input_dir = input_dir,
+    file_extension = file_extension
+  )
+  if (status) {
+    file_action(
+      input_dir = input_dir,
+      output_dir = output_dir,
+      file_extension = file_extension,
+      remove_name_pattern = "^\\_",
+      action = "rename"
+    )
+    file_action(
+      input_dir = input_dir,
+      output_dir = output_dir,
+      file_extension = file_extension,
+      remove_name_pattern = "^\\_",
+      action = "remove"
+    )
+    cli::cli_alert_info(text = "Files started with underscore in {.path {input_dir}} are updated!")
+  } else {
+    cli::cli_alert_info(text = "No files started with underscore name in {.path {input_dir}}!")
+  }
 }
 
 # Generate .rda dataset in `data` directory ----
@@ -771,7 +842,7 @@ update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = 
 #' @importFrom dplyr bind_rows mutate case_when select
 #' @importFrom assertr assert within_bounds
 #' @export
-get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$",recursive = TRUE) {
+get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$", recursive = TRUE) {
   require(tidyverse)
   dir <- main_dir <- dir_cat <- NULL
   full_file_path <- file_list <- file_list_temp <- num_dash_char <- NULL
@@ -815,12 +886,12 @@ get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$",re
         TRUE ~ dir_cat
       ),
       dir_cat = case_when(
-        tolower(file_name) %in% tolower(c("DATADIC", "UPDATED_DATADIC")) ~ "data_dict",
+        str_detect(tolower(file_name), tolower("DATADIC$|^DATADIC|DATADIC")) ~ "data_dict",
         tolower(file_name) %in% tolower("REMOTE_DATADIC") ~ "data_dict, remotely_collected_data",
         TRUE ~ dir_cat
       ),
-      full_file_path = file.path(dir, file_list), 
-      sub_dir = file.path(dir, str_remove_all(file_list, paste0("/",file_name,"$")))
+      full_file_path = file.path(dir, file_list),
+      sub_dir = file.path(dir, str_remove_all(file_list, paste0("/", file_name, "$")))
     ) %>%
     select(dir, sub_dir, full_file_path, file_list = file_name, dir_cat)
 
@@ -865,7 +936,7 @@ get_study_phase_category <- function(.data, phase_vars = NULL) {
   } else {
     output_data <- tibble(
       PHASE = "undefined_phase"
-    ) %>% 
+    ) %>%
       mutate(across(everything(), as.character))
   }
   return(output_data)
