@@ -450,7 +450,7 @@ extract_codelist_datadict <- function(.datadic) {
   exc_range <- paste0(
     c(
       "\\b\\d+\\.\\.\\d+\\b", "\\b\\d+\\.\\.\\..\\d+\\b",
-      "Range: 0+", "Range:  0+"
+      'Range: 0+", "Range:  0+|^See|^Calculated from: '
     ),
     collapse = "|"
   )

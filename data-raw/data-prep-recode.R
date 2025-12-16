@@ -1,5 +1,6 @@
 # Data preparation script setup ----
 source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "tools", "prepare-datadict.R"))
 source(file.path(".", "R", "utils.R"))
 source(file.path(".", "R", "checks-assert.R"))
 # Libraries ----
@@ -10,15 +11,12 @@ library(cli)
 # Directory ----
 data_dir <- "./data"
 # List available data in './data' directory
-data_path_list <- list.files(
-  path = data_dir,
-  pattern = "\\.rda$",
-  full.names = TRUE,
-  all.files = TRUE,
-  recursive = FALSE
+data_path_list <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "\\.rda$"
 )
+
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
-data_dic_path_remote <- file.path(data_dir, "REMOTE_DATADIC.rda")
 updated_data_dic_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATADIC.rda")
 data_path_list <- data_path_list[!data_path_list == data_dic_path]
 
@@ -28,7 +26,7 @@ if (length(args) != 1) {
   cli::cli_abort(
     message = c(
       "Input argument {.val args} must be size of 1. \n",
-      "{.val args} is a length of contains {.val {length(args)}} vector."
+      "{.val args} is a length of {.val {length(args)}} vector."
     )
   )
 }
@@ -58,11 +56,6 @@ if (file.exists(cur_data_dict_path)) {
     DATADIC <- UPDATED_DATADIC
     rm(list = "UPDATED_DATADIC", envir = .GlobalEnv)
   }
-  if (file.exists(data_dic_path_remote)) load(file = data_dic_path_remote, envir = .GlobalEnv)
-  if (!exists("REMOTE_DATADIC")) {
-    REMOTE_DATADIC <- tibble(PHASE = NA_character_) %>%
-      na.omit()
-  }
 } else {
   EXISTED_DATADTIC <- FALSE
   cli_alert_warning(
@@ -76,8 +69,6 @@ if (file.exists(cur_data_dict_path)) {
 if (EXISTED_DATADTIC) {
   # Expand DATADIC for combined phases
   DATADIC <- DATADIC %>%
-    # Add a DATADIC of the remote digital cohort
-    bind_rows(REMOTE_DATADIC) %>%
     mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]"))
 
   concat_phase <- unique(DATADIC$PHASE)[!is.na(unique(DATADIC$PHASE))]
@@ -325,6 +316,8 @@ if (DECODE_VALUE) {
 
   rm(list = c("UPDATED_DATADIC", "DATADIC", "dataset_data_dict", "coded_tblname", "tblname_list_dd"))
   cli_alert_success(text = paste0("Completed mapping coded values"))
-} else {
+}
+
+if (!DECODE_VALUE) {
   cli_alert_info(text = paste0("No mapping coded values!"))
 }

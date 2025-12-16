@@ -14,7 +14,7 @@ if (length(args) != 2) {
   cli::cli_abort(
     message = c(
       "Input argument {.val args} must be size of 2. \n",
-      "{.val args} is a length of contains {.val {length(args)}} vector."
+      "{.val args} is a length of {.val {length(args)}} vector."
     )
   )
 }
@@ -133,12 +133,11 @@ authors_list <- paste0(
   "{adni-data@googlegroups.com}"
 )
 
-adjust_datadict_fieldvalue <- function(.data,
-                                       datadict_name = c("DATADIC", "REMOTE_DATADIC", "DERIVED_DATADIC")) {
+adjust_datadict_fieldvalue <- function(.data) {
   col_names <- c("field_values", "field_notes")
   .data <- .data %>%
     mutate(across(any_of(col_names), ~ case_when(
-      dd_name %in% datadict_name ~ " ",
+      str_detect(dd_name, "^DATADIC|DATADIC$") ~ " ",
       TRUE ~ .x
     )))
   return(.data)

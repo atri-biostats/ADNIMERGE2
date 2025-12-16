@@ -42,7 +42,7 @@ if (CREATE_DATA_CATEGORY) {
 }
 
 # Generate PACC score input data ----
-INCLUDE_PACC_DERIVED_DATA <- FALSE
+INCLUDE_PACC_DERIVED_DATA <- TRUE
 # NOTE:
 #  Required to install the latest version of `ADNIMERGE` and `ADNI4 `study R packages
 #  `ADNI4` R package is only available internally
@@ -55,18 +55,21 @@ if (INCLUDE_PACC_DERIVED_DATA) {
 } else {
   # Transfer PACC scoring article from "./vignettes" to "./tools"
   # when PACC input raw data are not generated.
-  pacc_file_name <- "ADNIMERGE2-PACC.Rmd"
-  file.copy(
-    from = file.path(".", "vignettes", pacc_file_name),
-    to = file.path(".", "tools", pacc_file_name),
-    overwrite = TRUE
+  callr::rscript(
+    script = "./tools/remove-files.R",
+    wd = ".",
+    cmdargs = list(
+      INPUT_DIR = file.path(".", "vignettes"),
+      OUTPUT_DIR = file.path(".", "tools"),
+      file_extension = "ADNIMERGE2-PACC\\.Rmd$"
+    ),
+    show = TRUE,
+    spinner = TRUE
   )
-  # Remove the existing file from vignettes directory
-  file.remove(file.path(".", "vignettes", pacc_file_name))
 }
 
 ## Generate derived/analysis dataset ----
-INCLUDE_DERIVED_DATASET <- FALSE
+INCLUDE_DERIVED_DATASET <- TRUE
 
 # Required to change the default params yaml values in vignettes
 # Only applicable if you want to generate derived datasets other than PACC scores
@@ -99,20 +102,15 @@ if (INCLUDE_DERIVED_DATASET) {
   )
 } else {
   DERIVED_DATASET_LIST <- NULL
-  vignettes_dir <- "./vignettes"
-  tools_dir <- "./tools"
-  rmd_file_list <- list.files(
-    path = vignettes_dir,
-    pattern = ".Rmd$",
-    all.files = TRUE,
-    full.names = TRUE
+  callr::rscript(
+    script = "./tools/remove-files.R",
+    wd = ".",
+    cmdargs = list(
+      INPUT_DIR = file.path(".", "vignettes"),
+      OUTPUT_DIR = file.path(".", "tools"),
+      file_extension = "\\.Rmd$"
+    )
   )
-  file.copy(
-    from = rmd_file_list,
-    to = str_replace_all(rmd_file_list, vignettes_dir, tools_dir),
-    overwrite = TRUE
-  )
-  file.remove(rmd_file_list)
 }
 
 ## Generate documentations ----

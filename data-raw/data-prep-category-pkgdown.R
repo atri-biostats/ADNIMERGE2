@@ -26,7 +26,7 @@ dataset_category_raw <- dataset_category_raw %>%
   # Adjust for Neuropathology and Data Dictionary category
   mutate(dir_cat = case_when(
     file_list %in% "NEUROPATH" & dir_cat %in% "other_raw_dataset" ~ "neuropath",
-    str_detect(file_list, "DATADIC$|DATADIC") & dir_cat %in% "other_raw_dataset" ~ "data_dict",
+    str_detect(file_list, "^DATADIC$|^DATADIC|DATADIC$") & dir_cat %in% "other_raw_dataset" ~ "data_dict",
     TRUE ~ dir_cat
   ))
 
