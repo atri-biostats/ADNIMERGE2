@@ -1149,54 +1149,6 @@ generate_variable_format <- function(data_dict, var_name,
 }
 
 # Common utils functions ----
-## Check list object names -----
-#' @title Function to check list object names
-#' @description This function is used to check whether list names are a valid non-missing names
-#' @param obj List object
-#' @param list_names
-#'  A character vector of list names, Default NULL
-#' @param arg see \code{\link{rlang}{caller_arg}}
-#' @param call see \code{\link{rlang}{caller_env}}
-#' @return
-#'  An error message if there is any missing or misspelled names in the list object.
-#' @rdname check_list_names
-#' @keywords utils_fun
-#' @importFrom cli cli_abort
-#' @importFrom rlang call_args caller_env
-
-check_list_names <- function(obj, list_names = NULL, arg = rlang::caller_arg(obj), call = rlang::caller_env()) {
-  check_object_type(obj, "list")
-  # Checking for any unnamed list
-  if (any(is.null(names(obj)) | is.na(names(obj)))) {
-    cli_abort(
-      message = c(
-        "{.arg {arg}} must be fully named list object. \n",
-        "{.arg {arg}} contains unnamed list object."
-      ),
-      call = call
-    )
-  }
-
-  # Checking for any misspelled/omitted list names
-  if (all(is.null(list_names))) missing_names <- NULL
-
-  if (any(!is.null(list_names))) {
-    missing_names <- list_names[!list_names %in% names(obj)]
-  }
-
-  if (length(missing_names) > 0) {
-    cli_abort(
-      message = c(
-        "{.arg {arg}} contain unnamed list value. \n",
-        "{.val {missing_names}} names{?s} {?is/are} are not presented in list names."
-      ),
-      call = call
-    )
-  }
-
-  invisible(missing_names)
-}
-
 ## Convert missing value types ----
 #' @title Convert `NULL` into `NA`
 #' @param x Input value

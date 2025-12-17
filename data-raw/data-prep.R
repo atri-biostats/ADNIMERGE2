@@ -1,5 +1,6 @@
 # Data preparation script setup ----
 source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "tools", "prepare-datadict.R"))
 source(file.path(".", "R", "utils.R"))
 source(file.path(".", "R", "checks-assert.R"))
 
@@ -80,7 +81,7 @@ if (EXISTED_ZIPFILE) {
     string = zip_file_list,
     pattern = "Tables\\.zip$|\\.zip$|^\\./data-raw/"
   )
-
+  zip_files_prefix <- remove_zipname(zip_files_prefix, "ADSP_PHC")
   zip_name_pattern <- str_c(c(
     zip_files_prefix,
     date_stamped_suffix,
@@ -105,6 +106,7 @@ if (EXISTED_ZIPFILE) {
       string = zip_file,
       pattern = "\\.zip$"
     )
+
     rename_file_status <- file_action(
       input_dir = rawdata_csv_path,
       output_dir = ".",
@@ -126,7 +128,7 @@ if (EXISTED_ZIPFILE) {
   })
   cli::cli_alert_success(text = "Completed unzip zipped files")
 }
-rm(list = c("zip_file_list", "zip_name_pattern"))
+rm(list = c("zip_files_prefix", "zip_file_list", "zip_name_pattern"))
 
 # Convert '.csv' file into '.rda' file format ----
 csv_file_list <- list.files(
@@ -176,15 +178,17 @@ rm(list = c("date_stamped_suffix", "csv_file_list", "csv_name_pattern"))
 
 # Converting `-4` & `-1` value as missing values ----
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
-if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not found")
-data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
-data_path_list <- list.files(
-  path = data_dir,
-  pattern = "\\.rda$",
-  full.names = TRUE,
-  all.files = TRUE,
-  recursive = FALSE
+if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not found!")
+data_path_list <- get_full_file_path(
+  dir_path = "./data",
+  pattern = "DATADIC\\.rda$"
 )
+data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
+data_path_list <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "\\.rda$"
+)
+
 data_path_list <- data_path_list[!data_path_list %in% c(
   data_dic_path,
   data_downloaded_date_path
@@ -246,7 +250,11 @@ if (UPDATE_MISSING_VALUE) {
         )
       }
       dd <- dd %>%
-        create_col_protocol(.data = ., phaseVar = c("Phase", "PHASE", "ProtocolID")) %>%
+        create_col_protocol(
+          .data = .,
+          phaseVar = c("Phase", "PHASE", "ProtocolID"),
+          .strict_check = FALSE
+        ) %>%
         {
           if (num_missing_rid == 0) {
             create_orig_protocol(.data = .)
@@ -300,13 +308,16 @@ if (UPDATE_MISSING_VALUE) {
 ## Some of the imaging dataset might have a date stamped file extension
 ## A summary of dataset list will be copied to `./data-raw/date_stamped` directory
 cli::cli_alert_info(text = "Start removing date stamped from file name")
-data_path_list <- list.files(
-  path = data_dir,
-  pattern = "\\.rda$",
-  full.names = TRUE,
-  all.files = TRUE,
-  recursive = FALSE
+data_path_list <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "\\.rda$"
 )
+
+data_dic_path <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "DATADIC\\.rda$"
+)
+
 data_path_list <- data_path_list[!data_path_list %in% c(
   data_dic_path,
   data_downloaded_date_path
@@ -315,43 +326,44 @@ data_path_list <- data_path_list[!data_path_list %in% c(
 date_stamped_pattern <- "\\_[0-9]{2}\\_[0-9]{2}\\_[0-9]{2}"
 dataset_list_dd <- tibble(file_path = data_path_list) %>%
   mutate(short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern)) %>%
-  filter(str_detect(string = file_path, pattern = date_stamped_pattern) == TRUE) %>%
-  {
-    if (nrow(.) > 0) {
-      mutate(.,
-        updated_file_path = str_remove_all(string = file_path, pattern = date_stamped_pattern),
-        stamped_date = str_extract(string = file_path, pattern = date_stamped_pattern)
-      ) %>%
-        mutate(., stamped_date = str_sub(string = stamped_date, start = 2)) %>%
-        mutate(., stamped_date = str_replace_all(string = stamped_date, pattern = "\\_", "-")) %>%
-        mutate(., stamped_date = as.Date(stamped_date, "%m-%d-%y")) %>%
-        # To add version extension for the dataset with multiple truncation
-        group_by(., updated_file_path) %>%
-        arrange(., stamped_date) %>%
-        mutate(.,
-          version_order = row_number(),
-          num_records = n()
-        ) %>%
-        ungroup(.) %>%
-        mutate(., version_extension = str_c("_V", version_order, ".rda")) %>%
-        mutate(., updated_file_path = case_when(
-          num_records > 1 ~ str_replace(
-            string = updated_file_path,
-            pattern = "\\.rda$",
-            replacement = version_extension
-          ),
-          TRUE ~ updated_file_path
-        )) %>%
-        mutate(., updated_short_tblname = str_remove_all(
-          string = updated_file_path,
-          pattern = str_c(c(file_path_pattern, "ADNI\\_"), collapse = "|")
-        )) %>%
-        assert_uniq(., updated_short_tblname) %>%
-        assert_uniq(., short_tblname)
-    } else {
-      (.)
-    }
-  }
+  filter(str_detect(string = file_path, pattern = date_stamped_pattern) == TRUE)
+
+if (nrow(dataset_list_dd) > 0) {
+  dataset_list_dd <- dataset_list_dd %>%
+    mutate(
+      updated_file_path = str_remove_all(string = file_path, pattern = date_stamped_pattern),
+      stamped_date = str_extract(string = file_path, pattern = date_stamped_pattern)
+    ) %>%
+    mutate(stamped_date = str_sub(string = stamped_date, start = 2)) %>%
+    mutate(stamped_date = str_replace_all(string = stamped_date, pattern = "\\_", "-")) %>%
+    mutate(stamped_date = as.Date(stamped_date, "%m-%d-%y")) %>%
+    # To add version extension for the dataset with multiple truncation
+    group_by(updated_file_path) %>%
+    arrange(stamped_date) %>%
+    mutate(version_order = row_number(), num_records = n()) %>%
+    ungroup() %>%
+    mutate(version_extension = str_c("_V", version_order, ".rda")) %>%
+    mutate(updated_file_path = case_when(
+      num_records > 1 ~ str_replace(
+        string = updated_file_path,
+        pattern = "\\.rda$",
+        replacement = version_extension
+      ),
+      TRUE ~ updated_file_path
+    )) %>%
+    mutate(updated_short_tblname = str_remove_all(
+      string = updated_file_path,
+      pattern = str_c(c(file_path_pattern, "ADNI\\_"), collapse = "|")
+    )) %>%
+    assert_uniq(updated_short_tblname) %>%
+    assert_uniq(short_tblname)
+}
+
+if (nrow(dataset_list_dd) == 0) {
+  dataset_list_dd <- create_tibble0(
+    col_names = c("short_tblname", "stamped_date", "updated_short_tblname")
+  )
+}
 
 ## Save the list of dataset with date stamped file extension ----
 dir.create(date_stamped_dir)
@@ -436,17 +448,26 @@ if (nrow(dataset_list_dd) > 0) {
 
   # Remove already stored dataset with a date stamped file extension from './data/' directory
   file.remove(dataset_list_dd$file_path)
+  rm(list = c("date_stamped_pattern", "dataset_list_dd"))
+  cli::cli_alert_success(text = "Completed removing date stamped from file name")
+} else {
+  cli::cli_alert_success(text = "No dataset with date stamped file extension in {.path {data_dir}}")
 }
-rm(list = c("date_stamped_pattern", "dataset_list_dd"))
-cli::cli_alert_success(text = "Completed removing date stamped from file name")
 
 # Checking for common columns "COLPROT" and "ORIGPROT" across available datasets -----
-data_path_list <- list.files(
-  path = data_dir,
-  pattern = "\\.rda$",
-  full.names = TRUE,
-  all.files = TRUE,
-  recursive = FALSE
+data_path_list <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "\\.rda$"
+)
+
+## Data dictionary files
+data_dic_path <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "DATADIC\\.rda$"
+)
+main_datadic_path <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "^DATADIC\\.rda$"
 )
 
 data_path_list <- data_path_list[!data_path_list %in% c(
@@ -530,106 +551,82 @@ if (CHECK_COMMON_COL) {
 }
 
 # Update DATADIC -----
-## Prepare the data dictionary dataset ----
 ### Some of the datasets might have an additional file extension or they are study phase-specific
 ### E.g. "_V1$", "_V2$", "^ADNI2_", "_ADNI1$", "_ADNIG023$"
 ### Currently to update the DATADIC file manually
-if (!exists("DATADIC")) {
-  load(data_dic_path)
-  # Adjust for coded values of diagnostics summary in ADNI1GO2
-  temp_DATADIC_dxsum <- bind_rows(
-    tibble(
-      PHASE = c("ADNI1", "ADNI2", "ADNIGO"),
-      DATADIC %>%
-        filter(TBLNAME %in% "DXSUM" & FLDNAME %in% "DIAGNOSIS") %>%
-        filter(PHASE %in% "ADNI3") %>%
-        select(-PHASE)
-    ),
-    # Add dataset label manually for "ADNI2_VISITID", "VISITS" and "DATADIC"
-    DATADIC %>%
-      filter(TBLNAME %in% c("VISITS", "DATADIC")) %>%
-      mutate(CRFNAME = case_when(
-        is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "ADNI study visit code across phases",
-        is.na(CRFNAME) & TBLNAME %in% "DATADIC" ~ paste0("Data Dictionary Dataset", ifelse(UPDATE_DATADIC, " - Updated", "")),
-        TRUE ~ CRFNAME
-      )) %>%
-      filter(TBLNAME %in% "VISITS" |
-        (TBLNAME %in% "DATADIC" & FLDNAME %in% c(names(DATADIC)))),
-    tibble(
-      TBLNAME = "ADNI2_VISITID",
-      CRFNAME = "ADNI2 Visit Code Mapping List"
+### To combine all available data dictionary into one master dataset
+
+## List of all available DATADIC ----
+multiple_datadict <- get_listed_data(
+  dir_path = "./data",
+  pattern = "DATADIC\\.rda$"
+)
+
+## Bind data-dictionary specific descriptions ----
+datadict_code_list <- names(multiple_datadict)
+multiple_datadict <- lapply(datadict_code_list, function(x) {
+  multiple_datadict %>%
+    pluck(., x) %>%
+    {
+      if (x %in% "DATADIC") update_main_datadict(.) else (.)
+    } %>%
+    bind_datadict_description(
+      .datadict = .,
+      code = x,
+      label = x
     )
-  )
-  DATADIC <- DATADIC %>%
-    filter(!TBLNAME %in% "DATADIC") %>%
-    bind_rows(temp_DATADIC_dxsum)
+})
+
+names(multiple_datadict) <- datadict_code_list
+
+## Update main DATADIC manually -----
+if ("DATADIC" %in% datadict_code_list) {
+  multiple_datadict$DATADIC <- update_main_datadict(multiple_datadict$DATADIC)
+  if (UPDATE_DATADIC) {
+    cli::cli_alert_info(text = "Updating DATADIC")
+    multiple_datadict$DATADIC <- multiple_datadict$DATADIC %>%
+      update_phase_specific_datadict()
+    cli::cli_alert_success(text = "Completed updating DATADIC")
+  } else {
+    cli::cli_alert_warning(text = "Main DATADIC is not updated!")
+  }
 } else {
   cli::cli_alert_warning(
-    text = "{.var DATADIC} is not found in the list and {.var UPDATED_DATADIC} will not be created."
+    text = c(
+      "{.path {main_datadic_path}} is not found and \n",
+      " {.var UPDATED_DATADIC} will not be created."
+    )
   )
   UPDATE_DATADIC <- FALSE
 }
 
-if (!exists("REMOTE_DATADIC")) {
-  load(file.path("./data", "REMOTE_DATADIC.rda"))
-  REMOTE_DATADIC <- REMOTE_DATADIC %>%
-    mutate(across(everything(), as.character))
+## Store to "./data" directory ----
+use_data_modified_wrapper(multiple_datadict)
 
-  REMOTE_DATADIC <- REMOTE_DATADIC %>%
-    bind_rows(
-      tibble(
-        CRFNAME = "Remote Collected Data Dictionary Dataset",
-        TBLNAME = "REMOTE_DATADIC",
-        FLDNAME = names(REMOTE_DATADIC)
-      )
-    )
+DATADIC <- bind_rows(multiple_datadict, .id = "DATADIC_SOURCE")
+use_data_modified(
+  dataset_name = "DATADIC",
+  dataset = DATADIC,
+  edit_type = "create",
+  run_script = TRUE
+)
 
-  remote_data_dict_status <- use_data_modified(
-    dataset_name = "REMOTE_DATADIC",
-    dataset = REMOTE_DATADIC,
-    edit_type = "create",
-    run_script = TRUE
-  )
-  if (remote_data_dict_status != TRUE) {
-    cli::cli_abort(message = "{.val REMOTE_DATADIC} has not been updated")
-  }
-}
-
+## Save the UPDATED DATADIC ----
+## UPDATED DATADIC will be stored in the "data-raw/updated_datadic" directory
 if (UPDATE_DATADIC) {
-  cli::cli_alert_info(text = "Updating DATADIC")
-  # Assumed the same data dictionary for those paired dataset
-  # ?? Required confirmation
-  temp_DATADIC <- DATADIC %>%
-    mutate(TBLNAME = case_when(
-      TBLNAME %in% "ADAS" & PHASE %in% "ADNI1" ~ "ADAS_ADNI1",
-      TBLNAME %in% "ADAS" & PHASE %in% c("ADNIGO", "ADNI2", "ADNI3") ~ "ADAS_ADNIGO23",
-      TBLNAME %in% "ECG" & PHASE %in% "ADNI2" ~ "ADNI2_ECG",
-      TBLNAME %in% "OTELGTAU" & PHASE %in% "ADNI2" ~ "ADNI2_OTELGTAU",
-      TBLNAME %in% "PICSLASHS" ~ "PICSL_ASHS",
-      TBLNAME %in% "UCD_WMH" ~ "UCD_WMH_V1",
-      TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI2" ~ "TAUMETA2",
-      TBLNAME %in% "TAUMETA" & PHASE %in% "ADNI3" ~ "TAUMETA3",
-      TBLNAME %in% "TAUQC" & PHASE %in% "ADNI3" ~ "TAUQC3",
-      TBLNAME %in% "TBM" ~ "TBM22",
-      TBLNAME %in% "UCSFASLFS" ~ "UCSFASLFS_V2",
-      TBLNAME %in% "PETMETA" & PHASE %in% "ADNI1" ~ "PETMETA_ADNI1",
-      TBLNAME %in% "PETMETA" & PHASE %in% c("ADNIGO", "ADNI2") ~ "PETMETA_ADNIGO2",
-      TBLNAME %in% "PETMETA" & PHASE %in% "ADNI3" ~ "PETMETA3"
-    )) %>%
-    filter(!is.na(TBLNAME))
-
-  UPDATED_DATADIC <- DATADIC %>%
-    filter(!(TBLNAME %in% c("ECG", "OTELGTAU") & PHASE %in% "ADNI2")) %>%
-    bind_rows(
-      temp_DATADIC,
-      temp_DATADIC %>%
-        filter(TBLNAME %in% "UCD_WMH_V1") %>%
-        mutate(TBLNAME = "UCD_WMH_V2")
-    )
-  cli::cli_alert_success(text = "Completed updating DATADIC")
+  dir.create(updated_datadic_dir)
+  UPDATED_DATADIC <- DATADIC
+  readr::write_csv(
+    x = DATADIC,
+    file = file.path(updated_datadic_dir, "UPDATED_DATADIC.csv")
+  )
+  save(
+    list = "UPDATED_DATADIC",
+    file = file.path(updated_datadic_dir, "UPDATED_DATADIC.rda")
+  )
 }
 
-## Add a description for common columns: "ORIGPROT" or "COLPROT" ----
+# Add a description for common columns: "ORIGPROT" or "COLPROT" ----
 if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
   dataset_list_dd <- dataset_list_dd %>%
     # Long format
@@ -672,29 +669,4 @@ if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
       description = description_text
     )
   }
-}
-
-## Save the UPDATED DATADIC ----
-## UPDATED DATADIC will be stored in the "data-raw/updated_datadic" directory
-if (UPDATE_DATADIC) {
-  dir.create(updated_datadic_dir)
-  readr::write_csv(
-    x = UPDATED_DATADIC,
-    file = file.path(updated_datadic_dir, "UPDATED_DATADIC.csv")
-  )
-  save(
-    list = "UPDATED_DATADIC",
-    file = file.path(updated_datadic_dir, "UPDATED_DATADIC.rda")
-  )
-} else {
-  data_dict_status <- use_data_modified(
-    dataset_name = "DATADIC",
-    dataset = DATADIC,
-    edit_type = "create",
-    run_script = TRUE
-  )
-  if (data_dict_status != TRUE) {
-    cli::cli_abort(message = "{.val DATADIC} has not been updated")
-  }
-  cli::cli_alert_success(text = "{.val DATADIC} has been updated")
 }

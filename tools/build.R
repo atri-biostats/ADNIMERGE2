@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-11-12" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2025-12-15" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -55,14 +55,17 @@ if (INCLUDE_PACC_DERIVED_DATA) {
 } else {
   # Transfer PACC scoring article from "./vignettes" to "./tools"
   # when PACC input raw data are not generated.
-  pacc_file_name <- "ADNIMERGE2-PACC.Rmd"
-  file.copy(
-    from = file.path(".", "vignettes", pacc_file_name),
-    to = file.path(".", "tools", pacc_file_name),
-    overwrite = TRUE
+  callr::rscript(
+    script = "./tools/remove-files.R",
+    wd = ".",
+    cmdargs = list(
+      INPUT_DIR = file.path(".", "vignettes"),
+      OUTPUT_DIR = file.path(".", "tools"),
+      file_extension = "ADNIMERGE2-PACC\\.Rmd$"
+    ),
+    show = TRUE,
+    spinner = TRUE
   )
-  # Remove the existing file from vignettes directory
-  file.remove(file.path(".", "vignettes", pacc_file_name))
 }
 
 ## Generate derived/analysis dataset ----
@@ -80,7 +83,7 @@ if (CHANGE_VIGNETTES_YAML) {
     wd = ".",
   )
 } else {
-  cli::cli_alert_info("No vignettes yaml change!")
+  cli::cli_alert_info("Not required to change vignettes yaml!")
 }
 
 if (INCLUDE_DERIVED_DATASET) {
@@ -99,6 +102,15 @@ if (INCLUDE_DERIVED_DATASET) {
   )
 } else {
   DERIVED_DATASET_LIST <- NULL
+  callr::rscript(
+    script = "./tools/remove-files.R",
+    wd = ".",
+    cmdargs = list(
+      INPUT_DIR = file.path(".", "vignettes"),
+      OUTPUT_DIR = file.path(".", "tools"),
+      file_extension = "\\.Rmd$"
+    )
+  )
 }
 
 ## Generate documentations ----

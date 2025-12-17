@@ -131,6 +131,34 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
   }
 }
 
+### A wrapper function ----
+#' @title A wrapper function for use_data_modified
+#' @param .data_list A list data.frame
+#' @inheritParams use_data_modified
+#' @inherit use_data_modified return examples keywords family
+#' @rdname use_data_modified_wrapper
+#' @importFrom cli cli_abort
+#' @importFrom purrr pluck
+
+use_data_modified_wrapper <- function(.data_list, ...) {
+  check_list_names(.data_list)
+  status <- lapply(names(.data_list), function(i) {
+    use_data_modified(
+      dataset_name = i,
+      dataset = .data_list %>% 
+        pluck(., i),
+      ...
+    )
+  })
+  names(status) <- names(.data_list)
+  if (!all(status == TRUE)) {
+    cli::cli_abort(
+      message = "{.val {status[!status %in% TRUE]}} {?is/are} not saved to {.path {'./data'}}"
+    )
+  }
+  invisible()
+}
+
 # Unzip zipped files from a source -----
 #' @title Function to unzip zipped files
 #' @description This function is used to extracted raw datasets from zip files
@@ -181,47 +209,216 @@ get_unzip_file <- function(input_dir,
 #' @param input_dir Directory location where the file is stored
 #' @param output_dir Output directory
 #' @param file_extension File extension, Default: ".csv"
-#' @param action Either \code{rename} or \code{copy}
+#' @param action Either \code{rename}, \code{copy}, or \code{remove}
 #' @param remove_name_pattern
 #'   Strings that will be removed from the file name, Default = NULL
-#' @return \code{TRUE} if the file action is properly renamed or copied
+#' @return \code{TRUE} if the file action is properly renamed, copied or removed
 #' @rdname file_action
 #' @keywords utils_fun
+#' @seealso [get_file_action_message()]
 #' @importFrom stringr str_remove_all
 #' @importFrom rlang arg_match0
+#' @importFrom cli cli_alert_info
 #' @export
 file_action <- function(input_dir,
                         output_dir = ".",
                         file_extension = ".csv",
                         action = "rename",
-                        remove_name_pattern = NULL) {
+                        remove_name_pattern = NULL,
+                        show_message = FALSE) {
   require(rlang)
   require(stringr)
-  arg_match0(arg = action, values = c("rename", "copy"))
+  arg_match0(arg = action, values = c("rename", "copy", "remove"))
   # file list
   old_file_name <- list.files(path = input_dir, pattern = file_extension, all.files = TRUE)
+  if (length(old_file_name) == 0) {
+    cli::cli_abort(message = paste0(
+      "No files is found in {.path {input_dir}} ",
+      "with {.val {file_extension}} file extension!"
+    ))
+  }
   new_file_name <- old_file_name
   if (!is.null(remove_name_pattern)) {
     new_file_name <- str_remove_all(old_file_name, pattern = remove_name_pattern)
   }
   if (output_dir %in% ".") output_dir <- input_dir
   lapply(c(input_dir, output_dir), check_dir_path)
+  tryCatch(
+    {
+      if (action %in% "copy") {
+        if (show_message) {
+          get_file_progress_message(
+            from = file.path(input_dir, old_file_name),
+            to = file.path(output_dir, new_file_name),
+            type = "copy",
+            .envir = .GlobalEnv
+          )
+        } else {
+          file.copy(
+            from = file.path(input_dir, old_file_name),
+            to = file.path(output_dir, new_file_name)
+          )
+        }
+      }
 
-  if (action %in% "copy") {
-    file.copy(
-      from = file.path(input_dir, old_file_name),
-      to = file.path(output_dir, new_file_name)
-    )
+      if (action %in% "rename") {
+        if (show_message) {
+          get_file_progress_message(
+            from = file.path(input_dir, old_file_name),
+            to = file.path(output_dir, new_file_name),
+            type = "rename"
+          )
+        } else {
+          file.rename(
+            from = file.path(input_dir, old_file_name),
+            to = file.path(output_dir, new_file_name)
+          )
+        }
+      }
+
+      if (action %in% "remove") {
+        if (show_message) {
+          get_file_progress_message(
+            from = file.path(input_dir, old_file_name),
+            type = "remove"
+          )
+        } else {
+          file.remove(file.path(input_dir, old_file_name))
+        }
+      }
+      return(TRUE)
+    },
+    error = function(err) {
+      print(paste("MY_ERROR:  ", err))
+    }
+  )
+}
+
+#' @title Get File Action Progress Message
+#' @param from Input file(s) path
+#' @param to Output file(s) path, Default: NULL.
+#'         Only applicable for \code{type = 'copy'} and \code{type = 'rename'}
+#' @param type File action type either \code{'copy'}, \code{'rename'} or \code{'remove'}, Default: 'copy'
+#' @inheritSection file_action return
+#' @rdname get_file_action_message
+#' @keywords utils_fun
+#' @seealso [file_action()]
+#' @export
+#' @importFrom rlang arg_match0
+#' @importFrom cli cli_abort cli_progress_bar pb_spin pb_current pb_total
+
+get_file_progress_message <- function(from, to = NULL, type = "copy") {
+  require(cli)
+  require(rlang)
+  rlang::arg_match0(arg = type, values = c("copy", "rename", "remove"))
+  if (type %in% "copy") {
+    type_label <- "Copying"
+    type_done <- "Copied"
+  }
+  if (type %in% "rename") {
+    type_label <- "Renaming"
+    type_done <- "Renamed"
+  }
+  if (type %in% "remove") {
+    type_label <- "Removing"
+    type_done <- "Removed"
   }
 
-  if (action %in% "rename") {
-    file.rename(
-      from = file.path(input_dir, old_file_name),
-      to = file.path(output_dir, new_file_name)
-    )
+  if (!type %in% "remove" & length(from) != length(to)) {
+    cli::cli_abort("Input and output files must be the same length!")
   }
 
-  return(TRUE)
+  cli::cli_progress_bar(
+    format = paste0(
+      "{cli::pb_spin} [{cli::pb_current}/{cli::pb_total}] {type_label} {.path {from[x]}} ",
+      ifelse(type %in% "remove", " ", "to {.path {to[x]}}")
+    ), ,
+    format_done = paste0(
+      "{cli::col_green(symbol$tick)} {.var {type_done}} {cli::pb_total} files."
+    ),
+    total = length(from),
+    clear = TRUE
+  )
+  for (x in seq_along(from)) {
+    if (type %in% "copy") {
+      file.copy(from = from[x], to = to[x], overwrite = TRUE)
+    }
+    if (type %in% "rename") {
+      file.rename(from = from[x], to = to[x])
+    }
+    if (type %in% "remove") {
+      file.remove(from[x])
+    }
+    cli_progress_update()
+    Sys.sleep(0.75)
+  }
+}
+
+#' @title Detect Files Started With Underscore Name
+#' @param input_dir Input directory
+#' @param file_extension File extension patterns, Default: '\.csv$'
+#' @return A Boolean value if there is at least one file that started with underscore character.
+#' @examples
+#' \dontrun{
+#' detect_file_underscore(
+#'   input_dir = "./data-raw/ADSP_PHC",
+#'   file_extension = "\\.csv$"
+#' )
+#' }
+#' @rdname detect_file_underscore
+#' @importFrom stringr str_detect
+
+detect_file_underscore <- function(input_dir, file_extension = "\\.csv$") {
+  file_list <- list.files(
+    path = input_dir,
+    pattern = file_extension,
+    all.files = TRUE
+  )
+  status <- any(stringr::str_detect(file_list, "^\\_"))
+  return(status)
+}
+
+#' @title Removing Underscore Character From A File Name
+#' @param input_dir Input directory
+#' @param output_dir Output directory
+#' @param file_extension File extension patterns
+#' @return Renamed all files that started with underscore character
+#' @examples
+#' \dontrun{
+#' adjust_file_underscore(
+#'   input_dir = "./data-raw/ADSP_PHC",
+#'   output_dir = ".",
+#'   file_extension = "\\.csv$"
+#' )
+#' }
+#' @rdname adjust_file_underscore
+#' @export
+#' @importFrom cli cli_alert_info
+
+adjust_file_underscore <- function(input_dir, output_dir = ".", file_extension = "\\.csv$") {
+  status <- detect_file_underscore(
+    input_dir = input_dir,
+    file_extension = file_extension
+  )
+  if (status) {
+    file_action(
+      input_dir = input_dir,
+      output_dir = output_dir,
+      file_extension = file_extension,
+      remove_name_pattern = "^\\_",
+      action = "rename"
+    )
+    file_action(
+      input_dir = input_dir,
+      output_dir = output_dir,
+      file_extension = file_extension,
+      remove_name_pattern = "^\\_",
+      action = "remove"
+    )
+    cli::cli_alert_info(text = "Files started with underscore in {.path {input_dir}} are updated!")
+  } else {
+    cli::cli_alert_info(text = "No files started with underscore name in {.path {input_dir}}!")
+  }
 }
 
 # Generate .rda dataset in `data` directory ----
@@ -771,7 +968,7 @@ update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = 
 #' @importFrom dplyr bind_rows mutate case_when select
 #' @importFrom assertr assert within_bounds
 #' @export
-get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$",recursive = TRUE) {
+get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$", recursive = TRUE) {
   require(tidyverse)
   dir <- main_dir <- dir_cat <- NULL
   full_file_path <- file_list <- file_list_temp <- num_dash_char <- NULL
@@ -815,12 +1012,12 @@ get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$",re
         TRUE ~ dir_cat
       ),
       dir_cat = case_when(
-        tolower(file_name) %in% tolower(c("DATADIC", "UPDATED_DATADIC")) ~ "data_dict",
+        str_detect(tolower(file_name), tolower("DATADIC$|^DATADIC|DATADIC")) ~ "data_dict",
         tolower(file_name) %in% tolower("REMOTE_DATADIC") ~ "data_dict, remotely_collected_data",
         TRUE ~ dir_cat
       ),
-      full_file_path = file.path(dir, file_list), 
-      sub_dir = file.path(dir, str_remove_all(file_list, paste0("/",file_name,"$")))
+      full_file_path = file.path(dir, file_list),
+      sub_dir = file.path(dir, str_remove_all(file_list, paste0("/", file_name, "$")))
     ) %>%
     select(dir, sub_dir, full_file_path, file_list = file_name, dir_cat)
 
@@ -865,12 +1062,62 @@ get_study_phase_category <- function(.data, phase_vars = NULL) {
   } else {
     output_data <- tibble(
       PHASE = "undefined_phase"
-    ) %>% 
+    ) %>%
       mutate(across(everything(), as.character))
   }
   return(output_data)
 }
 
+# Utils functions ----
+## Check list object names -----
+#' @title Function to check list object names
+#' @description This function is used to check whether list names are a valid non-missing names
+#' @param obj List object
+#' @param list_names
+#'  A character vector of list names, Default NULL
+#' @param arg see \code{\link{rlang}{caller_arg}}
+#' @param call see \code{\link{rlang}{caller_env}}
+#' @return
+#'  An error message if there is any missing or misspelled names in the list object.
+#' @rdname check_list_names
+#' @keywords utils_fun
+#' @importFrom cli cli_abort
+#' @importFrom rlang call_args caller_env
+
+check_list_names <- function(obj, list_names = NULL, arg = rlang::caller_arg(obj), call = rlang::caller_env()) {
+  check_object_type(obj, "list")
+  # Checking for any unnamed list
+  if (any(is.null(names(obj)) | is.na(names(obj)))) {
+    cli_abort(
+      message = c(
+        "{.arg {arg}} must be fully named list object. \n",
+        "{.arg {arg}} contains unnamed list object."
+      ),
+      call = call
+    )
+  }
+  
+  # Checking for any misspelled/omitted list names
+  if (all(is.null(list_names))) missing_names <- NULL
+  
+  if (any(!is.null(list_names))) {
+    missing_names <- list_names[!list_names %in% names(obj)]
+  }
+  
+  if (length(missing_names) > 0) {
+    cli_abort(
+      message = c(
+        "{.arg {arg}} contain unnamed list value. \n",
+        "{.val {missing_names}} names{?s} {?is/are} are not presented in list names."
+      ),
+      call = call
+    )
+  }
+  
+  invisible(missing_names)
+}
+
+## Create missing data.frame -----
 #' @title Create a tibble/data.frame with no rows/records
 #' @param col_names Character vector of column names
 #' @return A data.frame with the provided columns with no rows/records.
@@ -891,4 +1138,21 @@ create_tibble0 <- function(col_names) {
       tidyr::pivot_wider(names_from = var, values_from = value) %>%
       na.omit()
   )
+}
+
+## Remove character from zip file names ----
+#' @title Remove Characters From Zip File Name
+#' @param x Character vector
+#' @param name Character name, Default: 'ADSP_PHC'
+#' @return A character vector
+#' @rdname remove_zipname
+#' @export
+#' @importFrom stringr str_detect str_remove_all
+
+remove_zipname <- function(x, name = "ADSP_PHC") {
+  if (stringr::str_detect(x, name)) {
+    x <- stringr::str_remove_all(x, name)
+    x <- x[!x %in% ""]
+  }
+  return(x)
 }
