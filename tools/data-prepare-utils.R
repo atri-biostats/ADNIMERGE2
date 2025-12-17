@@ -1150,7 +1150,7 @@ create_tibble0 <- function(col_names) {
 #' @importFrom stringr str_detect str_remove_all
 
 remove_zipname <- function(x, name = "ADSP_PHC") {
-  if (stringr::str_detect(x, name)) {
+  if (any(stringr::str_detect(x, name))) {
     x <- stringr::str_remove_all(x, name)
     x <- x[!x %in% ""]
   }
