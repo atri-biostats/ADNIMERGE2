@@ -90,7 +90,7 @@ dataset_list <- get_required_dataset_list(
   DT::datatable(.,
     options = list(paging = FALSE, searchable = TRUE, bInfo = FALSE),
     escape = FALSE,
-    caption = "List of datasets that required to replicated ADNIMERGE2 R data package"
+    caption = "List of datasets required to replicate ADNIMERGE2 R data package"
   )
 dataset_list
 ```
