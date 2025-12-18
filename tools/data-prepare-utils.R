@@ -1143,14 +1143,14 @@ create_tibble0 <- function(col_names) {
 ## Remove character from zip file names ----
 #' @title Remove Characters From Zip File Name
 #' @param x Character vector
-#' @param name Character name, Default: 'ADSP_PHC'
+#' @param name Character name
 #' @return A character vector
 #' @rdname remove_zipname
 #' @export
 #' @importFrom stringr str_detect str_remove_all
 
-remove_zipname <- function(x, name = "ADSP_PHC") {
-  if (stringr::str_detect(x, name)) {
+remove_zipname <- function(x, name) {
+  if (any(stringr::str_detect(x, name))) {
     x <- stringr::str_remove_all(x, name)
     x <- x[!x %in% ""]
   }
