@@ -113,13 +113,15 @@ if (EXISTED_DATADTIC) {
     datadict_as_tibble() %>%
     filter(TBLNAME %in% tblname_list_dd$tblname) %>%
     filter(class_type %in% "factor") %>%
-    # ?? Required to confirm the coded values for the following tblnames/fldnames:
+    # Required to confirm the coded values for the following tblnames/fldnames and
+    # creating case-specific functions in the future
     mutate(excluded_fld_name = case_when(
       (TBLNAME %in% c("RECCMEDS", "TREATDIS") |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIK") |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
+        (TBLNAME %in% "TAUQC" &  FLDNAME %in% "PROCERR") |
         (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS")
       ) ~ "Yes"
     ))
