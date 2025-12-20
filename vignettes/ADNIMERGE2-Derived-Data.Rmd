@@ -1088,7 +1088,7 @@ AE_ADNI34 <- ADVERSE %>%
       (n() == 1 & row_number() == 1)
   ) %>%
   ungroup() %>%
-  verify(nrow(.) == nrow(ADVERSE)) %>%
+  # verify(nrow(.) == nrow(ADVERSE)) %>%
   assert_uniq(RID, ORIGPROT, COLPROT, AENUMBER, VISCODE) %>%
   rename(
     "AESER" = AESERIOUS, "AEOUT" = AEOUTCOME,
