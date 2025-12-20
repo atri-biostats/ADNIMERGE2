@@ -11,26 +11,26 @@ if (length(args) != 3) {
     )
   )
 }
-input_dir <- args[1]
-output_dir <- args[2]
-file_extension <- args[3]
+INPUT_DIR <- args[1]
+OUTPUT_DIR <- args[2]
+PATTERN <- args[3]
 source(file.path(".", "tools", "data-prepare-utils.R"))
 library(cli)
 
 # Copy files to `output` directory ----
 file_action(
-  input_dir = input_dir,
-  output_dir = output_dir,
-  file_extension = file_extension,
+  input_dir = INPUT_DIR,
+  output_dir = OUTPUT_DIR,
+  file_extension = PATTERN,
   action = "copy", 
   show_message = FALSE
 )
 
 # Remove files from previous directory ------
 file_action(
-  input_dir = input_dir,
-  output_dir = output_dir,
-  file_extension = file_extension,
+  input_dir = INPUT_DIR,
+  output_dir = OUTPUT_DIR,
+  file_extension = PATTERN,
   action = "remove", 
   show_message = TRUE
 )
