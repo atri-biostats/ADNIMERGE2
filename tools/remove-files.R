@@ -1,21 +1,14 @@
-# Single files
-# Input directory
-# Output directory
-# File name
+# Removing files from a specific directory
+# Libraries ----
+library(cli)
+
+# Input argument ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 3) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.val args} must be size of 3. \n",
-      "{.val args} is a length of {.val {length(args)}} vector."
-    )
-  )
-}
+source(file.path(".", "tools", "data-prepare-utils.R"))
+check_arg(args, 3)
 INPUT_DIR <- args[1]
 OUTPUT_DIR <- args[2]
 PATTERN <- args[3]
-source(file.path(".", "tools", "data-prepare-utils.R"))
-library(cli)
 
 # Copy files to `output` directory ----
 file_action(

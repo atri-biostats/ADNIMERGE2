@@ -22,23 +22,9 @@ data_path_list <- data_path_list[!data_path_list == data_dic_path]
 
 # Input Args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 1) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.val args} must be size of 1. \n",
-      "{.val args} is a length of {.val {length(args)}} vector."
-    )
-  )
-}
+check_arg(args, 1)
 USE_UPDATED_DATADIC <- as.logical(args)
-if (!is.logical(USE_UPDATED_DATADIC) | is.na(USE_UPDATED_DATADIC)) {
-  cli::cli_abort(
-    message = c(
-      "{.var USE_UPDATED_DATADIC} must be a Boolean value. \n",
-      "The value of {.var USE_UPDATED_DATADIC} is {.val {USE_UPDATED_DATADIC}}."
-    )
-  )
-}
+check_arg_logical(USE_UPDATED_DATADIC)
 
 if (USE_UPDATED_DATADIC) {
   # To use manually updated data dictionary, see line 390-434 & 479-489 in `./data-raw/data_prep.R`
