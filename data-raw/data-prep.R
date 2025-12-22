@@ -21,34 +21,21 @@ check_dir_list <- lapply(dir_list, function(dir) {
 # Data downloaded date arg parameter ----
 # Input arg parameter ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 2) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.val args} must be size of 2. \n",
-      "{.val args} is a length of {.val {length(args)}} vector."
-    )
-  )
-}
-
+check_arg(args, 2)
 DATA_DOWNLOADED_DATE <- args[1]
-if (!str_detect(DATA_DOWNLOADED_DATE, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
-  cli::cli_abort(
-    message = c(
-      "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format. \n",
-      "The value of {.var DATA_DOWNLOADED_DATE} is {.val {DATA_DOWNLOADED_DATE}}."
+arg_format_status <- lapply(DATA_DOWNLOADED_DATE, function(x){
+  if (!str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+    cli::cli_abort(
+      message = c(
+        "{.var DATA_DOWNLOADED_DATE} must be in {.cls YYYY-MM-DD} format. \n",
+        "The value of {.var DATA_DOWNLOADED_DATE} is {.val {x}}."
+      )
     )
-  )
-}
+  }
+})
 
 UPDATE_DATADIC <- as.logical(args[2])
-if (!is.logical(UPDATE_DATADIC) | is.na(UPDATE_DATADIC)) {
-  cli::cli_abort(
-    message = c(
-      "{.var UPDATE_DATADIC} must be a Boolean value. \n",
-      "The value of {.var UPDATE_DATADIC} is {.val {UPDATE_DATADIC}}."
-    )
-  )
-}
+check_arg_logical(UPDATE_DATADIC)
 
 ## Data download stamped date
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)

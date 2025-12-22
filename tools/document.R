@@ -10,28 +10,11 @@ library(cli)
 
 # Input args ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 2) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.val args} must be size of 2. \n",
-      "{.val args} is a length of {.val {length(args)}} vector."
-    )
-  )
-}
-DERIVED_DATASET_LIST <- str_remove_all(string = args[1], pattern = '[\\(\\)]|\\"|^c') %>%
-  str_split(string = ., pattern = ",") %>%
-  unlist() %>%
-  str_trim(string = ., side = "both")
+check_arg(args, 2)
+DERIVED_DATASET_LIST <- split_concat_arg(args[1], FALSE)
 if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
 USE_UPDATED_DATADIC <- as.logical(args[2])
-if (!is.logical(USE_UPDATED_DATADIC) | is.na(USE_UPDATED_DATADIC)) {
-  cli::cli_abort(
-    message = c(
-      "{.var USE_UPDATED_DATADIC} must be a Boolean value. \n",
-      "The value of {.var USE_UPDATED_DATADIC} is {.val {USE_UPDATED_DATADIC}}."
-    )
-  )
-}
+check_arg_logical(USE_UPDATED_DATADIC)
 
 # Load all data from "./data" to .GlobalEnv ----
 data_dir <- "./data"

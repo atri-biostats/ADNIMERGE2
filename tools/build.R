@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-12-15" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2025-12-19" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -42,6 +42,9 @@ if (CREATE_DATA_CATEGORY) {
 }
 
 # Generate PACC score input data ----
+VIGNETTE_DIR <- file.path(".", "vignettes")
+TOOLS_DIR <- file.path(".", "tools")
+TEST_DIR <- file.path(".", "tests", "testthat")
 INCLUDE_PACC_DERIVED_DATA <- TRUE
 # NOTE:
 #  Required to install the latest version of `ADNIMERGE` and `ADNI4 `study R packages
@@ -59,12 +62,20 @@ if (INCLUDE_PACC_DERIVED_DATA) {
     script = "./tools/remove-files.R",
     wd = ".",
     cmdargs = list(
-      INPUT_DIR = file.path(".", "vignettes"),
-      OUTPUT_DIR = file.path(".", "tools"),
-      file_extension = "ADNIMERGE2-PACC\\.Rmd$"
-    ),
-    show = TRUE,
-    spinner = TRUE
+      INPUT_DIR = VIGNETTE_DIR,
+      OUTPUT_DIR = TOOLS_DIR,
+      PATTERN = "ADNIMERGE2-PACC\\.Rmd$"
+    )
+  )
+  # Transfer PACC unit test file
+  callr::rscript(
+    script = "./tools/remove-files.R",
+    wd = ".",
+    cmdargs = list(
+      INPUT_DIR = TEST_DIR,
+      OUTPUT_DIR = TOOLS_DIR,
+      PATTERN = "test-baseline-pacc\\.R$"
+    )
   )
 }
 
@@ -106,9 +117,19 @@ if (INCLUDE_DERIVED_DATASET) {
     script = "./tools/remove-files.R",
     wd = ".",
     cmdargs = list(
-      INPUT_DIR = file.path(".", "vignettes"),
-      OUTPUT_DIR = file.path(".", "tools"),
-      file_extension = "\\.Rmd$"
+      INPUT_DIR = VIGNETTE_DIR,
+      OUTPUT_DIR = TOOLS_DIR,
+      PATTERN = "\\.Rmd$"
+    )
+  )
+  # Transfer corresponding unit tests to "./tools"
+  callr::rscript(
+    script = "./tools/remove-files.R",
+    wd = ".",
+    cmdargs = list(
+      INPUT_DIR = TEST_DIR,
+      OUTPUT_DIR = TOOLS_DIR,
+      PATTERN = "test-derived|test-PET"
     )
   )
 }

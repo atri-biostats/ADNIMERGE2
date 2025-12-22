@@ -1,8 +1,9 @@
 # Libraries ----
-## Required internal packages ----
+## Required R packages ----
 # Install two packages from local directory
 # run once --
 # install.packages("./ADNIMERGE_0.0.1.tar.gz")
+# # `ADNI4` R package is available for internal use-only
 # install.packages("./ADNI4_0.0.1.tar.gz")
 
 library(tidyverse)
@@ -11,14 +12,8 @@ library(cli)
 
 # Input Argument ----
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 1) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.val args} must be size of 1. \n",
-      "{.val args} is a length of {.val {length(args)}} vector."
-    )
-  )
-}
+source(file.path(".", "tools", "data-prepare-utils.R"))
+check_arg(args, 1)
 DATA_DOWNLOADED_DATE <- as.Date(args[1])
 if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
   cli::cli_abort(

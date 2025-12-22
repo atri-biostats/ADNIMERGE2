@@ -6,19 +6,11 @@ library(rlang)
 library(cli)
 
 # Input parameter - derived/analysis datasets ----
+source(file = file.path(".", "tools", "data-prepare-utils.R"))
+
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 1) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.var args} must be size of 1. \n",
-      "{.val args} is a length of {.val {length(args)}}"
-    )
-  )
-}
-DERIVED_DATASET_LIST <- str_remove_all(string = args, pattern = '[\\(\\)]|\\"|^c') %>%
-  str_split(string = ., pattern = ",") %>%
-  unlist() %>%
-  str_trim(string = ., side = "both")
+check_arg(args, 1)
+DERIVED_DATASET_LIST <- split_concat_arg(args, FALSE)
 if (all(DERIVED_DATASET_LIST %in% "NULL") | any(is.na(DERIVED_DATASET_LIST))) {
   cli::cli_abort(
     message = c(
@@ -73,7 +65,6 @@ source(file = temp_file)
 
 ## Store all derived objects in `./data` directory ----
 ### using `use_data_modified()` function
-source(file = file.path(".", "tools", "data-prepare-utils.R"))
 save_derived_data <- lapply(
   DERIVED_DATASET_LIST,
   function(tbl_name) {

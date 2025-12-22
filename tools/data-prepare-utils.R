@@ -145,7 +145,7 @@ use_data_modified_wrapper <- function(.data_list, ...) {
   status <- lapply(names(.data_list), function(i) {
     use_data_modified(
       dataset_name = i,
-      dataset = .data_list %>% 
+      dataset = .data_list %>%
         pluck(., i),
       ...
     )
@@ -356,7 +356,7 @@ get_file_progress_message <- function(from, to = NULL, type = "copy") {
 
 #' @title Detect Files Started With Underscore Name
 #' @param input_dir Input directory
-#' @param file_extension File extension patterns, Default: '\.csv$'
+#' @param file_extension File extension pattern, Default: '\.csv$'
 #' @return A Boolean value if there is at least one file that started with underscore character.
 #' @examples
 #' \dontrun{
@@ -1096,14 +1096,14 @@ check_list_names <- function(obj, list_names = NULL, arg = rlang::caller_arg(obj
       call = call
     )
   }
-  
+
   # Checking for any misspelled/omitted list names
   if (all(is.null(list_names))) missing_names <- NULL
-  
+
   if (any(!is.null(list_names))) {
     missing_names <- list_names[!list_names %in% names(obj)]
   }
-  
+
   if (length(missing_names) > 0) {
     cli_abort(
       message = c(
@@ -1113,7 +1113,7 @@ check_list_names <- function(obj, list_names = NULL, arg = rlang::caller_arg(obj
       call = call
     )
   }
-  
+
   invisible(missing_names)
 }
 
@@ -1155,4 +1155,89 @@ remove_zipname <- function(x, name) {
     x <- x[!x %in% ""]
   }
   return(x)
+}
+
+
+## Split concatenated arg ----
+#' @title Split concatenated arg
+#' @param x Character arg
+#' @rdname split_concat_arg
+#' @importFrom stringr str_remove_all str_split_1 str_trim
+split_concat_arg <- function(arg, single_char = TRUE) {
+  stringr::str_remove_all(string = arg, pattern = '[\\(\\)]|\\"|^c') %>%
+    {
+      if (single_char) {
+        stringr::str_split_1(string = ., pattern = ",")
+      } else {
+        stringr::str_split(string = ., pattern = ",") %>%
+          unlist(.)
+      }
+    } %>%
+    stringr::str_trim(string = ., side = "both")
+}
+
+
+## Check input arguments ----
+#' @title Check Input Arguments
+#' @description
+#'  \code{check_arg} is used to check the length of input argument
+#'  \code{check_arg_logical} is used to check whether the input argument is non missing Boolean value
+#'  \code{check_arg_date} is used to check whether the object has 'YYYY-MM-DD' date format
+#' @param x Input arg
+#' @param size Length, only applicable for \code{check_arg}
+#' @param arg Arg parameter, Default: rlang::caller_arg(x)
+#' @param call Call environment, Default: rlang::caller_env()
+#' @return An error message if the check is fail.
+#' @seealso
+#'  \code{\link[rlang]{caller_arg}}, \code{\link[rlang]{stack}}
+#'  \code{\link[cli]{cli_abort}}
+#' @name arg_utils
+#' @export
+#' @importFrom rlang caller_arg caller_env
+#' @importFrom cli cli_abort
+NULL
+
+#' @rdname arg_utils
+check_arg <- function(x, size,
+                      arg = rlang::caller_arg(x),
+                      call = rlang::caller_env()) {
+  cli::cli_abort(
+    message = c(
+      "Input argument {.arg {arg}} must be size of {.val {size}}. \n",
+      "{.arg {arg}} is a length of {.val {length(arg)}} vector."
+    ),
+    call = call
+  )
+  invisible()
+}
+
+#' @rdname arg_utils
+check_arg_logical <- function(x,
+                              arg = rlang::caller_arg(x),
+                              call = rlang::caller_env()) {
+  check_object_type(x, "logical")
+  if (is.null(x) | is.na(x)) {
+    cli::cli_abort(
+      message = c(
+        "{.arg {arg}} must be a Boolean value. \n",
+        "The value of {.arg {arg}} is {.val {arg}}."
+      )
+    )
+  }
+  invisible()
+}
+
+#' @rdname arg_utils
+check_arg_date <- function(x, 
+                           arg = rlang::caller_arg(x),
+                           call = rlang::caller_env()){
+  if (!str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+    cli::cli_abort(
+      message = c(
+        "{.arg {arg}} must be in {.cls YYYY-MM-DD} format. \n",
+        "The value of {.arg {arg}} is {.val {x}}."
+      )
+    )
+  }
+  invisible()
 }
