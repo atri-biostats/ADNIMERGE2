@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2025-12-19" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2026-01-05" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
