@@ -60,7 +60,13 @@ reference:
        Remotely collected data only avaliable in ADNI4 study phase
     contents:
     - has_keyword("remotely_collected_data")
-
+  
+  - subtitle: ADSP Phenotype Harmonization Consortium (PHC)
+    desc: > 
+       Harmonized data within the ADSP - only for ADNI
+    contents:
+    - has_keyword("adsp_phc")
+  
   - subtitle: Other Raw Datasets
     contents:
     - has_keyword("other_raw_dataset")
