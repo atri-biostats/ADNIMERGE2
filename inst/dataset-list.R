@@ -179,20 +179,6 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
       use_article = TRUE
     ),
     c(
-      data_code = "FCI",
-      label = "Financial Capacity Instrument Short Form (FCI-SF)",
-      article_list = derived_data_artc,
-      source_derived_data = "QS",
-      use_article = TRUE
-    ),
-    c(
-      data_code = "FCI",
-      label = "Financial Capacity Instrument Short Form (FCI-SF)",
-      article_list = derived_data_artc,
-      source_derived_data = "QS",
-      use_article = TRUE
-    ),
-    c(
       data_code = "FAQ",
       label = "Functional Assessment Questionnaire",
       article_list = derived_data_artc,
@@ -402,12 +388,15 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   ) %>%
     select(all_of(order_cols))
 
+  list_col <- ifelse(use_type == "prep_script", "script_list", "article_list")
+  use_col <- ifelse(use_type == "prep_script", "use_prep_script", "use_article")
+
   pkg_data_list <- pkg_data_list %>%
     as_tibble() %>%
-    filter(if_all(all_of(paste0("use_", use_type)), ~ .x == TRUE)) %>%
+    filter(if_all(all_of(use_col), ~ .x == TRUE)) %>%
     {
       if (nrow(.) > 0) {
-        assert_non_missing(., all_of(paste0(gsub("prep", "", use_type), "_list")))
+        assert_non_missing(., all_of(list_col))
       } else {
         (.)
       }
