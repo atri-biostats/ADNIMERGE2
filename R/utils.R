@@ -1293,7 +1293,7 @@ replace_values_dataset <- function(.data, phaseVar = "PHASE", input_values) {
 #' }
 #' @rdname convert_to_missing_value
 #' @family functions to replace values
-#' @keywords adni_replace_fun utils_fun
+#' @keywords adni_replace_fun
 #' @importFrom cli cli_abort cli_alert_info
 #' @importFrom dplyr across filter if_all case_when
 #' @importFrom tibble as_tibble
@@ -1319,13 +1319,14 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
     )
   }
   column_list <- get_cols_value(.data = .data, value = value, col_name = col_name)
-
+  column_list <- exclude_cols(x = column_list, exact_match = FALSE, exc_col = c("has\\_qc\\_error", "qc\\_flag"))
+  
   if (all(is.na(column_list))) {
     cli_alert_info(
       text = c("No variable contains {.val {value}} value")
     )
   }
-
+  
   # To make sure '-1' as missing values only in ADNI1 phases
   if (all(value %in% "-1" & "ADNI1" %in% phase & length(phase) > 1)) {
     cli_abort(
@@ -1335,7 +1336,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
       )
     )
   }
-
+  
   output_data <- .data %>%
     {
       if (all(is.na(column_list))) {
@@ -1354,11 +1355,60 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
         (.)
       }
     }
-
+  
   return(output_data)
 }
 
 # Additional Utils Function ----
+## Exclude QC flag variables ----
+#' @title Exclude QC Flag Variable Names from A Character Vector
+#'
+#' @description
+#' This function is used to exclude QC flag variable names from a character vector.
+#'
+#' @param x Character vector of QC flag variable names
+#'
+#' @param exact_match An indicator to apply exact matching method.
+#'       By default \code{exact_match = TRUE}, the variable name \code{exc_col}
+#'       that match exactly in a given character vector will be removed.
+#'       Otherwise, the name that matches the pattern \code{exc_col} will be removed.
+#'
+#' @param exc_col Either a character vector or regex expressions of variable name that will be removed.
+#'      It should be a character vector if \code{exact_match} is \code{TRUE}.
+#'      By default, it removes QC flag variables.
+#' @return A character vector
+#' @examples
+#' \dontrun{
+#' x <- c("qc_flag", "CENTILOIDS")
+#' # Exclude QC flag variables
+#' ## With exact match method
+#' exclude_cols(x = x, exact_match = TRUE, exc_col = c("has_qc_error", "qc_flag"))
+#' ## With less restrict matching method
+#' exclude_cols(x = x, exact_match = FALSE, exc_col = c("has\\_qc", "qc\\_"))
+#' }
+#' @rdname exclude_cols
+#' @keywords adni_replace_fun
+#' @importFrom cli cli_abort
+#' @importFrom stringr str_detect
+exclude_cols <- function(x,
+                         exc_col = c("has_qc_error", "qc_flag"), 
+                         exact_match = TRUE) {
+  check_object_type(exact_match, "logical")
+  if (any(is.null(exc_col)) || any(is.na(exc_col))) {
+    cli::cli_abort("{.var exc_col} must not be missing")
+  }
+  if (exact_match == FALSE) {
+    exc_col <- ifelse(length(exc_col) > 1, paste0(exc_col, collapse = "|"), exc_col)
+    if (any(!is.na(x))) {
+      last_col <- x[stringr::str_detect(tolower(x), tolower(exc_col), negate = TRUE)]
+    } else {
+      last_col <- x
+    }
+  } else {
+    last_col <- x[!x %in% exc_col]
+  }
+  return(last_col)
+}
 ## Gets columns that contains specific values ------
 #' @title Get Columns With Specific Values
 #' @description
