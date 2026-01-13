@@ -251,7 +251,7 @@ file_action <- function(input_dir,
             from = file.path(input_dir, old_file_name),
             to = file.path(output_dir, new_file_name),
             type = "copy",
-            .envir = .GlobalEnv
+            .envir = rlang::caller_env()
           )
         } else {
           file.copy(
@@ -266,7 +266,8 @@ file_action <- function(input_dir,
           get_file_progress_message(
             from = file.path(input_dir, old_file_name),
             to = file.path(output_dir, new_file_name),
-            type = "rename"
+            type = "rename",
+            .envir = rlang::caller_env()
           )
         } else {
           file.rename(
@@ -280,7 +281,8 @@ file_action <- function(input_dir,
         if (show_message) {
           get_file_progress_message(
             from = file.path(input_dir, old_file_name),
-            type = "remove"
+            type = "remove",
+            .envir = rlang::caller_env()
           )
         } else {
           file.remove(file.path(input_dir, old_file_name))
@@ -299,6 +301,7 @@ file_action <- function(input_dir,
 #' @param to Output file(s) path, Default: NULL.
 #'         Only applicable for \code{type = 'copy'} and \code{type = 'rename'}
 #' @param type File action type either \code{'copy'}, \code{'rename'} or \code{'remove'}, Default: 'copy'
+#' @param .envir See \code{\link[cli]{cli_progress_bar}}, Default: 'rlang::caller_env()'
 #' @inheritSection file_action return
 #' @rdname get_file_action_message
 #' @keywords utils_fun
@@ -307,7 +310,7 @@ file_action <- function(input_dir,
 #' @importFrom rlang arg_match0
 #' @importFrom cli cli_abort cli_progress_bar pb_spin pb_current pb_total
 
-get_file_progress_message <- function(from, to = NULL, type = "copy") {
+get_file_progress_message <- function(from, to = NULL, type = "copy", .envir = rlang::caller_env()) {
   require(cli)
   require(rlang)
   rlang::arg_match0(arg = type, values = c("copy", "rename", "remove"))
@@ -327,7 +330,10 @@ get_file_progress_message <- function(from, to = NULL, type = "copy") {
   if (!type %in% "remove" & length(from) != length(to)) {
     cli::cli_abort("Input and output files must be the same length!")
   }
-
+  .envir$from <- from
+  .envir$to <- to
+  .envir$type_label <- type_label
+  .envir$type_done <- type_done
   cli::cli_progress_bar(
     format = paste0(
       "{cli::pb_spin} [{cli::pb_current}/{cli::pb_total}] {type_label} {.path {from[x]}} ",
@@ -337,9 +343,11 @@ get_file_progress_message <- function(from, to = NULL, type = "copy") {
       "{cli::col_green(symbol$tick)} {.var {type_done}} {cli::pb_total} files."
     ),
     total = length(from),
-    clear = TRUE
+    clear = FALSE,
+    .envir = .envir
   )
   for (x in seq_along(from)) {
+    .envir$x <- x
     if (type %in% "copy") {
       file.copy(from = from[x], to = to[x], overwrite = TRUE)
     }
@@ -349,9 +357,10 @@ get_file_progress_message <- function(from, to = NULL, type = "copy") {
     if (type %in% "remove") {
       file.remove(from[x])
     }
-    cli_progress_update()
     Sys.sleep(0.75)
+    cli_progress_update(.envir = .envir)
   }
+  cli_progress_done(.envir = .envir)
 }
 
 #' @title Detect Files Started With Underscore Name
