@@ -1,6 +1,6 @@
 # NOTE 
 
-* Since `ADNIMERGE2` is an R data package and its data content is frequently updated, only major change logs related to an R function within the package will be documented in the version history.
+* Because `ADNIMERGE2` is an R data package with frequent content updates, the change log focuses exclusively on major changes to R functions and package infrastructure rather than routine data refreshes.
 
 # Development
 
