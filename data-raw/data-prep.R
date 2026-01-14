@@ -23,16 +23,7 @@ check_dir_list <- lapply(dir_list, function(dir) {
 args <- commandArgs(trailingOnly = TRUE)
 check_arg(args, 2)
 DATA_DOWNLOADED_DATE <- args[1]
-arg_format_status <- lapply(DATA_DOWNLOADED_DATE, function(x){
-  if (!str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
-    cli::cli_abort(
-      message = c(
-        "{.var DATA_DOWNLOADED_DATE} must be in {.cls YYYY-MM-DD} format. \n",
-        "The value of {.var DATA_DOWNLOADED_DATE} is {.val {x}}."
-      )
-    )
-  }
-})
+check_arg_date(DATA_DOWNLOADED_DATE)
 
 UPDATE_DATADIC <- as.logical(args[2])
 check_arg_logical(UPDATE_DATADIC)

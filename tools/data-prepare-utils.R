@@ -1210,14 +1210,16 @@ NULL
 check_arg <- function(x, size,
                       arg = rlang::caller_arg(x),
                       call = rlang::caller_env()) {
-  cli::cli_abort(
-    message = c(
-      "Input argument {.arg {arg}} must be size of {.val {size}}. \n",
-      "{.arg {arg}} is a length of {.val {length(arg)}} vector."
-    ),
-    call = call
-  )
-  invisible()
+  if (length(x) != size) {
+    cli::cli_abort(
+      message = c(
+        "Input argument {.arg {arg}} must be size of {.val {size}}. \n",
+        "{.arg {arg}} is a length of {.val {length(x)}} vector."
+      ),
+      call = call
+    )
+  }
+  invisible(TRUE)
 }
 
 #' @rdname arg_utils
@@ -1225,22 +1227,22 @@ check_arg_logical <- function(x,
                               arg = rlang::caller_arg(x),
                               call = rlang::caller_env()) {
   check_object_type(x, "logical")
-  if (is.null(x) | is.na(x)) {
+  if (is.null(x) || is.na(x)) {
     cli::cli_abort(
       message = c(
         "{.arg {arg}} must be a Boolean value. \n",
-        "The value of {.arg {arg}} is {.val {arg}}."
+        "The value of {.arg {arg}} is {.val {x}}."
       )
     )
   }
-  invisible()
+  invisible(TRUE)
 }
 
 #' @rdname arg_utils
-check_arg_date <- function(x, 
+check_arg_date <- function(x,
                            arg = rlang::caller_arg(x),
-                           call = rlang::caller_env()){
-  if (!str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+                           call = rlang::caller_env()) {
+  if (!stringr::str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
     cli::cli_abort(
       message = c(
         "{.arg {arg}} must be in {.cls YYYY-MM-DD} format. \n",
@@ -1248,5 +1250,5 @@ check_arg_date <- function(x,
       )
     )
   }
-  invisible()
+  invisible(TRUE)
 }

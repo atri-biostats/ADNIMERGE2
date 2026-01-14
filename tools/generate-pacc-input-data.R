@@ -15,14 +15,7 @@ args <- commandArgs(trailingOnly = TRUE)
 source(file.path(".", "tools", "data-prepare-utils.R"))
 check_arg(args, 1)
 DATA_DOWNLOADED_DATE <- as.Date(args[1])
-if (is.null(DATA_DOWNLOADED_DATE) | is.na(DATA_DOWNLOADED_DATE)) {
-  cli::cli_abort(
-    message = c(
-      "{.var DATA_DOWNLOADED_DATE} must not be missing. \n",
-      "{.var DATA_DOWNLOADED_DATE} must be a character string of date value with {.cls YYYY-MM-DD} format."
-    )
-  )
-}
+check_arg_date(DATA_DOWNLOADED_DATE)
 # Compared with raw source dataset date
 if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
   cli::cli_abort(
