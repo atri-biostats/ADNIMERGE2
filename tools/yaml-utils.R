@@ -4,7 +4,7 @@
 #' This function is used to modify the existing params YAML in rmarkdown file(s).
 #' The modification can also be preformed across files in a specific directory.
 #'
-#' @param dir_path Directory, Default: NULL
+#' @param dir_path Directory path, Default: NULL
 #' @param file_path Full file path, Default: NULL
 #' @param current_param Current param value
 #' @param new_param New param value
@@ -24,10 +24,10 @@ modify_rmd_param_yaml <- function(dir_path = NULL, file_path = NULL, current_par
   check_load_input(dir_path, file_path)
   check_param_format(current_param)
   check_param_format(new_param)
-  param_name <- get_param_name_value(x = current_param, "param")
-  param_value <- get_param_name_value(x = current_param, "value")
-  param_name_new <- get_param_name_value(x = new_param, "param")
-  new_param_value <- get_param_name_value(x = new_param, "value")
+  param_name <- get_param_name_value(current_param, "param")
+  param_value <- get_param_name_value(current_param, "value")
+  param_name_new <- get_param_name_value(new_param, "param")
+  new_param_value <- get_param_name_value(new_param, "value")
   if (param_name != param_name_new) {
     cli::cli_abort(message = "Different param name is provided: {.val {current_param}} and {.val {new_param}}")
   }
@@ -46,8 +46,8 @@ modify_rmd_param_yaml <- function(dir_path = NULL, file_path = NULL, current_par
     }
   }
   if (length(rmd_file_list) == 0) {
-    if (!is.null(dir_path)) cli::cli_inform(message = c("{cli::symbol$info}" = "Rmarkdown file is not found in {.path {dir_path}}."))
-    if (!is.null(file_path)) cli::cli_inform(message = c("{cli::symbol$info}" = "Rmarkdown file is not provided in {.var file_path}."))
+    if (!is.null(dir_path)) cli::cli_inform(message = c("{cli::symbol$info} Rmarkdown file is not found in {.path {dir_path}}."))
+    if (!is.null(file_path)) cli::cli_inform(message = c("{cli::symbol$info} Rmarkdown file is not provided in {.var file_path}."))
   } else {
     for (i in seq_along(rmd_file_list)) {
       status <- set_rmd_param_yaml(
