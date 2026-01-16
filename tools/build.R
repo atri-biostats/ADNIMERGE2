@@ -45,9 +45,10 @@ if (CREATE_DATA_CATEGORY) {
 VIGNETTE_DIR <- file.path(".", "vignettes")
 TOOLS_DIR <- file.path(".", "tools")
 TEST_DIR <- file.path(".", "tests", "testthat")
+
 INCLUDE_PACC_DERIVED_DATA <- TRUE
 # NOTE:
-#  Required to install the latest version of `ADNIMERGE` and `ADNI4 `study R packages
+#  Required to install the latest version of `ADNIMERGE` and `ADNI4 ` R packages
 #  `ADNI4` R package is only available internally
 if (INCLUDE_PACC_DERIVED_DATA) {
   callr::rscript(
@@ -82,19 +83,26 @@ if (INCLUDE_PACC_DERIVED_DATA) {
 ## Generate derived/analysis dataset ----
 INCLUDE_DERIVED_DATASET <- TRUE
 
-# Required to change the default params yaml values in vignettes
-# Only applicable if you want to generate derived datasets other than PACC scores
-# For internal pkg build:
-# # CHANGE_VIGNETTES_YAML <- FALSE
-CHANGE_VIGNETTES_YAML <- FALSE
-CHANGE_VIGNETTES_YAML <- (INCLUDE_DERIVED_DATASET & !INCLUDE_PACC_DERIVED_DATA)
-if (CHANGE_VIGNETTES_YAML) {
+## Modify default PACC score related params YAML in vignettes
+# Required to modify the default `INCLUDE_PACC` param YAML if:
+#  I. PACC score input raw data are not generated or
+#  II. To generate some derived dataset other than PACC score
+MODIFY_PACC_PARAM <- FALSE
+MODIFY_PACC_PARAM <- (INCLUDE_DERIVED_DATASET & !INCLUDE_PACC_DERIVED_DATA)
+if (MODIFY_PACC_PARAM) {
   callr::rscript(
     script = "./tools/vignettes-yaml.R",
     wd = ".",
+    cmdargs = list(
+      INPUT_DIR = VIGNETTE_DIR,
+      CURRENT_PACC_PARAM = "INCLUDE_PACC: TRUE",
+      NEW_PACC_PARAM = "INCLUDE_PACC: FALSE"
+    )
   )
 } else {
-  cli::cli_alert_info("Not required to change vignettes yaml!")
+  cli::cli_alert_info(
+    text = "Not required to modify PACC score param YAML value in vignettes!"
+  )
 }
 
 if (INCLUDE_DERIVED_DATASET) {
