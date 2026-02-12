@@ -1401,3 +1401,30 @@ verify_data_download_date <- function(raw_data_path, input_date) {
   }
   invisible(TRUE)
 }
+
+#' @title Verify Package Installed
+#' @description 
+#'  This function is used to check whether a specific package(s) is already installed.
+#' @param pkg Package name(s)
+#' @return 
+#'  An error message if a specific package is not installed.
+#' @examples 
+#' \dontrun{
+#' verify_pkg_install(pkg = "ADNIMERGE2")
+#' }
+#' @rdname verify_pkg_install
+#' @importFrom cli cli_abort
+#' 
+verify_pkg_install <- function(pkg) {
+  check_object_type(pkg, "character")
+  pkg_list <- installed.packages()[, 1]
+  pkg_list <- as.character(pkg_list)
+  non_install_pkg <- pkg[!pkg %in% pkg_list]
+  if (length(non_install_pkg) > 0) {
+    cli::cli_abort(c(
+      "{.val {non_install_pkg}} {?has/have} not been installed in \n",
+      "{.val {(.libPaths())}} library path{?s}."
+    ))
+  }
+  invisible(TRUE)
+}

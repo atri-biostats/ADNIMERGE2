@@ -16,6 +16,7 @@ source(file.path(".", "tools", "data-prepare-utils.R"))
 check_arg(args, 1)
 DATA_DOWNLOADED_DATE <- as.Date(args[1])
 check_arg_date(DATA_DOWNLOADED_DATE)
+verify_pkg_install(pkg = c("ADNI4", "ADNIMERGE"))
 # Compared with raw source dataset date
 if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
   cli::cli_abort(
