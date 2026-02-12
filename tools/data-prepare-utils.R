@@ -1427,7 +1427,7 @@ verify_pkg_install <- function(pkg) {
   non_install_pkg <- pkg[!pkg %in% pkg_list]
   if (length(non_install_pkg) > 0) {
     cli::cli_abort(c(
-      "{.val {non_install_pkg}} {?has/have} not been installed in \n",
+      "{.val {non_install_pkg}} {?is/are} not installed in \n",
       "{.val {(.libPaths())}} library path{?s}."
     ))
   }

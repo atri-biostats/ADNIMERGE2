@@ -22,7 +22,7 @@ if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
   cli::cli_abort(
     message = c(
       "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
-      "{.var ADNI4} R package download date is {.val {ADNI4::data_dump_date}}."
+      "{.var ADNI4} R package was downloaded on {.val {ADNI4::data_dump_date}}."
     )
   )
 }
