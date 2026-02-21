@@ -107,8 +107,9 @@ if (EXISTED_DATADTIC) {
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIK") |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
-        (TBLNAME %in% "TAUQC" &  FLDNAME %in% "PROCERR") |
-        (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS")
+        (TBLNAME %in% "TAUQC" & FLDNAME %in% "PROCERR") |
+        (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS") |
+        (TBLNAME %in% "UPENN_PLASMA_FUJIREBIO_QUANTERIX" & FLDNAME %in% c("GFAP_F", "NfL_F"))
       ) ~ "Yes"
     ))
 
