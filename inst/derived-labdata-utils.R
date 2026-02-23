@@ -246,7 +246,7 @@ get_biomarker_details <- function(assay = "Roche") {
         LBORRESU = "pg/mL",
         LBSTRESU = "pg/mL",
         LBNAM = "C2N",
-        LBMETHOD = "C2N Assay", 
+        LBMETHOD = "C2N Assay",
         SOURCE = "C2N_PRECIVITYAD2_PLASMA"
       ) %>%
       dplyr::mutate(dplyr::across(
@@ -283,7 +283,7 @@ get_biomarker_details <- function(assay = "Roche") {
         LBSTRESU = "pg/mL",
         LBNAM = "UPENN",
         LBMETHOD = "Roche Elecsys",
-        LBSPEC = "PLASMA", 
+        LBSPEC = "PLASMA",
         SOURCE = "UPENNBIOMK_ROCHE_ELECSYS"
       )
   }
@@ -308,7 +308,7 @@ get_biomarker_details <- function(assay = "Roche") {
         LBSTRESU = "pg/mL",
         LBNAM = "UPENN",
         LBMETHOD = "INNO-BIA AlzBio3",
-        LBSPEC = "PLASMA", 
+        LBSPEC = "PLASMA",
         SOURCE = "UPENNBIOMK_MASTER"
       ) %>%
       dplyr::select(-ends_with("suffix"))
@@ -326,14 +326,17 @@ get_biomarker_details <- function(assay = "Roche") {
       )
     ) %>%
       dplyr::mutate(
-        LBORRESU = "pg/mL",
-        LBSTRESU = "pg/mL",
+        LBORRESU = case_when(
+          LBTESTCD %in% c("AB42AB40F", "PT217AB42F") ~ NA_character_,
+          TRUE ~ "pg/mL"
+        ),
+        LBSTRESU = LBORRESU,
         LBSPEC = "PLASMA",
         LBNAM = "UPENN",
         LBMETHOD = dplyr::case_when(
           stringr::str_detect(LBTESTCD, "F$") ~ toupper("Fujirebio Lumipulse"),
           stringr::str_detect(LBTESTCD, "Q$") ~ toupper("SIMOA Quanterix HD-X")
-        ), 
+        ),
         SOURCE = "UPENN_PLASMA_FUJIREBIO_QUANTERIX"
       ) %>%
       dplyr::mutate(LBTESTCD = stringr::str_remove_all(LBTESTCD, "F$|Q$")) %>%
