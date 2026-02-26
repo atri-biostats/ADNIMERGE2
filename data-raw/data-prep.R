@@ -29,6 +29,11 @@ UPDATE_DATADIC <- as.logical(args[2])
 check_arg_logical(UPDATE_DATADIC)
 
 ## Data download stamped date
+# Verify file downloaded date
+verify_data_download_date(
+  raw_data_path = raw_data_dir, 
+  input_date = DATA_DOWNLOADED_DATE
+)
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
 usethis::use_data(DATA_DOWNLOADED_DATE, overwrite = TRUE)
 

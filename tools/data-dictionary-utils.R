@@ -615,6 +615,15 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
     tag_list$keywords <- str_c(tolower(source_type), "_dataset")
   }
 
+  # checks tags list
+  tag_status <- all(names(tag_list) %in% roxygen2::tags_list(built_in = FALSE))
+  if (tag_status == FALSE) {
+    non_roxy <- names(tag_list)[!names(tag_list) %in% roxygen2::tags_list(built_in = FALSE)]
+    cli_abort(message = c(
+      "{.var tag_list} contains {.val {length(non_roxy)}} tag names that are not roxygen2 tags.\n ",
+      "{.val {non_roxy}} {?is/are} not roxygen2 tags."
+    ))
+  }
   format_description <- str_c(
     "#' @format A data frame with ", unique(temp_summarized_dd$num_rows),
     " observations and ", unique(temp_summarized_dd$num_cols), " variables. \n"

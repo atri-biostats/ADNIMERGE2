@@ -102,13 +102,14 @@ if (EXISTED_DATADTIC) {
     # Required to confirm the coded values for the following tblnames/fldnames and
     # creating case-specific functions in the future
     mutate(excluded_fld_name = case_when(
-      (TBLNAME %in% c("RECCMEDS", "TREATDIS") |
+      (TBLNAME %in% c("RECCMEDS", "TREATDIS", "ALIQUOT_COUNT") |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
         (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIK") |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
-        (TBLNAME %in% "TAUQC" &  FLDNAME %in% "PROCERR") |
-        (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS")
+        (TBLNAME %in% "TAUQC" & FLDNAME %in% "PROCERR") |
+        (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS") |
+        (TBLNAME %in% "UPENN_PLASMA_FUJIREBIO_QUANTERIX" & FLDNAME %in% c("GFAP_F", "NfL_F"))
       ) ~ "Yes"
     ))
 

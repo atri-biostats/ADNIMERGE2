@@ -1226,6 +1226,7 @@ check_arg <- function(x, size,
 check_arg_logical <- function(x,
                               arg = rlang::caller_arg(x),
                               call = rlang::caller_env()) {
+  check_arg(x, 1)
   check_object_type(x, "logical")
   if (is.null(x) || is.na(x)) {
     cli::cli_abort(
@@ -1242,6 +1243,7 @@ check_arg_logical <- function(x,
 check_arg_date <- function(x,
                            arg = rlang::caller_arg(x),
                            call = rlang::caller_env()) {
+  check_arg(x, 1)
   if (!stringr::str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
     cli::cli_abort(
       message = c(
@@ -1249,6 +1251,185 @@ check_arg_date <- function(x,
         "The value of {.arg {arg}} is {.val {x}}."
       )
     )
+  }
+  invisible(TRUE)
+}
+
+
+## Get data file download date ----
+#' @title Get Data File Download Date
+#' @description
+#'  This function is used to extract the data download date based on raw data file names.
+#'  It follows raw data file name format pattern.
+#' @param raw_data_path Directory path for raw data files
+#' @param date_pattern File date stamp pattern, Default: '[0-9]{2}[A-Za-z]{3}[0-9]{4}'
+#' @param show_max_date A Boolean value to show only the most recent dates, Default: FALSE
+#' @return
+#'  A character vector of dates in \code{'YYYY-DD-MM'} format.
+#'  It must be a single character vector if \code{show_max_date} is \code{TRUE}.
+#'  Otherwise, it can be any length of character vector.
+#' @examples
+#' \dontrun{
+#' # Suppose all raw data files are saved in `./data-raw` directory
+#' get_data_download_date(
+#'   raw_data_path = "./data-raw",
+#'   date_pattern = "[0-9]{2}[A-Za-z]{3}[0-9]{4}"
+#' )
+#' }
+#' @rdname get_data_download_date
+#' @importFrom utils unzip
+#' @importFrom cli cli_abort
+#' @importFrom stringr str_extract_all
+#'
+get_data_download_date <- function(raw_data_path,
+                                   date_pattern = "[0-9]{2}[A-Za-z]{3}[0-9]{4}",
+                                   show_max_date = FALSE) {
+  if (!dir.exists(raw_data_path)) {
+    cli::cli_abort("{.path {raw_data_path}} not found")
+  }
+  temp_dir <- tempdir()
+  temp_new_dir <- file.path(temp_dir, "full_files")
+  if (dir.exists(temp_new_dir)) unlink(temp_new_dir)
+  dir.create(temp_new_dir)
+  zip_list <- list.files(
+    path = raw_data_path,
+    pattern = "\\.zip$",
+    full.names = TRUE
+  )
+  if (length(zip_list) > 0) {
+    lapply(seq_along(zip_list), function(x) {
+      utils::unzip(zipfile = zip_list[x], exdir = temp_new_dir)
+    })
+  }
+  # Copy all csv files to "./full_list" directory
+  csv_list <- list.files(
+    path = raw_data_path,
+    pattern = "\\.csv$",
+    full.names = TRUE
+  )
+  if (!is.null(csv_list)) {
+    file.copy(csv_list, to = temp_new_dir)
+  }
+  file_lists <- list.files(temp_new_dir)
+  if (length(file_lists) == 0 || is.null(file_lists)) {
+    cli::cli_abort("No file is found in {.path {temp_new_dir}} temporary directory")
+  }
+  date_list <- stringr::str_extract_all(
+    string = file_lists,
+    pattern = paste0(date_pattern, collapse = "|")
+  )
+  date_list <- unlist(date_list)
+  date_list <- unique(date_list)
+  date_list <- as.Date(date_list, "%d%b%Y")
+  date_list <- date_list[!is.na(date_list)]
+  if (show_max_date == TRUE) {
+    date_list <- max(date_list)
+  } else {
+    date_list <- date_list
+  }
+  if (length(date_list) == 0 || all(is.na(date_list))) {
+    cli::cli_abort(
+      message = paste0(
+        "No file is found in {.path {raw_data_path}} directory ",
+        "with {.val {date_pattern}} date stamp pattern"
+      )
+    )
+  }
+  return(date_list)
+}
+
+#' @title Verify Raw Data Download Date
+#' @description
+#'  Function used to verify if all raw data files were downloaded on the same date
+#'  from the data sharing platform. It also compares with a pre-specified date value.
+#' @inheritParams get_data_download_date
+#' @param input_date Pre-specified date value in 'YYYY-MM-DD' format.
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' # Suppose all raw data files are saved in `./data-raw` directory and
+#' # pre-specified date was '2026-01-01'
+#' verify_data_download_date(
+#'   raw_data_path = "./data-raw",
+#'   input_date = "2026-01-01"
+#' )
+#' }
+#' @rdname verify_data_download_date
+#' @importFrom cli cli_abort symbol
+
+verify_data_download_date <- function(raw_data_path, input_date) {
+  date_list <- get_data_download_date(
+    raw_data_path = raw_data_path,
+    date_pattern = "[0-9]{2}[A-Za-z]{3}[0-9]{4}",
+    show_max_date = FALSE
+  )
+  date_list <- unique(date_list)
+  if (length(date_list) > 1) {
+    cli::cli_abort(
+      message = c(
+        paste0(
+          "There may be more than one file downloaded on different date: \n"
+        ),
+        paste0("{cli::col_yellow(symbol$info)} {.val {date_list}}. \n"),
+        paste0(
+          "{cli::col_green(symbol$info)} The current workflow supports building ",
+          "the package using the same/latest contemporaneous files."
+        )
+      )
+    )
+  }
+  check_arg_date(input_date)
+  if (any(date_list != input_date)) {
+    cli::cli_abort(
+      message = c(
+        paste0(
+          "Mismtach between data download dates based on raw data files ",
+          "and pre-specified date value {.var input_date}.\n"
+        ),
+        paste0(
+          "{cli::col_green(cli::symbol$info)} Either to modify {.var input_date} arg ",
+          "value or cross check all raw data files are downloaded on the same date. \n"
+        ),
+        paste0(
+          "{cli::col_green(cli::symbol$info)} Data download date based on ",
+          "raw data files: {.val {date_list}} \n"
+        ),
+        paste0("{cli::col_green(cli::symbol$info)} Pre-specified date value: {.val {input_date}}")
+      )
+    )
+  }
+  invisible(TRUE)
+}
+
+#' @title Verify Package Installed
+#' @description
+#'  This function is used to check whether a specific package(s) is already installed.
+#' @param pkg Package name(s)
+#' @return
+#'  An error message if a specific package is not installed.
+#' @examples
+#' \dontrun{
+#' verify_pkg_install(pkg = "ADNIMERGE2")
+#' }
+#' @rdname verify_pkg_install
+#' @importFrom cli cli_abort
+#'
+verify_pkg_install <- function(pkg) {
+  if (!is.character(pkg)) {
+    cli::cli_abort(c(
+      "{.var pkg} must be a character object. \n",
+      "{.var pkg} is a {.val {class(pkg)}} object."
+    ))
+  }
+  pkg_list <- installed.packages()[, 1]
+  pkg_list <- as.character(pkg_list)
+  non_install_pkg <- pkg[!pkg %in% pkg_list]
+  if (length(non_install_pkg) > 0) {
+    cli::cli_abort(c(
+      "{.val {non_install_pkg}} {?is/are} not installed in \n",
+      "{.val {(.libPaths())}} library path{?s}."
+    ))
   }
   invisible(TRUE)
 }
