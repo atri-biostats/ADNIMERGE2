@@ -351,7 +351,7 @@ create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| 
 #' @title Gets Factor Levels from DATADIC Dataset
 #' @description
 #'  This function is used to generate the coded levels of FLDNAME using
-#'  a data dictionary dataset \code{\link{DATADIC}()} downloaded from
+#'  a data dictionary dataset \code{\link{DATADIC}} downloaded from
 #'  <https://adni.loni.usc.edu/data-samples/adni-data/>.
 #' @param .datadic Data dictionary dataset
 #' @param tbl_name
@@ -364,7 +364,7 @@ create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| 
 #' @return A data.frame that appended with the following variables:
 #' \itemize{
 #'   \item \emph{prefix}: Actual value in the dataset
-#'   \item \emph{suffix}: Coded values from \code{\link{DATADIC}()}
+#'   \item \emph{suffix}: Coded values from \code{\link{DATADIC}}
 #'   \item \emph{class_type}: Class type, "factor"
 #'   }
 #' @examples
@@ -423,7 +423,7 @@ get_factor_levels_datadict <- function(.datadic,
 ## Function to Extract Codelist from DATADIC ----
 #' @title Extract Codedlist from DATADIC
 #' @description
-#' This function is used to extract codelist from a data dictionary \code{\link{DATADIC}()}.
+#' This function is used to extract codelist from a data dictionary \code{\link{DATADIC}}.
 #' @param .datadic Data dictionary dataset
 #' @return A data.frame the same as \code{.datadic} with only coded list.
 #' @examples
@@ -537,7 +537,7 @@ extract_codelist_datadict <- function(.datadic) {
 #' @title Gets Factor Field Name (FLDNAME)
 #' @description
 #'   This function is used to identify factor field name (FLDNAME) based on a
-#'   data dictionary dataset \code{\link{DATADIC}()}
+#'   data dictionary dataset \code{\link{DATADIC}}
 #'   from <https://adni.loni.usc.edu/data-samples/adni-data/>.
 #' @param .datadic
 #'  Data dictionary dataset that generated using \code{\link{get_factor_levels_datadict}()}
@@ -552,7 +552,7 @@ extract_codelist_datadict <- function(.datadic) {
 #'   nested_value = TRUE
 #' )
 #' # List of available factor columns in data dictionary
-#' # \code{\link{DATADIC}()} for the \code{\link{CDR}()} dataset
+#' # \code{\link{DATADIC}} for the \code{\link{CDR}} dataset
 #' get_factor_fldname(
 #'   .datadic = data_dict_dd,
 #'   tbl_name = "CDR",
@@ -568,7 +568,7 @@ extract_codelist_datadict <- function(.datadic) {
 #' @rdname get_factor_fldname
 #' @family data dictionary related functions
 #' @keywords adni_datadic_fun
-#' @seealso \code{\link{get_factor_levels_datadict}()} \code{\link{DATADIC}()}
+#' @seealso \code{\link{get_factor_levels_datadict}()} \code{\link{DATADIC}}
 #' @importFrom dplyr select filter
 #' @importFrom tibble as_tibble
 #' @export
@@ -602,7 +602,7 @@ get_factor_fldname <- function(.datadic, tbl_name, dd_fldnames = NULL) {
 #' @title Collecting Variable Coded Values
 #' @description
 #'  This function is used to collect the coded and decoded values for a given
-#'  variable based on a data dictionary \code{\link{DATADIC}()}.
+#'  variable based on a data dictionary \code{\link{DATADIC}}.
 #' @param .datadic
 #'    Data dictionary dataset created using \code{\link{get_factor_levels_datadict}()} function
 #' @param tbl_name Dataset name

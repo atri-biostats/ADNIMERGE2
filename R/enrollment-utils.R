@@ -3,7 +3,7 @@
 #' @description
 #'  This function is used to extract enrollment date (baseline visit date)
 #'  when subjects are enrolled in ADNI study for the first time.
-#' @param .registry Data.frame of \code{\link{REGISTRY}()} eCRF
+#' @param .registry Data.frame of \code{\link{REGISTRY}} eCRF
 #' @return
 #'  A data.frame of overall enrollment in ADNI study with the following variables:
 #' \itemize{
@@ -18,7 +18,6 @@
 #'   .registry = ADNIMERGE2::REGISTRY
 #' )
 #' }
-#' @seealso \code{\link{get_adni_screen_date}()}
 #' @rdname get_adni_enrollment
 #' @family ADNI specific functions
 #' @keywords adni_enroll_fun
@@ -82,7 +81,7 @@ get_adni_enrollment <- function(.registry) {
 #' \strong{Multiple Screening Visit}: Accounts for multiple screening stage,
 #'  particularly in \code{ADNIGO} and \code{ADNI2} study phases.
 #'
-#' @param .registry Data.frame of \code{\link{REGISTRY}()} eCRF
+#' @param .registry Data.frame of \code{\link{REGISTRY}} eCRF
 #' @param phase Either \code{Overall} or phase-specific screening date, Default: 'Overall'
 
 #' @param multiple_screen_visit
@@ -131,7 +130,6 @@ get_adni_enrollment <- function(.registry) {
 #'   multiple_screen_visit = FALSE
 #' )
 #' }
-#' @seealso \code{\link{get_adni_enrollment}()}
 #' @rdname get_adni_screen_date
 #' @family ADNI specific functions
 #' @keywords adni_enroll_fun
@@ -269,7 +267,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 #'   See examples for more information.
 #' }
 #'
-#' @param .dxsum Data.frame of \code{\link{DXSUM}()} eCRF
+#' @param .dxsum Data.frame of \code{\link{DXSUM}} eCRF
 #' @param visit_type
 #'  Either \code{baseline} or \code{screen} diagnostic status, Default: 'baseline'
 #' @param phase
@@ -422,11 +420,11 @@ check_overall_phase <- function(phase) {
 #' This function is used to extract death records in the study based on the
 #' adverse events and disposition records.
 #' @param .adverse
-#'  Adverse events record for ADNI3-4 study phase, see \code{\link{ADVERSE}()}
+#'  Adverse events record for ADNI3-4 study phase, see \code{\link{ADVERSE}}
 #' @param .recadv
-#'  Adverse events record for ADNI1-GO-2, see \code{\link{RECADV}()}
+#'  Adverse events record for ADNI1-GO-2, see \code{\link{RECADV}}
 #' @param .studysum
-#'   Dispositions record for ADNI3-4, see \code{\link{STUDYSUM}()}
+#'   Dispositions record for ADNI3-4, see \code{\link{STUDYSUM}}
 #' @return A data.frame with the following columns:
 #' \itemize{
 #'  \item {\code{RID}}: Subject ID
@@ -531,10 +529,10 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
 # Get Discontinuation Flag -----
 #' @title Study Discontinuation Flag
 #' @description This function is used to get early discontinuation list in ADNI study.
-#'   Based on the \code{\link{REGISTRY}()} eCRF for ADNI1-GO-2 and
+#'   Based on the \code{\link{REGISTRY}} eCRF for ADNI1-GO-2 and
 #'   \code{\link{STUDYSUM}} eCRF for ADNI3-4.
-#' @param .registry Registry record for ADNI1-GO-2, see \code{\link{REGISTRY}()}
-#' @param .studysum Disposition record for ADNI3-4, see \code{\link{STUDYSUM}()}
+#' @param .registry Registry record for ADNI1-GO-2, see \code{\link{REGISTRY}}
+#' @param .studysum Disposition record for ADNI3-4, see \code{\link{STUDYSUM}}
 #' @return A data.frame with the following columns:
 #' \itemize{
 #'  \item {\code{RID}}: Subject ID
@@ -656,7 +654,7 @@ get_disposition_flag <- function(.registry, .studysum) {
 #' }
 #' @seealso
 #'  \code{\link{get_baseline_vistcode}()}
-#'  \code{\link{VISITS}()}
+#'  \code{\link{VISITS}}
 #' @rdname get_screen_vistcode
 #' @family ADNI visit codes
 #' @keywords adni_utils
@@ -680,7 +678,7 @@ get_screen_vistcode <- function(type = "all") {
 #' }
 #' @seealso
 #'  \code{\link{get_screen_vistcode}()}
-#'  \code{\link{VISITS}()}
+#'  \code{\link{VISITS}}
 #' @rdname get_baseline_vistcode
 #' @keywords adni_utils
 #' @family ADNI visit codes

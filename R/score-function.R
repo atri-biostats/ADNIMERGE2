@@ -1,9 +1,9 @@
 # NEUROBAT Scoring Function -----
 #' @title Scoring Function for NEUROBAT Sub-items
 #' @description
-#'  This function is used to compute item-level subscore in \code{\link{NEUROBAT}()} eCRF.
+#'  This function is used to compute item-level subscore in \code{\link{NEUROBAT}} eCRF.
 #'  Please see the \code{Value} section for item-level score description.
-#' @param .neurobat Data.frame of \code{\link{NEUROBAT}()} eCRF
+#' @param .neurobat Data.frame of \code{\link{NEUROBAT}} eCRF
 #' @return A data frame the same as \code{.neurobat} with the following appended columns
 #'   \item{LIMMTOTL }{Logical Memory - Immediate Recall Score: Between 0 and 25}
 #'   \item{LDELTOTL }{Logical Memory - Delayed Recall Score: Between 0 and 25}
