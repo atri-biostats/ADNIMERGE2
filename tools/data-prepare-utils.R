@@ -535,6 +535,11 @@ adjust_code_labels <- function(.datadic, phaseVar = "PHASE", codeVar = "CODE", t
           pull(renamed_list)
       ),
       all_of(column_list_dd$specified_name_list)
+    ) %>%
+    # Replacing double braces
+    mutate(
+      text_var = str_replace_all(text_var, "\\{\\{", "\\emph{"),
+      text_var = str_replace_all(text_var, "\\}\\}", "}")
     )
 
   if (nrow(.datadic) > 1) {
@@ -868,7 +873,7 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
 
 #' @title Update Specific Character in Coded Values (Prefix)
 #' @description
-#'  This function is used to add prefix on the data dictionary (`DATADIC`)
+#'  This function is used to add prefix on the data dictionary \code{DATADIC}
 #'  coded values to match values in the actual data.
 #' @param .datadic
 #'  Data dictionary dataset created using
