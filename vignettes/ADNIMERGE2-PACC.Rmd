@@ -495,7 +495,7 @@ pacc_data_dic %>%
 
 # Baseline Modified-PACC Score
 
-The following r chunks show how to get a baseline PACC composite scores based on the `PACC` data. Similar result can be obtained using [`ADSL`](../reference/ADSL.html) or [`ADQS`](../reference/ADQS.html) datasets. For more information regarding how to get the baseline PACC scores from those derived dataset, please see [ADNI-Enrollment](../articles/ADNI-Enrollment.html) and [ADNIMERGE2-Analysis-Data]() articles.
+The following r chunks show how to get a baseline PACC composite scores based on the `PACC` data. Similar result can be obtained using [`ADSL`](../reference/ADSL.html) or [`ADQS`](../reference/ADQS.html) datasets. For more information regarding how to get the baseline PACC scores from those derived dataset, please see [ADNI-Enrollment](../articles/ADNI-Enrollment.html) and [ADNIMERGE2-Analysis-Data](../articles/ADNIMERGE2-Analysis-Data.html) articles.
 
 ```{r bl-pacc}
 # Modified PACC using DSS score
