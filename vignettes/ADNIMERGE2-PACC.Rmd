@@ -152,16 +152,6 @@ pacc_data_dic <- bind_rows(
     TYPE = "date"
   ),
   c(
-    FLDNAME = "PACC_VISDATE",
-    LABEL = "PACC Collection/Visit Date",
-    TYPE = "date",
-    TEXT = paste0(
-      "Either common date across non-missing PACC component ",
-      "collection date, the maximum relative date or the corresponding ",
-      "study visit date when all component collection date is not available."
-    )
-  ),
-  c(
     FLDNAME = "ADASQ4SCOREZ",
     LABEL = "ADAS Q4 Standardized Score",
     TYPE = "numeric",
@@ -200,12 +190,22 @@ pacc_data_dic <- bind_rows(
   ),
   c(
     FLDNAME = "LOG.TRABSCORZ",
-    LABEL = "Logical Memory - Delayed Recall Log Standardized Score",
+    LABEL = "Logarithm Trials B Standardized Score",
     TYPE = "numeric",
     TEXT = paste0(
       "Standardized by corresponding log transformed baseline score among ",
       "cognitive normal (CN) new enrollee in ADNI study. ",
       "Also adjusted for directional effect (i.e. multiplied by -1)"
+    )
+  ),
+  c(
+    FLDNAME = "PACC_VISDATE",
+    LABEL = "PACC Collection/Visit Date",
+    TYPE = "date",
+    TEXT = paste0(
+      "Either common date across non-missing PACC component ",
+      "collection date, the maximum relative date or the corresponding ",
+      "study visit date when all component collection date is not available."
     )
   ),
   c(
