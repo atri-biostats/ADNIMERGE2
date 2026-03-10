@@ -410,7 +410,7 @@ pacc_input_data_wide <- pacc_input_data_wide %>%
 
 ## Component Baseline Score Summaries 
 
-The next step is to calculate component specific baseline summaries that will be used to normalize component score. This baseline summary is based on user-defined standardization population. Here, we define the standardization population as follows:
+The next step is to calculate component specific baseline summaries that will be used to normalize component score. This baseline statistic can be calculated based on user-defined standardization population. Here, we define the standardization population as follows:
 
 * New enrolled subject in ADNI study
 
@@ -448,15 +448,19 @@ pacc_component_bl.summary %>%
 ```
 ## Compute PACC Score 
 
-The composite PACC score is the sum of the standardized component scores adjusted by the number of components. The following two conditions are required to be checked before computing the PACC score.
+The composite PACC score is the sum of standardized component scores adjusted by the number of components. The following conditions are required to be checked before computing the PACC score.
 
 * `Trials B` Measurement Scale: To identify whether the score is in a logarithm scale. For example, the `Trials B` score is not in a logarithm scale. We need either to map the raw score values to logarithm scale prior to using a scoring function or to specify an argument that allows us to perform a logarithm transformation inside a scoring function.
+
+* Standardized Components Score: Each component scores are normalized.
 
 * Standardized Component Directional Effect: To verify the same directional effect across standardized component score, and reoriented standardized component scores as needed since the composite score is the sum of these standardized scores. In ADNI study, `ADAS-cog Q4` and `Trials B` scores have opposite directional effect compared to the remaining PACC component scores. Higher values of those two components indicates worse condition. Thus, the directional effect of those two standardized components are required to be re-oriented as the remaining components. As a result, higher values of the composite score would indicate better condition/higher performance in cognition.
 
 * Number of Missing Components: The composite score is only calculated when at least *two* components are non-missing at a given study visit per subject.
 
-The `ADNIMERGE2::compute_pacc_score` function can be used to compute the two modified composite PACC scores in ADNI study. The next r chunk shows how to calculate the PACC composite score based on a wide format input component score, a standardization baseline summary, and with a logarithm transformation of `Trials B` score inside in the scoring function.
+The `ADNIMERGE2::compute_pacc_score` function can be used to compute the two modified composite PACC scores in ADNI study. Each each component scores are mean centered and divided by the baseline sample standard deviation of that component to create standardized z scores (@donohue2014preclinical).
+
+The next r chunk shows how to calculate the PACC composite score based on a wide format input component score, a standardization baseline summary, and with a logarithm transformation of `Trials B` score inside in the scoring function.
 
 ```{r compute-pacc-score}
 PACC <- compute_pacc_score(
