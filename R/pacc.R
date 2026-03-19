@@ -60,7 +60,7 @@
 #'   \item Trails B Score, see see \code{TRABSCOR} score in \code{\link{NEUROBAT}()}
 #' }
 #'
-#' @param rescale_trialsB A Boolean value to change the \code{Trails B} score in log scale, Default: TRUE
+#' @param rescale_trailsB A Boolean value to change the \code{Trails B} score in logarithm scale, Default: TRUE
 #'
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
@@ -185,7 +185,7 @@
 compute_pacc_score <- function(.data,
                                bl.summary,
                                componentVars,
-                               rescale_trialsB = FALSE,
+                               rescale_trailsB = FALSE,
                                keepComponents = FALSE,
                                wideFormat = TRUE,
                                varName = NULL,
@@ -193,7 +193,7 @@ compute_pacc_score <- function(.data,
                                idCols = NULL) {
   mPACCdigit <- mPACCtrailsB <- NULL
   check_object_type(keepComponents, "logical")
-  check_object_type(rescale_trialsB, "logical")
+  check_object_type(rescale_trailsB, "logical")
   check_object_type(wideFormat, "logical")
 
   var_names <- componentVars
@@ -269,8 +269,8 @@ compute_pacc_score <- function(.data,
     strict = TRUE
   )
 
-  # Log transformed Trial B score
-  if (!rescale_trialsB) {
+  # Log transformed Trails B score
+  if (!rescale_trailsB) {
     trailB_score <- .data_wide %>%
       select(all_of(var_names[5])) %>%
       pull()
@@ -278,12 +278,12 @@ compute_pacc_score <- function(.data,
     if (any(trailB_score < 0)) {
       cli::cli_abort(
         message = c(
-          "{.var trailB_score} represents the Trial B score. \n",
+          "{.var trailB_score} represents Trails B score. \n",
           paste0(
             "{.var trailB_score} must not contains any negative value for",
             " log rescale/transformation. \n"
           ),
-          "Do you want to set {.var rescale_trialsB} = {.val {FALSE}}?"
+          "Do you want to set {.var rescale_trailsB} = {.val {FALSE}}?"
         )
       )
     }
@@ -291,16 +291,16 @@ compute_pacc_score <- function(.data,
 
   .data_wide <- .data_wide %>%
     {
-      if (rescale_trialsB) {
-        # Create log transformation for Trial B Scores
-        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG.{col}"))
+      if (rescale_trailsB) {
+        # Create log transformation for Trails B scores
+        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG_{col}"))
       } else {
         (.)
       }
     }
 
-  if (rescale_trialsB) {
-    var_names[5] <- paste0("LOG.", var_names[5])
+  if (rescale_trailsB) {
+    var_names[5] <- paste0("LOG_", var_names[5])
   }
 
   # Check for any pre-existing standardized variables
@@ -322,9 +322,9 @@ compute_pacc_score <- function(.data,
   .data_wide <- .data_wide %>%
     mutate(across(all_of(var_names),
       ~ {
-        # Adjust for LOG.trialB score
-        if (rescale_trialsB) {
-          col_name <- gsub("LOG\\.", "", cur_column())
+        # Adjust for LOG_trailsB score
+        if (rescale_trailsB) {
+          col_name <- gsub("LOG\\_", "", cur_column())
         } else {
           col_name <- cur_column()
         }
