@@ -87,6 +87,11 @@ pacc_data_dic <- bind_rows(
     TYPE = "character"
   ),
   c(
+    FLDNAME = "PTID",
+    LABEL = "Participant ID",
+    TYPE = "character"
+  ),
+  c(
     FLDNAME = "RID",
     LABEL = "Subject Identifier",
     TYPE = "numeric"
@@ -288,7 +293,7 @@ The following r chuck demonstrate how the screening-baseline visit adjustment is
 
 ```{r adjust-scbl}
 # Adjustment of screening-baseline record
-id_vars <- c("COLPROT", "RID", "VISCODE", "SCORE_SOURCE")
+id_vars <- c("COLPROT", "PTID", "RID", "VISCODE", "SCORE_SOURCE")
 
 ## MMSE ----
 pacc_mmse_long <- pacc_mmse_long %>%
@@ -347,7 +352,7 @@ pacc_input_data_wide <- pacc_input_data_long %>%
     names_from = SCORE_SOURCE,
     values_from = SCORE_VISDATE
   ) %>%
-  assert_uniq(all_of(c("COLPROT", "RID", "VISCODE"))) %>%
+  assert_uniq(all_of(c("COLPROT", "PTID", "RID", "VISCODE"))) %>%
   mutate(across(all_of(pacc_component), ~ strsplit(as.character(.), "-/"))) %>%
   unnest_wider(all_of(pacc_component), names_sep = "_") %>%
   rename_with(~ str_remove_all(.x, "\\_1$"), starts_with(pacc_component)) %>%
@@ -429,7 +434,8 @@ pacc_component_bl <- pacc_input_data_wide %>%
   filter(ORIGPROT == COLPROT) %>%
   filter(VISCODE %in% get_baseline_vistcode()) %>%
   ungroup() %>%
-  assert_uniq(RID)
+  assert_uniq(RID) %>%
+  assert_uniq(PTID)
 
 pacc_component_bl.summary <- compute_score_summary(
   .data = pacc_component_bl,
@@ -483,6 +489,11 @@ PACC <- PACC %>%
     .labels = pacc_data_dic$LABEL,
     .strict = TRUE
   )
+```
+
+```{r checks include=FALSE}
+PACC <- PACC %>%
+  assert_non_missing(all_of(c("PTID", "RID", "VISCODE", "COLPROT", "ORIGPROT")))
 ```
 
 <details>

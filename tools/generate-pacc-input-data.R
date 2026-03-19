@@ -71,6 +71,12 @@ adas_q4score_adni13 <- ADNIMERGE::adas %>%
     VISCODE2 = VISCODE, DONE, NDREASON,
     DATE, Q4TASK, Q4UNABLE, Q4SCORE
   ) %>%
+  # To add PTID
+  left_join(
+    ADNIMERGE2::ADAS %>%
+      distinct(PTID, RID),
+    by = "RID"
+  ) %>%
   set_as_tibble() %>%
   # Trying to remap visitcode2 to the original visit code
   left_join(
@@ -89,7 +95,8 @@ adas_q4score_adni13 <- ADNIMERGE::adas %>%
 adni4_adas_q4score <- ADNI4::adas_score %>%
   ADNI4::create_common_cols() %>%
   ADNI4::derive_site_id() %>%
-  select(COLPROT, RID, VISCODE, done, ndreason, date, q4task, q4unable, q4score) %>%
+  ADNI4::remove_site_records() %>%
+  select(COLPROT, PTID, RID, VISCODE, done, ndreason, date, q4task, q4unable, q4score) %>%
   set_as_tibble() %>%
   left_join(
     ADNI4::registry %>%
@@ -105,18 +112,19 @@ adni4_adas_q4score <- ADNI4::adas_score %>%
 pacc_adas_q4score <- bind_rows(adas_q4score_adni13, adni4_adas_q4score) %>%
   rename("VISDATE" = DATE) %>%
   rename_with(~ paste0("ADAS_", .x), any_of(c("DONE", "NDREASON"))) %>%
-  check_unique_record()
+  check_unique_record() %>%
+  assert_non_missing(all_of(c("PTID", "VISCODE")))
 
 pacc_adas_q4score_long <- pacc_adas_q4score %>%
   mutate(
     SCORE = Q4SCORE,
     SCORE_SOURCE = "ADASQ4SCORE"
   ) %>%
-  select(COLPROT, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
+  select(COLPROT, PTID, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
 
 ## MMSE from ADNIMERGE2 -----
 pacc_mmse <- MMSE %>%
-  select(COLPROT, RID, VISCODE, VISDATE, DONE, NDREASON, MMSCORE) %>%
+  select(COLPROT, PTID, RID, VISCODE, VISDATE, DONE, NDREASON, MMSCORE) %>%
   set_as_tibble() %>%
   convert_f_viscode_to_sc() %>%
   rename_with(~ paste0("MMSE_", .x), any_of(c("DONE", "NDREASON"))) %>%
@@ -127,7 +135,7 @@ pacc_mmse_long <- pacc_mmse %>%
     SCORE = MMSCORE,
     SCORE_SOURCE = "MMSE"
   ) %>%
-  select(COLPROT, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
+  select(COLPROT, PTID, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
 
 ## NEUROBAT from ADNIMERGE2 -----
 # Includes: Trial B Score: `TRABSCOR`
@@ -135,13 +143,16 @@ pacc_mmse_long <- pacc_mmse %>%
 #           Digit Symbol Substitution Test Score: `DIGITSCR`
 
 pacc_neurobat <- NEUROBAT %>%
-  select(COLPROT, RID, VISCODE, VISDATE, LDELTOTL = LDELTOTAL, DIGITSCR = DIGITSCOR, TRABSCOR) %>%
+  select(
+    COLPROT, PTID, RID, VISCODE, VISDATE,
+    LDELTOTL = LDELTOTAL, DIGITSCR = DIGITSCOR, TRABSCOR
+  ) %>%
   set_as_tibble() %>%
   convert_f_viscode_to_sc() %>%
   check_unique_record()
 
 pacc_neurobat_long <- pacc_neurobat %>%
-  select(COLPROT, RID, VISCODE, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
+  select(COLPROT, PTID, RID, VISCODE, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
   pivot_longer(
     cols = all_of(c("LDELTOTL", "DIGITSCR", "TRABSCOR")),
     values_to = "SCORE",
