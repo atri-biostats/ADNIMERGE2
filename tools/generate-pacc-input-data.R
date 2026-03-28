@@ -44,24 +44,6 @@ check_unique_record <- function(.data) {
   return(.data)
 }
 
-#' @title Adjust Screening Visit Code in ADNI1 Phase
-#' @description
-#' This function is used to convert screen failure visit code \code{f} into
-#' screening visit \code{sc} for records in ADNI phase.
-#' @param .data A data.frame
-#' @return A data.frame
-#' @rdname convert_f_viscode_to_sc
-#' @importFrom dplyr mutate case_when across
-#' @importFrom tidyselect all_of
-
-convert_f_viscode_to_sc <- function(.data, visitVar = "VISCODE") {
-  require(dplyr)
-  require(tidyselect)
-  .data <- .data %>%
-    mutate(across(all_of(visitVar), ~ case_when(.x %in% "f" ~ "sc", TRUE ~ .x)))
-  return(.data)
-}
-
 # Prepare input data -----
 ## Get ADAS - Delayed Word Recall Score/Q4 sub-score -----
 ### For ADNI1-3 phases

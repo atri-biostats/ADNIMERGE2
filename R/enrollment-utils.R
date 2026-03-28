@@ -686,3 +686,32 @@ get_screen_vistcode <- function(type = "all") {
 get_baseline_vistcode <- function() {
   return(c("bl", "v03", "4_bl"))
 }
+
+#' @title Adjust screening visit code in ADNI1 phase
+#' @description
+#'   This function is used to convert screen fail visit code \code{f} into
+#'   actual screening visit \code{sc} code across records in \code{ADNI1} phase.
+#' @param .data A data.frame
+#' @param code_var
+#'       Visit code column name.
+#'       By default, 'VISCODE' column will be used.
+#' @return A data.frame
+#'
+#' @examples
+#' \dontrun{
+#' convert_f_viscode_to_sc(
+#'   .data = ADNIMERGE2::REGISTRY,
+#'   code_var = "VISCODE"
+#' )
+#' }
+#'
+#' @rdname convert_f_viscode_to_sc
+#' @keywords adni_utils
+#' @export
+#' @importFrom dplyr mutate case_when across
+#' @importFrom tidyselect all_of
+
+convert_f_viscode_to_sc <- function(.data, code_var = "VISCODE") {
+  .data <- .data %>%
+    mutate(across(all_of(code_var), ~ ifelse(.x %in% "f", "sc", .x)))
+}
