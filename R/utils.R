@@ -1812,7 +1812,5 @@ load_csv_files <- function(input_dir = NULL, full_file_path = NULL, .envr = NULL
     ),
     seq_along(names(combined_data_file))
   )
-  cli::cli_alert_success(
-    text = success_text
-  )
+  cli::cli_alert_success(text = success_text)
 }

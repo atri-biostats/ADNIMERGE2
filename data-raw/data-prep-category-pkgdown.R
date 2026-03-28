@@ -135,4 +135,4 @@ readr::write_csv(
   file = file.path(dataset_cat_dir, "dataset_category.csv")
 )
 
-cli::cli_alert_info(text = "Completed generating dataset category for pkdown!")
+cli::cli_alert_info(text = "Completed generating dataset category for {.val pkgdown}!")

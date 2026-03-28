@@ -1034,7 +1034,7 @@ set_as_tibble <- function(.data) {
   return(.data)
 }
 
-# Baseline record adjustment from screening visit -----
+## Baseline record adjustment from screening visit -----
 #' @title Carrying Forward Screening Record as Baseline Record
 #'
 #' @description
