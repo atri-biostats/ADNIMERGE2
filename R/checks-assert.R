@@ -115,3 +115,57 @@ is_datadict_tbl <- function(x) {
   }
   invisible(x)
 }
+
+
+# Check named list object -----
+#' @title Checks a named list object
+#' @description
+#'  This function is used to check whether a provided object is a named list and
+#'  the list names are a valid non-missing names.
+#'
+#' @param obj A list object
+#' @param list_names
+#'    A character vector of list names.
+#'    By default, it is missing (\code{'NULL'}).
+#' @param arg see \code{\link{rlang}{caller_arg}}
+#' @param call see \code{\link{rlang}{caller_env}}
+#' @return
+#'  An invisible object. Otherwise, an error message if there is any missing or
+#'  mismatch names in the list object when comparing with pre-specified name list.
+#' @rdname check_list_names
+#' @keywords utils_fun
+#' @importFrom cli cli_abort
+#' @importFrom rlang call_args caller_env
+
+check_list_names <- function(obj, list_names = NULL, arg = rlang::caller_arg(obj), call = rlang::caller_env()) {
+  check_object_type(obj, "list")
+  # Checking for any unnamed list
+  unnamed_status <- c(is.null(names(obj)), is.na(names(obj)))
+  if (any(unnamed_status == TRUE)) {
+    cli_abort(
+      message = c(
+        "{.arg {arg}} must be fully named list object. \n",
+        "{.arg {arg}} contains unnamed list object."
+      ),
+      call = call
+    )
+  }
+
+  # Checking for any misspelled/omitted list names
+  if (all(is.null(list_names))) missing_names <- NULL
+
+  if (any(!is.null(list_names))) {
+    missing_names <- list_names[!list_names %in% names(obj)]
+  }
+  if (length(missing_names) > 0) {
+    cli_abort(
+      message = c(
+        "{.arg {arg}} contain unnamed list value. \n",
+        "Can't find {.val {missing_names}} names{?s} {?is/are} in {.arg {arg}}."
+      ),
+      call = call
+    )
+  }
+
+  invisible(obj)
+}
