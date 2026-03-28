@@ -484,6 +484,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
     assert(is.character, SAEDEATH) %>%
     filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
     select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
+    distinct() %>%
     assert_uniq(RID)
 
   # Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
