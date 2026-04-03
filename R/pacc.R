@@ -66,8 +66,7 @@
 #'     
 #' @param rescale_trialsB `r lifecycle::badge("deprecated")` the same as 
 #'    `rescale_trailsB` argument. Note: Deprecated in version 0.1.2. 
-#'     The `rescale_trialsB` argument 
-#'     will be removed in a future release. 
+#'     The `rescale_trialsB` argument will be removed in a future release. 
 #'     
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
@@ -213,17 +212,8 @@ compute_pacc_score <- function(.data,
   }
   check_object_type(rescale_trailsB, "logical")
   check_object_type(wideFormat, "logical")
-  
+  check_vector_length(componentVars, 5)
   var_names <- componentVars
-  if (length(var_names) != 5) {
-    cli::cli_abort(
-      message = c(
-        "{.var var_name} must be length of 5. \n",
-        "{.val {var_name}} are provided"
-      )
-    )
-  }
-  
   if (!all(var_names %in% bl.summary$VAR)) {
     cli::cli_abort(
       message = c(
@@ -845,32 +835,6 @@ calculate_zscore <- function(x, mean, sd) {
 }
 
 # Utility functions ----
-#' @title Check for non-missing value
-#' @param x Input value
-#' @return A stop error if the value is missing value \code{'NULL'}
-#' @examples
-#' \dontrun{
-#' check_non_missing_value(x = LETTERS[1:10])
-#' check_non_missing_value(x = NULL)
-#' }
-#' @rdname check_non_missing_value
-#' @family checks function
-#' @keywords utils_fun
-#' @importFrom cli cli_abort
-#' @export
-
-check_non_missing_value <- function(x) {
-  if (is.null(x)) {
-    cli::cli_abort(
-      message = c(
-        "{.var x} must not be missing value."
-      )
-    )
-  }
-  invisible(x)
-}
-
-
 ## Get variable common date -----
 #' @title Get Common Date Across Variables
 #'
