@@ -26,10 +26,10 @@ knitr::opts_chunk$set(
   eval = TRUE
 )
 # Data print function
-datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
+datatable <- function(data, paging = FALSE, searching = TRUE, bInfo = FALSE, ...) {
   DT::datatable(
     data = data, ...,
-    options = list(paging = paging, searchable = searchable, bInfo = bInfo, ...)
+    options = list(paging = paging, searching = searching, bInfo = bInfo, ...)
   )
 }
 ```

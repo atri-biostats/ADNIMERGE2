@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 )
 options(rmarkdown.html_vignette.check_title = FALSE)
 # Data print function
-datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
+datatable <- function(data, paging = FALSE, searching = TRUE, bInfo = FALSE, ...) {
   DT::datatable(
     data = data, ...,
     options = list(
-      paging = paging, searchable = searchable, bInfo = bInfo,
+      paging = paging, searching = searching, bInfo = bInfo,
       ...
     )
   )
@@ -97,7 +97,7 @@ bind_rows(
     `Package Source` = source,
     `Description` = text
   ) %>%
-  datatable(searchable = FALSE, bInfo = FALSE)
+  datatable(searching = FALSE, bInfo = FALSE)
 ```
 
 ```{r system-utils, purl = FALSE, echo = TRUE, eval = TRUE}
