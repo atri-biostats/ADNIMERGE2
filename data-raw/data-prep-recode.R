@@ -21,9 +21,9 @@ updated_data_dic_path <- file.path("./data-raw/updated_datadic", "UPDATED_DATADI
 data_path_list <- data_path_list[!data_path_list == data_dic_path]
 
 # Input Args ----
-args <- commandArgs(trailingOnly = TRUE)
-check_arg(args, 1)
-USE_UPDATED_DATADIC <- as.logical(args)
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 1)
+USE_UPDATED_DATADIC <- as.logical(arg_list)
 check_arg_logical(USE_UPDATED_DATADIC)
 
 if (USE_UPDATED_DATADIC) {
@@ -104,8 +104,7 @@ if (EXISTED_DATADTIC) {
     mutate(excluded_fld_name = case_when(
       (TBLNAME %in% c("RECCMEDS", "TREATDIS", "ALIQUOT_COUNT") |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
-        (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIJ") |
-        (TBLNAME %in% "NPIQ" & FLDNAME %in% "NPIK") |
+        (TBLNAME %in% "NPIQ" & FLDNAME %in% c("NPIA", "NPIJ", "NPIK")) |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
         (TBLNAME %in% "TAUQC" & FLDNAME %in% "PROCERR") |
         (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS") |

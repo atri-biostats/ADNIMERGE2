@@ -223,17 +223,18 @@ adjust_lab_comment <- function(lab_data) {
 #' }
 #' @rdname get_biomarker_details
 #' @export
-#' @importFrom tidyr expand_grid
-#' @importFrom tibble tibble
-#' @importFrom dplyr mutate
 #' @importFrom rlang arg_match0
+#' @importFrom tibble tibble
+#' @importFrom dplyr mutate across case_when select
+#' @importFrom tidyselect ends_with
+#' @importFrom tidyr expand_grid
+#' @importFrom stringr str_detect str_remove_all
 #' @importFrom assertr assert not_na
-#' @importFrom stringr str_remove_all
 get_biomarker_details <- function(assay = "Roche") {
   rlang::arg_match0(arg = assay, values = c("C2N", "Roche", "AlzBio3", "FQ"))
   LBTESTCD <- LBTEST <- LBNAM <- LBMETHOD <- LBORRESU <- LBSTRESU <- NULL
   LBORNRLO <- LBORNRHI <- LBSTNRLO <- LBSTNRHI <- LBSPEC <- NULL
-  if (assay %in% "C2N") {
+  if (assay == "C2N") {
     BIOMARKER_DATA_LIMITU <- tibble::tibble(
       LBTESTCD = c("AB40", "AB42", "AB42AB40", "APS2", "NPT217", "PT217", "PTNPT217"),
       LBTEST = c(
@@ -257,7 +258,7 @@ get_biomarker_details <- function(assay = "Roche") {
         )
       ))
   }
-  if (assay %in% "Roche") {
+  if (assay == "Roche") {
     # test batch
     batch_list <- c(
       "ADNI1/GO/2 batch", "ADNI3 1st batch",
@@ -287,7 +288,7 @@ get_biomarker_details <- function(assay = "Roche") {
         SOURCE = "UPENNBIOMK_ROCHE_ELECSYS"
       )
   }
-  if (assay %in% "AlzBio3") {
+  if (assay == "AlzBio3") {
     BIOMARKER_DATA_LIMITU <- tidyr::expand_grid(
       tibble::tibble(
         LBTESTCD = c("ABETA42", "TPROT", "PTAU181"),
@@ -311,10 +312,10 @@ get_biomarker_details <- function(assay = "Roche") {
         LBSPEC = "PLASMA",
         SOURCE = "UPENNBIOMK_MASTER"
       ) %>%
-      dplyr::select(-ends_with("suffix"))
+      dplyr::select(-tidyselect::ends_with("suffix"))
   }
 
-  if (assay %in% "FQ") {
+  if (assay == "FQ") {
     BIOMARKER_DATA_LIMITU <- tibble::tibble(
       LBTESTCD = c(
         "PT217F", "AB42F", "AB40F", "AB42AB40F", "PT217AB42F", "NFLQ", "GFAPQ"

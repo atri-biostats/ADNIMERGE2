@@ -53,13 +53,13 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 
   if (add_url_link) {
     derived_data_artc <- paste0("<a href='", paste0(pkg_url, "/articles/ADNIMERGE2-Derived-Data.html"), "' target='_blank'>ADNIMERGE2 Derived Data</a>")
-    prep_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data_prep.R"), "' target='_blank'>data-prep.R</a>")
+    prep_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep.R"), "' target='_blank'>data-prep.R</a>")
     prep_recode_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep-recode.R"), "' target='_blank'>data-prep-recode.R</a>")
     document_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/document.R"), "' target='_blank'>document.R</a>")
     pacc_input_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/generate-pacc-input-data.R"), "' target='_blank'>generate-pacc-input-data.R</a>")
   } else {
     derived_data_artc <- "ADNIMERGE2-Derived-Data"
-    prep_url <- "data_prep.R"
+    prep_url <- "data-prep.R"
     prep_recode_url <- "data-prep-recode.R"
     document_url <- "document.R"
     pacc_input_url <- "generate-pacc-input-data.R"

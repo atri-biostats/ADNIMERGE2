@@ -9,18 +9,21 @@ library(assertr)
 library(cli)
 
 # Input args ----
-args <- commandArgs(trailingOnly = TRUE)
-check_arg(args, 2)
-DERIVED_DATASET_LIST <- split_concat_arg(args[1], FALSE)
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 2)
+DERIVED_DATASET_LIST <- split_concat_arg(arg = arg_list[1], single_char = FALSE)
 if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
-USE_UPDATED_DATADIC <- as.logical(args[2])
+USE_UPDATED_DATADIC <- as.logical(arg_list[2])
 check_arg_logical(USE_UPDATED_DATADIC)
 
 # Load all data from "./data" to .GlobalEnv ----
 data_dir <- "./data"
 data_path <- list.files(
-  path = data_dir, pattern = "\\.rda$", all.files = TRUE,
-  full.names = TRUE, recursive = FALSE
+  path = data_dir,
+  pattern = "\\.rda$",
+  all.files = TRUE,
+  full.names = TRUE,
+  recursive = FALSE
 )
 derived_data_path <- file.path(data_dir, str_c(c(DERIVED_DATASET_LIST, "DERIVED_DATADIC"), ".rda"))
 data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")

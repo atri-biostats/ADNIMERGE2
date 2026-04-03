@@ -1031,22 +1031,8 @@ detect_decimal_value <- function(value) {
 replace_values_phase_specific <- function(.data, fld_name, phase,
                                           phaseVar = "PHASE", code, decode) {
   phase_var <- NULL
-  if (length(fld_name) != 1) {
-    cli_abort(
-      message = c(
-        "{.var fld_name} must be a single character vector.",
-        "The length of {.va fld_name} is {.code length(fld_name)}."
-      )
-    )
-  }
-  if (length(phase) != 1) {
-    cli_abort(
-      message = c(
-        "{.var phase} must be a single character vector.",
-        "The length of {.var phase} is {.code length(phase)}."
-      )
-    )
-  }
+  check_vector_length(x = fld_name, size = 1)
+  check_vector_length(x = phase, size = 1)
   if (!is.na(phase)) {
     rlang::arg_match(
       arg = phase,
@@ -1130,7 +1116,7 @@ replace_values_phase_specific <- function(.data, fld_name, phase,
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
 #'  A list value associated with each ADNI study phase and the format will be
-#'   \emph{[phase_name]$values}.
+#'  `[phase_name]$values`.
 #' \itemize{
 #'   \item \emph{code}: Value that will be replaced, see more \code{\link{collect_value_mapping_single_var}()}
 #'   \item \emph{decode}: Values that will replace the coded values, \code{code}
@@ -1215,7 +1201,7 @@ replace_values_single_var <- function(.data, fld_name, phaseVar = "PHASE", input
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
 #'  A nested list values of each columns associated with corresponding ADNI
-#'  study phase and the format will be: [column_name][[phase_name]]$values
+#'  study phase and the format will be: `[column_name][[phase_name]]$values`
 #' \itemize{
 #'   \item \emph{code} Value that will be replaced
 #'   \item \emph{decode} Values that will replace coded value (\emph{code})
@@ -1320,13 +1306,13 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
   }
   column_list <- get_cols_value(.data = .data, value = value, col_name = col_name)
   column_list <- exclude_cols(x = column_list, exact_match = FALSE, exc_col = c("has\\_qc\\_error", "qc\\_flag"))
-  
+
   if (all(is.na(column_list))) {
     cli_alert_info(
       text = c("No variable contains {.val {value}} value")
     )
   }
-  
+
   # To make sure '-1' as missing values only in ADNI1 phases
   if (all(value %in% "-1" & "ADNI1" %in% phase & length(phase) > 1)) {
     cli_abort(
@@ -1336,7 +1322,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
       )
     )
   }
-  
+
   output_data <- .data %>%
     {
       if (all(is.na(column_list))) {
@@ -1355,7 +1341,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
         (.)
       }
     }
-  
+
   return(output_data)
 }
 
@@ -1391,7 +1377,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
 #' @importFrom cli cli_abort
 #' @importFrom stringr str_detect
 exclude_cols <- function(x,
-                         exc_col = c("has_qc_error", "qc_flag"), 
+                         exc_col = c("has_qc_error", "qc_flag"),
                          exact_match = TRUE) {
   check_object_type(exact_match, "logical")
   if (any(is.null(exc_col)) || any(is.na(exc_col))) {
@@ -1604,7 +1590,7 @@ check_value_match <- function(values,
 #' @title Checks Duplicated Records - Internal
 #' @description
 #'  This function is used to check for any duplicated records in a dataset
-#'  based on the combination of provided columns.
+#'  based on a combination of provided columns.
 #' @param .data Data.frame
 #' @param col_names Character vector of column names
 #' @param stop_message

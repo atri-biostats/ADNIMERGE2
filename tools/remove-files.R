@@ -3,12 +3,12 @@
 library(cli)
 
 # Input argument ----
-args <- commandArgs(trailingOnly = TRUE)
+arg_list <- commandArgs(trailingOnly = TRUE)
 source(file.path(".", "tools", "data-prepare-utils.R"))
-check_arg(args, 3)
-INPUT_DIR <- args[1]
-OUTPUT_DIR <- args[2]
-PATTERN <- args[3]
+check_arg(x = arg_list, size = 3)
+INPUT_DIR <- arg_list[1]
+OUTPUT_DIR <- arg_list[2]
+PATTERN <- arg_list[3]
 soure_file_list <- list.files(
   path = INPUT_DIR,
   pattern = PATTERN,

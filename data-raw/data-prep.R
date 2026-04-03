@@ -20,12 +20,12 @@ check_dir_list <- lapply(dir_list, function(dir) {
 
 # Data downloaded date arg parameter ----
 # Input arg parameter ----
-args <- commandArgs(trailingOnly = TRUE)
-check_arg(args, 2)
-DATA_DOWNLOADED_DATE <- args[1]
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 2)
+DATA_DOWNLOADED_DATE <- arg_list[1]
 check_arg_date(DATA_DOWNLOADED_DATE)
 
-UPDATE_DATADIC <- as.logical(args[2])
+UPDATE_DATADIC <- as.logical(arg_list[2])
 check_arg_logical(UPDATE_DATADIC)
 
 ## Data download stamped date
