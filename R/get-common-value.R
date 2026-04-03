@@ -13,17 +13,17 @@
 #'    By default, it is \code{quiet = FALSE}.
 #'
 #' @return
-#' A data.frame with the following appended column:
-#'
-#'   \item {\code{COM_VISCODE2}}: Column that contains common VISCODE2 value
+#'  A data.frame with an appended column:
+#'  \itemize{
+#'   \item {\code{COM_VISCODE2}}: Variable that contains common VISCODE2 value
+#'   }
 #'
 #' @examples
 #'
 #' # Please see an example in
-#' # \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}.
+#' vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")
 #'
-#' @seealso
-#'  [create_list_object()] [get_common_value()]
+#' @seealso \code{\link{get_common_value}()}
 #'
 #' @rdname get_common_viscode2
 #' @keywords adni_utils
@@ -31,8 +31,8 @@
 #' @importFrom rlang arg_match
 #' @importFrom cli cli_alert_info cli_inform
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr mutate row_number group_by across n_distinct case_when filter
-#' @importFrom dplyr ungroup left_join select rename_with
+#' @importFrom dplyr mutate filter group_by ungroup distinct n_distinct
+#' @importFrom dplyr case_when row_number left_join select across rename_with
 #' @importFrom tidyr nest unnest
 #' @importFrom assertr verify
 
@@ -86,7 +86,7 @@ get_common_viscode2 <- function(.data, id_cols, col_order, quiet = FALSE) {
   tmp_long <- .data %>%
     group_by(across(all_of(id_cols))) %>%
     mutate(
-      num_unique_value = n_distinct(across(all_of(viscode2_col))),
+      num_unique_value = n_distinct(across(all_of(viscode2_col)))
     ) %>%
     ungroup() %>%
     # Flag records with further data wrangling
@@ -116,7 +116,7 @@ get_common_viscode2 <- function(.data, id_cols, col_order, quiet = FALSE) {
     # Create a list value per group rows
     tmp_long_group$list_value <- apply(tmp_long_group, MARGIN = 1, FUN = function(x) {
       create_list_object(
-        .data = as_tibble(x[["nest_data"]]),
+        x = as_tibble(x[["nest_data"]]),
         col_names = nest_col
       )
     })
@@ -172,29 +172,25 @@ get_common_viscode2 <- function(.data, id_cols, col_order, quiet = FALSE) {
   output_data <- output_data %>%
     select(all_of(c(prev_cols, "COM_VISCODE2")))
 
-  # Adjust screen fail visit code of ADNI1 phase
-  output_data <- convert_f_viscode_to_sc(
-    .data = output_data,
-    code_var = "COM_VISCODE2"
-  )
-
   output_data
 }
 
 # Create list object -----
-#' @title Create list object
+#' @title Create list object from a data frame
 #'
 #' @description
-#'  This function is used to create a list object by converting two-column data frames.
-#'  The list object will be named based the first column values.
+#'  This function is used to create a list object by converting two-column data frame
+#'  based on [tibble::deframe] framework.
+#'  The list object will be named based on the first column values.
 #'
-#' @param .data A data.frame
+#' @param x A data.frame
 #' @param col_names Column names
 #'
 #' @return A named list object
 #'
 #' @details
-#' Please see [tibble::deframe()] for more information.
+#'
+#' Please see [tibble::deframe] for more information.
 #'
 #' @examples
 #'
@@ -205,32 +201,76 @@ get_common_viscode2 <- function(.data, id_cols, col_order, quiet = FALSE) {
 #' )
 #'
 #' # Create a list object
-#' create_list_object(
-#'   .data = example_data,
+#' deframe_as_list(
+#'   x = example_data,
+#'   col_names = NULL
+#' )
+#'
+#' deframe_as_list(
+#'   x = example_data,
 #'   col_names = c("SCORE_SOURCE", "VISCODE2")
 #' )
 #'
-#' @seealso [get_common_value()]
-#'
-#' @rdname create_list_object
-#' @keywords pacc_score_utils_fun adni_utils
-#' @importFrom rlang arg_match
+#' @seealso \code{\link{get_common_value}()}
+#' @name deframe_as_list
+#' @rdname deframe_as_list
+#' @keywords utils
 #' @importFrom dplyr select
 #' @importFrom tidyselect all_of
 #' @importFrom tibble deframe
+#' @export
+#'
+deframe_as_list <- function(x, col_names = NULL) {
+  if (any(!is.null(col_names))) {
+    x <- x %>%
+      dplyr::select(tidyselect::all_of(col_names))
+  }
+  x <- tibble::deframe(x = x)
+  x <- as.list(x)
+  x
+}
 
-create_list_object <- function(.data, col_names) {
-  check_object_type(.data, "data.frame")
+#' @title Create list object from a data frame
+#' @param x A data.frame
+#' @inheritParams deframe_as_list
+#' @inheritParams check_object_type
+#' @examples
+#' \dontrun{
+#' example_data <- tibble::tibble(
+#'   SCORE_SOURCE = c("ADASQ4SCORE", "MMSE", "LDELTOTL", "DIGITSCR", "TRABSCOR"),
+#'   VISCODE2 = c("bl", "sc", "bl", "bl", "bl")
+#' )
+#'
+#' # Without error message
+#' create_list_object(
+#'   x = example_data,
+#'   col_names = c("SCORE_SOURCE", "VISCODE2")
+#' )
+#'
+#' # With error message
+#' create_list_object(
+#'   x = example_data %>%
+#'     rename(`SCORE_VAR` = SCORE_SOURCE),
+#'   col_names = c("SCORE_SOURCE", "VISCODE2")
+#' )
+#' }
+#' @rdname create_list_object
+#' @keywords internal
+#' @importFrom rlang arg_match
+
+create_list_object <- function(x,
+                               col_names,
+                               arg = rlang::caller_arg(x),
+                               call = rlang::caller_env()) {
+  check_object_type(x, "data.frame", arg, call)
+  check_vector_length(col_names, 2, arg, call)
   pre_cols <- c("SCORE_SOURCE", "VISCODE2")
   rlang::arg_match(
     arg = col_names,
     values = pre_cols,
     multiple = TRUE
   )
-  list_value <- .data %>%
-    dplyr::select(tidyselect::all_of(pre_cols)) %>%
-    tibble::deframe()
-  list_value <- as.list(list_value)
+  list_value <- deframe_as_list(x = x, col_names = pre_cols)
   list_value
 }
 
@@ -260,8 +300,8 @@ create_list_object <- function(.data, col_names) {
 #'   VISCODE2 = c("bl", "sc", "bl", "bl", "bl")
 #' )
 #'
-#' list_value <- create_list_object(
-#'   .data = example_data,
+#' list_value <- deframe_as_list(
+#'   x = example_data,
 #'   col_names = c("SCORE_SOURCE", "VISCODE2")
 #' )
 #'
@@ -284,13 +324,14 @@ create_list_object <- function(.data, col_names) {
 #'   col_order = col_order
 #' )
 #'
-#' @seealso [create_list_object()]
+#' @seealso \code{\link{deframe_as_list}()}
 #' @rdname get_common_value
 #' @keywords pacc_score_utils_fun utils
 #' @importFrom cli cli_abort
+#' @export
 
 get_common_value <- function(list_value, col_order) {
-  check_list_names(obj = list_value)
+  check_list_names(list_value)
   if (length(list_value) > length(col_order)) {
     cli_abort(
       message = c(
@@ -305,9 +346,9 @@ get_common_value <- function(list_value, col_order) {
     non_ext_col <- col_order[!col_order %in% names(list_value)]
     cli_abort(
       message = c(
-        "x" = "Can't get at least one col in the list value. \n",
-        "i" = "Can't find column names {.val {non_ext_col}} in {.var list_value} \n",
-        "i" = "Ordered columns: {.val {col_order}} \n",
+        "x" = "Can't get at least one col in the list value.\n",
+        "i" = "Can't find column names {.val {non_ext_col}} in {.var list_value}\n",
+        "i" = "Ordered columns: {.val {col_order}}\n",
         "i" = "Column names in list value: {.val {names(list_value)}}"
       )
     )
