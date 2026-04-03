@@ -166,7 +166,7 @@ devtools::load_all("./")
 devtools::document()
 devtools::check(error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
 pkg_dir <- devtools::build(vignettes = INCLUDE_DERIVED_DATASET)
-install.packages(pkgs = pkg_dir, repos = NULL)
+install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
 
 # Build README.md ----
 # devtools::build_readme()
