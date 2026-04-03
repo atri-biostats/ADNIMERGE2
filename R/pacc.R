@@ -60,8 +60,15 @@
 #'   \item Trails B Score, see see \code{TRABSCOR} score in \code{\link{NEUROBAT}()}
 #' }
 #'
-#' @param rescale_trailsB A Boolean value to change the \code{Trails B} score in logarithm scale, Default: TRUE
-#'
+#' @param rescale_trailsB 
+#'     A Boolean value to change the \code{Trails B} score in logarithm scale. 
+#'     By default, `Trails B` score will be converted into a logarithm scale.
+#'     
+#' @param rescale_trialsB `r lifecycle::badge("deprecated")` the same as 
+#'    `rescale_trailsB` argument. Note: Deprecated in version 0.1.2. 
+#'     The `rescale_trialsB` argument 
+#'     will be removed in a future release. 
+#'     
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
 #' @param wideFormat A Boolean value whether the data.frame is in \code{wide} or \code{long} format, Default: TRUE
@@ -181,11 +188,13 @@
 #' @importFrom tidyr pivot_wider pivot_longer
 #' @importFrom tidyselect all_of any_of ends_with contains last_col
 #' @importFrom stats cor
+#' @importFrom lifecycle is_present deprecated deprecate_warn
 
 compute_pacc_score <- function(.data,
                                bl.summary,
                                componentVars,
                                rescale_trailsB = FALSE,
+                               rescale_trialsB = deprecated(),
                                keepComponents = FALSE,
                                wideFormat = TRUE,
                                varName = NULL,
@@ -193,9 +202,18 @@ compute_pacc_score <- function(.data,
                                idCols = NULL) {
   mPACCdigit <- mPACCtrailsB <- NULL
   check_object_type(keepComponents, "logical")
+  # Signal the `rescale_trialsB` deprecation to the user
+  if (lifecycle::is_present(rescale_trialsB)) {
+    deprecate_warn(
+      when = "0.1.2",
+      what = "compute_pacc_score(rescale_trialsB = )",
+      with = "compute_pacc_score(rescale_trailsB = )"
+    )
+    rescale_trailsB <- rescale_trialsB
+  }
   check_object_type(rescale_trailsB, "logical")
   check_object_type(wideFormat, "logical")
-
+  
   var_names <- componentVars
   if (length(var_names) != 5) {
     cli::cli_abort(
@@ -205,7 +223,7 @@ compute_pacc_score <- function(.data,
       )
     )
   }
-
+  
   if (!all(var_names %in% bl.summary$VAR)) {
     cli::cli_abort(
       message = c(
@@ -1222,9 +1240,9 @@ adjust_scbl_visitdate <- function(.data, .adj_scbl_data, date_col, check_col, ex
     temp_value <- get(i)
     if (length(temp_value) != 1) {
       cli_abort(
-        message = paste0(
-          "{.var {i}} must be a length of 1 character vector. \n",
-          "{.var {i}} contains {.val {temp_value}} value{?s}."
+        message = c(
+          "x" = "{.var {i}} must be a single character vector. \n",
+          "i" = "{.var {i}} contains {.val {temp_value}} value{?s}."
         )
       )
     }

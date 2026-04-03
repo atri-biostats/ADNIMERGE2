@@ -25,7 +25,8 @@ Imports:
   cli,
   readr,
   stats, 
-  bookdown
+  lifecycle,
+  bookdown,
 Suggests:
   knitr,
   tidyverse,
