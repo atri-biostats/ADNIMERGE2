@@ -15,9 +15,9 @@ source(file.path(".", "tools", "data-prepare-utils.R"))
 devtools::load_all("./")
 
 # Input Argument ----
-args <- commandArgs(trailingOnly = TRUE)
-check_arg(x = args, size = 1)
-DATA_DOWNLOADED_DATE <- as.Date(args[1])
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 1)
+DATA_DOWNLOADED_DATE <- as.Date(arg_list[1])
 check_arg_date(x = DATA_DOWNLOADED_DATE)
 verify_pkg_install(pkg = c("ADNI4", "ADNIMERGE"))
 # Compared with raw source dataset date
@@ -61,11 +61,15 @@ adas_q4score_adni13 <- ADNIMERGE::adas %>%
     relationship = "many-to-one",
     by = "RID"
   ) %>%
-  set_as_tibble() %>%
-  # Trying to remap visitcode2 to the original visit code
+  verify(nrow(.) == nrow(ADNIMERGE::adas)) %>%
+  set_as_tibble()
+
+adas_q4score_adni13 <- adas_q4score_adni13 %>%
+  # Trying to remap `VISCODE2` to the original visit code `VISCODE`
+  # Using ADAS table
   left_join(
     ADNIMERGE2::ADAS %>%
-      select(COLPROT, RID, VISCODE2, VISCODE, VISDATE) %>%
+      select(COLPROT, RID, VISCODE2, VISCODE = VISCODE, VISDATE) %>%
       set_as_tibble(),
     by = c("COLPROT", "RID", "VISCODE2")
   ) %>%
@@ -81,8 +85,11 @@ adni4_adas_q4score <- ADNI4::adas_score %>%
   ADNI4::create_common_cols() %>%
   ADNI4::derive_site_id() %>%
   ADNI4::remove_site_records() %>%
-  select(COLPROT, PTID, RID, VISCODE, done, ndreason, date, q4task, q4unable, q4score) %>%
   set_as_tibble() %>%
+  select(
+    COLPROT, PTID, RID, VISCODE, DONE,
+    NDREASON, DATE, Q4TASK, Q4UNABLE, Q4SCORE
+  ) %>%
   left_join(
     ADNI4::registry %>%
       ADNI4::create_common_cols() %>%
@@ -91,14 +98,43 @@ adni4_adas_q4score <- ADNI4::adas_score %>%
     by = c("RID", "VISCODE")
   ) %>%
   mutate(DATE = ifelse(is.na(DATE), EXAMDATE, DATE)) %>%
-  select(-EXAMDATE) %>%
+  select(-EXAMDATE)
+
+adni4_adas_q4score <- adni4_adas_q4score %>%
   # Add VISCODE2 from current ADAS score data
   left_join(
     ADNIMERGE2::ADAS %>%
       select(COLPROT, RID, VISCODE2, VISCODE) %>%
       set_as_tibble(),
     by = c("COLPROT", "RID", "VISCODE")
+  ) %>%
+  # Add VISCODE2 from REGISTRY
+  left_join(
+    ADNIMERGE2::REGISTRY %>%
+      select(COLPROT, RID, REGISTRY_VISCODE2 = VISCODE2, VISCODE) %>%
+      set_as_tibble(),
+    by = c("COLPROT", "RID", "VISCODE")
+  ) %>%
+  verify(nrow(.) == nrow(adni4_adas_q4score))
+
+# VISCODE2 mapping checks - ADNI4 phase
+mismatch_viscode2 <- adni4_adas_q4score %>%
+  mutate(across(contains("VISCODE"), ~ ifelse(is.na(.x), "", as.character(.x)))) %>%
+  filter(VISCODE2 != REGISTRY_VISCODE2)
+
+if (nrow(mismatch_viscode2) > 0) {
+  cli::cli_abort(
+    message = c(
+      "x" = paste0(
+        "Found mismatch {.var {'VISCODE2'}} mapping for ADNI4 phase while using ",
+        "{.var ADNIMERGE2::ADAS} and {.var ADNIMERGE2::REGISTRY} tables. \n"
+      ),
+      "i" = paste0("May required to account for 'VISCODE2' mapping for REGISTRY table.")
+    )
   )
+}
+adni4_adas_q4score <- adni4_adas_q4score %>%
+  select(-REGISTRY_VISCODE2)
 
 # Bind across study phases
 pacc_adas_q4score <- bind_rows(adas_q4score_adni13, adni4_adas_q4score) %>%
