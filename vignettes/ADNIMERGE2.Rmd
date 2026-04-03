@@ -51,7 +51,7 @@ library(ADNIMERGE2)
 
 ## Package Version 
 
-To get the package version, run ``r paste0('packageVersion(\"', pkgName,'\")')``. Please refer to [Version]('../news/index.html') for more detailed about changelog. 
+To get the package version, run ``r paste0('packageVersion(\"', pkgName,'\")')``. Please refer to [versions page](../news/index.html) for more detailed about changelog. 
 
 ## Package Source Data Date 
 
