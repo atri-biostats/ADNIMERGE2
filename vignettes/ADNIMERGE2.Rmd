@@ -43,15 +43,15 @@ To get access the package, it is required to submit an online application via LO
 
 To install the package locally, run ``r paste0("install.packages(\"path/to/", pkgFilename, "\", repos = NULL, type = \"source\")")``.
 
-# Package Version 
-
-To get the package version, run ``r paste0('packageVersion(\"', pkgName,'\")')`` after installing the R package locally. Please refer to [Version]('../news/index.html') for more detailed about changelog. 
-
 # Package Usage 
 
 ```{r study-pkg}
 library(ADNIMERGE2)
 ```
+
+## Package Version 
+
+To get the package version, run ``r paste0('packageVersion(\"', pkgName,'\")')``. Please refer to [Version]('../news/index.html') for more detailed about changelog. 
 
 ## Package Source Data Date 
 
