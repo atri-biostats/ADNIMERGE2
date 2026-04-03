@@ -98,7 +98,12 @@ pacc_data_dic <- bind_rows(
   ),
   c(
     FLDNAME = "VISCODE",
-    LABEL = "Study visit code",
+    LABEL = "Visit Code",
+    TYPE = "character"
+  ),
+  c(
+    FLDNAME = "VISCODE2",
+    LABEL = "Translated Visit Code",
     TYPE = "character"
   ),
   c(
@@ -249,7 +254,10 @@ pacc_data_dic <- bind_rows(
     TEXT = replace_na(TEXT, " "),
     DERIVED = TRUE,
     TBLNAME = "PACC",
-    CRFNAME = "[ Derived ] Modified Preclinical Alzheimer’s Cognitive Composite (PACC) Score"
+    CRFNAME = paste0(
+      "[ Derived ] Modified Preclinical ",
+      "Alzheimer’s Cognitive Composite (PACC) Score"
+    )
   )
 
 names(pacc_data_dic$LABEL) <- pacc_data_dic$FLDNAME
@@ -257,7 +265,7 @@ names(pacc_data_dic$LABEL) <- pacc_data_dic$FLDNAME
 
 ## Import Raw Datasets
 
-First, pre-processed raw datasets of PACC components from the `ADNIMERGE2` package are imported. These raw datasets were stored in `csv` format as external data in the package. The main rational of sourcing those as an external data is 1) not all PACC component score are yet available at the data-sharing platform, particularly the ADAS-Cog Q4 score, and 2) to reduce any potential additional package dependency during the `ADNIMERGE2` package build.
+First, prepared raw data of PACC components are imported. These raw datasets were stored in `*.csv` format as external data in the package. The main rational of sourcing those datasets as an external data is 1) not all PACC component scores are yet available at the data-sharing platform, particularly the ADAS-Cog Q4 score, and 2) to reduce any potential additional package dependency during `ADNIMERGE2` package build.
 
 In the next r chunk, all raw datasets are loaded to the current working environment using `load_csv_files()` function. 
 
@@ -289,7 +297,7 @@ These raw datasets are in a long format and presented as follow:
 
 * Given that some of the PACC component assessments are either not collected at baseline visit at all or partially collected at baseline visit in specific ADNI study phase, it is reasonable to carrying forward the screening visit record of an assessment as a corresponding baseline record if the baseline assessment result is missing/unknown. For examples, `MMSE` assessment was not collected at baseline visit at all since it is begin used as one of study inclusion/exclusion criteria at screening visit. Similarly, other component scores from Neuropsychological Battery assessments (i.e., `LDELTOTL`, `DIGITSCR`, and `TRABSCOR`) are partially collected at baseline visit in certain ADNI study phase 
 
-The following r chuck demonstrate how the screening-baseline visit adjustment is preformed by carrying forward any screening visit record as a baseline record using `adjust_scbl_record()` function.
+The following r chuck demonstrate how the screening-baseline visit adjustment is preformed by carrying forward any screening visit record as a baseline record using `adjust_scbl_record()` function. This adjustment is only preformed if a baseline record was collected or missing.
 
 ```{r adjust-scbl}
 # Adjustment of screening-baseline record
@@ -333,7 +341,7 @@ pacc_adas_q4score_long <- pacc_adas_q4score_long %>%
   set_as_tibble()
 ```
 
-The next step is to combine all the raw datasets and converting the combined data into a wide format using the study data collection phase/protocol and study visit code per subject.
+The next step is to combine input raw datasets and convert into a wide format using the study data collection phase/protocol and study visit code per subject.
 
 ```{r bind-pacc-input}
 # Bind PACC input raw-data
@@ -343,9 +351,24 @@ pacc_input_data_long <- bind_rows(
   pacc_adas_q4score_long
 )
 
-# Convert into wide format
+# PACC component vars
 pacc_component <- c("ADASQ4SCORE", "MMSE", neurobat_vars)
+```
 
+```{r pacc-viscode2}
+# Get common VISCODE2: adjusting previously computed VISCODE2 across components
+pacc_input_data_long <- get_common_viscode2(
+  .data = pacc_input_data_long,
+  id_cols = c("COLPROT", "PTID", "RID", "VISCODE"),
+  col_order = pacc_component,
+  quiet = TRUE
+) %>%
+  mutate(VISCODE2 = COM_VISCODE2) %>%
+  select(-COM_VISCODE2)
+```
+
+```{r pacc-wide-format}
+# Convert into wider format
 pacc_input_data_wide <- pacc_input_data_long %>%
   unite(col = "SCORE_VISDATE", SCORE, VISDATE, sep = "-/") %>%
   pivot_wider(
@@ -476,7 +499,9 @@ PACC <- compute_pacc_score(
   rescale_trailsB = TRUE,
   keepComponents = TRUE,
   wideFormat = TRUE
-) %>%
+)
+
+PACC <- PACC %>%
   mutate(RID = as.numeric(RID)) %>%
   rename_with(~ str_replace_all(.x, "\\.zscore", "Z"), ends_with(".zscore")) %>%
   create_orig_protocol()
@@ -491,7 +516,7 @@ PACC <- PACC %>%
   )
 ```
 
-```{r checks include=FALSE}
+```{r checks, include = FALSE}
 PACC <- PACC %>%
   assert_non_missing(all_of(c("PTID", "RID", "VISCODE", "COLPROT", "ORIGPROT")))
 ```
@@ -535,18 +560,19 @@ baseline_mPACCtrailsB <- PACC %>%
 ```
 
 ```{r plot-bl-pacc, fig.width = 7, fig.height = 3, fig.alt = "Baseline Modiffied PACC score"}
-baseline_PACC <- baseline_mPACCtrailsB %>%
-  mutate(
-    SCORE = mPACCtrailsB,
-    SCORE_NAME = "mPACCtrailsB"
-  ) %>%
-  bind_rows(
-    baseline_mPACCdigit %>%
-      mutate(
-        SCORE = mPACCdigit,
-        SCORE_NAME = "mPACCdigit"
-      )
-  ) %>%
+# Bind both modified PACC scores in long format
+baseline_PACC <- bind_rows(
+  baseline_mPACCtrailsB %>%
+    mutate(
+      SCORE = mPACCtrailsB,
+      SCORE_NAME = "mPACCtrailsB"
+    ),
+  baseline_mPACCdigit %>%
+    mutate(
+      SCORE = mPACCdigit,
+      SCORE_NAME = "mPACCdigit"
+    )
+) %>%
   group_by(SCORE_NAME) %>%
   mutate(SCORE_NAME = paste0(SCORE_NAME, " (n = ", sum(!is.na(SCORE)), ")")) %>%
   ungroup()
@@ -559,6 +585,8 @@ baseline_PACC %>%
   theme_bw(base_size = 12)
 ```
 
+**NOTE:** We recommend to use continuous time point for PACC score in longitudinal data analysis. 
+  
 # References {-}
 
 <div id="refs"></div>

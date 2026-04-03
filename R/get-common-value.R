@@ -214,7 +214,7 @@ get_common_viscode2 <- function(.data, id_cols, col_order, quiet = FALSE) {
 #' @seealso \code{\link{get_common_value}()}
 #' @name deframe_as_list
 #' @rdname deframe_as_list
-#' @keywords utils
+#' @keywords utils_fun
 #' @importFrom dplyr select
 #' @importFrom tidyselect all_of
 #' @importFrom tibble deframe

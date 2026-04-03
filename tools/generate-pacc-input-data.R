@@ -10,12 +10,15 @@ library(tidyverse)
 library(assertr)
 library(cli)
 
+# Source util functions ----
+source(file.path(".", "tools", "data-prepare-utils.R"))
+devtools::load_all("./")
+
 # Input Argument ----
 args <- commandArgs(trailingOnly = TRUE)
-source(file.path(".", "tools", "data-prepare-utils.R"))
-check_arg(args, 1)
+check_arg(x = args, size = 1)
 DATA_DOWNLOADED_DATE <- as.Date(args[1])
-check_arg_date(DATA_DOWNLOADED_DATE)
+check_arg_date(x = DATA_DOWNLOADED_DATE)
 verify_pkg_install(pkg = c("ADNI4", "ADNIMERGE"))
 # Compared with raw source dataset date
 if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
@@ -26,8 +29,6 @@ if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
     )
   )
 }
-
-devtools::load_all("./")
 
 # Utility functions ------
 #' @title Check for Unique Records
@@ -49,14 +50,15 @@ check_unique_record <- function(.data) {
 ### For ADNI1-3 phases
 adas_q4score_adni13 <- ADNIMERGE::adas %>%
   select(
-    COLPROT, RID, SITEID,
-    VISCODE2 = VISCODE, DONE, NDREASON,
-    DATE, Q4TASK, Q4UNABLE, Q4SCORE
+    COLPROT, RID, SITEID, DONE, NDREASON,
+    DATE, Q4TASK, Q4UNABLE, Q4SCORE,
+    VISCODE2 = VISCODE
   ) %>%
   # To add PTID
   left_join(
     ADNIMERGE2::ADAS %>%
       distinct(PTID, RID),
+    relationship = "many-to-one",
     by = "RID"
   ) %>%
   set_as_tibble() %>%
@@ -67,6 +69,7 @@ adas_q4score_adni13 <- ADNIMERGE::adas %>%
       set_as_tibble(),
     by = c("COLPROT", "RID", "VISCODE2")
   ) %>%
+  # Adjust for missing VISCODE - that are not done
   mutate(
     VISCODE = ifelse(is.na(VISCODE), VISCODE2, VISCODE),
     DATE = ifelse(is.na(DATE), VISDATE, DATE)
@@ -88,7 +91,14 @@ adni4_adas_q4score <- ADNI4::adas_score %>%
     by = c("RID", "VISCODE")
   ) %>%
   mutate(DATE = ifelse(is.na(DATE), EXAMDATE, DATE)) %>%
-  select(-EXAMDATE)
+  select(-EXAMDATE) %>%
+  # Add VISCODE2 from current ADAS score data
+  left_join(
+    ADNIMERGE2::ADAS %>%
+      select(COLPROT, RID, VISCODE2, VISCODE) %>%
+      set_as_tibble(),
+    by = c("COLPROT", "RID", "VISCODE")
+  )
 
 # Bind across study phases
 pacc_adas_q4score <- bind_rows(adas_q4score_adni13, adni4_adas_q4score) %>%
@@ -102,13 +112,16 @@ pacc_adas_q4score_long <- pacc_adas_q4score %>%
     SCORE = Q4SCORE,
     SCORE_SOURCE = "ADASQ4SCORE"
   ) %>%
-  select(COLPROT, PTID, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, SCORE, SCORE_SOURCE)
 
 ## MMSE from ADNIMERGE2 -----
-pacc_mmse <- MMSE %>%
-  select(COLPROT, PTID, RID, VISCODE, VISDATE, DONE, NDREASON, MMSCORE) %>%
+pacc_mmse <- ADNIMERGE2::MMSE %>%
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, DONE, NDREASON, MMSCORE) %>%
   set_as_tibble() %>%
-  convert_f_viscode_to_sc() %>%
+  convert_f_viscode_to_sc(
+    .data = .,
+    code_var = c("VISCODE", "VISCODE2")
+  ) %>%
   rename_with(~ paste0("MMSE_", .x), any_of(c("DONE", "NDREASON"))) %>%
   check_unique_record()
 
@@ -117,24 +130,27 @@ pacc_mmse_long <- pacc_mmse %>%
     SCORE = MMSCORE,
     SCORE_SOURCE = "MMSE"
   ) %>%
-  select(COLPROT, PTID, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, SCORE, SCORE_SOURCE)
 
 ## NEUROBAT from ADNIMERGE2 -----
 # Includes: Trial B Score: `TRABSCOR`
 #           Logical Memory IIa Delayed Recall Score: `LDELTOTL`
 #           Digit Symbol Substitution Test Score: `DIGITSCR`
 
-pacc_neurobat <- NEUROBAT %>%
+pacc_neurobat <- ADNIMERGE2::NEUROBAT %>%
   select(
-    COLPROT, PTID, RID, VISCODE, VISDATE,
+    COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE,
     LDELTOTL = LDELTOTAL, DIGITSCR = DIGITSCOR, TRABSCOR
   ) %>%
   set_as_tibble() %>%
-  convert_f_viscode_to_sc() %>%
+  convert_f_viscode_to_sc(
+    .data = .,
+    code_var = c("VISCODE", "VISCODE2")
+  ) %>%
   check_unique_record()
 
 pacc_neurobat_long <- pacc_neurobat %>%
-  select(COLPROT, PTID, RID, VISCODE, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
   pivot_longer(
     cols = all_of(c("LDELTOTL", "DIGITSCR", "TRABSCOR")),
     values_to = "SCORE",
