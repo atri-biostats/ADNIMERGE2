@@ -253,6 +253,10 @@ temp_data_dict <- temp_data_dict %>%
     data_label, source_type, authors, description, source
   )
 
+# To allow Rd and markdown roxygen syntax
+temp_data_dict <- temp_data_dict %>%
+  mutate(across(everything(), convert_brace_as_rd_code))
+
 ### Add dataset category/keywords ----
 dataset_category_path <- file.path(".", "data-raw", "dataset_cat", "dataset_category.csv")
 if (file.exists(dataset_category_path)) {
@@ -429,10 +433,11 @@ if (exists("derived_data_list")) {
     assert_uniq(dd_name, field_name) %>%
     assert_non_missing(dd_name, field_name, CRFNAME) %>%
     mutate(
+      CRFNAME = str_remove_all(CRFNAME, "^\\[ Derived \\]"),
       data_label = CRFNAME,
       authors = authors_list,
       description = str_c(
-        str_to_sentence(str_remove_all(CRFNAME, "\\[ Derived \\]")),
+        str_to_sentence(CRFNAME),
         " derived dataset."
       ),
       source_type = "derived",
@@ -461,6 +466,10 @@ if (exists("derived_data_list")) {
       data_label, source_type, authors, description, source, keywords
     ) %>%
     assert_non_missing(field_label, field_notes)
+
+  # To allow Rd and markdown roxygen syntax
+  temp_data_dict_derived <- temp_data_dict_derived %>%
+    mutate(across(everything(), convert_brace_as_rd_code))
 
   ## Finalize documentation ----
   generate_roxygen_document(

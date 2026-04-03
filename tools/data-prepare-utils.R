@@ -538,8 +538,7 @@ adjust_code_labels <- function(.datadic, phaseVar = "PHASE", codeVar = "CODE", t
     ) %>%
     # Replacing double braces
     mutate(
-      text_var = str_replace_all(text_var, "\\{\\{", "\\emph{"),
-      text_var = str_replace_all(text_var, "\\}\\}", "}")
+      text_var = replace_double_braces(text_var)
     )
 
   if (nrow(.datadic) > 1) {
@@ -595,6 +594,34 @@ adjust_code_labels <- function(.datadic, phaseVar = "PHASE", codeVar = "CODE", t
     mutate(field_label = str_replace_all(field_label, "\\{P\\}", " P"))
 
   return(output_data)
+}
+
+# Replacing double braces
+#' @title Replace double braces with `italic` format
+#' @param x Input character object
+#' @return A character object
+#' @rdname markdown_rd
+#' @importFrom stringr str_replace_all
+#' @export
+#'
+replace_double_braces <- function(x) {
+  x <- stringr::str_replace_all(x, "\\{\\{", "\\\\emph{")
+  x <- stringr::str_replace_all(x, "\\}\\}", "}")
+  x
+}
+#' @title Convert markdown braces into Rd code syntax
+#' @description
+#' A function to convert brace characters into `markdown` readable roxygen2
+#' without altering existing `Rd` syntax format.
+#' @inheritParams convert_brace_as_rd_code
+#' @inherit markdown_rd return
+#' @rdname markdown_rd
+#' @export
+
+convert_brace_as_rd_code <- function(x) {
+  x <- stringr::str_replace_all(x, "\\[", "`[")
+  x <- stringr::str_replace_all(x, "\\]", "]`")
+  x
 }
 
 # Add description for common columns in DATADIC ----
@@ -1164,19 +1191,13 @@ split_concat_arg <- function(arg, single_char = TRUE) {
 NULL
 
 #' @rdname arg_utils
-check_arg <- function(x, size,
-                      arg = rlang::caller_arg(x),
-                      call = rlang::caller_env()) {
-  if (length(x) != size) {
-    cli::cli_abort(
-      message = c(
-        "Input argument {.arg {arg}} must be size of {.val {size}}. \n",
-        "{.arg {arg}} is a length of {.val {length(x)}} vector."
-      ),
-      call = call
-    )
-  }
-  invisible(TRUE)
+check_arg <- function(x, size, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  check_vector_length(
+    x = x,
+    size = size,
+    arg = arg,
+    call = call
+  )
 }
 
 #' @rdname arg_utils
@@ -1326,7 +1347,7 @@ verify_data_download_date <- function(raw_data_path, input_date) {
     cli::cli_abort(
       message = c(
         paste0(
-          "There may be more than one file downloaded on different date: \n"
+          "There are at least two files that are downloaded on different dates: \n"
         ),
         paste0("{cli::col_yellow(symbol$info)} {.val {date_list}}. \n"),
         paste0(
