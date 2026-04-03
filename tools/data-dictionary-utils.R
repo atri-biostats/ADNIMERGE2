@@ -787,10 +787,10 @@ generate_roxygen_document <- function(data_names,
   if (roxygen_source %in% "data_list") {
     if (is.null(data_list)) cli_abort(message = "{.val data_list} must not be missing")
     # Checking for name of listed dataset
-    check_list_names(obj = data_list, list_names = data_names)
-    check_list_names(obj = tag_list, list_names = data_names)
-    check_list_names(obj = data_label_list, list_names = data_names)
-    check_list_names(obj = source_type_list, list_names = data_names)
+    check_list_names(x = data_list, list_names = data_names)
+    check_list_names(x = tag_list, list_names = data_names)
+    check_list_names(x = data_label_list, list_names = data_names)
+    check_list_names(x = source_type_list, list_names = data_names)
   }
 
   # If a data dictionary (data_dict) is provided
@@ -819,9 +819,9 @@ generate_roxygen_document <- function(data_names,
       source_type_list <- get_prep_list(data_dict = source_type_data, var_name = "source_type")
     }
 
-    check_list_names(obj = tag_list, list_names = data_names)
-    check_list_names(obj = data_label_list, list_names = data_names)
-    check_list_names(obj = source_type_list, list_names = data_names)
+    check_list_names(x = tag_list, list_names = data_names)
+    check_list_names(x = data_label_list, list_names = data_names)
+    check_list_names(x = source_type_list, list_names = data_names)
   }
 
   output_result <- lapply(data_names, function(data_name) {
