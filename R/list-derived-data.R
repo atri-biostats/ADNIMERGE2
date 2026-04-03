@@ -1,13 +1,12 @@
 # List derived dataset -----
-#' @title [ADNIMERGE2] Derived Dataset(s)
+#' @title `ADNIMERGE2` Derived Dataset(s)
 #' @description List of derived/analysis dataset(s) in `ADNIMERGE2` R package
 #'
 #' @param type Data type
-#'
-#'     + **derived**: To list derived data
-#'     + **analysis**: To list analysis ready data
-#'     + **metadata**: To list metadata
-#'     + **NULL**: To list all available derived/analysis data in [ADNIMERGE2]
+#'  + `derived`: To list derived data
+#'  + `analysis`: To list analysis ready data
+#'  + `metadata`: To list metadata
+#'  + `NULL`: To list all available derived/analysis data in `ADNIMERGE2`
 #'
 #' @return A data.frame with **Dataset Code**, **Dataset Label** and *Data Type* columns.
 #'
