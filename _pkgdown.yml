@@ -2,6 +2,7 @@ url: https://atri-biostats.github.io/ADNIMERGE2
 template:
   bootstrap: 5
   light-switch: true
+llm-docs: false
 
 reference:
   - title: ADNI Raw Datasets
