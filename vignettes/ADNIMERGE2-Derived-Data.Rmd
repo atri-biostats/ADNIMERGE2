@@ -46,11 +46,11 @@ This article describes creating derived datasets from raw data (eCRFs) for ADNI 
 
 **NOTE: ** 
 
-* *ORIGPROT* variable is included in the DM dataset to identify the first study protocol/phase of subjects' enrollment in the ADNI study. 
+* *ORIGPROT* variable is included in `DM` data to identify the first study protocol/phase of subjects' enrollment in the ADNI study. 
 
 * *COLPROT* or *---GRPID* variables are also included in some of the derived dataset to identify the data collection study protocol/phase in the ADNI study.
 
-* *VISITNUM* variable is included only for creating study epoch across the study phases and mainly used for data merging and sorting purpose. The *VISITNUM* variable should not be used in analysis that related to these derived dataset. Learn more about how the study visit number *VISITNUM* is created in `Data Preparation` section below.
+* *VISITNUM* variable is included only for creating study epoch across the study phases and mainly used for data merging and sorting purpose. The *VISITNUM* variable should not be used in analysis related to these derived dataset. Please refer to `Data Preparation` section below to learn more about how the study visit number *VISITNUM* is created.
 
 * *These derived dataset may not be fully complied with the [CDISC-SDTM](https://www.cdisc.org/standards/foundational/sdtm) standardization.*  
 
@@ -319,7 +319,7 @@ ADNI_VISIT_RECORD <- ADNI_VISIT_RECORD %>%
 
 ## Demographic (DM) {#sec-dm}
 
-[`DM`](../reference/DM.html) dataset contains one records per subject when subjects were enrolled or screened in the ADNI study for the first time (i.e. as new-enrollee).
+[`DM`](../reference/DM.html) data contains one record per subject when subjects were enrolled or screened in the ADNI study for the first time (i.e. as new-enrollee).
 
 ```{r dm-data-dic, echo = FALSE}
 dm_data_dic <- bind_rows(
@@ -582,7 +582,7 @@ DM <- DM %>%
 
 ## Subject Characteristics (SC) {#sec-sc}
 
-[`SC`](../reference/SC.html) dataset contains subject-related data that are not collected in [`DM`](../reference/DM.html) domain and/or characteristics that are collected over time. In ADNI study, subject characteristics that are collected across the study phases: ADNI1, ADNIGO, ADNI2, ADNI3, and ADNI4 can be stored in [`SC`](../reference/SC.html). The [`SC`](../reference/SC.html) dataset will contains characteristics collected from three source datasets: [`PTDEMOG`](../reference/PTDEMOG.html), [`ADI`](../reference/ADI.html) 
+[`SC`](../reference/SC.html) dataset contains subject-related data that are not collected in [`DM`](../reference/DM.html) domain and/or characteristics that are collected over time. In ADNI study, subject characteristics that are collected across the study phases: ADNI1, ADNIGO, ADNI2, ADNI3, and ADNI4 can be stored in [`SC`](../reference/SC.html). The [`SC`](../reference/SC.html) dataset will contain characteristics collected from three source datasets: [`PTDEMOG`](../reference/PTDEMOG.html), [`ADI`](../reference/ADI.html) 
  and [`RURALITY`](../reference/RURALITY.html).
 
 ```{r sc-data-dic, echo = FALSE}
@@ -628,6 +628,10 @@ sc_data_dic <- bind_rows(
   c(
     FLDNAME = "SCSTRESN",
     LABEL = "Numeric Result/Finding in Standard Units"
+  ),
+  c(
+    FLDNAME = "SCSTRESC",
+    LABEL = "Character Result/Finding in Std Format"
   ),
   c(
     FLDNAME = "SCBLFL",
@@ -747,9 +751,17 @@ SC_RURALITY <- RURALITY %>%
     SCDTC = RURDATE
   ) %>%
   generate_oak_id_vars_adni(raw_src = "RURALITY") %>%
-  mutate(across(all_of(c(rurality_cols, "SCDTC")), as.character)) %>%
+  # Create RURALITY var - combining binary and coded RUCA value
+  mutate(
+    RURALITY = case_when(
+      RUCA_2010 >= 1 & RUCA_2010 <= 3 ~ "Urban",
+      RUCA_2010 >= 4 & RUCA_2010 <= 10 ~ "Rural",
+      .default = RUCA
+    )
+  ) %>%
+  mutate(across(all_of(c(rurality_cols, "RURALITY", "SCDTC")), as.character)) %>%
   pivot_longer(
-    cols = all_of(rurality_cols),
+    cols = all_of(c(rurality_cols, "RURALITY")),
     names_to = "SCTESTCD",
     values_to = "SCORRES"
   ) %>%
@@ -797,6 +809,13 @@ SC <- bind_rows(SC_DEMOG, SC_ADI, SC_RURALITY) %>%
     tgt_var = "SCSEQ",
     rec_vars = c("USUBJID", "SCTESTCD", "SCGRPID")
   )
+
+# Adjust for derived RURALITY vars
+SC <- SC %>%
+  mutate(
+    SCSTRESC = ifelse(SCTESTCD == "RURALITY", SCORRES, NA_character_),
+    SCORRES = ifelse(SCTESTCD == "RURALITY", NA_character_, SCORRES)
+  )
 ```
 
 ```{r scrtest-detail, eval = TRUE, echo = FALSE}
@@ -821,6 +840,15 @@ SC_TESTCD_LIST <- DATADIC %>%
   group_by(SCTESTCD) %>%
   filter(row_number() == n()) %>%
   ungroup()
+
+# Add rurality variable description
+SC_TESTCD_LIST <- bind_rows(
+  SC_TESTCD_LIST,
+  tibble::tibble(
+    SCTESTCD = "RURALITY",
+    SCTEST = "Derived rurality binary category"
+  )
+)
 ```
 
 ```{r add-sctest}

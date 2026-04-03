@@ -166,11 +166,13 @@ ADSL <- build_from_derived(
     num_grp_var = AGEGR1N
   ) %>%
   # Adjust for multiple race groups
-  mutate(RACE = case_when(
-    str_detect(RACE, "\\|") ~ "More than one race",
-    str_detect(RACE, "Native Hawaiian$|^Other Pacific Islander") ~ "Native Hawaiian or Other Pacific Islander",
-    TRUE ~ as.character(RACE)
-  )) %>%
+  mutate(
+    RACE = case_when(
+      str_detect(RACE, "\\|") ~ "More than one race",
+      str_detect(RACE, "Native Hawaiian$|^Other Pacific Islander") ~ "Native Hawaiian or Other Pacific Islander",
+      TRUE ~ as.character(RACE)
+    )
+  ) %>%
   # Re-code RACE
   create_var_from_codelist(
     data = .,
@@ -217,8 +219,10 @@ ADSL <- build_from_derived(
     by_vars = exprs(STUDYID, USUBJID),
     check_type = "error",
     relationship = "one-to-one"
-  ) %>%
-  # Add baseline BMI derived from weight and height
+  )
+
+# Add baseline BMI derived from weight and height
+ADSL <- ADSL %>%
   call_derivation(
     dataset = .,
     dataset_add = VS,
@@ -243,6 +247,20 @@ ADSL <- build_from_derived(
     BMI = round(compute_bmi(height = HEIGHT, weight = WEIGHT), 2),
     BMIBLU = ifelse(!is.na(BMI), "kg/m^2", NA_character_),
     AGEU = ifelse(!is.na(AGEU), "Years", NA_character_)
+  )
+
+# Add derived baseline RURALITY - only collected in ADNI4 phase
+ADSL <- ADSL %>%
+  derive_vars_merged(
+    dataset = .,
+    dataset_add = SC,
+    filter_add = SCTESTCD == "RURALITY" & SCBLFL == "Y",
+    new_vars = exprs(RURALITY = SCSTRESC),
+    order = exprs(VISITNUM),
+    mode = "last",
+    by_vars = exprs(STUDYID, USUBJID),
+    check_type = "error",
+    relationship = "one-to-one"
   )
 ```
 

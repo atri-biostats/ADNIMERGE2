@@ -172,6 +172,10 @@ adsl_dic <- bind_rows(
   c(variable = "RACEN", type = "integer", length = "3", label = "Race (N)", common = FALSE, code_id = "RACEN", origin = "Predecessor", derivation = "Numeric code for RACE"),
   c(variable = "ETHNIC", type = "text", length = "40", label = "Ethnicity", code_id = "ETHNIC", origin = "Predecessor", derivation = "DM.ETHNIC"),
   c(
+    variable = "RURALITY", type = "text", length = "10", label = "Rurality", code_id = "RURALITY", origin = "Derived",
+    derivation = "SC.SCSTRESC where SC.SCTESTCD='RURALITY' and SCBLFL = 'Y'."
+  ),
+  c(
     variable = "ENRLFL", type = "text", length = "3", label = "Enrolled Population Flag", common = TRUE, code_id = "YN", origin = "Derived",
     derivation = "Yes if ENRLDT is non-missing. No otherwise"
   ),
@@ -853,6 +857,15 @@ ETHNIC_CODEDLIST <- tibble(
   tibble(
     code = c("Hispanic or Latino", "Not Hispanic or Latino", "Unknown"),
     decode = c("Hispanic or Latino", "Not Hispanic or Latino", "Unknown")
+  )
+)
+
+# Rurality binary category ---
+RURALITY_CODEDLIST <- tibble(
+  code_id = "RURALITY", name = "RURALITY", type = "code_decode",
+  tibble(
+    code = c("Urban", "Rural"),
+    decode = c("Urban", "Rural")
   )
 )
 
