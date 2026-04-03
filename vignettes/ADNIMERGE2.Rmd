@@ -32,7 +32,7 @@ The main goal of developing the Alzheimer's Disease Neuroimaging Initiative (ADN
 
 # Package Source
 
-The *``r pkgName``* R package is available on the data-sharing platform at [LONI website](https://adni.loni.usc.edu/). The R package `*.tar.gz` file is located in *Study Files > Data & Database* folder at the data-sharing platform. 
+The *``r pkgName``* R package is available on the data-sharing platform at [LONI website](https://adni.loni.usc.edu/). The R package `*.tar.gz` file is located in *Study Files > Study Info > Data & Database* folder at the data-sharing platform. 
 
 # Package Access
 
