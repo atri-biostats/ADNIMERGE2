@@ -751,6 +751,13 @@ SC_RURALITY <- RURALITY %>%
     SCDTC = RURDATE
   ) %>%
   generate_oak_id_vars_adni(raw_src = "RURALITY") %>%
+  # Convert into numeric scale
+  mutate(
+    RUCA_2010 = as.numeric(RUCA_2010),
+    RUCC_2023 = case_when(str_detect(RUCC_2023, "99 -") ~ 99,
+      .default = as.numeric(RUCC_2023)
+    )
+  ) %>%
   # Create RURALITY var - combining binary and coded RUCA value
   mutate(
     RURALITY = case_when(
