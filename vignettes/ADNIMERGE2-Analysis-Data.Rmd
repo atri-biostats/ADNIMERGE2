@@ -254,8 +254,8 @@ ADSL <- ADSL %>%
   derive_vars_merged(
     dataset = .,
     dataset_add = SC,
-    filter_add = SCTESTCD == "RURALITY" & SCBLFL == "Y",
-    new_vars = exprs(RURALITY = SCSTRESC),
+    filter_add = SCTESTCD == "RUCAGR" & SCBLFL == "Y",
+    new_vars = exprs(RUCAGR1 = SCSTRESC),
     order = exprs(VISITNUM),
     mode = "last",
     by_vars = exprs(STUDYID, USUBJID),

@@ -760,15 +760,15 @@ SC_RURALITY <- RURALITY %>%
   ) %>%
   # Create RURALITY var - combining binary and coded RUCA value
   mutate(
-    RURALITY = case_when(
+    RUCAGR = case_when(
       RUCA_2010 >= 1 & RUCA_2010 <= 3 ~ "Urban",
       RUCA_2010 >= 4 & RUCA_2010 <= 10 ~ "Rural",
       .default = RUCA
     )
   ) %>%
-  mutate(across(all_of(c(rurality_cols, "RURALITY", "SCDTC")), as.character)) %>%
+  mutate(across(all_of(c(rurality_cols, "RUCAGR", "SCDTC")), as.character)) %>%
   pivot_longer(
-    cols = all_of(c(rurality_cols, "RURALITY")),
+    cols = all_of(c(rurality_cols, "RUCAGR")),
     names_to = "SCTESTCD",
     values_to = "SCORRES"
   ) %>%
@@ -817,11 +817,11 @@ SC <- bind_rows(SC_DEMOG, SC_ADI, SC_RURALITY) %>%
     rec_vars = c("USUBJID", "SCTESTCD", "SCGRPID")
   )
 
-# Adjust for derived RURALITY vars
+# Adjust for derived RUCAGR vars
 SC <- SC %>%
   mutate(
-    SCSTRESC = ifelse(SCTESTCD == "RURALITY", SCORRES, NA_character_),
-    SCORRES = ifelse(SCTESTCD == "RURALITY", NA_character_, SCORRES)
+    SCSTRESC = ifelse(SCTESTCD == "RUCAGR", SCORRES, NA_character_),
+    SCORRES = ifelse(SCTESTCD == "RUCAGR", NA_character_, SCORRES)
   )
 ```
 
@@ -848,12 +848,12 @@ SC_TESTCD_LIST <- DATADIC %>%
   filter(row_number() == n()) %>%
   ungroup()
 
-# Add rurality variable description
+# Add RUCAGR variable description
 SC_TESTCD_LIST <- bind_rows(
   SC_TESTCD_LIST,
   tibble::tibble(
-    SCTESTCD = "RURALITY",
-    SCTEST = "Derived rurality binary category"
+    SCTESTCD = "RUCAGR",
+    SCTEST = "Derived RUCA Designation Category"
   )
 )
 ```
