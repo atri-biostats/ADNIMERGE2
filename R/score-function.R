@@ -18,7 +18,7 @@
 #' @keywords adni_scoring_fun
 #' @importFrom dplyr relocate mutate
 #' @importFrom assertr assert within_bounds verify
-#' @importFrom tidyselect all_of last_col
+#' @importFrom dplyr all_of last_col
 #' @references [Powell, J.B., Cripe, L.I. and Dodrill, C.B., 1991. Assessment of brain impairment with the Rey Auditory Verbal Learning Test: A comparison with other neuropsychological measures. Archives of Clinical Neuropsychology, 6(4), pp.241-249.](https://doi.org/10.1016/0887-6177(91)90001-P)
 #' @export
 compute_neurobat_subscore <- function(.neurobat) {

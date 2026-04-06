@@ -196,7 +196,7 @@ convert_var_to_fct_wrapper <- function(.data, metacore, var) {
 #' @importFrom dplyr pivot_longer group_by mutate ungroup case_when filter distinct select
 #' @importFrom assertr verify
 #' @importFrom stringr str_detect
-#' @importFrom tidyselect all_of any_of starts_with ends_with
+#' @importFrom dplyr all_of any_of starts_with ends_with
 
 get_common_vars_value <- function(.data, var_tracer_name, split_parm = "0") {
   USUBJID <- VARNAME <- VARVALUE <- UNIQUE_VALUE <- SELECT_COL <- NULL

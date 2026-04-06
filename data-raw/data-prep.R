@@ -14,7 +14,7 @@ library(cli)
 # Pre-specified directories name ----
 source(file.path(".", "data-raw", "dir-list.R"))
 check_dir_list <- lapply(dir_list, function(dir) {
-  if (dir.exists(dir) == TRUE) unlink(dir, recursive = TRUE)
+  if (dir.exists(dir) == TRUE) unlink(dir, recursive = TRUE, force = TRUE)
   cli::cli_alert_warning(text = "{.path {dir}} removed")
 })
 

@@ -17,19 +17,16 @@ Imports:
   dplyr,
   tibble,
   assertr,
-  magrittr,
-  rmarkdown,
-  tidyselect,
   purrr,
   tidyr, 
   cli,
   readr,
-  stats, 
-  lifecycle,
-  bookdown
+  lifecycle
 Suggests:
   knitr,
+  rmarkdown,
   tidyverse,
+  stats,
   DT,
   metacore,
   metatools,
@@ -48,12 +45,8 @@ Suggests:
   lme4, 
   marginaleffects, 
   performance,
-  survival,
-  msm,
   minqa,
-  consort,
-  scales,
-  broom
+  consort
 Depends: 
     R (>= 3.5)
 RoxygenNote: 7.3.3

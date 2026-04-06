@@ -185,7 +185,7 @@
 #' @importFrom cli cli_abort cli_alert_warning
 #' @importFrom dplyr mutate across select relocate bind_rows
 #' @importFrom tidyr pivot_wider pivot_longer
-#' @importFrom tidyselect all_of any_of ends_with contains last_col
+#' @importFrom dplyr all_of any_of ends_with contains last_col
 #' @importFrom stats cor
 #' @importFrom lifecycle is_present deprecated deprecate_warn
 
@@ -517,7 +517,7 @@ compute_pacc_score <- function(.data,
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter if_all group_by across ungroup if_any select mutate
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom stats sd
 
 compute_score_summary <- function(.data,
@@ -652,7 +652,7 @@ compute_score_summary <- function(.data,
 #' @importFrom cli cli_abort
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter if_all
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 
 compute_baseline_score_summary <- function(.data, filterBy, filterValue = c("Y", "Yes", "bl"), ...) {
   if (length(filterBy) != 1) {
@@ -890,7 +890,7 @@ calculate_zscore <- function(x, mean, sd) {
 #' @importFrom dplyr mutate row_number filter group_by ungroup n_distinct
 #' @importFrom dplyr distinct left_join case_when select
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @export
 
 get_vars_common_date <- function(.data,
@@ -1005,7 +1005,7 @@ get_vars_common_date <- function(.data,
 #' @keywords utils_fun
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr rename_with mutate across
-#' @importFrom tidyselect everything
+#' @importFrom dplyr everything
 #' @export
 
 set_as_tibble <- function(.data) {
@@ -1078,7 +1078,7 @@ set_as_tibble <- function(.data) {
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter mutate across case_when select distinct left_join
 #' @importFrom dplyr group_by ungroup bind_rows
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom tidyr expand_grid fill
 #' @importFrom assertr verify
 #' @export

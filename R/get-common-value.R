@@ -215,15 +215,14 @@ get_common_viscode2 <- function(.data, id_cols, col_order, quiet = FALSE) {
 #' @name deframe_as_list
 #' @rdname deframe_as_list
 #' @keywords utils_fun
-#' @importFrom dplyr select
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr select all_of
 #' @importFrom tibble deframe
 #' @export
 #'
 deframe_as_list <- function(x, col_names = NULL) {
   if (any(!is.null(col_names))) {
     x <- x %>%
-      dplyr::select(tidyselect::all_of(col_names))
+      dplyr::select(dplyr::all_of(col_names))
   }
   x <- tibble::deframe(x = x)
   x <- as.list(x)

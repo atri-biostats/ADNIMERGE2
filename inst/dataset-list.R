@@ -42,9 +42,8 @@
 #' @family ADNIMERGE2 required datasets
 #' @export
 #' @importFrom rlang arg_match0
-#' @importFrom dplyr bind_rows select filter if_all
+#' @importFrom dplyr bind_rows select filter if_all all_of
 #' @importFrom tibble as_tibble
-#' @importFrom tidyselect all_of
 
 get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   rlang::arg_match0(arg = use_type, values = c("prep_script", "article"))
@@ -424,8 +423,7 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 #' @rdname concat_dataset_url
 #' @keywords adni_utils
 #' @family ADNIMERGE2 required datasets
-#' @importFrom dplyr mutate  across
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr mutate across all_of
 #' @export
 
 concat_dataset_url <- function(.data, var_name = "data_code") {

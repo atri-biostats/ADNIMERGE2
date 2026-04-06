@@ -34,8 +34,7 @@
 #' @seealso \code{\link{summarize_dataset}}
 #' @importFrom rlang arg_match
 #' @importFrom assertr verify
-#' @importFrom dplyr select
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr select all_of
 #' @export
 
 summarize_variable <- function(.data, var_name, wide_format = FALSE) {
@@ -83,8 +82,7 @@ summarize_var <- function(.data, var_name, wide_format = FALSE) {
 #' @importFrom rlang arg_match0
 #' @importFrom assertr verify
 #' @importFrom tibble tibble
-#' @importFrom dplyr select pull group_by mutate ungroup distinct
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr select pull group_by mutate ungroup distinct all_of
 #' @rdname summarize_var
 
 summarize_var.fct <- function(.data, var_name, wide_format = FALSE) {
@@ -377,8 +375,7 @@ remove_var_class <- function(.data) {
 #'  \code{\link[remove_var_class]()}
 #' @rdname set_var_class
 #' @keywords utils_fun
-#' @importFrom dplyr rename_with
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr rename_with all_of
 
 set_var_class <- function(.data, var_name) {
   .data <- remove_var_class(.data)
@@ -900,7 +897,7 @@ generate_roxygen_document <- function(data_names,
 #' @importFrom dplyr select distinct group_by group_nest ungroup mutate
 #' @importFrom assertr assert is_uniq
 #' @importFrom purrr map
-#' @importFrom tidyselect any_of all_of
+#' @importFrom dplyr any_of all_of
 
 get_prep_list <- function(data_dict, var_name = NULL, is_tag_list = FALSE,
                           arg = rlang::caller_arg(var_name), call = rlang::caller_env()) {
@@ -973,8 +970,7 @@ get_tag_list <- function(data_dict) {
 #' @rdname create_vars
 #' @export
 #' @importFrom cli cli_alert_info
-#' @importFrom dplyr mutate rename_with
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr mutate rename_with all_of
 
 create_vars <- function(.data, var_name) {
   temp_var <- NULL
@@ -1070,8 +1066,7 @@ concat_tag <- function(x, tag_name, tag_value = NULL, error_call = TRUE) {
 #' @rdname data_dict_column_names
 #' @keywords utils_fun
 #' @importFrom tibble tibble
-#' @importFrom dplyr mutate rename_with filter across pull
-#' @importFrom tidyselect any_of
+#' @importFrom dplyr mutate rename_with filter across pull any_of
 
 data_dict_column_names <- function(data_dict,
                                    field_nameVar = NULL, field_classVar = NULL,

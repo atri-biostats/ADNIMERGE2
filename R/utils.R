@@ -126,7 +126,6 @@ convert_adni_phase_order_num <- function(phase_num) {
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom tibble tibble
-#' @importFrom magrittr %>%
 #' @importFrom dplyr mutate across case_when
 #' @importFrom assertr verify
 #' @importFrom cli cli_abort
@@ -240,8 +239,7 @@ create_orig_protocol <- function(.data) {
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom cli cli_abort
-#' @importFrom tidyselect all_of
-#' @importFrom dplyr rename_with relocate
+#' @importFrom dplyr all_of rename_with relocate
 #' @importFrom assertr verify
 #' @export
 create_col_protocol <- function(.data, phaseVar = NULL, .strict_check = TRUE) {
@@ -761,9 +759,7 @@ collect_value_mapping <- function(.datadic, tbl_name, all_fld_name) {
 #' @rdname convert_value_mapping
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
-#' @importFrom purrr pluck
-#' @importFrom dplyr mutate relocate bind_rows
-#' @importFrom cli cli_abort
+#' @importFrom dplyr bind_rows mutate relocate
 convert_value_mapping <- function(coded_values, tbl_name = NULL) {
   TBLNAME <- FLDNAME <- PHASE <- CODES <- NULL
   check_object_type(coded_values, "list")
@@ -787,8 +783,7 @@ convert_value_mapping <- function(coded_values, tbl_name = NULL) {
 #' @rdname convert_value_mapping_phase_specific
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
-#' @importFrom dplyr bind_rows group_by ungroup
-#' @importFrom tidyselect everything
+#' @importFrom dplyr bind_rows group_by ungroup everything
 #' @importFrom tidyr nest replace_na
 #' @importFrom cli cli_abort
 convert_value_mapping_phase_specific <- function(coded_values) {
@@ -1026,7 +1021,7 @@ detect_decimal_value <- function(value) {
 #' @importFrom rlang arg_match
 #' @importFrom cli cli_abort
 #' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with select
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom stringr str_detect str_c str_extract str_remove_all
 replace_values_phase_specific <- function(.data, fld_name, phase,
                                           phaseVar = "PHASE", code, decode) {
@@ -1284,7 +1279,7 @@ replace_values_dataset <- function(.data, phaseVar = "PHASE", input_values) {
 #' @importFrom dplyr across filter if_all case_when
 #' @importFrom tibble as_tibble
 #' @importFrom rlang arg_match
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @export
 convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
                                      missing_char = NA, phase = NULL) {
@@ -1615,8 +1610,8 @@ check_value_match <- function(values,
 #' @family checks function
 #' @keywords utils_fun
 #' @importFrom dplyr select mutate across n if_all
+#' @importFrom dplyr all_of any_of
 #' @importFrom tidyr unite
-#' @importFrom tidyselect all_of any_of
 #' @importFrom cli cli_alert_info cli_abort
 #' @export
 check_duplicate_records <- function(.data,
@@ -1769,8 +1764,7 @@ load_csv_files <- function(input_dir = NULL, full_file_path = NULL, .envr = NULL
   if (is.null(input_dir) & is.null(full_file_path)) {
     cli::cli_abort(
       message = paste0(
-        "At least one of {.var input_dir} and ",
-        "{.var full_file_path} must not be missing."
+        "Both {.var input_dir} and {.var full_file_path} can not be missing."
       )
     )
   }

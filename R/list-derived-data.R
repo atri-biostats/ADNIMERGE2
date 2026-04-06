@@ -46,6 +46,7 @@
 
 list_derived_data <- function(type = NULL) {
   TBLNAME <- CRFNAME <- `Dataset Code` <- `Dataset Label` <- NULL
+  `Data Type` <- data_type <- NULL
   type_list <- c("derived", "analysis", "metadata")
   if (any(!is.null(type))) {
     rlang::arg_match(

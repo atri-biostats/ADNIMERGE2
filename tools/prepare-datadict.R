@@ -86,7 +86,7 @@ update_phase_specific_datadict <- function(.datadict) {
 #' @export
 #' @importFrom tibble tibble
 #' @importFrom dplyr mutate across bind_rows
-#' @importFrom tidyselect everything
+#' @importFrom dplyr everything
 
 bind_datadict_description <- function(.datadict, code, label) {
   .datadict <- .datadict %>%

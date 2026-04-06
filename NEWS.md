@@ -12,21 +12,23 @@
    
    - `PACC` scores related util functions: `get_common_value()`, `deframe_as_list()` and `get_common_viscode2()`.
 
-* Minor Bugs
+* Minor Changes/Bugs Fix
 
    - Fix #21 bugs in `get_required_dataset_list`. Thanks @jwang-lilly.
+   
+   - Minimize dependency R packages
    
    - Rename `rescale_trialsB` argument to `rescale_trailsB` in `compute_pacc_score` function.
    
    - Update PACC-scores generating steps to include `PTID` and `VISCODE2` variables
    
-   - Fix unit of measurements for ratio biomarkers
+   - Fix measurement unit of ratio biomarkers
 
 * Documentations
 
-   - Update package vignettes contents
+   - Update package vignettes content
    
-   - Update roxygen2 syntax to allow both `markdown` and `Rd` style
+   - Update roxygen2 syntax to allow `markdown` style
 
 # ADNIMERGE2 0.1.1
 

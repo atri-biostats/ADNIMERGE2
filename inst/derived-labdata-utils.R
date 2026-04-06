@@ -25,12 +25,11 @@
 #' @rdname adjust_lab_status
 #' @importFrom dplyr mutate case_when across
 #' @importFrom stringr str_c str_detect
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @export
 adjust_lab_status <- function(lab_data) {
   require(stringr)
   require(dplyr)
-  require(tidyselect)
   LBSTAT <- LBREASND <- impute_value <- NULL
   cols <- c("ResultValue", "ResultValueConv", "ResultValueSI", "Comments")
   check_colnames(
@@ -146,8 +145,7 @@ adjust_lab_visitcode <- function(lab_data) {
 #' @rdname adjust_lab_comment
 #' @export
 #' @importFrom assert verify
-#' @importFrom dplyr mutate case_when select
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr mutate case_when select all_of
 #' @importFrom stringr str_detect str_to_lower str_trim
 #' @importFrom tidyr separate_wider_delim
 adjust_lab_comment <- function(lab_data) {
@@ -225,8 +223,7 @@ adjust_lab_comment <- function(lab_data) {
 #' @export
 #' @importFrom rlang arg_match0
 #' @importFrom tibble tibble
-#' @importFrom dplyr mutate across case_when select
-#' @importFrom tidyselect ends_with
+#' @importFrom dplyr mutate across case_when select ends_with
 #' @importFrom tidyr expand_grid
 #' @importFrom stringr str_detect str_remove_all
 #' @importFrom assertr assert not_na
@@ -251,7 +248,7 @@ get_biomarker_details <- function(assay = "Roche") {
         SOURCE = "C2N_PRECIVITYAD2_PLASMA"
       ) %>%
       dplyr::mutate(dplyr::across(
-        tidyselect::ends_with("SU"),
+        dplyr::ends_with("SU"),
         ~ dplyr::case_when(
           LBTESTCD %in% c("AB42AB40", "APS2", "PTNPT217") ~ "",
           TRUE ~ .x
@@ -312,7 +309,7 @@ get_biomarker_details <- function(assay = "Roche") {
         LBSPEC = "PLASMA",
         SOURCE = "UPENNBIOMK_MASTER"
       ) %>%
-      dplyr::select(-tidyselect::ends_with("suffix"))
+      dplyr::select(-dplyr::ends_with("suffix"))
   }
 
   if (assay == "FQ") {

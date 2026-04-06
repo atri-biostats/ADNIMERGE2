@@ -24,7 +24,6 @@
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify is_uniq
-#' @importFrom magrittr %>%
 #' @export
 get_adni_enrollment <- function(.registry) {
   COLPROT <- ORIGPROT <- RID <- EXAMDATE <- PTTYPE <- OVERALL_ENRLFG <- ENRLFG <- NULL
@@ -136,7 +135,6 @@ get_adni_enrollment <- function(.registry) {
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any rename
 #' @importFrom assertr verify assert
-#' @importFrom magrittr %>%
 #' @export
 get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_visit = FALSE) {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- PTTYPE <- NULL
@@ -340,8 +338,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify
-#' @importFrom magrittr %>%
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom cli cli_abort
 #' @export
 get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Overall") {
@@ -710,7 +707,7 @@ get_baseline_vistcode <- function() {
 #' @keywords adni_utils
 #' @export
 #' @importFrom dplyr mutate case_when across
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 
 convert_f_viscode_to_sc <- function(.data, code_var = "VISCODE") {
   .data <- .data %>%
