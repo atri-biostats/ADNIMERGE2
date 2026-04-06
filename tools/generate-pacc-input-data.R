@@ -20,15 +20,7 @@ check_arg(x = arg_list, size = 1)
 DATA_DOWNLOADED_DATE <- as.Date(arg_list[1])
 check_arg_date(x = DATA_DOWNLOADED_DATE)
 verify_pkg_install(pkg = c("ADNI4", "ADNIMERGE"))
-# Compared with raw source dataset date
-if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
-  cli::cli_abort(
-    message = c(
-      "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
-      "{.var ADNI4} R package was downloaded on {.val {ADNI4::data_dump_date}}."
-    )
-  )
-}
+compare_adni4_pkg_date(download_date = DATA_DOWNLOADED_DATE)
 
 # Utility functions ------
 #' @title Check for Unique Records
@@ -75,10 +67,12 @@ adas_q4score_adni13 <- adas_q4score_adni13 %>%
   ) %>%
   # Adjust for missing VISCODE - that are not done
   mutate(
-    VISCODE = ifelse(is.na(VISCODE), VISCODE2, VISCODE),
+    MISSING_VISCODE = is.na(VISCODE),
+    VISCODE = ifelse(MISSING_VISCODE == TRUE, VISCODE2, VISCODE),
+    VISCODE2 = ifelse(MISSING_VISCODE == TRUE, NA_character_, VISCODE2),
     DATE = ifelse(is.na(DATE), VISDATE, DATE)
   ) %>%
-  select(-VISDATE)
+  select(-VISDATE, -MISSING_VISCODE)
 
 ## For ANDI4 phase
 adni4_adas_q4score <- ADNI4::adas_score %>%

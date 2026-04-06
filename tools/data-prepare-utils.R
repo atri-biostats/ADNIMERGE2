@@ -1411,3 +1411,36 @@ verify_pkg_install <- function(pkg) {
   }
   invisible(TRUE)
 }
+
+#' @title Compare `ADNI4` R package date with raw data download date
+#' @param download_date Raw data download date
+#' @return Invisible Boolean value or an error message
+#' @examples
+#' \dontrun{
+#' compare_adni4_pkg_date(download_date = Sys.Date())
+#' }
+#' @rdname compare_adni4_pkg_date
+#' @importFrom cli cli_abort
+compare_adni4_pkg_date <- function(download_date) {
+  adni4_date <- as.Date(ADNI4::data_dump_date)
+  download_date <- as.Date(download_date)
+  if (is.na(download_date)) {
+    cli_abort(
+      message = c(
+        "x" = "Missing {.var download_date} value.\n",
+        "i" = "{.var download_date} must be a date object."
+      )
+    )
+  }
+  if (adni4_date < download_date) {
+    cli::cli_abort(
+      message = c(
+        "x" = "Can't find the latest {.var ADNI4} R data package. \n",
+        "i" = "{.var ADNI4} R data package was downloaded prior to the raw source data date. \n",
+        "i" = "{.var ADNI4} R data package was downloaded on {.val {adni4_date}}. \n",
+        "i" = "{.var ADNI4} R data package must be downloaded on or after {.val {download_date}}."
+      )
+    )
+  }
+  invisible(TRUE)
+}
