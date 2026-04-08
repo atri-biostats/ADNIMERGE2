@@ -3,7 +3,7 @@
 #' @description
 #'  This function is used to extract enrollment date (baseline visit date)
 #'  when subjects are enrolled in ADNI study for the first time.
-#' @param .registry Data.frame of \code{\link{REGISTRY}()} eCRF
+#' @param .registry Data.frame of \code{\link{REGISTRY}} eCRF
 #' @return
 #'  A data.frame of overall enrollment in ADNI study with the following variables:
 #' \itemize{
@@ -18,14 +18,12 @@
 #'   .registry = ADNIMERGE2::REGISTRY
 #' )
 #' }
-#' @seealso \code{\link{get_adni_screen_date}()}
 #' @rdname get_adni_enrollment
 #' @family ADNI specific functions
 #' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify is_uniq
-#' @importFrom magrittr %>%
 #' @export
 get_adni_enrollment <- function(.registry) {
   COLPROT <- ORIGPROT <- RID <- EXAMDATE <- PTTYPE <- OVERALL_ENRLFG <- ENRLFG <- NULL
@@ -82,7 +80,7 @@ get_adni_enrollment <- function(.registry) {
 #' \strong{Multiple Screening Visit}: Accounts for multiple screening stage,
 #'  particularly in \code{ADNIGO} and \code{ADNI2} study phases.
 #'
-#' @param .registry Data.frame of \code{\link{REGISTRY}()} eCRF
+#' @param .registry Data.frame of \code{\link{REGISTRY}} eCRF
 #' @param phase Either \code{Overall} or phase-specific screening date, Default: 'Overall'
 
 #' @param multiple_screen_visit
@@ -131,14 +129,12 @@ get_adni_enrollment <- function(.registry) {
 #'   multiple_screen_visit = FALSE
 #' )
 #' }
-#' @seealso \code{\link{get_adni_enrollment}()}
 #' @rdname get_adni_screen_date
 #' @family ADNI specific functions
 #' @keywords adni_enroll_fun
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any rename
 #' @importFrom assertr verify assert
-#' @importFrom magrittr %>%
 #' @export
 get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_visit = FALSE) {
   RID <- COLPROT <- ORIGPROT <- EXAMDATE <- VISCODE <- PTTYPE <- NULL
@@ -269,7 +265,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 #'   See examples for more information.
 #' }
 #'
-#' @param .dxsum Data.frame of \code{\link{DXSUM}()} eCRF
+#' @param .dxsum Data.frame of \code{\link{DXSUM}} eCRF
 #' @param visit_type
 #'  Either \code{baseline} or \code{screen} diagnostic status, Default: 'baseline'
 #' @param phase
@@ -342,8 +338,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 #' @importFrom rlang arg_match
 #' @importFrom dplyr mutate across case_when filter select starts_with if_any
 #' @importFrom assertr verify
-#' @importFrom magrittr %>%
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom cli cli_abort
 #' @export
 get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Overall") {
@@ -422,11 +417,11 @@ check_overall_phase <- function(phase) {
 #' This function is used to extract death records in the study based on the
 #' adverse events and disposition records.
 #' @param .adverse
-#'  Adverse events record for ADNI3-4 study phase, see \code{\link{ADVERSE}()}
+#'  Adverse events record for ADNI3-4 study phase, see \code{\link{ADVERSE}}
 #' @param .recadv
-#'  Adverse events record for ADNI1-GO-2, see \code{\link{RECADV}()}
+#'  Adverse events record for ADNI1-GO-2, see \code{\link{RECADV}}
 #' @param .studysum
-#'   Dispositions record for ADNI3-4, see \code{\link{STUDYSUM}()}
+#'   Dispositions record for ADNI3-4, see \code{\link{STUDYSUM}}
 #' @return A data.frame with the following columns:
 #' \itemize{
 #'  \item {\code{RID}}: Subject ID
@@ -486,6 +481,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
     assert(is.character, SAEDEATH) %>%
     filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
     select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
+    distinct() %>%
     assert_uniq(RID)
 
   # Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
@@ -531,10 +527,10 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
 # Get Discontinuation Flag -----
 #' @title Study Discontinuation Flag
 #' @description This function is used to get early discontinuation list in ADNI study.
-#'   Based on the \code{\link{REGISTRY}()} eCRF for ADNI1-GO-2 and
+#'   Based on the \code{\link{REGISTRY}} eCRF for ADNI1-GO-2 and
 #'   \code{\link{STUDYSUM}} eCRF for ADNI3-4.
-#' @param .registry Registry record for ADNI1-GO-2, see \code{\link{REGISTRY}()}
-#' @param .studysum Disposition record for ADNI3-4, see \code{\link{STUDYSUM}()}
+#' @param .registry Registry record for ADNI1-GO-2, see \code{\link{REGISTRY}}
+#' @param .studysum Disposition record for ADNI3-4, see \code{\link{STUDYSUM}}
 #' @return A data.frame with the following columns:
 #' \itemize{
 #'  \item {\code{RID}}: Subject ID
@@ -656,7 +652,7 @@ get_disposition_flag <- function(.registry, .studysum) {
 #' }
 #' @seealso
 #'  \code{\link{get_baseline_vistcode}()}
-#'  \code{\link{VISITS}()}
+#'  \code{\link{VISITS}}
 #' @rdname get_screen_vistcode
 #' @family ADNI visit codes
 #' @keywords adni_utils
@@ -680,11 +676,40 @@ get_screen_vistcode <- function(type = "all") {
 #' }
 #' @seealso
 #'  \code{\link{get_screen_vistcode}()}
-#'  \code{\link{VISITS}()}
+#'  \code{\link{VISITS}}
 #' @rdname get_baseline_vistcode
 #' @keywords adni_utils
 #' @family ADNI visit codes
 #' @export
 get_baseline_vistcode <- function() {
   return(c("bl", "v03", "4_bl"))
+}
+
+#' @title Adjust screening visit code in ADNI1 phase
+#' @description
+#'   This function is used to convert screen fail visit code \code{f} into
+#'   actual screening visit \code{sc} code across records in \code{ADNI1} phase.
+#' @param .data A data.frame
+#' @param code_var
+#'       Visit code column name.
+#'       By default, 'VISCODE' column will be used.
+#' @return A data.frame
+#'
+#' @examples
+#' \dontrun{
+#' convert_f_viscode_to_sc(
+#'   .data = ADNIMERGE2::REGISTRY,
+#'   code_var = "VISCODE"
+#' )
+#' }
+#'
+#' @rdname convert_f_viscode_to_sc
+#' @keywords adni_utils
+#' @export
+#' @importFrom dplyr mutate case_when across
+#' @importFrom dplyr all_of
+
+convert_f_viscode_to_sc <- function(.data, code_var = "VISCODE") {
+  .data <- .data %>%
+    mutate(across(all_of(code_var), ~ ifelse(.x %in% "f", "sc", .x)))
 }

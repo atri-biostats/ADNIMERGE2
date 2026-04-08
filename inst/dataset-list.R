@@ -1,8 +1,9 @@
-#' @title Get list of dataset name required for replicate ADNIMERGE2 package
+#' @title List of dataset required to replicate [ADNIMERGE2] package
 #'
 #' @description
-#'  This function is shows dataset names that are required and to be downloaded
-#'  # from data-sharing platform in order to replicate ADNIMERGE2 R data package.
+#'  This function list datasets that are required and to be downloaded
+#'  from ADNI data-sharing platform in order to replicate 
+#'  [ADNIMERGE2] R data package.
 #'
 #' @param use_type Usage of dataset either \code{article} or \code{prep_script}
 #'  \item \code{article} To list raw dataset names that are used in \code{ADNIMERGE2} vignettes
@@ -23,14 +24,13 @@
 #' \dontrun{
 #' library(dplyr)
 #'
-#' # To get list of dataset that are used during data wrangling prior to package build
+#' # To list datasets that are used during data wrangling steps prior to package build
 #' get_required_dataset_list(
 #'   use_type = "prep_script",
 #'   add_url_link = FALSE
 #' )
 #'
-#' # To get list of dataset that are required to
-#' # reproduce ADNIMERGE2 R package including its vignettes
+#' # To list datasets that are required to replicate ADNIMERGE2 R package including vignettes
 #' get_required_dataset_list(
 #'   use_type = "article",
 #'   add_url_link = FALSE
@@ -42,9 +42,8 @@
 #' @family ADNIMERGE2 required datasets
 #' @export
 #' @importFrom rlang arg_match0
-#' @importFrom dplyr bind_rows select filter if_all
+#' @importFrom dplyr bind_rows select filter if_all all_of
 #' @importFrom tibble as_tibble
-#' @importFrom tidyselect all_of
 
 get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   rlang::arg_match0(arg = use_type, values = c("prep_script", "article"))
@@ -53,13 +52,13 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 
   if (add_url_link) {
     derived_data_artc <- paste0("<a href='", paste0(pkg_url, "/articles/ADNIMERGE2-Derived-Data.html"), "' target='_blank'>ADNIMERGE2 Derived Data</a>")
-    prep_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data_prep.R"), "' target='_blank'>data-prep.R</a>")
+    prep_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep.R"), "' target='_blank'>data-prep.R</a>")
     prep_recode_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep-recode.R"), "' target='_blank'>data-prep-recode.R</a>")
     document_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/document.R"), "' target='_blank'>document.R</a>")
     pacc_input_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/generate-pacc-input-data.R"), "' target='_blank'>generate-pacc-input-data.R</a>")
   } else {
     derived_data_artc <- "ADNIMERGE2-Derived-Data"
-    prep_url <- "data_prep.R"
+    prep_url <- "data-prep.R"
     prep_recode_url <- "data-prep-recode.R"
     document_url <- "document.R"
     pacc_input_url <- "generate-pacc-input-data.R"
@@ -424,8 +423,7 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 #' @rdname concat_dataset_url
 #' @keywords adni_utils
 #' @family ADNIMERGE2 required datasets
-#' @importFrom dplyr mutate  across
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr mutate across all_of
 #' @export
 
 concat_dataset_url <- function(.data, var_name = "data_code") {

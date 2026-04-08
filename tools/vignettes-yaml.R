@@ -8,7 +8,7 @@ source(file.path(".", "tools", "prepare-datadict.R"))
 
 ## Input args ----
 arg_list <- commandArgs(trailingOnly = TRUE)
-check_arg(arg_list, 3)
+check_arg(x = arg_list, size = 3)
 INPUT_DIR <- arg_list[1]
 CURRENT_PACC_PARAM <- arg_list[2]
 NEW_PACC_PARAM <- arg_list[3]
@@ -18,6 +18,6 @@ modify_rmd_param_yaml(
   dir_path = INPUT_DIR,
   file_path = NULL,
   current_param = CURRENT_PACC_PARAM,
-  new_param = NEW_PACC_PARAM, 
+  new_param = NEW_PACC_PARAM,
   value_as_logical = TRUE
 )

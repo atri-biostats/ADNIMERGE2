@@ -26,11 +26,11 @@ knitr::opts_chunk$set(
 
 ```{r utils, echo = FALSE, include = FALSE}
 # Data print function
-datatable <- function(data, paging = FALSE, searchable = TRUE, bInfo = FALSE, ...) {
+datatable <- function(data, paging = FALSE, searching = TRUE, bInfo = FALSE, ...) {
   require(DT)
   DT::datatable(
     data = data,
-    options = list(paging = paging, searchable = searchable, bInfo = bInfo, ...),
+    options = list(paging = paging, searching = searching, bInfo = bInfo, ...),
     ...
   )
 }
@@ -171,6 +171,10 @@ adsl_dic <- bind_rows(
   c(variable = "RACE", type = "text", length = "45", label = "Race", common = TRUE, code_id = "RACE", origin = "Predecessor", derivation = "DM.RACE"),
   c(variable = "RACEN", type = "integer", length = "3", label = "Race (N)", common = FALSE, code_id = "RACEN", origin = "Predecessor", derivation = "Numeric code for RACE"),
   c(variable = "ETHNIC", type = "text", length = "40", label = "Ethnicity", code_id = "ETHNIC", origin = "Predecessor", derivation = "DM.ETHNIC"),
+  c(
+    variable = "RUCAGR1", type = "text", length = "10", label = "RUCA Designation", code_id = "RUCAGR1", origin = "Derived",
+    derivation = "SC.SCSTRESC where SC.SCTESTCD='RUCAGR' and SCBLFL = 'Y'."
+  ),
   c(
     variable = "ENRLFL", type = "text", length = "3", label = "Enrolled Population Flag", common = TRUE, code_id = "YN", origin = "Derived",
     derivation = "Yes if ENRLDT is non-missing. No otherwise"
@@ -853,6 +857,15 @@ ETHNIC_CODEDLIST <- tibble(
   tibble(
     code = c("Hispanic or Latino", "Not Hispanic or Latino", "Unknown"),
     decode = c("Hispanic or Latino", "Not Hispanic or Latino", "Unknown")
+  )
+)
+
+# Rurality binary category ---
+RUCAGR1_CODEDLIST <- tibble(
+  code_id = "RUCAGR1", name = "RUCAGR1", type = "code_decode",
+  tibble(
+    code = c("Urban", "Rural"),
+    decode = c("Urban", "Rural")
   )
 )
 

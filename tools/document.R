@@ -9,18 +9,21 @@ library(assertr)
 library(cli)
 
 # Input args ----
-args <- commandArgs(trailingOnly = TRUE)
-check_arg(args, 2)
-DERIVED_DATASET_LIST <- split_concat_arg(args[1], FALSE)
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 2)
+DERIVED_DATASET_LIST <- split_concat_arg(arg = arg_list[1], single_char = FALSE)
 if (all(DERIVED_DATASET_LIST %in% "NULL")) DERIVED_DATASET_LIST <- NULL
-USE_UPDATED_DATADIC <- as.logical(args[2])
+USE_UPDATED_DATADIC <- as.logical(arg_list[2])
 check_arg_logical(USE_UPDATED_DATADIC)
 
 # Load all data from "./data" to .GlobalEnv ----
 data_dir <- "./data"
 data_path <- list.files(
-  path = data_dir, pattern = "\\.rda$", all.files = TRUE,
-  full.names = TRUE, recursive = FALSE
+  path = data_dir,
+  pattern = "\\.rda$",
+  all.files = TRUE,
+  full.names = TRUE,
+  recursive = FALSE
 )
 derived_data_path <- file.path(data_dir, str_c(c(DERIVED_DATASET_LIST, "DERIVED_DATADIC"), ".rda"))
 data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
@@ -253,6 +256,10 @@ temp_data_dict <- temp_data_dict %>%
     data_label, source_type, authors, description, source
   )
 
+# To allow Rd and markdown roxygen syntax
+temp_data_dict <- temp_data_dict %>%
+  mutate(across(everything(), convert_brace_as_rd_code))
+
 ### Add dataset category/keywords ----
 dataset_category_path <- file.path(".", "data-raw", "dataset_cat", "dataset_category.csv")
 if (file.exists(dataset_category_path)) {
@@ -429,10 +436,11 @@ if (exists("derived_data_list")) {
     assert_uniq(dd_name, field_name) %>%
     assert_non_missing(dd_name, field_name, CRFNAME) %>%
     mutate(
+      CRFNAME = str_remove_all(CRFNAME, "^\\[ Derived \\]"),
       data_label = CRFNAME,
       authors = authors_list,
       description = str_c(
-        str_to_sentence(str_remove_all(CRFNAME, "\\[ Derived \\]")),
+        str_to_sentence(CRFNAME),
         " derived dataset."
       ),
       source_type = "derived",
@@ -461,6 +469,10 @@ if (exists("derived_data_list")) {
       data_label, source_type, authors, description, source, keywords
     ) %>%
     assert_non_missing(field_label, field_notes)
+
+  # To allow Rd and markdown roxygen syntax
+  temp_data_dict_derived <- temp_data_dict_derived %>%
+    mutate(across(everything(), convert_brace_as_rd_code))
 
   ## Finalize documentation ----
   generate_roxygen_document(

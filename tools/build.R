@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2026-01-05" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2026-04-02" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -41,7 +41,7 @@ if (CREATE_DATA_CATEGORY) {
   )
 }
 
-# Generate PACC score input data ----
+## Generate PACC score input data ----
 VIGNETTE_DIR <- file.path(".", "vignettes")
 TOOLS_DIR <- file.path(".", "tools")
 TEST_DIR <- file.path(".", "tests", "testthat")
@@ -137,7 +137,7 @@ if (INCLUDE_DERIVED_DATASET) {
     cmdargs = list(
       INPUT_DIR = TEST_DIR,
       OUTPUT_DIR = TOOLS_DIR,
-      PATTERN = "test-derived|test-PET"
+      PATTERN = "test-derived"
     )
   )
 }
@@ -156,6 +156,7 @@ callr::rscript(
 # # run once:
 # # Package license
 # usethis::use_mit_license()
+#
 # # Package news
 # # Caution of overwriting any existing `NEWS.md` file
 # usethis::use_news_md()
@@ -165,21 +166,28 @@ devtools::load_all("./")
 devtools::document()
 devtools::check(error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
 pkg_dir <- devtools::build(vignettes = INCLUDE_DERIVED_DATASET)
-install.packages(pkgs = pkg_dir, repos = NULL)
+install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
 
 # Build README.md ----
-devtools::build_readme()
+# devtools::build_readme()
 
 # # Build website ----
 # # run once:
+#
 # # To clean any existing site on local machine
 # pkgdown::clean_site()
+#
 # # Caution of overwriting any existing `_pkgdown.yml` file
-# usethis::use_pkgdown()
+# # usethis::use_pkgdown()
+#
+# # To check pkgdown configuration: `_pkgdown.yml`
 # pkgdown::check_pkgdown()
+#
+# # To build a site
 # pkgdown::build_site()
+#
 # # Publish website online ----
-# # To publish a site online via GitHub repo: PUBLISH_SITE = TRUE
+# # To publish a site online via GitHub repo: set `PUBLISH_SITE <- TRUE`
 # # PUBLISH_SITE <- FALSE
 # if (PUBLISH_SITE) {
 #   pkgdown::deploy_to_branch()

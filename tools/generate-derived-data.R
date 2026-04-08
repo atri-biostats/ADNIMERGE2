@@ -5,12 +5,14 @@ library(knitr)
 library(rlang)
 library(cli)
 
-# Input parameter - derived/analysis datasets ----
+# Source utils ----
 source(file = file.path(".", "tools", "data-prepare-utils.R"))
+devtools::load_all("./")
 
-args <- commandArgs(trailingOnly = TRUE)
-check_arg(args, 1)
-DERIVED_DATASET_LIST <- split_concat_arg(args, FALSE)
+# Input parameter - derived/analysis datasets ----
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 1)
+DERIVED_DATASET_LIST <- split_concat_arg(arg = arg_list, single_char = FALSE)
 if (all(DERIVED_DATASET_LIST %in% "NULL") | any(is.na(DERIVED_DATASET_LIST))) {
   cli::cli_abort(
     message = c(
@@ -21,12 +23,13 @@ if (all(DERIVED_DATASET_LIST %in% "NULL") | any(is.na(DERIVED_DATASET_LIST))) {
 }
 
 # Generate derived and analysis datasets using metadata specs ----
-devtools::load_all("./")
-
-# Load system files\ utils function ----
+## Load system files\ utils function ----
 utils_file_list <- list.files(
-  path = "./inst", pattern = "\\.R$", all.files = TRUE,
-  full.names = TRUE, recursive = FALSE
+  path = "./inst",
+  pattern = "\\.R$",
+  all.files = TRUE,
+  full.names = TRUE,
+  recursive = FALSE
 )
 load_result <- lapply(utils_file_list, source)
 

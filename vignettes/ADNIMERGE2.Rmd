@@ -23,7 +23,8 @@ knitr::opts_chunk$set(
 )
 # Package Versions
 pkgName <- "ADNIMERGE2"
-pkgFilename <- paste0("ADNIMERGE2_", packageVersion("ADNIMERGE2"), ".tar.gz")
+# pkgFilename <- paste0("ADNIMERGE2_", packageVersion("ADNIMERGE2"), ".tar.gz")
+pkgFilename <- paste0("ADNIMERGE2.tar.gz")
 ```
 
 # Overview 
@@ -32,7 +33,11 @@ The main goal of developing the Alzheimer's Disease Neuroimaging Initiative (ADN
 
 # Package Source
 
-The *``r pkgName``* R package will be available on the data-sharing platform at [LONI website](https://adni.loni.usc.edu/). To get access the package, it is required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement. Please visit at <https://adni.loni.usc.edu/data-samples/adni-data/#AccessData> to learn more about the application submission process and ADNI Data Use Agreement.
+The *``r pkgName``* R package is available on the data-sharing platform at [LONI website](https://adni.loni.usc.edu/). The R package file is located in [Study Files > Study Info > Data & Database](https://adni.loni.usc.edu/) folder at the data-sharing platform. 
+
+# Package Access
+
+To get access the package, it is required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement. Please visit at <https://adni.loni.usc.edu/data-samples/adni-data/#AccessData> to learn more about the application submission process and ADNI Data Use Agreement.
 
 # Installation
 
@@ -43,6 +48,10 @@ To install the package locally, run ``r paste0("install.packages(\"path/to/", pk
 ```{r study-pkg}
 library(ADNIMERGE2)
 ```
+
+## Package Version 
+
+To get the package version, run ``r paste0('packageVersion(\"', pkgName,'\")')``. Please refer to [versions page](../news/index.html) for more detailed about changelog. 
 
 ## Package Source Data Date 
 
@@ -142,11 +151,11 @@ convert_to_missing_value(
 
 As part of the study data R package development, some derived datasets are created using the [PHARMAVERSE](https://pharmaverse.org/) workflow for illustration purpose. Detailed procedures of how these datasets are generated can be found in the following package vignettes:
 
-* [ADNIMERGE2-Derived-Data](vignette(topic = "ADNIMERGE2-Derived-Data", package = "ADNIMERGE2")): Includes standardized derived datasets
+* [ADNIMERGE2-Derived-Data](../articles/ADNIMERGE2-Derived-Data.html): Includes standardized derived datasets
 
-* [ADNIMERGE2-Analysis-Meta-Specs](vignette(topic = "ADNIMERGE2-Analysis-Meta-Specs", package = "ADNIMERGE2")l): Includes a metadata specification that is used for generating the derived analysis ready datasets.
+* [ADNIMERGE2-Analysis-Meta-Specs](../articles/ADNIMERGE2-Analysis-Meta-Specs.html): Includes a metadata specification that is used for generating the derived analysis ready datasets.
 
-* [ADNIMERGE2-Analysis-Data](vignette(topic = "ADNIMERGE2-Analysis-Data", package = "ADNIMERGE2")l): Includes derived analysis ready datasets based on the metadata specifications and derived datasets.
+* [ADNIMERGE2-Analysis-Data](../articles/ADNIMERGE2-Analysis-Data.html): Includes derived analysis ready datasets based on the metadata specifications and derived datasets.
 
 **NOTE: ** 
 
@@ -154,14 +163,14 @@ As part of the study data R package development, some derived datasets are creat
 
 * *Some of the derived datasets in the package may not be fully complied with the [CDISC](https://www.cdisc.org/) standardization, and those data are generated for illustration purpose.*
 
-Furthermore, a derived data for modified version of the Preclinical Alzheimer Cognitive Composite (PACC) score is also included. [ADNIMERGE2-PACC](vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")) shows creating PACC score from raw datasets.
+Furthermore, a derived data for modified version of the Preclinical Alzheimer Cognitive Composite (PACC) score is also included. [ADNIMERGE2-PACC](../articles/ADNIMERGE2-PACC.html) shows creating PACC score from raw datasets.
 
 ## Articles 
 
 There are few articles included in the package as a vignette to demonstrate how to use the study data R package for creating simple summaries or analysis results.
 
-* [Enrollment Summaries]('./ADNI-Enrollment.html'): Includes enrollment summary by calender month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
+* [Enrollment Summaries](../articlesADNI-Enrollment.html): Includes enrollment summary by calendar month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
 
-* [Longitudinal Clinical Cognitive Outcome Summaries]('./ADNI-Longitudinal.html'): Currently, includes summary of the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog) overtime across the baseline diagnostics status.
+* [Longitudinal Clinical Cognitive Outcome Summaries](../articles/ADNI-Longitudinal.html): Currently, includes summary of the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog) overtime across the baseline diagnostics status.
 
-**NOTE: ** *The analysis results that presented in the package vignettes are not pre-planned and only included for illustration purpose.* 
+**NOTE: ** *The analysis results that are presented in this package vignettes are not pre-planned and only included for illustration purpose.* 

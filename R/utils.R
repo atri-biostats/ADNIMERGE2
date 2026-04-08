@@ -126,7 +126,6 @@ convert_adni_phase_order_num <- function(phase_num) {
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom tibble tibble
-#' @importFrom magrittr %>%
 #' @importFrom dplyr mutate across case_when
 #' @importFrom assertr verify
 #' @importFrom cli cli_abort
@@ -240,8 +239,7 @@ create_orig_protocol <- function(.data) {
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom cli cli_abort
-#' @importFrom tidyselect all_of
-#' @importFrom dplyr rename_with relocate
+#' @importFrom dplyr all_of rename_with relocate
 #' @importFrom assertr verify
 #' @export
 create_col_protocol <- function(.data, phaseVar = NULL, .strict_check = TRUE) {
@@ -351,7 +349,7 @@ create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| 
 #' @title Gets Factor Levels from DATADIC Dataset
 #' @description
 #'  This function is used to generate the coded levels of FLDNAME using
-#'  a data dictionary dataset \code{\link{DATADIC}()} downloaded from
+#'  a data dictionary dataset \code{\link{DATADIC}} downloaded from
 #'  <https://adni.loni.usc.edu/data-samples/adni-data/>.
 #' @param .datadic Data dictionary dataset
 #' @param tbl_name
@@ -364,7 +362,7 @@ create_string_split <- function(CODES, spliter1 = ";| ;| ; ", spliter2 = "=| =| 
 #' @return A data.frame that appended with the following variables:
 #' \itemize{
 #'   \item \emph{prefix}: Actual value in the dataset
-#'   \item \emph{suffix}: Coded values from \code{\link{DATADIC}()}
+#'   \item \emph{suffix}: Coded values from \code{\link{DATADIC}}
 #'   \item \emph{class_type}: Class type, "factor"
 #'   }
 #' @examples
@@ -423,7 +421,7 @@ get_factor_levels_datadict <- function(.datadic,
 ## Function to Extract Codelist from DATADIC ----
 #' @title Extract Codedlist from DATADIC
 #' @description
-#' This function is used to extract codelist from a data dictionary \code{\link{DATADIC}()}.
+#' This function is used to extract codelist from a data dictionary \code{\link{DATADIC}}.
 #' @param .datadic Data dictionary dataset
 #' @return A data.frame the same as \code{.datadic} with only coded list.
 #' @examples
@@ -537,7 +535,7 @@ extract_codelist_datadict <- function(.datadic) {
 #' @title Gets Factor Field Name (FLDNAME)
 #' @description
 #'   This function is used to identify factor field name (FLDNAME) based on a
-#'   data dictionary dataset \code{\link{DATADIC}()}
+#'   data dictionary dataset \code{\link{DATADIC}}
 #'   from <https://adni.loni.usc.edu/data-samples/adni-data/>.
 #' @param .datadic
 #'  Data dictionary dataset that generated using \code{\link{get_factor_levels_datadict}()}
@@ -552,7 +550,7 @@ extract_codelist_datadict <- function(.datadic) {
 #'   nested_value = TRUE
 #' )
 #' # List of available factor columns in data dictionary
-#' # \code{\link{DATADIC}()} for the \code{\link{CDR}()} dataset
+#' # \code{\link{DATADIC}} for the \code{\link{CDR}} dataset
 #' get_factor_fldname(
 #'   .datadic = data_dict_dd,
 #'   tbl_name = "CDR",
@@ -568,7 +566,7 @@ extract_codelist_datadict <- function(.datadic) {
 #' @rdname get_factor_fldname
 #' @family data dictionary related functions
 #' @keywords adni_datadic_fun
-#' @seealso \code{\link{get_factor_levels_datadict}()} \code{\link{DATADIC}()}
+#' @seealso \code{\link{get_factor_levels_datadict}()} \code{\link{DATADIC}}
 #' @importFrom dplyr select filter
 #' @importFrom tibble as_tibble
 #' @export
@@ -602,7 +600,7 @@ get_factor_fldname <- function(.datadic, tbl_name, dd_fldnames = NULL) {
 #' @title Collecting Variable Coded Values
 #' @description
 #'  This function is used to collect the coded and decoded values for a given
-#'  variable based on a data dictionary \code{\link{DATADIC}()}.
+#'  variable based on a data dictionary \code{\link{DATADIC}}.
 #' @param .datadic
 #'    Data dictionary dataset created using \code{\link{get_factor_levels_datadict}()} function
 #' @param tbl_name Dataset name
@@ -761,9 +759,7 @@ collect_value_mapping <- function(.datadic, tbl_name, all_fld_name) {
 #' @rdname convert_value_mapping
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
-#' @importFrom purrr pluck
-#' @importFrom dplyr mutate relocate bind_rows
-#' @importFrom cli cli_abort
+#' @importFrom dplyr bind_rows mutate relocate
 convert_value_mapping <- function(coded_values, tbl_name = NULL) {
   TBLNAME <- FLDNAME <- PHASE <- CODES <- NULL
   check_object_type(coded_values, "list")
@@ -787,8 +783,7 @@ convert_value_mapping <- function(coded_values, tbl_name = NULL) {
 #' @rdname convert_value_mapping_phase_specific
 #' @family data dictionary codelist related functions
 #' @keywords adni_datadic_fun
-#' @importFrom dplyr bind_rows group_by ungroup
-#' @importFrom tidyselect everything
+#' @importFrom dplyr bind_rows group_by ungroup everything
 #' @importFrom tidyr nest replace_na
 #' @importFrom cli cli_abort
 convert_value_mapping_phase_specific <- function(coded_values) {
@@ -1026,27 +1021,13 @@ detect_decimal_value <- function(value) {
 #' @importFrom rlang arg_match
 #' @importFrom cli cli_abort
 #' @importFrom dplyr mutate across filter pull bind_rows arrange rename_with select
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom stringr str_detect str_c str_extract str_remove_all
 replace_values_phase_specific <- function(.data, fld_name, phase,
                                           phaseVar = "PHASE", code, decode) {
   phase_var <- NULL
-  if (length(fld_name) != 1) {
-    cli_abort(
-      message = c(
-        "{.var fld_name} must be a single character vector.",
-        "The length of {.va fld_name} is {.code length(fld_name)}."
-      )
-    )
-  }
-  if (length(phase) != 1) {
-    cli_abort(
-      message = c(
-        "{.var phase} must be a single character vector.",
-        "The length of {.var phase} is {.code length(phase)}."
-      )
-    )
-  }
+  check_vector_length(x = fld_name, size = 1)
+  check_vector_length(x = phase, size = 1)
   if (!is.na(phase)) {
     rlang::arg_match(
       arg = phase,
@@ -1130,7 +1111,7 @@ replace_values_phase_specific <- function(.data, fld_name, phase,
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
 #'  A list value associated with each ADNI study phase and the format will be
-#'   \emph{[phase_name]$values}.
+#'  `[phase_name]$values`.
 #' \itemize{
 #'   \item \emph{code}: Value that will be replaced, see more \code{\link{collect_value_mapping_single_var}()}
 #'   \item \emph{decode}: Values that will replace the coded values, \code{code}
@@ -1215,7 +1196,7 @@ replace_values_single_var <- function(.data, fld_name, phaseVar = "PHASE", input
 #' @param phaseVar Variable name for the ADNI study protocol, Default: "PHASE"
 #' @param input_values
 #'  A nested list values of each columns associated with corresponding ADNI
-#'  study phase and the format will be: [column_name][[phase_name]]$values
+#'  study phase and the format will be: `[column_name][[phase_name]]$values`
 #' \itemize{
 #'   \item \emph{code} Value that will be replaced
 #'   \item \emph{decode} Values that will replace coded value (\emph{code})
@@ -1298,7 +1279,7 @@ replace_values_dataset <- function(.data, phaseVar = "PHASE", input_values) {
 #' @importFrom dplyr across filter if_all case_when
 #' @importFrom tibble as_tibble
 #' @importFrom rlang arg_match
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @export
 convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
                                      missing_char = NA, phase = NULL) {
@@ -1320,13 +1301,13 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
   }
   column_list <- get_cols_value(.data = .data, value = value, col_name = col_name)
   column_list <- exclude_cols(x = column_list, exact_match = FALSE, exc_col = c("has\\_qc\\_error", "qc\\_flag"))
-  
+
   if (all(is.na(column_list))) {
     cli_alert_info(
       text = c("No variable contains {.val {value}} value")
     )
   }
-  
+
   # To make sure '-1' as missing values only in ADNI1 phases
   if (all(value %in% "-1" & "ADNI1" %in% phase & length(phase) > 1)) {
     cli_abort(
@@ -1336,7 +1317,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
       )
     )
   }
-  
+
   output_data <- .data %>%
     {
       if (all(is.na(column_list))) {
@@ -1355,7 +1336,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
         (.)
       }
     }
-  
+
   return(output_data)
 }
 
@@ -1391,7 +1372,7 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
 #' @importFrom cli cli_abort
 #' @importFrom stringr str_detect
 exclude_cols <- function(x,
-                         exc_col = c("has_qc_error", "qc_flag"), 
+                         exc_col = c("has_qc_error", "qc_flag"),
                          exact_match = TRUE) {
   check_object_type(exact_match, "logical")
   if (any(is.null(exc_col)) || any(is.na(exc_col))) {
@@ -1604,7 +1585,7 @@ check_value_match <- function(values,
 #' @title Checks Duplicated Records - Internal
 #' @description
 #'  This function is used to check for any duplicated records in a dataset
-#'  based on the combination of provided columns.
+#'  based on a combination of provided columns.
 #' @param .data Data.frame
 #' @param col_names Character vector of column names
 #' @param stop_message
@@ -1629,8 +1610,8 @@ check_value_match <- function(values,
 #' @family checks function
 #' @keywords utils_fun
 #' @importFrom dplyr select mutate across n if_all
+#' @importFrom dplyr all_of any_of
 #' @importFrom tidyr unite
-#' @importFrom tidyselect all_of any_of
 #' @importFrom cli cli_alert_info cli_abort
 #' @export
 check_duplicate_records <- function(.data,
@@ -1783,8 +1764,7 @@ load_csv_files <- function(input_dir = NULL, full_file_path = NULL, .envr = NULL
   if (is.null(input_dir) & is.null(full_file_path)) {
     cli::cli_abort(
       message = paste0(
-        "At least one of {.var input_dir} and ",
-        "{.var full_file_path} must not be missing."
+        "Both {.var input_dir} and {.var full_file_path} can not be missing."
       )
     )
   }
@@ -1812,7 +1792,5 @@ load_csv_files <- function(input_dir = NULL, full_file_path = NULL, .envr = NULL
     ),
     seq_along(names(combined_data_file))
   )
-  cli::cli_alert_success(
-    text = success_text
-  )
+  cli::cli_alert_success(text = success_text)
 }

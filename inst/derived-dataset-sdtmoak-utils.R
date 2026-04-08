@@ -47,7 +47,7 @@ generate_oak_id_vars_adni <- function(...) {
 #' @importFrom sdtm.oak derive_blfl
 #' @importFrom dplyr rename_with mutate across select
 #' @importFrom assertr verify
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom stringr str_remove_all str_c str_extract_all
 derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", num_ref_days = 90,
                              baseline_visits = "Baseline", baseline_timepoints = character(),
@@ -136,7 +136,7 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", n
 #' @importFrom rlang arg_match0
 #' @importFrom cli cli_abort
 #' @importFrom dplyr filter if_all group_by n ungroup relocate
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 
 checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_alert = TRUE, id_col = "USUBJID") {
   rlang::arg_match0(arg = action_type, values = c("return_records", "error"))
@@ -203,7 +203,7 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
 #' @keywords internal
 #' @importFrom sdtm.oak oak_id_vars
 #' @importFrom dplyr group_by across mutate case_when ungroup select left_join
-#' @importFrom tidyselect all_of any_of
+#' @importFrom dplyr all_of any_of
 #' @importFrom assertr verify
 
 adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", id_col = "USUBJID") {
@@ -273,7 +273,7 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
 #'  in the input data.
 #' @rdname drive_bfl_visit
 #' @importFrom dplyr mutate across case_when
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 
 drive_bfl_visit <- function(.data, visit_col = "VISIT", baseline_visits = "Baseline",
                             value_col = NULL, status_col = NULL) {
@@ -375,22 +375,21 @@ assign_studyid_domain <- function(.data, studyid = "ADNI", domain) {
 #' @export
 #' @importFrom assertr assert not_na is_uniq
 #' @importFrom dplyr select
-#' @importFrom tidyselect all_of any_of
+#' @importFrom dplyr all_of any_of
 #' @importFrom labelled set_variable_labels
 assign_vars_label <- function(.data, data_dict, .strict = TRUE) {
   require(dplyr)
-  require(tidyselect)
   require(labelled)
   require(assertr)
   check_object_type(.strict, "logical")
   if (.strict) {
     select_of <- function(x) {
-      tidyselect::all_of(x)
+      dplyr::all_of(x)
     }
   }
   if (!.strict) {
     select_of <- function(x) {
-      tidyselect::any_of(x)
+      dplyr::any_of(x)
     }
   }
 

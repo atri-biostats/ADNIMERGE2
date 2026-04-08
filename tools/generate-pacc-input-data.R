@@ -10,24 +10,17 @@ library(tidyverse)
 library(assertr)
 library(cli)
 
-# Input Argument ----
-args <- commandArgs(trailingOnly = TRUE)
+# Source util functions ----
 source(file.path(".", "tools", "data-prepare-utils.R"))
-check_arg(args, 1)
-DATA_DOWNLOADED_DATE <- as.Date(args[1])
-check_arg_date(DATA_DOWNLOADED_DATE)
-verify_pkg_install(pkg = c("ADNI4", "ADNIMERGE"))
-# Compared with raw source dataset date
-if (ADNI4::data_dump_date < DATA_DOWNLOADED_DATE) {
-  cli::cli_abort(
-    message = c(
-      "{.var ADNI4} package must be downloaded on {.val {DATA_DOWNLOADED_DATE}}. \n",
-      "{.var ADNI4} R package was downloaded on {.val {ADNI4::data_dump_date}}."
-    )
-  )
-}
-
 devtools::load_all("./")
+
+# Input Argument ----
+arg_list <- commandArgs(trailingOnly = TRUE)
+check_arg(x = arg_list, size = 1)
+DATA_DOWNLOADED_DATE <- as.Date(arg_list[1])
+check_arg_date(x = DATA_DOWNLOADED_DATE)
+verify_pkg_install(pkg = c("ADNI4", "ADNIMERGE"))
+compare_adni4_pkg_date(download_date = DATA_DOWNLOADED_DATE)
 
 # Utility functions ------
 #' @title Check for Unique Records
@@ -44,53 +37,53 @@ check_unique_record <- function(.data) {
   return(.data)
 }
 
-#' @title Adjust Screening Visit Code in ADNI1 Phase
-#' @description
-#' This function is used to convert screen failure visit code \code{f} into
-#' screening visit \code{sc} for records in ADNI phase.
-#' @param .data A data.frame
-#' @return A data.frame
-#' @rdname convert_f_viscode_to_sc
-#' @importFrom dplyr mutate case_when across
-#' @importFrom tidyselect all_of
-
-convert_f_viscode_to_sc <- function(.data, visitVar = "VISCODE") {
-  require(dplyr)
-  require(tidyselect)
-  .data <- .data %>%
-    mutate(across(all_of(visitVar), ~ case_when(.x %in% "f" ~ "sc", TRUE ~ .x)))
-  return(.data)
-}
-
 # Prepare input data -----
 ## Get ADAS - Delayed Word Recall Score/Q4 sub-score -----
 ### For ADNI1-3 phases
 adas_q4score_adni13 <- ADNIMERGE::adas %>%
   select(
-    COLPROT, RID, SITEID,
-    VISCODE2 = VISCODE, DONE, NDREASON,
-    DATE, Q4TASK, Q4UNABLE, Q4SCORE
+    COLPROT, RID, SITEID, DONE, NDREASON,
+    DATE, Q4TASK, Q4UNABLE, Q4SCORE,
+    VISCODE2 = VISCODE
   ) %>%
-  set_as_tibble() %>%
-  # Trying to remap visitcode2 to the original visit code
+  # To add PTID
   left_join(
     ADNIMERGE2::ADAS %>%
-      select(COLPROT, RID, VISCODE2, VISCODE, VISDATE) %>%
+      distinct(PTID, RID),
+    relationship = "many-to-one",
+    by = "RID"
+  ) %>%
+  verify(nrow(.) == nrow(ADNIMERGE::adas)) %>%
+  set_as_tibble()
+
+adas_q4score_adni13 <- adas_q4score_adni13 %>%
+  # Trying to remap `VISCODE2` to the original visit code `VISCODE`
+  # Using ADAS table
+  left_join(
+    ADNIMERGE2::ADAS %>%
+      select(COLPROT, RID, VISCODE2, VISCODE = VISCODE, VISDATE) %>%
       set_as_tibble(),
     by = c("COLPROT", "RID", "VISCODE2")
   ) %>%
+  # Adjust for missing VISCODE - that are not done
   mutate(
-    VISCODE = ifelse(is.na(VISCODE), VISCODE2, VISCODE),
+    MISSING_VISCODE = is.na(VISCODE),
+    VISCODE = ifelse(MISSING_VISCODE == TRUE, VISCODE2, VISCODE),
+    VISCODE2 = ifelse(MISSING_VISCODE == TRUE, NA_character_, VISCODE2),
     DATE = ifelse(is.na(DATE), VISDATE, DATE)
   ) %>%
-  select(-VISDATE)
+  select(-VISDATE, -MISSING_VISCODE)
 
 ## For ANDI4 phase
 adni4_adas_q4score <- ADNI4::adas_score %>%
   ADNI4::create_common_cols() %>%
   ADNI4::derive_site_id() %>%
-  select(COLPROT, RID, VISCODE, done, ndreason, date, q4task, q4unable, q4score) %>%
+  ADNI4::remove_site_records() %>%
   set_as_tibble() %>%
+  select(
+    COLPROT, PTID, RID, VISCODE, DONE,
+    NDREASON, DATE, Q4TASK, Q4UNABLE, Q4SCORE
+  ) %>%
   left_join(
     ADNI4::registry %>%
       ADNI4::create_common_cols() %>%
@@ -101,24 +94,64 @@ adni4_adas_q4score <- ADNI4::adas_score %>%
   mutate(DATE = ifelse(is.na(DATE), EXAMDATE, DATE)) %>%
   select(-EXAMDATE)
 
+adni4_adas_q4score <- adni4_adas_q4score %>%
+  # Add VISCODE2 from current ADAS score data
+  left_join(
+    ADNIMERGE2::ADAS %>%
+      select(COLPROT, RID, VISCODE2, VISCODE) %>%
+      set_as_tibble(),
+    by = c("COLPROT", "RID", "VISCODE")
+  ) %>%
+  # Add VISCODE2 from REGISTRY
+  left_join(
+    ADNIMERGE2::REGISTRY %>%
+      select(COLPROT, RID, REGISTRY_VISCODE2 = VISCODE2, VISCODE) %>%
+      set_as_tibble(),
+    by = c("COLPROT", "RID", "VISCODE")
+  ) %>%
+  verify(nrow(.) == nrow(adni4_adas_q4score))
+
+# VISCODE2 mapping checks - ADNI4 phase
+mismatch_viscode2 <- adni4_adas_q4score %>%
+  mutate(across(contains("VISCODE"), ~ ifelse(is.na(.x), "", as.character(.x)))) %>%
+  filter(VISCODE2 != REGISTRY_VISCODE2)
+
+if (nrow(mismatch_viscode2) > 0) {
+  cli::cli_abort(
+    message = c(
+      "x" = paste0(
+        "Found mismatch {.var {'VISCODE2'}} mapping for ADNI4 phase while using ",
+        "{.var ADNIMERGE2::ADAS} and {.var ADNIMERGE2::REGISTRY} tables. \n"
+      ),
+      "i" = paste0("May required to account for 'VISCODE2' mapping for REGISTRY table.")
+    )
+  )
+}
+adni4_adas_q4score <- adni4_adas_q4score %>%
+  select(-REGISTRY_VISCODE2)
+
 # Bind across study phases
 pacc_adas_q4score <- bind_rows(adas_q4score_adni13, adni4_adas_q4score) %>%
   rename("VISDATE" = DATE) %>%
   rename_with(~ paste0("ADAS_", .x), any_of(c("DONE", "NDREASON"))) %>%
-  check_unique_record()
+  check_unique_record() %>%
+  assert_non_missing(all_of(c("PTID", "VISCODE")))
 
 pacc_adas_q4score_long <- pacc_adas_q4score %>%
   mutate(
     SCORE = Q4SCORE,
     SCORE_SOURCE = "ADASQ4SCORE"
   ) %>%
-  select(COLPROT, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, SCORE, SCORE_SOURCE)
 
 ## MMSE from ADNIMERGE2 -----
-pacc_mmse <- MMSE %>%
-  select(COLPROT, RID, VISCODE, VISDATE, DONE, NDREASON, MMSCORE) %>%
+pacc_mmse <- ADNIMERGE2::MMSE %>%
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, DONE, NDREASON, MMSCORE) %>%
   set_as_tibble() %>%
-  convert_f_viscode_to_sc() %>%
+  convert_f_viscode_to_sc(
+    .data = .,
+    code_var = c("VISCODE", "VISCODE2")
+  ) %>%
   rename_with(~ paste0("MMSE_", .x), any_of(c("DONE", "NDREASON"))) %>%
   check_unique_record()
 
@@ -127,21 +160,27 @@ pacc_mmse_long <- pacc_mmse %>%
     SCORE = MMSCORE,
     SCORE_SOURCE = "MMSE"
   ) %>%
-  select(COLPROT, RID, VISCODE, VISDATE, SCORE, SCORE_SOURCE)
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, SCORE, SCORE_SOURCE)
 
 ## NEUROBAT from ADNIMERGE2 -----
 # Includes: Trial B Score: `TRABSCOR`
 #           Logical Memory IIa Delayed Recall Score: `LDELTOTL`
 #           Digit Symbol Substitution Test Score: `DIGITSCR`
 
-pacc_neurobat <- NEUROBAT %>%
-  select(COLPROT, RID, VISCODE, VISDATE, LDELTOTL = LDELTOTAL, DIGITSCR = DIGITSCOR, TRABSCOR) %>%
+pacc_neurobat <- ADNIMERGE2::NEUROBAT %>%
+  select(
+    COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE,
+    LDELTOTL = LDELTOTAL, DIGITSCR = DIGITSCOR, TRABSCOR
+  ) %>%
   set_as_tibble() %>%
-  convert_f_viscode_to_sc() %>%
+  convert_f_viscode_to_sc(
+    .data = .,
+    code_var = c("VISCODE", "VISCODE2")
+  ) %>%
   check_unique_record()
 
 pacc_neurobat_long <- pacc_neurobat %>%
-  select(COLPROT, RID, VISCODE, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
+  select(COLPROT, PTID, RID, VISCODE, VISCODE2, VISDATE, LDELTOTL, DIGITSCR, TRABSCOR) %>%
   pivot_longer(
     cols = all_of(c("LDELTOTL", "DIGITSCR", "TRABSCOR")),
     values_to = "SCORE",

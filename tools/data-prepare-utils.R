@@ -535,6 +535,10 @@ adjust_code_labels <- function(.datadic, phaseVar = "PHASE", codeVar = "CODE", t
           pull(renamed_list)
       ),
       all_of(column_list_dd$specified_name_list)
+    ) %>%
+    # Replacing double braces
+    mutate(
+      text_var = replace_double_braces(text_var)
     )
 
   if (nrow(.datadic) > 1) {
@@ -590,6 +594,34 @@ adjust_code_labels <- function(.datadic, phaseVar = "PHASE", codeVar = "CODE", t
     mutate(field_label = str_replace_all(field_label, "\\{P\\}", " P"))
 
   return(output_data)
+}
+
+# Replacing double braces
+#' @title Replace double braces with `italic` format
+#' @param x Input character object
+#' @return A character object
+#' @rdname markdown_rd
+#' @importFrom stringr str_replace_all
+#' @export
+#'
+replace_double_braces <- function(x) {
+  x <- stringr::str_replace_all(x, "\\{\\{", "\\\\emph{")
+  x <- stringr::str_replace_all(x, "\\}\\}", "}")
+  x
+}
+#' @title Convert markdown braces into Rd code syntax
+#' @description
+#' A function to convert brace characters into `markdown` readable roxygen2
+#' without altering existing `Rd` syntax format.
+#' @inheritParams convert_brace_as_rd_code
+#' @inherit markdown_rd return
+#' @rdname markdown_rd
+#' @export
+
+convert_brace_as_rd_code <- function(x) {
+  x <- stringr::str_replace_all(x, "\\[", "`[")
+  x <- stringr::str_replace_all(x, "\\]", "]`")
+  x
 }
 
 # Add description for common columns in DATADIC ----
@@ -868,7 +900,7 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
 
 #' @title Update Specific Character in Coded Values (Prefix)
 #' @description
-#'  This function is used to add prefix on the data dictionary (`DATADIC`)
+#'  This function is used to add prefix on the data dictionary \code{DATADIC}
 #'  coded values to match values in the actual data.
 #' @param .datadic
 #'  Data dictionary dataset created using
@@ -1078,54 +1110,6 @@ get_study_phase_category <- function(.data, phase_vars = NULL) {
 }
 
 # Utils functions ----
-## Check list object names -----
-#' @title Function to check list object names
-#' @description This function is used to check whether list names are a valid non-missing names
-#' @param obj List object
-#' @param list_names
-#'  A character vector of list names, Default NULL
-#' @param arg see \code{\link{rlang}{caller_arg}}
-#' @param call see \code{\link{rlang}{caller_env}}
-#' @return
-#'  An error message if there is any missing or misspelled names in the list object.
-#' @rdname check_list_names
-#' @keywords utils_fun
-#' @importFrom cli cli_abort
-#' @importFrom rlang call_args caller_env
-
-check_list_names <- function(obj, list_names = NULL, arg = rlang::caller_arg(obj), call = rlang::caller_env()) {
-  check_object_type(obj, "list")
-  # Checking for any unnamed list
-  if (any(is.null(names(obj)) | is.na(names(obj)))) {
-    cli_abort(
-      message = c(
-        "{.arg {arg}} must be fully named list object. \n",
-        "{.arg {arg}} contains unnamed list object."
-      ),
-      call = call
-    )
-  }
-
-  # Checking for any misspelled/omitted list names
-  if (all(is.null(list_names))) missing_names <- NULL
-
-  if (any(!is.null(list_names))) {
-    missing_names <- list_names[!list_names %in% names(obj)]
-  }
-
-  if (length(missing_names) > 0) {
-    cli_abort(
-      message = c(
-        "{.arg {arg}} contain unnamed list value. \n",
-        "{.val {missing_names}} names{?s} {?is/are} are not presented in list names."
-      ),
-      call = call
-    )
-  }
-
-  invisible(missing_names)
-}
-
 ## Create missing data.frame -----
 #' @title Create a tibble/data.frame with no rows/records
 #' @param col_names Character vector of column names
@@ -1207,19 +1191,13 @@ split_concat_arg <- function(arg, single_char = TRUE) {
 NULL
 
 #' @rdname arg_utils
-check_arg <- function(x, size,
-                      arg = rlang::caller_arg(x),
-                      call = rlang::caller_env()) {
-  if (length(x) != size) {
-    cli::cli_abort(
-      message = c(
-        "Input argument {.arg {arg}} must be size of {.val {size}}. \n",
-        "{.arg {arg}} is a length of {.val {length(x)}} vector."
-      ),
-      call = call
-    )
-  }
-  invisible(TRUE)
+check_arg <- function(x, size, arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  check_vector_length(
+    x = x,
+    size = size,
+    arg = arg,
+    call = call
+  )
 }
 
 #' @rdname arg_utils
@@ -1369,7 +1347,7 @@ verify_data_download_date <- function(raw_data_path, input_date) {
     cli::cli_abort(
       message = c(
         paste0(
-          "There may be more than one file downloaded on different date: \n"
+          "There are at least two files that are downloaded on different dates: \n"
         ),
         paste0("{cli::col_yellow(symbol$info)} {.val {date_list}}. \n"),
         paste0(
@@ -1430,6 +1408,39 @@ verify_pkg_install <- function(pkg) {
       "{.val {non_install_pkg}} {?is/are} not installed in \n",
       "{.val {(.libPaths())}} library path{?s}."
     ))
+  }
+  invisible(TRUE)
+}
+
+#' @title Compare `ADNI4` R package date with raw data download date
+#' @param download_date Raw data download date
+#' @return Invisible Boolean value or an error message
+#' @examples
+#' \dontrun{
+#' compare_adni4_pkg_date(download_date = Sys.Date())
+#' }
+#' @rdname compare_adni4_pkg_date
+#' @importFrom cli cli_abort
+compare_adni4_pkg_date <- function(download_date) {
+  adni4_date <- as.Date(ADNI4::data_dump_date)
+  download_date <- as.Date(download_date)
+  if (is.na(download_date)) {
+    cli_abort(
+      message = c(
+        "x" = "Missing {.var download_date} value.\n",
+        "i" = "{.var download_date} must be a date object."
+      )
+    )
+  }
+  if (adni4_date < download_date) {
+    cli::cli_abort(
+      message = c(
+        "x" = "Can't find the latest {.var ADNI4} R data package. \n",
+        "i" = "{.var ADNI4} R data package was downloaded prior to the raw source data date. \n",
+        "i" = "{.var ADNI4} R data package was downloaded on {.val {adni4_date}}. \n",
+        "i" = "{.var ADNI4} R data package must be downloaded on or after {.val {download_date}}."
+      )
+    )
   }
   invisible(TRUE)
 }

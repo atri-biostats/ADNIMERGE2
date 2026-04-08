@@ -104,13 +104,11 @@ get_id_mapping_list <- function(.registry = get("REGISTRY"),
 #' )
 #' }
 #' @rdname create_rfstdtc
-#' @importFrom dplyr left_join mutate select
+#' @importFrom dplyr left_join mutate select all_of
 #' @importFrom assertr verify
-#' @importFrom tidyselect all_of
 create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
   require(dplyr)
   require(assertr)
-  require(tidyselect)
   RFSTDTC <- NULL
   join_cols <- get_cols_name(.data, c("RID", "ORIGPORT"))
   check_colnames(
@@ -147,9 +145,8 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
 #' @return A data frame appended with \code{VISIT} and \code{VISITNUM}.
 #' @rdname assign_visit_attr
 #' @keywords adni_visit_adjust
-#' @importFrom dplyr left_join select mutate across case_when
+#' @importFrom dplyr left_join select mutate across case_when all_of
 #' @importFrom assertr verify
-#' @importFrom tidyselect all_of
 assign_visit_attr <- function(.data,
                               visit_record_data = get("ADNI_VISIT_RECORD"),
                               domain = NULL, check_missing_visnum = TRUE) {
@@ -234,8 +231,7 @@ assign_visit_attr <- function(.data,
 #' @return A data.frame with adjusted value of \code{dtc_col} column.
 #' @rdname adjust_visit_date
 #' @keywords adni_visit_adjust
-#' @importFrom dplyr mutate across case_when pull
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr mutate across case_when pull all_of
 #' @importFrom sdtm.oak create_iso8601
 adjust_visit_date <- function(.data, dtc_col, visdtc_col = "VISDTC") {
   require(tidyverse)
@@ -268,8 +264,7 @@ adjust_visit_date <- function(.data, dtc_col, visdtc_col = "VISDTC") {
 #' @return A data.frame with adjusted visit completion status.
 #' @rdname adjust_visit_status
 #' @keywords adni_visit_adjust
-#' @importFrom dplyr mutate if_any across case_when select
-#' @importFrom tidyselect any_of all_of
+#' @importFrom dplyr mutate if_any across case_when select any_of all_of
 #' @importFrom cli cli_abort
 adjust_visit_status <- function(.data, domain = NULL, vistat_col = "VISTAT") {
   require(tidyverse)
@@ -329,13 +324,11 @@ adjust_visit_status <- function(.data, domain = NULL, vistat_col = "VISTAT") {
 #'  A data.frame that generated based on ADNI study phase visits, Default: get("EPOCH_LIST_LONG")
 #' @return A data.frame appended with \code{EPOCH} variable.
 #' @rdname set_epoch
-#' @importFrom dplyr rename mutate left_join select
+#' @importFrom dplyr rename mutate left_join select all_of
 #' @importFrom assertr verify
-#' @importFrom tidyselect all_of
 assign_epoch <- function(.data, .epoch = get("EPOCH_LIST_LONG")) {
   require(dplyr)
   require(assertr)
-  require(tidyselect)
   PTTYPE <- COLPROT <- ORIGPROT <- NULL
   join_cols <- c("COLPROT", "VISCODE", "PTTYPE")
   check_colnames(
@@ -383,11 +376,10 @@ assign_epoch <- function(.data, .epoch = get("EPOCH_LIST_LONG")) {
 #' @return A data.frame the same as \code{.data} with adjusted vist name/code label for unscheduled visit.
 #' @rdname assign_unsch_visit_label
 #' @importFrom tibble tibble
-#' @importFrom dplyr left_join mutate case_when cur_column select
-#' @importFrom tidyselect any_of
+#' @importFrom dplyr left_join mutate case_when cur_column select any_of
 #' @importFrom assertr verify
 assign_unsch_visit_label <- function(.data) {
-  require(tidyverse)
+  require(dplyr)
   require(assertr)
   VISCODE <- VISIT_LABEL <- VISITNUM_LABEL <- NULL
   vistcols <- c("VISIT", "VISITNUM")
@@ -449,9 +441,9 @@ get_closest_visitnum <- function(data_dd) {
 #' @param .data Data.frame
 #' @rdname adjust_vistnum_unsch
 #' @export
-#' @importFrom dplyr mutate select filter group_by across ungroup select case_when
+#' @importFrom dplyr mutate select filter group_by across ungroup select
+#' @importFrom dplyr case_when all_of
 #' @importFrom tidyr nest fill unnest
-#' @importFrom tidyselect all_of
 #' @importFrom mirai daemons
 adjust_vistnum_unsch <- function(.data, domain = NULL) {
   require(tidyverse)
@@ -587,7 +579,7 @@ set_dom_test <- function(.data, .data_list, merge_by) {
 #' @importFrom purrr map_dfr
 #' @importFrom fuzzyjoin stringdist_left_join
 #' @importFrom dplyr left_join filter select mutate row_number bind_rows
-#' @importFrom tidyselect all_of any_of ends_with
+#' @importFrom dplyr all_of any_of ends_with
 #' @importFrom data.table as.data.table
 left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
                             date_col = NULL, relation = "one-to-one",
@@ -722,20 +714,22 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
 #' # Without strict method
 #' name_char <- c(name_char, "ORIGPROT" = "FIRST PHASE")
 #' data3 <- data1 %>%
-#'   rename_with_list(., name_char = name_char, by_name = TRUE, .strict = FALSE, suffix = "_RENAMED")
+#'   rename_with_list(.,
+#'     name_char = name_char,
+#'     by_name = TRUE,
+#'     .strict = FALSE,
+#'     suffix = "_RENAMED"
+#'   )
 #' }
 #' @seealso
-#'  \code{\link[tidyselect]{all_of}}
-#'  \code{\link[dplyr]{rename}}
+#'  \code{\link[dplyr]{rename_with}}
 #' @rdname rename_with_list
 #' @export
-#' @importFrom tidyselect all_of any_of
-#' @importFrom dplyr rename_with
+#' @importFrom dplyr all_of any_of rename_with
 #' @importFrom cli cli_abort
 rename_with_list <- function(.data, name_char, by_name = TRUE, .strict = TRUE,
                              prefix = NULL, suffix = NULL) {
   require(dplyr)
-  require(tidyselect)
   require(cli)
   check_object_type(by_name, "logical")
   check_object_type(.strict, "logical")
@@ -743,12 +737,12 @@ rename_with_list <- function(.data, name_char, by_name = TRUE, .strict = TRUE,
   if (is.null(prefix)) prefix <- ""
   if (.strict) {
     select_of <- function(x) {
-      tidyselect::all_of(x)
+      dplyr::all_of(x)
     }
   }
   if (!.strict) {
     select_of <- function(x) {
-      tidyselect::any_of(x)
+      dplyr::any_of(x)
     }
   }
 

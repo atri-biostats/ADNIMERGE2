@@ -60,8 +60,14 @@
 #'   \item Trails B Score, see see \code{TRABSCOR} score in \code{\link{NEUROBAT}()}
 #' }
 #'
-#' @param rescale_trialsB A Boolean value to change the \code{Trails B} score in log scale, Default: TRUE
-#'
+#' @param rescale_trailsB 
+#'     A Boolean value to change the \code{Trails B} score in logarithm scale. 
+#'     By default, `Trails B` score will be converted into a logarithm scale.
+#'     
+#' @param rescale_trialsB `r lifecycle::badge("deprecated")` the same as 
+#'    `rescale_trailsB` argument. Note: Deprecated in version 0.1.2. 
+#'     The `rescale_trialsB` argument will be removed in a future release. 
+#'     
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
 #' @param wideFormat A Boolean value whether the data.frame is in \code{wide} or \code{long} format, Default: TRUE
@@ -179,13 +185,15 @@
 #' @importFrom cli cli_abort cli_alert_warning
 #' @importFrom dplyr mutate across select relocate bind_rows
 #' @importFrom tidyr pivot_wider pivot_longer
-#' @importFrom tidyselect all_of any_of ends_with contains last_col
+#' @importFrom dplyr all_of any_of ends_with contains last_col
 #' @importFrom stats cor
+#' @importFrom lifecycle is_present deprecated deprecate_warn
 
 compute_pacc_score <- function(.data,
                                bl.summary,
                                componentVars,
-                               rescale_trialsB = FALSE,
+                               rescale_trailsB = FALSE,
+                               rescale_trialsB = lifecycle::deprecated(),
                                keepComponents = FALSE,
                                wideFormat = TRUE,
                                varName = NULL,
@@ -193,19 +201,19 @@ compute_pacc_score <- function(.data,
                                idCols = NULL) {
   mPACCdigit <- mPACCtrailsB <- NULL
   check_object_type(keepComponents, "logical")
-  check_object_type(rescale_trialsB, "logical")
-  check_object_type(wideFormat, "logical")
-
-  var_names <- componentVars
-  if (length(var_names) != 5) {
-    cli::cli_abort(
-      message = c(
-        "{.var var_name} must be length of 5. \n",
-        "{.val {var_name}} are provided"
-      )
+  # Signal the `rescale_trialsB` deprecation to the user
+  if (lifecycle::is_present(rescale_trialsB)) {
+    deprecate_warn(
+      when = "0.1.2",
+      what = "compute_pacc_score(rescale_trialsB = )",
+      with = "compute_pacc_score(rescale_trailsB = )"
     )
+    rescale_trailsB <- rescale_trialsB
   }
-
+  check_object_type(rescale_trailsB, "logical")
+  check_object_type(wideFormat, "logical")
+  check_vector_length(componentVars, 5)
+  var_names <- componentVars
   if (!all(var_names %in% bl.summary$VAR)) {
     cli::cli_abort(
       message = c(
@@ -269,8 +277,8 @@ compute_pacc_score <- function(.data,
     strict = TRUE
   )
 
-  # Log transformed Trial B score
-  if (!rescale_trialsB) {
+  # Log transformed Trails B score
+  if (!rescale_trailsB) {
     trailB_score <- .data_wide %>%
       select(all_of(var_names[5])) %>%
       pull()
@@ -278,12 +286,12 @@ compute_pacc_score <- function(.data,
     if (any(trailB_score < 0)) {
       cli::cli_abort(
         message = c(
-          "{.var trailB_score} represents the Trial B score. \n",
+          "{.var trailB_score} represents Trails B score. \n",
           paste0(
             "{.var trailB_score} must not contains any negative value for",
             " log rescale/transformation. \n"
           ),
-          "Do you want to set {.var rescale_trialsB} = {.val {FALSE}}?"
+          "Do you want to set {.var rescale_trailsB} = {.val {FALSE}}?"
         )
       )
     }
@@ -291,16 +299,16 @@ compute_pacc_score <- function(.data,
 
   .data_wide <- .data_wide %>%
     {
-      if (rescale_trialsB) {
-        # Create log transformation for Trial B Scores
-        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG.{col}"))
+      if (rescale_trailsB) {
+        # Create log transformation for Trails B scores
+        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG_{col}"))
       } else {
         (.)
       }
     }
 
-  if (rescale_trialsB) {
-    var_names[5] <- paste0("LOG.", var_names[5])
+  if (rescale_trailsB) {
+    var_names[5] <- paste0("LOG_", var_names[5])
   }
 
   # Check for any pre-existing standardized variables
@@ -322,9 +330,9 @@ compute_pacc_score <- function(.data,
   .data_wide <- .data_wide %>%
     mutate(across(all_of(var_names),
       ~ {
-        # Adjust for LOG.trialB score
-        if (rescale_trialsB) {
-          col_name <- gsub("LOG\\.", "", cur_column())
+        # Adjust for LOG_trailsB score
+        if (rescale_trailsB) {
+          col_name <- gsub("LOG\\_", "", cur_column())
         } else {
           col_name <- cur_column()
         }
@@ -509,7 +517,7 @@ compute_pacc_score <- function(.data,
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter if_all group_by across ungroup if_any select mutate
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom stats sd
 
 compute_score_summary <- function(.data,
@@ -644,7 +652,7 @@ compute_score_summary <- function(.data,
 #' @importFrom cli cli_abort
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter if_all
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 
 compute_baseline_score_summary <- function(.data, filterBy, filterValue = c("Y", "Yes", "bl"), ...) {
   if (length(filterBy) != 1) {
@@ -827,32 +835,6 @@ calculate_zscore <- function(x, mean, sd) {
 }
 
 # Utility functions ----
-#' @title Check for non-missing value
-#' @param x Input value
-#' @return A stop error if the value is missing value \code{'NULL'}
-#' @examples
-#' \dontrun{
-#' check_non_missing_value(x = LETTERS[1:10])
-#' check_non_missing_value(x = NULL)
-#' }
-#' @rdname check_non_missing_value
-#' @family checks function
-#' @keywords utils_fun
-#' @importFrom cli cli_abort
-#' @export
-
-check_non_missing_value <- function(x) {
-  if (is.null(x)) {
-    cli::cli_abort(
-      message = c(
-        "{.var x} must not be missing value."
-      )
-    )
-  }
-  invisible(x)
-}
-
-
 ## Get variable common date -----
 #' @title Get Common Date Across Variables
 #'
@@ -908,7 +890,7 @@ check_non_missing_value <- function(x) {
 #' @importFrom dplyr mutate row_number filter group_by ungroup n_distinct
 #' @importFrom dplyr distinct left_join case_when select
 #' @importFrom tidyr pivot_longer
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @export
 
 get_vars_common_date <- function(.data,
@@ -1023,7 +1005,7 @@ get_vars_common_date <- function(.data,
 #' @keywords utils_fun
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr rename_with mutate across
-#' @importFrom tidyselect everything
+#' @importFrom dplyr everything
 #' @export
 
 set_as_tibble <- function(.data) {
@@ -1034,7 +1016,7 @@ set_as_tibble <- function(.data) {
   return(.data)
 }
 
-# Baseline record adjustment from screening visit -----
+## Baseline record adjustment from screening visit -----
 #' @title Carrying Forward Screening Record as Baseline Record
 #'
 #' @description
@@ -1096,7 +1078,7 @@ set_as_tibble <- function(.data) {
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter mutate across case_when select distinct left_join
 #' @importFrom dplyr group_by ungroup bind_rows
-#' @importFrom tidyselect all_of
+#' @importFrom dplyr all_of
 #' @importFrom tidyr expand_grid fill
 #' @importFrom assertr verify
 #' @export
@@ -1222,9 +1204,9 @@ adjust_scbl_visitdate <- function(.data, .adj_scbl_data, date_col, check_col, ex
     temp_value <- get(i)
     if (length(temp_value) != 1) {
       cli_abort(
-        message = paste0(
-          "{.var {i}} must be a length of 1 character vector. \n",
-          "{.var {i}} contains {.val {temp_value}} value{?s}."
+        message = c(
+          "x" = "{.var {i}} must be a single character vector. \n",
+          "i" = "{.var {i}} contains {.val {temp_value}} value{?s}."
         )
       )
     }

@@ -66,6 +66,9 @@ abbrev_list <- paste0(
     "Baseline mPACCdigit score was based on subjects that were ",
     "enrolled only in ADNI1 study phase. "
   ),
+  paste0(
+    "RUCA characteristics is only collected in ADNI4 phase based on RUCA score. "
+  ),
   collapse = "\n "
 )
 conts_statistic_label <- c("Mean (SD)", "Median (Q1, Q3)", "Range")
@@ -108,8 +111,8 @@ enroll_summary_plot
 # Characteristics/variables
 include_vars <- c(
   "AGE", "SEX", "EDUC", "RACE", "ETHNIC", "MARISTAT",
-  "DX", "APOE", "ADASTT13", "CDGLOBAL", "CDRSB", "MMSCORE",
-  "FAQTOTAL"
+  "DX", "APOE", "RUCAGR1",
+  "ADASTT13", "CDGLOBAL", "CDRSB", "MMSCORE", "FAQTOTAL"
 )
 if (params$INCLUDE_PACC) {
   pacc_vars <- c("MPACCTRAILSB", "MPACCDIGIT")
