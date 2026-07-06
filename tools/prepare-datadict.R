@@ -124,7 +124,7 @@ check_load_input <- function(dir_path, full_file_path) {
       )
     )
   }
-  invisible()
+  invisible(TRUE)
 }
 
 #' @title A Wrapper Function For Listing Files
@@ -267,5 +267,5 @@ load_rda <- function(dir_path = NULL,
   if (!quite) {
     cli::cli_alert_success(text = success_text)
   }
-  invisible()
+  invisible(TRUE)
 }
