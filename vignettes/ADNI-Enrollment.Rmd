@@ -184,7 +184,7 @@ plots(
   caption = ifelse(params$INCLUDE_PACC, paste0(
     "Baseline mPACCdigit score was based on subjects that were enrolled only ",
     "in ADNI1 study phase. \n The remaining summary plots were based on ",
-    "subjects that enrolled in ADNI study."
+    "enrolled subjects in ADNI study."
   ), ""),
   title = "ADNI - Plots of Numeric Characteristics: By Study Phase"
 )
@@ -260,19 +260,25 @@ cont_violin_plot_bl_dx <- lapply(cont_var_list, function(x) {
 
 names(cont_violin_plot_bl_dx) <- cont_var_list
 
+plot_caption <- paste0(
+  "Based on subjects that had known diagnostics status at baseline visit.",
+  ifelse(params$INCLUDE_PACC == TRUE,
+    paste0(
+      "\n Baseline mPACCdigit score was based on subjects that were enrolled only ",
+      "in ADNI1 study phase. \n The remaining summary plots were based on ",
+      "enrolled subjects in ADNI study."
+    ),
+    " "
+  )
+)
+
 plots(
   cont_violin_plot_bl_dx,
   n_columns = 2,
   guides = "collect",
-  caption = paste0(
-    "Based on subjects that had known diagnostics status at baseline visit. \n",
-    "Baseline mPACCdigit score was based on subjects that were enrolled only ",
-    "in ADNI1 study phase. \n The remaining summary plots were based on ",
-    "subjects that enrolled in ADNI study."
-  ),
+  caption = plot_caption,
   title = paste0(
-    "ADNI - Plots of Numeric Characteristics: ",
-    "By Baseline Diagnostics Status"
+    "ADNI - Plots of Numeric Characteristics: By Baseline Diagnostics Status"
   )
 ) & theme(legend.position = "bottom")
 ``` 

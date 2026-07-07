@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2026-04-02" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2026-07-06" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -162,10 +162,11 @@ callr::rscript(
 # usethis::use_news_md()
 
 ## Finalize package building ----
-devtools::load_all("./")
-devtools::document()
-devtools::check(error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
-pkg_dir <- devtools::build(vignettes = INCLUDE_DERIVED_DATASET)
+pkg_root <- "./"
+devtools::load_all(path = pkg_root)
+devtools::document(pkg = pkg_root)
+devtools::check(pkg = pkg_root, error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
+pkg_dir <- devtools::build(pkg = pkg_root, vignettes = INCLUDE_DERIVED_DATASET)
 install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
 
 # Build README.md ----

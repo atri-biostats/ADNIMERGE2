@@ -2,7 +2,7 @@
 
 To build an R data package from source `.csv` files with similar workflow: 
 
-## Create R Package Project 
+## Create R package project 
 
 Clone the [https://github.com/atri-biostats/ADNIMERGE2](https://github.com/atri-biostats/ADNIMERGE2) repository. This will create the following directories:
    
@@ -28,9 +28,9 @@ Or create an R package project locally and add a package metadata into the local
   
   * Copy all pre-defined scripts/functions as necessary from the [ADNIMERGE2 github repository](https://github.com/atri-biostats/ADNIMERGE2) with the same file path to the local package directory.
 
-## Download the ADNI Study Data
+## Download ADNI study data
 
-Download the ADNI study data from the data-shared platform at [https://adni.loni.usc.edu/data-samples/adni-data/](https://adni.loni.usc.edu/data-samples/adni-data/) either in `*.zip` or `*.csv` file format, and store the files in [`./data-raw`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw) directory
+Download ADNI study data from the data-shared platform at [https://adni.loni.usc.edu/data-samples/adni-data/](https://adni.loni.usc.edu/data-samples/adni-data/) either in `*.zip` or `*.csv` file format, and store the files in [`./data-raw`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw) directory
    
    + Required to download a data dictionary `*.csv` file
    
@@ -38,11 +38,11 @@ Download the ADNI study data from the data-shared platform at [https://adni.loni
 
  <img src="../man/figures/arc_table_template.png" align="center" height="130">
 
-### Required ADNI Study Data
+### List of required ADNI study data
 
 A data dictionary file is required to build a package similar to `ADNIMERGE2` R data package. To replicate exactly the `ADNIMERGE2` R package, please refer to [`./inst/dataset-list.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/package_build/inst/dataset-list.R) for the list of minimum required datasets.
 
-## Build Package 
+## Build package 
 
 Run `source('tools/build.R')` to prepare dataset, generate documentations and build R package. More details about the main procedures in [`build.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R) script are presented as follows: 
 
