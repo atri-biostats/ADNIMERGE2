@@ -4,7 +4,8 @@ update_main_datadict <- function(.datadict) {
     .datadict,
     create_adni2_visitid_datadict(),
     create_visit_datadict(.datadict),
-    update_dxsum_datadict(.datadict)
+    update_dxsum_datadict(.datadict),
+    update_adni4_ptdemog_datadict(.datadict)
   )
   temp_main_datadict <- .datadict %>%
     filter(TBLNAME %in% "DATADIC" & FLDNAME %in% c(names(.datadict)))
@@ -41,6 +42,28 @@ update_dxsum_datadict <- function(.datadict) {
       dplyr::filter(PHASE %in% "ADNI3") %>%
       dplyr::select(-PHASE)
   )
+}
+
+
+# Update ptdemog field data dictionary ------
+# Only race and other ethnicity categories
+update_adni4_ptdemog_datadict <- function(.datadict) {
+  # Based on internal source
+  # PTRACCAT
+  ptraccat_code <- c("3 = Native Hawaiian or Other Pacific Islander")
+  tmp_ptraccat_datadic <- .datadict %>%
+    filter(TBLNAME == "PTDEMOG" & FLDNAME == "PTRACCAT" & PHASE == "ADNI4") %>%
+    mutate(CODE = ptraccat_code)
+  # PTETHCATH
+  ptethcath_code <- c("1 = Mexican, Mexican Am., Chicano; 4 = Another Hispanic, Latino, or Spanish origin")
+  tmp_ptethcath_datadic <- .datadict %>%
+    filter(TBLNAME == "PTDEMOG" & FLDNAME == "PTETHCATH" & PHASE == "ADNI4") %>%
+    mutate(CODE = ptethcath_code)
+  update_datadict <- bind_rows(
+    tmp_ptraccat_datadic,
+    tmp_ptethcath_datadic
+  )
+  return(update_datadict)
 }
 
 # Update phase specific datad dictionary -----

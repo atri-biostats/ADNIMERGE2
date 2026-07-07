@@ -2,6 +2,10 @@
 
 * Because `ADNIMERGE2` is an R data package with frequent content updates, the change log focuses exclusively on major changes to R functions and package infrastructure rather than routine data refreshes.
 
+# Development
+
+* Fix bugs minor bugs in `extract_codelist_datadict()`
+
 # ADNIMERGE2 0.1.2
 
 * New Features: 

@@ -104,11 +104,13 @@ if (EXISTED_DATADTIC) {
     mutate(excluded_fld_name = case_when(
       (TBLNAME %in% c("RECCMEDS", "TREATDIS", "ALIQUOT_COUNT") |
         (TBLNAME %in% "MRIPROT" & FLDNAME %in% "PASS") |
-        (TBLNAME %in% "NPIQ" & FLDNAME %in% c("NPIA", "NPIJ", "NPIK")) |
+        (TBLNAME %in% "NPIQ" & FLDNAME %in% c("NPIA", "NPIJ", "NPIK", "NPIG")) |
         (TBLNAME %in% "PETQC" & FLDNAME %in% c("PQPROERR", "PQISSUES")) |
         (TBLNAME %in% "TAUQC" & FLDNAME %in% "PROCERR") |
         (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS") |
-        (TBLNAME %in% "UPENN_PLASMA_FUJIREBIO_QUANTERIX" & FLDNAME %in% c("GFAP_F", "NfL_F"))
+        (TBLNAME %in% "UPENN_PLASMA_FUJIREBIO_QUANTERIX" & FLDNAME %in% c("GFAP_F", "NfL_F")) |
+        (TBLNAME %in% "AMYREAD" & FLDNAME %in% "CORTREGION") |
+        (TBLNAME %in% "ECOG12PT" & FLDNAME %in% "STAFFASST")
       ) ~ "Yes"
     ))
 
@@ -132,7 +134,7 @@ if (EXISTED_DATADTIC) {
   } else {
     DECODE_VALUE <- FALSE
     cli_alert_warning(
-      text = "No existing data conatins variables with coded values"
+      text = "No existing data contain coded variable"
     )
   }
 }

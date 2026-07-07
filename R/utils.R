@@ -508,7 +508,8 @@ extract_codelist_datadict <- function(.datadic) {
   )
   exc_tbl_add <- c(
     "MRIFIND", "MRIQC", "MRINFQ", "MRIFind", "MRIQSM",
-    "MAYOADIRL_MRI_MCH", "MAYOADIRL_MRI_TBMSYN"
+    "MAYOADIRL_MRI_MCH", "MAYOADIRL_MRI_TBMSYN", 
+    "YASSINE_CSFPLASMA_HDL_sPDGFRb_APOEglyc"
   )
 
   .datadic <- .datadic %>%
