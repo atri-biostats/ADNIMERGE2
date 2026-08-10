@@ -147,7 +147,7 @@ adjust_lab_visitcode <- function(lab_data) {
 #' @importFrom assert verify
 #' @importFrom dplyr mutate case_when select all_of
 #' @importFrom stringr str_detect str_to_lower str_trim
-#' @importFrom tidyr separate_wider_delim
+#' @importFrom tidyr separate
 adjust_lab_comment <- function(lab_data) {
   require(tidyverse)
   require(assertr)
@@ -171,6 +171,13 @@ adjust_lab_comment <- function(lab_data) {
       )
     )) %>%
     separate(all_of(cols[1]), into = labtestcd[3:4], sep = ",", remove = FALSE) %>%
+    mutate(across(
+      all_of(labtestcd[3:4]),
+      ~ case_when(
+        .x == "NA" ~ NA_character_,
+        TRUE ~ as.character(.x)
+      )
+    )) %>%
     mutate(across(
       all_of(labtestcd[3:4]),
       ~ case_when(str_detect(str_to_lower(.x), "tau") &

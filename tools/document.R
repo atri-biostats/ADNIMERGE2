@@ -1,4 +1,4 @@
-# Data documtations -----
+# Data documentations -----
 source(file.path(".", "tools", "data-prepare-utils.R"))
 source(file.path(".", "tools", "data-dictionary-utils.R"))
 source(file.path(".", "R", "checks-assert.R"))

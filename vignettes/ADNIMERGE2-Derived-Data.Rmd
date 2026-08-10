@@ -3282,13 +3282,23 @@ VS <- VS %>%
     merge_by = "VSTESTCD"
   ) %>%
   separate(VALUE, into = c("VSORRES", "VSORRESU", "VSLOC"), sep = "-") %>%
-  mutate(VSLOC = str_to_upper(VSLOC)) %>%
-  mutate(VSSTRESU = case_when(
-    VSORRESU %in% c("F", "C") ~ "C",
-    VSORRESU %in% c("cm", "inch") ~ "cm",
-    VSORRESU %in% c("kg", "LB") ~ "kg",
-    VSORRESU %in% c("mmHg", "beats/min", "breaths/min") ~ VSORRESU
+  mutate(across(
+    all_of(c("VSORRES", "VSORRESU", "VSLOC")),
+    ~ case_when(
+      .x == "NA" ~ NA_character_,
+      TRUE ~ as.character(.x)
+    )
   )) %>%
+  mutate(VSLOC = str_to_upper(VSLOC)) %>%
+  # Set standard unit of measurements
+  mutate(
+    VSSTRESU = case_when(
+      VSORRESU %in% c("F", "C") ~ "C",
+      VSORRESU %in% c("cm", "inch") ~ "cm",
+      VSORRESU %in% c("kg", "LB") ~ "kg",
+      VSORRESU %in% c("mmHg", "beats/min", "breaths/min") ~ VSORRESU
+    )
+  ) %>%
   # Unit conversion: conv_unit
   mutate(
     FROM_UNIT = case_when(

@@ -5,6 +5,7 @@ library(cli)
 # Input argument ----
 arg_list <- commandArgs(trailingOnly = TRUE)
 source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "R", "checks-assert.R"))
 check_arg(x = arg_list, size = 3)
 INPUT_DIR <- arg_list[1]
 OUTPUT_DIR <- arg_list[2]

@@ -44,7 +44,7 @@ reference:
   - subtitle: Imaging
     desc: > 
          Includes image acquisition, image analyses results, image quality for 
-         both MIR Scan and PET Scan
+         both MIR scan and PET scan
     contents:
     - has_keyword("imaging")   
     
@@ -68,6 +68,12 @@ reference:
     contents:
     - has_keyword("adsp_phc")
   
+  - subtitle: ADOPIC - MASS & MUSE Volumetrics - ADNI 1-3
+    desc: > 
+      ADOPIC: Volumetric Analysis utilizing MASS and MUSE
+    contents:
+    - has_keyword("adopic_analysis")
+    
   - subtitle: Other Raw Datasets
     contents:
     - has_keyword("other_raw_dataset")
