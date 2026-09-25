@@ -1,5 +1,5 @@
 # List derived dataset -----
-#' @title `ADNIMERGE2` Derived Dataset(s)
+#' @title [ADNIMERGE2] Derived Dataset(s)
 #' @description List of derived/analysis dataset(s) in `ADNIMERGE2` R package
 #'
 #' @param type Data type

@@ -9,3 +9,6 @@
 ^docs$
 ^pkgdown$
 ^LICENSE\.md$
+^tar.gz$
+^build$
+^doc$
