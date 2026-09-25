@@ -1818,6 +1818,7 @@ RS_TESTCD_LIST %>%
 ```{r generate-rs0}
 # Clinical diagnostics status
 RS <- DXSUM %>%
+  ADNIMERGE2:::filter_out_teamadni(.data = ., cols_name = "COLPROT") %>%
   generate_oak_id_vars_adni(raw_src = "DXSUM") %>%
   mutate(
     DIAGNOSIS = case_when(
