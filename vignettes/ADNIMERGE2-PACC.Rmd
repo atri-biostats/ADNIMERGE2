@@ -277,6 +277,8 @@ pacc_raw_data_dir <- system.file(
   mustWork = TRUE
 )
 load_csv_files(input_dir = pacc_raw_data_dir)
+
+prepare_pacc_input_data()
 ```
 
 These raw datasets are in a long format and presented as follow:
@@ -311,7 +313,7 @@ pacc_mmse_long <- pacc_mmse_long %>%
       adjust_date_col = "VISDATE",
       check_col = "SCORE"
     ) %>%
-      filter(VISCODE %in% get_baseline_vistcode())
+      filter(VISCODE %in% get_baseline_viscode())
   ) %>%
   assert_uniq(all_of(id_vars)) %>%
   set_as_tibble()
@@ -327,10 +329,10 @@ adjusted_bl_neurobat <- adjust_scbl_record(
   check_col = "SCORE"
 ) %>%
   # Only baseline records
-  filter(VISCODE %in% get_baseline_vistcode())
+  filter(VISCODE %in% get_baseline_viscode())
 
 pacc_neurobat_long <- pacc_neurobat_long %>%
-  filter(!VISCODE %in% get_baseline_vistcode()) %>%
+  filter(!VISCODE %in% get_baseline_viscode()) %>%
   bind_rows(adjusted_bl_neurobat) %>%
   distinct() %>%
   assert_uniq(all_of(id_vars)) %>%
@@ -455,7 +457,7 @@ pacc_component_bl <- pacc_input_data_wide %>%
   filter(ENRLFG %in% "Yes") %>%
   group_by(RID) %>%
   filter(ORIGPROT == COLPROT) %>%
-  filter(VISCODE %in% get_baseline_vistcode()) %>%
+  filter(VISCODE %in% get_baseline_viscode()) %>%
   ungroup() %>%
   assert_uniq(RID) %>%
   assert_uniq(PTID)
@@ -543,7 +545,7 @@ baseline_mPACCdigit <- PACC %>%
   # Only in ADNI1 study phase
   filter(COLPROT == adni_phase()[1]) %>%
   filter(ORIGPROT == COLPROT) %>%
-  filter(VISCODE %in% get_baseline_vistcode()) %>%
+  filter(VISCODE %in% get_baseline_viscode()) %>%
   # Enrolled subjects
   filter(ENRLFG %in% "Yes") %>%
   assert_uniq(RID) %>%
@@ -552,7 +554,7 @@ baseline_mPACCdigit <- PACC %>%
 # Modified PACC using Trails B score as a proxy for DSS
 baseline_mPACCtrailsB <- PACC %>%
   filter(ORIGPROT == COLPROT) %>%
-  filter(VISCODE %in% get_baseline_vistcode()) %>%
+  filter(VISCODE %in% get_baseline_viscode()) %>%
   # Enrolled subjects
   filter(ENRLFG %in% "Yes") %>%
   assert_uniq(RID) %>%

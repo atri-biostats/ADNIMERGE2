@@ -1131,6 +1131,7 @@ adjust_scbl_record <- function(.data, wide_format = TRUE, extra_id_cols = NULL,
       .x %in% "bl" & get(join_by_vars[2]) %in% adni_phase()[3] ~ "v03",
       .x %in% "sc" & get(join_by_vars[2]) %in% adni_phase()[5] ~ "4_sc",
       .x %in% "bl" & get(join_by_vars[2]) %in% adni_phase()[5] ~ "4_bl",
+      .x %in% "bl" & get(join_by_vars[2]) %in% adni_phase()[6] ~ "t_bl", # place holder for team-adni
       TRUE ~ .x
     )))
 

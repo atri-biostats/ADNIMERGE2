@@ -13,7 +13,8 @@
 #' @keywords adni_procotol_fun
 #' @export
 adni_phase <- function() {
-  return(c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4"))
+  phase_list <- c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4", "TEAM")
+  return(phase_list)
 }
 
 ## Get Original ADNI Study Phase/Protocol -----
@@ -42,7 +43,8 @@ original_study_protocol <- function(RID) {
     RID >= 2000 & RID < 3000 ~ "ADNIGO",
     RID >= 3000 & RID < 6000 ~ "ADNI2",
     RID >= 6000 & RID < 10000 ~ "ADNI3",
-    RID >= 10000 ~ "ADNI4"
+    RID >= 10000 & RID < 12000 ~ "ADNI4",
+    RID >= 12001 ~ "TEAM"
   )
   return(origprot)
 }
@@ -66,7 +68,8 @@ original_study_protocol <- function(RID) {
 #' @export
 adni_phase_order_num <- function(phase) {
   rlang::arg_match(
-    arg = phase, values = adni_phase(),
+    arg = phase,
+    values = adni_phase(),
     multiple = TRUE
   )
   phase_order_num <- case_when(
@@ -74,7 +77,8 @@ adni_phase_order_num <- function(phase) {
     phase %in% "ADNIGO" ~ 2,
     phase %in% "ADNI2" ~ 3,
     phase %in% "ADNI3" ~ 4,
-    phase %in% "ADNI4" ~ 5
+    phase %in% "ADNI4" ~ 5,
+    phase %in% "TEAM" ~ 6
   )
   return(phase_order_num)
 }
@@ -88,7 +92,7 @@ adni_phase_order_num <- function(phase) {
 #' @return A character vector with list of ADNI study phases.
 #' @examples
 #' \dontrun{
-#' convert_adni_phase_order_num(phase_num = c(1, 3, 5))
+#' convert_adni_phase_order_num(phase_num = c(1, 3, 5, 6))
 #' }
 #' @rdname convert_adni_phase_order_num
 #' @family ADNI study protocol/phase
@@ -508,7 +512,7 @@ extract_codelist_datadict <- function(.datadic) {
   )
   exc_tbl_add <- c(
     "MRIFIND", "MRIQC", "MRINFQ", "MRIFind", "MRIQSM",
-    "MAYOADIRL_MRI_MCH", "MAYOADIRL_MRI_TBMSYN", 
+    "MAYOADIRL_MRI_MCH", "MAYOADIRL_MRI_TBMSYN",
     "YASSINE_CSFPLASMA_HDL_sPDGFRb_APOEglyc"
   )
 

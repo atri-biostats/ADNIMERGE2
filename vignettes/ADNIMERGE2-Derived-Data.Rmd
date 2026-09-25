@@ -126,8 +126,19 @@ load_utils_funs <- lapply(utils_file_path, source)
 
 ```{r phase-visit-epoch, class.source = NULL, echo = FALSE}
 # Create study epoch stage- overall and phase-specific
-EPOCH_LIST <- VISITS %>%
-  filter(!VISCODE %in% c("reg", "AUT", "4_disp")) %>%
+TEAM_ADNI_VISIT <- tibble(
+  PHASE = "TEAM",
+  VISCODE = c("t_bl", "t_m3", "t_m6", "t_m9", "t_m12", "t_disp"),
+  VISNAME = c("Baseline", paste0("Month ", seq(3, 12, by = 3)), "Final Disposition")
+) %>%
+  mutate(
+    VISORDER = row_number(),
+    ID = row_number()
+  ) %>%
+  select(PHASE, ID, VISCODE, VISNAME, VISORDER)
+
+EPOCH_LIST <- bind_rows(VISITS, TEAM_ADNI_VISIT) %>%
+  filter(!VISCODE %in% c("reg", "4_reg", "AUT", "4_disp", "t_disp")) %>%
   mutate(EPOCH = case_when(
     VISCODE %in% c("sc", "4_sc", "scmri", "f", "v01", "v02") ~ "Screening",
     VISCODE %in% c("bl", "4_bl", "init", "4_init", "v03", "v06") ~ "Baseline",
@@ -138,7 +149,12 @@ EPOCH_LIST <- VISITS %>%
   select(PHASE, VISCODE, PHASE_EPOCH, EPOCH, VISORDER, VISNAME) %>%
   group_by(PHASE) %>%
   arrange(VISORDER) %>%
-  mutate(PHASE_VISITNUM = row_number() - 2) %>%
+  mutate(
+    PHASE_VISITNUM = case_when(
+      !PHASE %in% "TEAM" ~ row_number() - 2,
+      PHASE %in% "TEAM" ~ VISORDER
+    )
+  ) %>%
   ungroup() %>%
   # Create phase-specific visit number/order
   # 999 - represents unscheduled visit
@@ -161,6 +177,7 @@ EPOCH_LIST <- VISITS %>%
     PHASE %in% c("ADNI1", "ADNIGO") ~ "Both",
     str_detect(VISNAME, "Continuing ") == TRUE ~ "Rollover",
     str_detect(VISNAME, "New Pt|Screening") == TRUE ~ "New",
+    PHASE %in% "TEAM" ~ "New",
     TRUE ~ "Both"
   )) %>%
   arrange(PHASE, PHASE_VISITNUM) %>%

@@ -49,6 +49,7 @@ get_adni_enrollment <- function(.registry) {
     # Enrollment flag
     mutate(
       OVERALL_ENRLFG = case_when(
+        COLPROT %in% adni_phase()[6] & VISCODE %in% "t_bl" & PTTYPE %in% adni_pttype()[2] & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% adni_phase()[5] & VISCODE %in% "4_bl" & PTTYPE %in% adni_pttype()[2] & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% adni_phase()[4] & VISCODE %in% "bl" & PTTYPE %in% adni_pttype()[2] & VISTYPE != "Not done" ~ "Yes",
         COLPROT %in% adni_phase()[3] & VISCODE %in% "v03" & PTTYPE %in% adni_pttype()[2] & VISTYPE != "Not done" ~ "Yes",
@@ -149,6 +150,14 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
   )
   check_object_type(multiple_screen_visit, "logical")
   check_overall_phase(phase = phase)
+  if (phase %in% "TEAM") {
+    cli::cli_abort(
+      message = paste0(
+        "Cann't find screening data records for ",
+        "{.val {phase}} study phase in current {.var REGISTRY} table."
+      )
+    )
+  }
 
   detect_numeric_value(
     value = .registry$VISTYPE,
@@ -348,6 +357,11 @@ get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Ov
   check_overall_phase(phase = phase)
   col_names <- c("RID", "ORIGPROT", "COLPROT", "VISCODE", "EXAMDATE", "DIAGNOSIS")
 
+  .dxsum <- filter_out_teamadni(
+    .data = .dxsum,
+    cols_name = "COLPROT"
+  )
+
   output_data <- .dxsum %>%
     select(all_of(col_names)) %>%
     adjust_scbl_record(
@@ -403,8 +417,8 @@ check_overall_phase <- function(phase) {
   if (grepl("Overall|overall", phase) & length(phase) > 1) {
     cli::cli_abort(
       message = c(
-        "{.var phase} must be either {.val {'Overall'}} or {.val {adni_phase()}}. \n",
-        "{.var phase} contains {.val {phase}}"
+        "{.arg phase} must be either {.val {'Overall'}} or {.val {adni_phase()}}. \n",
+        "{.arg phase} contains {.val {phase}}"
       )
     )
   }
@@ -450,7 +464,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
   SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- AEHDTHDT <- NULL
   VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- NULL
 
-  # Based on reported study disposition; for ADNI3 & ADNI4 phases
+  # Based on reported study disposition; for ADNI3, ADNI4 & TEAM-ADNI phases
   check_colnames(
     .data = .studysum,
     col_names = c("RID", "ORIGPROT", "COLPROT", "SDPRIMARY", "SDPRIMARY"),
@@ -477,7 +491,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
     stop_message = TRUE
   )
 
-  death_adverse_even_adni34 <- .adverse %>%
+  death_adverse_event_adni34team <- .adverse %>%
     assert(is.character, SAEDEATH) %>%
     filter(SAEDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
     select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = SAEDEATH) %>%
@@ -498,7 +512,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
     stop_message = TRUE
   )
 
-  death_adverse_even_adni12go <- .recadv %>%
+  death_adverse_event_adni12go <- .recadv %>%
     assert(is.character, AEHDEATH) %>%
     filter(AEHDEATH == "Yes" | !is.na(AEHDTHDT)) %>%
     select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = AEHDEATH) %>%
@@ -511,8 +525,8 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
 
   death_event_dataset <- full_join(
     x = death_studysum,
-    y = death_adverse_even_adni34 %>%
-      bind_rows(death_adverse_even_adni12go) %>%
+    y = death_adverse_event_adni34team %>%
+      bind_rows(death_adverse_event_adni12go) %>%
       assert_uniq(RID),
     by = c("RID", "ORIGPROT", "COLPROT")
   ) %>%
@@ -573,6 +587,8 @@ get_disposition_flag <- function(.registry, .studysum) {
     num_type = "any",
     stop_message = TRUE
   )
+  .registry <- .registry %>%
+    assert_non_missing(COLPROT)
 
   # Warning?
   # Early discontinuations in ADNIGO and ADNI2
@@ -580,8 +596,10 @@ get_disposition_flag <- function(.registry, .studysum) {
     filter(COLPROT %in% adni_phase()[2:3]) %>%
     filter(str_detect(string = PTSTATUS, pattern = "Discontinued")) %>%
     group_by(RID, COLPROT) %>%
-    filter((all(is.na(EXAMDATE)) & row_number() == 1) |
-      (EXAMDATE == min(EXAMDATE, na.rm = TRUE))) %>%
+    filter(
+      (all(is.na(EXAMDATE)) & row_number() == 1) |
+        (EXAMDATE == suppressWarnings(min(EXAMDATE, na.rm = TRUE)))
+    ) %>%
     ungroup() %>%
     assert_uniq(RID, COLPROT) %>%
     select(RID, ORIGPROT, COLPROT, PTSTATUS, EXAMDATE, VISCODE)
@@ -598,7 +616,7 @@ get_disposition_flag <- function(.registry, .studysum) {
     "INCLUSION", "EXCLUSION", "INCROLL", "VERSION", "INCNEWPT",
     "EXCCRIT", "MRIFIND", "NVRDISC", "NVROT", "AENUM"
   )
-  adni34 <- .studysum %>%
+  adni34team <- .studysum %>%
     filter(SDSTATUS %in% disc_lvls) %>%
     select(
       RID, ORIGPROT, COLPROT, SDSTATUS, SDDATE, INCLUSION, EXCLUSION, INCROLL,
@@ -610,12 +628,12 @@ get_disposition_flag <- function(.registry, .studysum) {
 
   input_phase <- adni_phase()[2:4]
   phase_rid <- lapply(input_phase, function(x) {
-    if (x %in% adni_phase()[2:3]) .data <- adnigo2 else .data <- adni34
+    if (x %in% adni_phase()[2:3]) .data <- adnigo2 else .data <- adni34team
     get_rid_followup(
       check_rid = .data %>%
         filter(COLPROT %in% x) %>%
         pull(RID),
-      check_phase = adni_phase()[adni_phase_order_num(phase = x) + 1:5]
+      check_phase = adni_phase()[adni_phase_order_num(phase = x) + seq_along(adni_phase())]
     )
   })
   names(phase_rid) <- input_phase
@@ -628,10 +646,12 @@ get_disposition_flag <- function(.registry, .studysum) {
     unlist()
 
   # Overall Never Enrolled or Early Discontinued
-  early_discon_adni <- adni34 %>%
-    assert_non_missing(SDDATE) %>%
-    bind_rows(adnigo2 %>%
-      select(RID, ORIGPROT, COLPROT, SDSTATUS = PTSTATUS, SDDATE = EXAMDATE)) %>%
+  early_discon_adni <- bind_rows(
+    adni34team %>%
+      assert_non_missing(SDDATE),
+    adnigo2 %>%
+      select(RID, ORIGPROT, COLPROT, SDSTATUS = PTSTATUS, SDDATE = EXAMDATE)
+  ) %>%
     filter(!RID %in% rid_list) %>%
     select(RID, ORIGPROT, COLPROT, SDSTATUS, SDDATE) %>%
     assert_non_missing(SDSTATUS)
@@ -682,7 +702,8 @@ get_screen_vistcode <- function(type = "all") {
 #' @family ADNI visit codes
 #' @export
 get_baseline_vistcode <- function() {
-  return(c("bl", "v03", "4_bl"))
+  code <- c("bl", "v03", "4_bl", "t_bl")
+  return(code)
 }
 
 #' @title Adjust screening visit code in ADNI1 phase
