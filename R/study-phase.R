@@ -11,8 +11,7 @@
 #'        For examples, similar to `ORIGPROT` or `COLPROT` columns.
 #'
 #' @return A data.frame
-#'
-#' @rdname filter_teamadni
+#' @name filter_teamadni
 #' @family ADNI study protocol/phase
 #' @keywords adni_procotol_fun
 #' @importFrom dplyr filter filter_out if_any all_of
@@ -30,7 +29,8 @@ NULL
 #'   cols_name = "COLPROT"
 #' )
 #'
-#' # To keep any records for those who started joined ADNI study since the start of TEAM-ADNI study phase
+#' # To keep any records for those who started joined ADNI study 
+#' # since the start of TEAM-ADNI study phase
 #' filter_out_teamadni(
 #'   .data = ADNIMERGE2::REGISTRY,
 #'   cols_name = "COLPROT"

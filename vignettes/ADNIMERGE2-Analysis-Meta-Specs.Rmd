@@ -813,8 +813,8 @@ AGEU_CODEDLIST <- tibble(
 PHASE_CODEDLIST <- tibble(
   code_id = "PHASE", name = "PHASE", type = "code_decode",
   tibble(
-    code = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4"),
-    decode = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4")
+    code = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4", "TEAM"),
+    decode = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4", "TEAM")
   )
 )
 

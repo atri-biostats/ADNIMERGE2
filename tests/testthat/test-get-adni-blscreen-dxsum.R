@@ -26,7 +26,10 @@ test_that("Check get_adni_blscreen_dxsum function", {
         visit_type = "baseline",
         phase = "Overall"
       ) %>%
-        mutate(DX = ifelse(DIAGNOSIS %in% "Dementia", "DEM", DIAGNOSIS)) %>%
+        mutate(
+          DX = ifelse(DIAGNOSIS %in% "Dementia", "DEM", DIAGNOSIS),
+          DX = ifelse(DX %in% "TEAM_NODX", NA_character_, DX)
+        ) %>%
         select(RID, ORIGPROT, DX),
       by = c("RID", "ORIGPROT")
     )
@@ -63,6 +66,18 @@ test_that("Check get_adni_blscreen_dxsum function", {
   expect_identical(
     object = bl_dxsum_rs,
     expected = bl_dxsum,
+    info = "Check get_adni_blscreen_dxsum function based on `DXSUM` and `RS` records"
+  )
+
+  # TEAM-ADNI: dxsum - not collected
+  team_nodx <- keep_teamadni(.data = DXSUM, cols_name = "COLPROT") %>%
+    filter(!is.na(DIAGNOSIS)) %>%
+    distinct(DIAGNOSIS) %>%
+    pull()
+
+  expect_identical(
+    object = team_nodx,
+    expected = "TEAM_NODX",
     info = "Check get_adni_blscreen_dxsum function based on `DXSUM` and `RS` records"
   )
 })
