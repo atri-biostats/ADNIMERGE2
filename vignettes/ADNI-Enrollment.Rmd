@@ -111,7 +111,7 @@ enroll_summary_plot
 # Characteristics/variables
 include_vars <- c(
   "AGE", "SEX", "EDUC", "RACE", "ETHNIC", "MARISTAT",
-  "DX", "APOE", "RUCAGR1",
+  "DX", "APOE", "RUCAGR1", "BMI",
   "ADASTT13", "CDGLOBAL", "CDRSB", "MMSCORE", "FAQTOTAL"
 )
 if (params$INCLUDE_PACC) {
@@ -154,7 +154,7 @@ tbl_summary(
 ```{r viloin-plot, fig.height = 11, fig.alt = "Distribution of numeric characteristics: Overall"}
 var_label_list <- get_variable_labels(ADSL)
 cont_var_list <- c(
-  "AGE", "EDUC", "ADASTT13", "CDGLOBAL",
+  "AGE", "EDUC", "BMI", "ADASTT13", "CDGLOBAL",
   "CDRSB", "MMSCORE", "FAQTOTAL"
 )
 if (params$INCLUDE_PACC) {
