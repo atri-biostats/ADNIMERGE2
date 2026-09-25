@@ -159,7 +159,7 @@ EPOCH_LIST <- bind_rows(VISITS, TEAM_ADNI_VISIT) %>%
   # Create phase-specific visit number/order
   # 999 - represents unscheduled visit
   mutate(PHASE_VISITNUM = case_when(
-    VISCODE %in% c("nv", "uns1", "tau") ~ 999,
+    !is.na(PHASE) & VISCODE %in% c("nv", "uns1", "tau") ~ 999,
     PHASE %in% "ADNI1" & VISCODE %in% c("f", "sc") ~ -1,
     PHASE %in% "ADNI1" & VISCODE %in% "bl" ~ 1,
     PHASE %in% "ADNI1" & str_detect(VISCODE, "m") ~ PHASE_VISITNUM + 1,
@@ -745,7 +745,7 @@ SC_DEMOG <- tibble(RID = unique_rid) %>%
 
 # Area Deprivation Index (ADI) for ADNI4 phase only ----
 SC_ADI <- ADI %>%
-  verify(all(COLPROT == adni_phase()[5])) %>%
+  verify(all(COLPROT %in% adni_phase()[5:6])) %>%
   select(
     RID, ORIGPROT, COLPROT, VISCODE, ADISTATE, ADINATIONAL, ADIREV,
     SCDTC = ADIDATE
@@ -762,7 +762,7 @@ SC_ADI <- ADI %>%
 # RUCA and RUCC from ADNI4 phase only ----
 rurality_cols <- c("RUCA", "RUCC", "RUCA_2010", "RUCC_2023")
 SC_RURALITY <- RURALITY %>%
-  verify(all(COLPROT == adni_phase()[5])) %>%
+  verify(all(COLPROT %in% adni_phase()[5:6])) %>%
   select(
     RID, ORIGPROT, COLPROT, VISCODE, all_of(rurality_cols),
     SCDTC = RURDATE
@@ -2254,7 +2254,7 @@ PIB_PET_DATA <- PIBPETSUVR %>%
 amystatus_lvls <- c("Non Elevated", "Elevated")
 
 AMYREAD_DATA <- AMYREAD %>%
-  verify(all(COLPROT == adni_phase()[5])) %>%
+  verify(all(COLPROT %in% adni_phase()[5:6])) %>%
   # Based on clinicians' decision
   mutate(AMYSTAT = case_when(
     str_detect(CONSENS, "No, visual read and quantification") ~ as.character(CONGRU),
