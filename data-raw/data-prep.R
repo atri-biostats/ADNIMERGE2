@@ -556,7 +556,7 @@ multiple_datadict <- lapply(datadict_code_list, function(x) {
     bind_datadict_description(
       .datadict = .,
       code = x,
-      label = x
+      label = edit_datadict_labels(x)
     )
 })
 

@@ -123,6 +123,18 @@ bind_datadict_description <- function(.datadict, code, label) {
   .datadict
 }
 
+# Manual dictionary labels ----
+edit_datadict_labels <- function(.datadict_code) {
+  if (.datadict_code %in% "DATADIC") {
+    text_label <- "ADNI Data Dictionary"
+  } else if (.datadict_code %in% "REMOTE_DATADIC") {
+    text_label <- "Data Dictionary For Remotely Collected Data In ADNI4 Study Phase"
+  } else {
+    text_label <- .datadict_code
+  }
+  return(text_label)
+}
+
 
 #' @title Check Load Inputs
 #' @param dir_path Input directory arg
