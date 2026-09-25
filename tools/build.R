@@ -47,16 +47,7 @@ TOOLS_DIR <- file.path(".", "tools")
 TEST_DIR <- file.path(".", "tests", "testthat")
 
 INCLUDE_PACC_DERIVED_DATA <- TRUE
-# NOTE:
-#  Required to install the latest version of `ADNIMERGE` and `ADNI4 ` R packages
-#  `ADNI4` R package is only available internally
-if (INCLUDE_PACC_DERIVED_DATA) {
-  callr::rscript(
-    script = "./tools/generate-pacc-input-data.R",
-    wd = ".",
-    cmdargs = list(DATA_DOWNLOADED_DATE = DATA_DOWNLOADED_DATE)
-  )
-} else {
+if (!INCLUDE_PACC_DERIVED_DATA) {
   # Transfer PACC scoring article from "./vignettes" to "./tools"
   # when PACC input raw data are not generated.
   callr::rscript(

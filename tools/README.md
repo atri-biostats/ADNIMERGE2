@@ -74,11 +74,11 @@ Run `source('tools/build.R')` to prepare dataset, generate documentations and bu
          
       + Required to specify the name of derived dataset (`DERIVED_DATASET_LIST`) as an input argument
       
-      + **NOTE:** At this moment, Preclinical Alzheimer Cognitive Composite (PACC) scores derived data will only be created internally due to not all required raw-input data are available at the data-sharing platform. Please refer to [ADNIMERGE2-PACC](https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-PACC.html#import-raw-datasets) and [`./tools/generate-pacc-input-data.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/generate-pacc-input-data.R) for more information. 
-       
-          * We suggest to set the `INCLUDE_PACC_DERIVED_DATA` value to `FALSE` for not generating PACC scores data. 
+      + **NOTE:** The derived Preclinical Alzheimer Cognitive Composite (PACC) scores can also be generated as part of the data package build as all required raw data files are now available on the data-sharing platform. Please refer to [ADNIMERGE2-PACC](https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-PACC.html#import-raw-datasets) for more information. 
+      
+          * We suggest setting `INCLUDE_PACC_DERIVED_DATA` to `FALSE` to exclude the PACC scores dataset from the data package build as needed.
           
-          * Moreover, [`vignettes-yaml.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/vignettes-yaml.R) script will allows to change the default parameter yaml value related to PACC in package vignettes.
+          * Moreover, [`vignettes-yaml.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/vignettes-yaml.R) script allows to change the default parameter yaml value related to PACC in package vignettes.
     
 + Generate data-related documentations:
     

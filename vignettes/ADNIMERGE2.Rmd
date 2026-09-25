@@ -169,7 +169,7 @@ Furthermore, a derived data for modified version of the Preclinical Alzheimer Co
 
 There are few articles included in the package as a vignette to demonstrate how to use the study data R package for creating simple summaries or analysis results.
 
-* [Enrollment Summaries](../articlesADNI-Enrollment.html): Includes enrollment summary by calendar month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
+* [Enrollment Summaries](../articles/ADNI-Enrollment.html): Includes enrollment summary by calendar month, enrolled subject demographic/characteristics summary by study phases and baseline diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment (MCI) and Dementia (DEM)).
 
 * [Longitudinal Clinical Cognitive Outcome Summaries](../articles/ADNI-Longitudinal.html): Currently, includes summary of the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog) overtime across the baseline diagnostics status.
 
