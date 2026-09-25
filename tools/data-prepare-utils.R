@@ -836,6 +836,8 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
 #' @param add_char
 #'  Character that will be concatenated with \code{prefix_char} character based on
 #'  the provided \code{position}.
+#' @param .strict Boolean value to apply concatenation if the provided prefix 
+#'  character `prefix_char` is not presented.
 #' @return
 #'  A same data.frame as \code{data_dict} with additional records if there coded
 #'  values that did not contains the specified prefix character.
@@ -848,12 +850,13 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
 #' @importFrom tidyr expand_grid
 add_code_prefix <- function(.datadic, prefix_char = "0",
                             nested_value = TRUE, position = "first",
-                            add_char = NULL) {
+                            add_char = NULL, .strict = TRUE) {
   require(tidyverse)
   require(assertr)
   CODES <- CRFNAME <- TBLNAME <- FLDNAME <- PHASE <- NULL
   prefix_char <- as.character(prefix_char)
   check_object_type(nested_value, "logical")
+  check_object_type(.strict, "logical")
   is_datadict_tbl(.datadic)
   if (nested_value) add_cols <- "CODES" else add_cols <- c("prefix", "suffix")
   check_colnames(
@@ -879,7 +882,8 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
       .datadic = .,
       prefix_char = prefix_char,
       position = position,
-      add_char = add_char
+      add_char = add_char,
+      .strict = .strict
     ) %>%
     datadict_as_tibble() %>%
     group_by(CRFNAME, TBLNAME, FLDNAME, PHASE) %>%
@@ -918,7 +922,7 @@ add_code_prefix <- function(.datadic, prefix_char = "0",
 #' @importFrom tibble as_tibble
 #' @importFrom assertr assert not_na
 #' @importFrom rlang arg_match0
-update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = NULL) {
+update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = NULL, .strict = TRUE) {
   require(tidyverse)
   require(assertr)
   require(rlang)
@@ -953,7 +957,13 @@ update_code_prefix_char <- function(.datadic, prefix_char, position, add_char = 
     group_by(CRFNAME, TBLNAME, FLDNAME, PHASE) %>%
     mutate(overall_status = any(status)) %>%
     ungroup() %>%
-    filter(overall_status == FALSE)
+    {
+      if (.strict) {
+        filter(., overall_status == FALSE)
+      } else {
+        (.)
+      }
+    }
 
   if (nrow(data_dict_update) > 0) {
     data_dict_update <- data_dict_update %>%

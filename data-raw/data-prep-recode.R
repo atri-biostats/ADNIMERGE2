@@ -81,13 +81,14 @@ if (EXISTED_DATADTIC) {
     .datadic = DATADIC,
     nested_value = TRUE
   ) %>%
-    # Add "0" prefix character for FLDNAME coded value that contains "0" value
+    # Add "0" character as prefix for each FLDNAME coded value
     add_code_prefix(
       .datadic = .,
       prefix_char = "0",
       nested_value = TRUE,
       position = "first",
-      add_char = NULL
+      add_char = NULL, 
+      .strict = FALSE
     ) %>%
     add_code_prefix(
       .datadic = .,
