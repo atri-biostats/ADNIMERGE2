@@ -400,6 +400,8 @@ pacc_input_data_long <- bind_rows(
 
 # PACC component vars
 pacc_component <- c("ADASQ4SCORE", "MMSE", neurobat_vars)
+pacc_component_list <- pacc_component
+names(pacc_component_list) <- pacc_component
 ```
 
 ```{r pacc-viscode2}
@@ -534,7 +536,7 @@ The composite PACC score is the sum of standardized component scores adjusted by
 
 - Standardized Component Directional Effect: To verify the same directional effect across standardized component score, and reoriented standardized component scores as needed since the composite score is the sum of these standardized scores. In ADNI study, `ADAS-cog Q4` and `Trails B` scores have opposite directional effect compared to the remaining PACC component scores. Higher values of those two components indicates worse condition. Thus, the directional effect of those two standardized components are required to be re-oriented as the remaining components. As a result, higher values of the composite score would indicate better condition/higher performance in cognition.
 
-- Number of Missing Components: The composite score is only calculated when at least *two* components are non-missing at a given study visit per subject.
+- Number of Missing Components: The composite score is only calculated when there are at least *two* none missing components at a given study visit per subject.
 
 The `ADNIMERGE2::compute_pacc_score` function can be used to compute the two modified composite PACC scores in ADNI study. Each each component scores are mean centered and divided by the baseline sample standard deviation of that component to create standardized z scores (@donohue2014preclinical).
 
@@ -544,7 +546,7 @@ The next r chunk shows how to calculate the PACC composite score based on a wide
 PACC <- compute_pacc_score(
   .data = pacc_input_data_wide,
   bl.summary = pacc_component_bl.summary,
-  componentVars = pacc_component,
+  componentVars = pacc_component_list,
   rescale_trailsB = TRUE,
   keepComponents = TRUE,
   wideFormat = TRUE
