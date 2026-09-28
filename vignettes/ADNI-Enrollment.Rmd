@@ -46,11 +46,10 @@ library(ADNIMERGE2)
 check_object_type(params$INCLUDE_PACC, "logical")
 ```
 
-```{r global-param}
-# tbl_summary theme
-theme_gtsummary_compact()
-# ggplot2 theme
+```{r ggplot2-theme}
+# Set a ggplot2 theme  -----
 theme_set(theme_bw(base_size = 12))
+
 # Label wrap function ----
 apply_label_wrap <- function(x, width = 25) {
   tmp_wrap <- label_wrap_gen(width = width, multi_line = TRUE) %>%
@@ -61,25 +60,73 @@ apply_label_wrap <- function(x, width = 25) {
 }
 ```
 
+```{r gtsummary-theme}
+# Create default theme for tbl_summary ----
+adni_theme <- list(
+  # Allow multi-line continuous format as default
+  "tbl_summary-str:default_con_type" = "continuous2",
+  # To update statistic report style
+  "tbl_summary-arg:statistic" = list(
+    all_continuous() ~ c(
+      "{mean} ({sd})",
+      "{median} ({p25}, {p75})",
+      "{min}, {max}"
+    ),
+    all_categorical() ~ "{n} ({p}%)"
+  ),
+  # Set default digit/decimal place
+  "tbl_summary-arg:digits" = list(
+    all_continuous() ~ 1,
+    all_continuous2() ~ 1,
+    all_categorical() ~ 1
+  ),
+  "tbl_summary-arg:missing_text" = "(Missing)",
+  "tbl_summary-fn:addnl-fn-to-run" = function(x) {
+    x %>%
+      # To relabel continuous statistic
+      add_stat_label(
+        label = all_continuous2() ~ c("Mean (SD)", "Median (Q1, Q3)", "Range")
+      ) %>%
+      # To replace any 'NA/NaN/Inf' valu with '-' symbol
+      modify_table_body(
+        ~ .x %>%
+          mutate(across(starts_with("stat_"), ~ case_when(
+            grepl("NA|NaN", .) ~ "-",
+            grepl("Inf|-Inf", .) ~ "-",
+            TRUE ~ .
+          )))
+      )
+  }
+)
+check_gtsummary_theme(adni_theme)
+# Set a tbl_summary theme ----
+theme_gtsummary_compact(set_theme = TRUE, font_size = 12)
+set_gtsummary_theme(adni_theme)
+```
+
 ```{r abbrev}
 # Abbreviation list
 abbrev_list <- paste0(
   paste0(
-    "CN: Cognitive Normal; MCI: Mild Cognitive Impairment; DEM: Dementia; "
+    "<b>CN</b>: Cognitive Normal; ",
+    "<b>MCI</b>: Mild Cognitive Impairment; ",
+    "<b>DEM</b>: Dementia; "
   ),
   paste0(
-    "SD: Standard Deviation; Q1: the 25th percentile; Q3: the 75th percentile; "
+    "<b>SD</b>: Standard Deviation; ",
+    "<b>Q1</b>: the 25th percentile; ",
+    "<b>Q3</b>: the 75th percentile; "
   ),
   paste0(
-    "Baseline mPACCdigit score was based on subjects that were ",
+    "Baseline <b>mPACCdigit</b> score was based on subjects that were ",
     "enrolled only in ADNI1 study phase. "
   ),
   paste0(
-    "RUCA characteristics is only collected in ADNI4 phase based on RUCA score. "
+    "<b>RUCA</b> characteristics is only collected in ADNI4 phase based on ",
+    "Rural-Urban Commuting Area designation score. "
   ),
-  collapse = "\n "
+  collapse = ";"
 )
-conts_statistic_label <- c("Mean (SD)", "Median (Q1, Q3)", "Range")
 ```
 
 # ADNI Enrollment Summaries
@@ -136,20 +183,12 @@ tbl_summary(
   by = ORIGPROT,
   include = include_vars,
   type = all_continuous() ~ "continuous2",
-  statistic = list(
-    all_continuous() ~ c(
-      "{mean} ({sd})",
-      "{median} ({p25}, {p75})",
-      "{min}, {max}"
-    ),
-    all_categorical() ~ "{n} ({p}%)"
-  ),
-  digits = all_continuous() ~ 1,
-  percent = "column",
-  missing_text = "(Missing)"
+  percent = "column"
 ) %>%
   add_overall(last = TRUE) %>%
-  add_stat_label(label = all_continuous2() ~ conts_statistic_label) %>%
+  modify_spanning_header(
+    all_stat_cols(stat_0 = FALSE) ~ "**ADNI Study Phase (N = {N})**"
+  ) %>%
   modify_footnote_header(
     footnote = "Column-wise percentage; n (%)",
     columns = all_stat_cols(),
@@ -157,7 +196,9 @@ tbl_summary(
   ) %>%
   modify_abbreviation(abbreviation = abbrev_list) %>%
   modify_caption(
-    caption = "Table 1. ADNI - Subject Characteristics: By Study Phase"
+    caption = paste0(
+      "Table 1. ADNI - Subject Characteristics: By Study Phase"
+    )
   ) %>%
   bold_labels()
 ```
@@ -174,7 +215,7 @@ if (params$INCLUDE_PACC) {
 cont_bl_distr_plot <- lapply(cont_var_list, function(x) {
   graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
-    rename_with(~ paste0("yvalue"), all_of(x)) %>% 
+    rename_with(~ paste0("yvalue"), all_of(x)) %>%
     filter(!is.na(yvalue))
 
   if (x == "CDGLOBAL") {
@@ -234,30 +275,22 @@ tbl_summary(
     filter(ENRLFL %in% "Y"),
   by = DX,
   include = include_vars,
-  type = all_continuous() ~ "continuous2",
-  statistic = list(
-    all_continuous() ~ c(
-      "{mean} ({sd})",
-      "{median} ({p25}, {p75})",
-      "{min}, {max}"
-    ),
-    all_categorical() ~ "{n} ({p}%)"
-  ),
-  digits = all_continuous() ~ 1,
-  percent = "row",
-  missing_text = "(Missing)"
+  percent = "row"
 ) %>%
-  add_stat_label(label = all_continuous2() ~ conts_statistic_label) %>%
-  modify_caption(caption = paste0(
-    "Table 2. ADNI - Subject Characteristics: ",
-    "By Baseline Diagnosis Status"
-  )) %>%
+  modify_spanning_header(
+    all_stat_cols() ~ paste0("**", get_variable_labels(ADSL$DX), " (N = {N})**")
+  ) %>%
   modify_footnote_header(
     footnote = "Row-wise percentage; n (%)",
     columns = all_stat_cols(),
     replace = TRUE
   ) %>%
   modify_abbreviation(abbreviation = abbrev_list) %>%
+  modify_caption(
+    caption = paste0(
+      "Table 2. ADNI - Subject Characteristics: By ", get_variable_labels(ADSL$DX)
+    )
+  ) %>%
   bold_labels()
 ```
 
@@ -269,17 +302,17 @@ cont_distr_plot_bl_dx <- lapply(cont_var_list, function(x) {
   graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
     rename_with(~ paste0("yvalue"), all_of(x)) %>%
-    filter(!is.na(DX) & !is.na(yvalue)) %>% 
-    group_by(DX) %>% 
-    mutate(DX_LABEL = paste0(DX, "\n (n = ", sum(!is.na(yvalue)), ")")) %>% 
+    filter(!is.na(DX) & !is.na(yvalue)) %>%
+    group_by(DX) %>%
+    mutate(DX_LABEL = paste0(DX, "\n (n = ", sum(!is.na(yvalue)), ")")) %>%
     ungroup()
-  
-  dxlabel_lvls <- graph_data %>% 
-    distinct(DX, DX_LABEL) %>% 
-    arrange(DX) %>% 
+
+  dxlabel_lvls <- graph_data %>%
+    distinct(DX, DX_LABEL) %>%
+    arrange(DX) %>%
     pull(DX_LABEL)
-  
-  graph_data <- graph_data %>% 
+
+  graph_data <- graph_data %>%
     mutate(DX_LABEL = factor(DX_LABEL, levels = dxlabel_lvls))
 
   if (x == "CDGLOBAL") {
