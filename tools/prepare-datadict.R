@@ -8,10 +8,14 @@ update_main_datadict <- function(.datadict) {
     update_adni4_ptdemog_datadict(.datadict)
   )
   temp_main_datadict <- .datadict %>%
-    filter(TBLNAME %in% "DATADIC" & FLDNAME %in% c(names(.datadict)))
-  .datadict <- .datadict %>%
-    filter(!TBLNAME %in% "DATADIC") %>%
-    bind_rows(temp_main_datadict)
+    filter(TBLNAME %in% "DATADIC" & FLDNAME %in% c(names(.datadict))) %>%
+    mutate(CRFNAME = "ADNI Study Data Dictionary")
+
+  .datadict <- bind_rows(
+    .datadict %>%
+      filter(!TBLNAME %in% "DATADIC"),
+    temp_main_datadict
+  )
   return(.datadict)
 }
 
@@ -28,7 +32,7 @@ create_visit_datadict <- function(.datadict) {
   .datadict %>%
     filter(TBLNAME %in% "VISITS") %>%
     mutate(CRFNAME = case_when(
-      is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "ADNI study visit code across phases",
+      is.na(CRFNAME) & TBLNAME %in% "VISITS" ~ "ADNI study visit code across study phases",
       TRUE ~ CRFNAME
     ))
 }

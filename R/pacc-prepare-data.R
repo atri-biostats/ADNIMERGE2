@@ -58,7 +58,8 @@
 #' @importFrom dplyr mutate select
 #' @importFrom tidyr pivot_longer
 #' @importFrom purrr map pluck
-#' @keywords internal pacc_score_utils_fun
+#' @keywords internal
+#' @family PACC score related
 
 prepare_pacc_input_data <- function(
   data_source = "ADNIMERGE2",
@@ -137,8 +138,11 @@ prepare_pacc_input_data <- function(
   return(output)
 }
 
-#' @title Function to create a common data format of PACC component input raw dataset, and
-#'        perform some internal validation checks. Please see details section for more.
+#' @title prepare_common_data_format
+#' @description
+#' Function to create a common data format for PACC component input raw dataset, and
+#' perform some internal validation checks. Please see details section for more.
+#'
 #' @param .data A data.frame
 #'
 #' @return A data.frame similar to `.data` input where every columns are renamed
@@ -160,7 +164,8 @@ prepare_pacc_input_data <- function(
 #' prepare_common_data_format(.data = ADNIMERGE2::ADAS)
 #' }
 #' @rdname prepare_common_data_format
-#' @keywords internal pacc_score_utils_fun
+#' @keywords internal
+#' @family PACC score related
 
 prepare_common_data_format <- function(.data) {
   id_cols <- c("COLPROT", "RID", "VISCODE")

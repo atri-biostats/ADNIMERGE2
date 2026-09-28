@@ -60,14 +60,14 @@
 #'   \item Trails B Score, see see \code{TRABSCOR} score in \code{\link{NEUROBAT}()}
 #' }
 #'
-#' @param rescale_trailsB 
-#'     A Boolean value to change the \code{Trails B} score in logarithm scale. 
+#' @param rescale_trailsB
+#'     A Boolean value to change the \code{Trails B} score in logarithm scale.
 #'     By default, `Trails B` score will be converted into a logarithm scale.
-#'     
-#' @param rescale_trialsB `r lifecycle::badge("deprecated")` the same as 
-#'    `rescale_trailsB` argument. Note: Deprecated in version 0.1.2. 
-#'     The `rescale_trialsB` argument will be removed in a future release. 
-#'     
+#'
+#' @param rescale_trialsB `r lifecycle::badge("deprecated")` the same as
+#'    `rescale_trailsB` argument. Note: Deprecated in version 0.1.2.
+#'     The `rescale_trialsB` argument will be removed in a future release.
+#'
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
 #' @param wideFormat A Boolean value whether the data.frame is in \code{wide} or \code{long} format, Default: TRUE
@@ -181,6 +181,7 @@
 #'   \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
 #' @rdname compute_pacc_score
 #' @keywords adni_scoring_fun pacc_score_utils_fun
+#' @family PACC score related
 #' @export
 #' @importFrom cli cli_abort cli_alert_warning
 #' @importFrom dplyr mutate across select relocate bind_rows
@@ -512,7 +513,7 @@ compute_pacc_score <- function(.data,
 #'  \code{\link{compute_baseline_score_summary}()}
 #'  \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
 #' @rdname compute_score_summary
-#' @keywords pacc_score_utils_fun utils_fun
+#' @keywords utils_fun
 #' @export
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr filter if_all group_by across ungroup if_any select mutate
@@ -762,7 +763,7 @@ compute_baseline_score_summary <- function(.data, filterBy, filterValue = c("Y",
 #'   facet_wrap(~SOURCE)
 #' }
 #' @rdname normalize_var_by_baseline_score
-#' @keywords pacc_score_utils_fun
+#' @keywords internal
 #' @family utility functions
 #' @importFrom dplyr filter
 #' @importFrom tibble as_tibble
@@ -884,7 +885,7 @@ calculate_zscore <- function(x, mean, sd) {
 #' }
 #'
 #' @rdname get_vars_common_date
-#' @keywords utils_fun
+#' @keywords internal
 #' @importFrom rlang arg_match0
 #' @importFrom cli cli_abort
 #' @importFrom dplyr mutate row_number filter group_by ungroup n_distinct
