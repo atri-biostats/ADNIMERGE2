@@ -32,7 +32,7 @@
 #' \strong{mPACCdigit} only will be calculated for the study phase when DSST was collected, which is in ADNI1 study phase.
 #'  Otherwise the \code{mPACCdigit} score will be missing (i.e., \code{NA}) even though the remaining PACC component scores are non-missing.
 #'
-#' Please see \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
+#' Please see \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")}
 #' how \code{\link{compute_pacc_score}()} function can be used.
 #'
 #' @param .data A data.frame either in wide or long format. Please see the other arguments.
@@ -95,7 +95,7 @@
 #' @examples
 #' \dontrun{
 #' # Please see 'Details' section or 'ADNIMERGE2-PACC' vignette
-#' vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")
+#' vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")
 #'
 #' # Additional examples about PACC score -----
 #' library(nlme)
@@ -176,7 +176,7 @@
 #' summary(multcomp::glht(fit, linfct = contrast.data))
 #' }
 #' @seealso
-#'   \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
+#'   \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")}
 #' @rdname compute_pacc_score
 #' @keywords adni_scoring_fun pacc_score_utils_fun
 #' @family PACC score related
@@ -530,7 +530,7 @@ compute_pacc_score <- function(.data,
 #' }
 #' @seealso
 #'  \code{\link{compute_baseline_score_summary}()}
-#'  \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
+#'  \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")}
 #' @rdname compute_score_summary
 #' @keywords utils_fun
 #' @export
@@ -899,8 +899,8 @@ calculate_zscore <- function(x, mean, sd) {
 #'
 #' @examples
 #' \dontrun{
-#' # Please see the \code{ADNIMERGE2-PACC-SCORE} vignette
-#' vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")
+#' # Please see the \code{ADNIMERGE2-PACC} vignette
+#' vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")
 #' }
 #'
 #' @rdname get_vars_common_date
