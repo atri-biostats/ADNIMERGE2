@@ -51,6 +51,14 @@ check_object_type(params$INCLUDE_PACC, "logical")
 theme_gtsummary_compact()
 # ggplot2 theme
 theme_set(theme_bw(base_size = 12))
+# Label wrap function ----
+apply_label_wrap <- function(x, width = 25) {
+  tmp_wrap <- label_wrap_gen(width = width, multi_line = TRUE) %>%
+    unlist()
+  x <- x %>%
+    tmp_wrap()
+  return(x)
+}
 ```
 
 ```{r abbrev}
@@ -101,7 +109,10 @@ enroll_summary_plot <- enroll_summary_data %>%
     y = "Cumulative Enrollment Per Month",
     color = "ADNI Study Phase"
   ) +
-  theme(axis.text.x = element_text(hjust = 0.3, vjust = 0, angle = 15))
+  theme(
+    axis.text.x = element_text(hjust = 0.3, vjust = 0, angle = 15),
+    axis.title.x = element_text(margin = margin(t = 20))
+  )
 enroll_summary_plot
 ```
 
@@ -151,7 +162,7 @@ tbl_summary(
   bold_labels()
 ```
 
-```{r viloin-plot, fig.height = 11, fig.alt = "Distribution of numeric characteristics: Overall"}
+```{r distr-plot, fig.height = 11, fig.alt = "Distribution of continuous characteristics: Overall"}
 var_label_list <- get_variable_labels(ADSL)
 cont_var_list <- c(
   "AGE", "EDUC", "BMI", "ADASTT13", "CDGLOBAL",
@@ -160,33 +171,58 @@ cont_var_list <- c(
 if (params$INCLUDE_PACC) {
   cont_var_list <- c(cont_var_list, pacc_vars)
 }
-cont_bl_violin_plot <- lapply(cont_var_list, function(x) {
+cont_bl_distr_plot <- lapply(cont_var_list, function(x) {
   graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
-    rename_with(~ paste0("yvalue"), all_of(x))
+    rename_with(~ paste0("yvalue"), all_of(x)) %>% 
+    filter(!is.na(yvalue))
 
-  graph_data %>%
-    ggplot(data = ., aes(x = yvalue)) +
-    geom_histogram() +
+  if (x == "CDGLOBAL") {
+    distr_plot <- graph_data %>%
+      mutate(yvalue = factor(yvalue, levels = c(0, 0.5, 1:3))) %>%
+      ggplot(data = ., aes(x = yvalue)) +
+      geom_bar(alpha = 0.95, fill = "#ADD8E6", width = 0.75) +
+      geom_text(
+        stat = "count",
+        aes(label = paste0("n = ", after_stat(count))),
+        size = 3.5, color = "#000000"
+      )
+  } else {
+    distr_plot <- graph_data %>%
+      ggplot(data = ., aes(x = yvalue)) +
+      geom_histogram(alpha = 0.95, fill = "#ADD8E6")
+  }
+
+  distr_plot <- distr_plot +
     labs(
       x = var_label_list[[x]],
       y = "Count",
-      title = paste0("n = ", sum(!is.na(graph_data$yvalue)))
+      title = paste0("N = ", sum(!is.na(graph_data$yvalue))),
+      fill = ""
     ) +
-    theme(title = element_text(size = 11))
+    theme(
+      title = element_text(size = 11),
+      legend.position = "none"
+    )
+
+  return(distr_plot)
 })
 
-names(cont_bl_violin_plot) <- cont_var_list
+names(cont_bl_distr_plot) <- cont_var_list
 
 plots(
-  cont_bl_violin_plot,
+  cont_bl_distr_plot,
   n_columns = 2,
   caption = ifelse(params$INCLUDE_PACC, paste0(
     "Baseline mPACCdigit score was based on subjects that were enrolled only ",
-    "in ADNI1 study phase. \n The remaining summary plots were based on ",
-    "enrolled subjects in ADNI study."
+    "in ADNI1 study phase. \nThe remaining distribution plots were based on ",
+    "all enrolled subjects in ADNI study."
   ), ""),
-  title = "ADNI - Plots of Numeric Characteristics: By Study Phase"
+  title = "ADNI - Distribution of Continuous Characteristics: By Study Phase",
+  theme = theme(
+    plot.caption = element_text(hjust = 0),
+    plot.caption.position = "plot"
+  )
 )
 ``` 
 
@@ -225,60 +261,90 @@ tbl_summary(
   bold_labels()
 ```
 
-```{r viloin-plot-bl-dx, fig.height = 13, fig.width = 8, fig.alt = "Distribution of numeric characteristics: By baseline diagnostics status"}
+```{r distr-plot-bl-dx, fig.height = 14, fig.width = 9, fig.alt = "Distribution of continuous characteristics: By baseline diagnostics status"}
 dx_color_pal <- c("#73C186", "#F2B974", "#DF957C", "#999999")
 
-# Create density plot
-cont_violin_plot_bl_dx <- lapply(cont_var_list, function(x) {
+# Create barchart/density plot
+cont_distr_plot_bl_dx <- lapply(cont_var_list, function(x) {
   graph_data <- ADSL %>%
     filter(ENRLFL %in% "Y") %>%
-    filter(!is.na(DX)) %>%
-    rename_with(~ paste0("yvalue"), all_of(x))
+    rename_with(~ paste0("yvalue"), all_of(x)) %>%
+    filter(!is.na(DX) & !is.na(yvalue)) %>% 
+    group_by(DX) %>% 
+    mutate(DX_LABEL = paste0(DX, "\n (n = ", sum(!is.na(yvalue)), ")")) %>% 
+    ungroup()
+  
+  dxlabel_lvls <- graph_data %>% 
+    distinct(DX, DX_LABEL) %>% 
+    arrange(DX) %>% 
+    pull(DX_LABEL)
+  
+  graph_data <- graph_data %>% 
+    mutate(DX_LABEL = factor(DX_LABEL, levels = dxlabel_lvls))
 
-  n_obs <- graph_data %>%
-    select(yvalue, DX) %>%
-    na.omit() %>%
-    nrow()
+  if (x == "CDGLOBAL") {
+    graph_data <- graph_data %>%
+      mutate(yvalue = factor(yvalue, levels = c(0, 0.5, 1:3))) %>%
+      group_by(yvalue) %>%
+      mutate(yvalue = paste0(yvalue, " \n(n = ", n(), ")")) %>%
+      ungroup()
 
-  graph_data %>%
-    ggplot(data = ., aes(x = yvalue, fill = DX)) +
-    geom_density(alpha = 0.5) +
+    distr_plot <- graph_data %>%
+      ggplot(data = ., aes(x = yvalue, fill = DX)) +
+      geom_bar(position = "stack", width = 0.75, show.legend = FALSE)
+  } else {
+    distr_plot <- graph_data %>%
+      ggplot(data = ., aes(x = DX_LABEL, y = yvalue, fill = DX)) +
+      geom_violin(alpha = 0.5, trim = TRUE, draw_quantiles = .5)
+  }
+
+  distr_plot <- distr_plot +
     labs(
-      x = paste0(var_label_list[[x]]),
-      y = "Density",
+      x = ifelse(x == "CDGLOBAL", var_label_list[[x]], get_variable_labels(ADSL$DX)),
+      y = ifelse(x == "CDGLOBAL", "Count", var_label_list[[x]]) %>%
+        apply_label_wrap(),
       color = get_variable_labels(ADSL$DX),
-      title = var_label_list[[x]],
-      subtitle = paste0(" By ", get_variable_labels(ADSL$DX), ", n = ", n_obs),
+      title = paste0(var_label_list[[x]], ", N = ", nrow(graph_data)),
+      # subtitle = paste0("By ", get_variable_labels(ADSL$DX), ", N = ", nrow(graph_data)),
       fill = get_variable_labels(ADSL$DX)
     ) +
     scale_fill_manual(values = dx_color_pal) +
     theme(
       legend.position = "bottom",
-      title = element_text(size = 10.5)
+      plot.title = element_text(size = 10.5),
+      plot.subtitle = element_text(size = 9.5)
     )
+
+  return(distr_plot)
 })
 
-names(cont_violin_plot_bl_dx) <- cont_var_list
+names(cont_distr_plot_bl_dx) <- cont_var_list
 
 plot_caption <- paste0(
   "Based on subjects that had known diagnostics status at baseline visit.",
   ifelse(params$INCLUDE_PACC == TRUE,
     paste0(
-      "\n Baseline mPACCdigit score was based on subjects that were enrolled only ",
-      "in ADNI1 study phase. \n The remaining summary plots were based on ",
-      "enrolled subjects in ADNI study."
+      "\nBaseline mPACCdigit score was based on subjects that were enrolled only ",
+      "in ADNI1 study phase. \nThe remaining distribution plots were based on ",
+      "all enrolled subjects in ADNI study."
     ),
     " "
   )
 )
 
 plots(
-  cont_violin_plot_bl_dx,
+  cont_distr_plot_bl_dx,
   n_columns = 2,
   guides = "collect",
   caption = plot_caption,
   title = paste0(
-    "ADNI - Plots of Numeric Characteristics: By Baseline Diagnostics Status"
+    "ADNI - Distribution Of Continuous Characteristics: By ",
+    get_variable_labels(ADSL$DX)
+  ),
+  theme = theme(
+    legend.position = "bottom",
+    plot.caption = element_text(hjust = 0),
+    plot.caption.position = "plot"
   )
-) & theme(legend.position = "bottom")
+)
 ``` 
