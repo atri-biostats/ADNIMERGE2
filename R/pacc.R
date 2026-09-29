@@ -32,7 +32,7 @@
 #' \strong{mPACCdigit} only will be calculated for the study phase when DSST was collected, which is in ADNI1 study phase.
 #'  Otherwise the \code{mPACCdigit} score will be missing (i.e., \code{NA}) even though the remaining PACC component scores are non-missing.
 #'
-#' Please see \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
+#' Please see \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")}
 #' how \code{\link{compute_pacc_score}()} function can be used.
 #'
 #' @param .data A data.frame either in wide or long format. Please see the other arguments.
@@ -48,25 +48,23 @@
 #'  Often recommended to use the baseline component score that summarized by
 #'  baseline diagnostics status.
 #'
-#' @param componentVars Character vector of component score variable names.
+#' @param componentVars A named list object of component score variable names.
 #' The component score variable names should be arranged based the following order.
 #' Otherwise, \strong{invalid} composite score will be calculated.
 #'
 #' \itemize{
-#'   \item Delayed Recall portion from ADAS Cognitive Behavior assessment (ADAS-Cog), see \code{\link{ADAS}()}
-#'   \item Mini-Mental State Examination Score, see \code{\link{MMSE}()}
-#'   \item Logical Memory IIa Delayed Recall Score, see \code{LDELTOTAL} score in \code{\link{NEUROBAT}()}
-#'   \item Digit Symbol Substitution Test Score, see \code{DIGITSCOR} score in \code{\link{NEUROBAT}()}
-#'   \item Trails B Score, see see \code{TRABSCOR} score in \code{\link{NEUROBAT}()}
+#'   \item Delayed Recall portion from ADAS Cognitive Behavior assessment (ADAS-Cog), see \code{\link{ADAS}}
+#'   \item Mini-Mental State Examination Score, see \code{\link{MMSE}}
+#'   \item Logical Memory IIa Delayed Recall Score, see \code{LDELTOTAL} score in \code{\link{NEUROBAT}}
+#'   \item Digit Symbol Substitution Test Score, see \code{DIGITSCOR} score in \code{\link{NEUROBAT}}
+#'   \item Trails B Score, see \code{TRABSCOR} score in \code{\link{NEUROBAT}}
 #' }
+#'
+#' \code{componentVars = list(ADASQ4SCORE = "ADASQ4SCORE", MMSE = "MMSE", LDELTOTL = "LDELTOTL", DIGITSCR = "DIGITSCR", TRABSCOR = "TRABSCOR")}
 #'
 #' @param rescale_trailsB
 #'     A Boolean value to change the \code{Trails B} score in logarithm scale.
 #'     By default, `Trails B` score will be converted into a logarithm scale.
-#'
-#' @param rescale_trialsB `r lifecycle::badge("deprecated")` the same as
-#'    `rescale_trailsB` argument. Note: Deprecated in version 0.1.2.
-#'     The `rescale_trialsB` argument will be removed in a future release.
 #'
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
@@ -96,8 +94,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Please see 'Details' section or 'ADNIMERGE2-PACC-SCORE' vignette
-#' vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")
+#' # Please see 'Details' section or 'ADNIMERGE2-PACC' vignette
+#' vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")
 #'
 #' # Additional examples about PACC score -----
 #' library(nlme)
@@ -178,7 +176,7 @@
 #' summary(multcomp::glht(fit, linfct = contrast.data))
 #' }
 #' @seealso
-#'   \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
+#'   \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")}
 #' @rdname compute_pacc_score
 #' @keywords adni_scoring_fun pacc_score_utils_fun
 #' @family PACC score related
@@ -187,14 +185,17 @@
 #' @importFrom dplyr mutate across select relocate bind_rows
 #' @importFrom tidyr pivot_wider pivot_longer
 #' @importFrom dplyr all_of any_of ends_with contains last_col
-#' @importFrom stats cor
-#' @importFrom lifecycle is_present deprecated deprecate_warn
 
 compute_pacc_score <- function(.data,
                                bl.summary,
-                               componentVars,
+                               componentVars = list(
+                                 ADASQ4SCORE = "ADASQ4SCORE",
+                                 MMSE = "MMSE",
+                                 LDELTOTL = "LDELTOTL",
+                                 DIGITSCR = "DIGITSCR",
+                                 TRABSCOR = "TRABSCOR"
+                               ),
                                rescale_trailsB = FALSE,
-                               rescale_trialsB = lifecycle::deprecated(),
                                keepComponents = FALSE,
                                wideFormat = TRUE,
                                varName = NULL,
@@ -202,24 +203,29 @@ compute_pacc_score <- function(.data,
                                idCols = NULL) {
   mPACCdigit <- mPACCtrailsB <- NULL
   check_object_type(keepComponents, "logical")
-  # Signal the `rescale_trialsB` deprecation to the user
-  if (lifecycle::is_present(rescale_trialsB)) {
-    deprecate_warn(
-      when = "0.1.2",
-      what = "compute_pacc_score(rescale_trialsB = )",
-      with = "compute_pacc_score(rescale_trailsB = )"
-    )
-    rescale_trailsB <- rescale_trialsB
+  args_list <- names(match.call())
+  # Signal deprecated args to the user
+  if ("rescale_trialsB" %in% args_list) {
+    if (lifecycle::is_present(rescale_trialsB)) {
+      lifecycle::deprecate_warn(
+        when = "0.1.2",
+        what = "compute_pacc_score(rescale_trialsB = )",
+        with = "compute_pacc_score(rescale_trailsB = )"
+      )
+    }
   }
   check_object_type(rescale_trailsB, "logical")
   check_object_type(wideFormat, "logical")
+  comp_vars <- c("ADASQ4SCORE", "MMSE", "LDELTOTL", "DIGITSCR", "TRABSCOR")
   check_vector_length(componentVars, 5)
+  check_list_names(x = componentVars, list_names = comp_vars)
+  not_na_status <- lapply(comp_vars, function(z) check_non_missing_value(componentVars[[z]]))
   var_names <- componentVars
-  if (!all(var_names %in% bl.summary$VAR)) {
+  if (!all(as.character(var_names) %in% bl.summary$VAR)) {
     cli::cli_abort(
       message = c(
         "All {.var componentVars} not found in {.var bl.summary$VAR}. \n",
-        "Component variables are: {.val {componentVars}}, and \n",
+        "Component variables are: {.val {as.character(componentVars)}}, and \n",
         paste0(
           "The baseline summary data {.var bl.summary} contains:",
           " {.val {unique(bl.summary$VAR)}} variable{?s}."
@@ -255,7 +261,8 @@ compute_pacc_score <- function(.data,
         names_from = all_of(varName),
         values_from = all_of(scoreCol)
       ) %>%
-      select(all_of(c(idCols, var_names)))
+      assert_uniq(idCols) %>%
+      select(all_of(c(idCols, as.character(var_names))))
   } else {
     .data_wide <- .data
   }
@@ -273,7 +280,7 @@ compute_pacc_score <- function(.data,
 
   check_colnames(
     .data = .data_wide,
-    col_names = var_names,
+    col_names = as.character(var_names),
     stop_message = TRUE,
     strict = TRUE
   )
@@ -281,7 +288,7 @@ compute_pacc_score <- function(.data,
   # Log transformed Trails B score
   if (!rescale_trailsB) {
     trailB_score <- .data_wide %>%
-      select(all_of(var_names[5])) %>%
+      select(all_of(var_names$TRABSCOR)) %>%
       pull()
 
     if (any(trailB_score < 0)) {
@@ -290,7 +297,7 @@ compute_pacc_score <- function(.data,
           "{.var trailB_score} represents Trails B score. \n",
           paste0(
             "{.var trailB_score} must not contains any negative value for",
-            " log rescale/transformation. \n"
+            " logarithm transformation. \n"
           ),
           "Do you want to set {.var rescale_trailsB} = {.val {FALSE}}?"
         )
@@ -298,29 +305,32 @@ compute_pacc_score <- function(.data,
     }
   }
 
-  .data_wide <- .data_wide %>%
-    {
-      if (rescale_trailsB) {
-        # Create log transformation for Trails B scores
-        mutate(., across(all_of(var_names[5]), ~ log(.x + 1), .names = "LOG_{col}"))
-      } else {
-        (.)
-      }
-    }
-
   if (rescale_trailsB) {
-    var_names[5] <- paste0("LOG_", var_names[5])
+    col_list <- names(.data_wide)
+    log_trails_var <- paste0("LOG_", var_names$TRABSCOR)
+    if (log_trails_var %in% col_list) {
+      cli::cli_abort(
+        message = c(
+          "Found {.var {log_trails_var}} variable in the data. \n",
+          "Maybe rename this variable or set {.var rescale_trailsB} = {.val {FALSE}}."
+        )
+      )
+    }
+    .data_wide <- .data_wide %>%
+      # Logarithm scales of Trails B score
+      mutate(., across(all_of(var_names$TRABSCOR), ~ log(.x + 1), .names = "LOG_{col}"))
+    var_names$TRABSCOR <- log_trails_var
   }
 
   # Check for any pre-existing standardized variables
   check.zscore_var <- .data_wide %>%
     select(any_of(ends_with(".zscore"))) %>%
     colnames()
-  check.zscore_var <- check.zscore_var[check.zscore_var %in% paste0(var_names, ".zscore")]
+  check.zscore_var <- check.zscore_var[check.zscore_var %in% paste0(as.character(var_names), ".zscore")]
   if (length(check.zscore_var) != 0) {
     cli::cli_alert_warning(
       message = c(
-        "{var .data_wide} must not contains pre-existing {.val {paste0(var_names, '.zscore')}} variable{?s}. \n",
+        "{var .data_wide} must not contains pre-existing {.val {paste0(as.character(var_names), '.zscore')}} variable{?s}. \n",
         "Caution: these variables will be overwriting! \n",
         "{var .data_wide} contains pre-existed {.val {check.zscore_var}} variable{?s}."
       )
@@ -329,7 +339,7 @@ compute_pacc_score <- function(.data,
 
   # Normalized item-level score by corresponding baseline score among cognitive normal subjects
   .data_wide <- .data_wide %>%
-    mutate(across(all_of(var_names),
+    mutate(across(all_of(as.character(var_names)),
       ~ {
         # Adjust for LOG_trailsB score
         if (rescale_trailsB) {
@@ -340,9 +350,12 @@ compute_pacc_score <- function(.data,
         normalize_var_by_baseline_score(x = .x, baseline_summary = bl.summary, varName = col_name)
       },
       .names = "{col}.zscore"
-    )) %>%
+    ))
+
+  oriented_vars <- paste0(c(var_names$ADASQ4SCORE, var_names$TRABSCOR), ".zscore")
+  .data_wide <- .data_wide %>%
     # Adjust direction
-    mutate(across(all_of(paste0(var_names[c(1, 5)], ".zscore")), ~ -.x))
+    mutate(across(all_of(oriented_vars), ~ -.x))
 
   # check that all measure are positively correlated:
   corTest <- .data_wide %>%
@@ -364,8 +377,11 @@ compute_pacc_score <- function(.data,
     ifelse(sum(is.na(x)) > n.missing, NA, mean(x, na.rm = TRUE)) * n.components
   }
 
-  .data_wide$mPACCdigit <- apply(.data_wide[, paste0(var_names[-5], ".zscore")], 1, compscore)
-  .data_wide$mPACCtrailsB <- apply(.data_wide[, paste0(var_names[-4], ".zscore")], 1, compscore)
+  pdigit_vars <- var_names[names(var_names) %in% c("ADASQ4SCORE", "MMSE", "LDELTOTL", "DIGITSCR")]
+  ptrail_vars <- var_names[names(var_names) %in% c("ADASQ4SCORE", "MMSE", "LDELTOTL", "TRABSCOR")]
+
+  .data_wide$mPACCdigit <- apply(.data_wide[, paste0(as.character(pdigit_vars), ".zscore")], 1, compscore)
+  .data_wide$mPACCtrailsB <- apply(.data_wide[, paste0(as.character(ptrail_vars), ".zscore")], 1, compscore)
 
   .data_wide <- .data_wide %>%
     relocate(all_of(c("mPACCdigit", "mPACCtrailsB")), .after = last_col()) %>%
@@ -382,6 +398,7 @@ compute_pacc_score <- function(.data,
 
   if (!wideFormat) {
     .data_long <- .data_wide %>%
+      assert_uniq(idCols) %>%
       pivot_longer(
         cols = -all_of(idCols),
         names_to = varName,
@@ -511,7 +528,7 @@ compute_pacc_score <- function(.data,
 #' }
 #' @seealso
 #'  \code{\link{compute_baseline_score_summary}()}
-#'  \code{vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")}
+#'  \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")}
 #' @rdname compute_score_summary
 #' @keywords utils_fun
 #' @export
@@ -519,7 +536,6 @@ compute_pacc_score <- function(.data,
 #' @importFrom dplyr filter if_all group_by across ungroup if_any select mutate
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr all_of
-#' @importFrom stats sd
 
 compute_score_summary <- function(.data,
                                   wideFormat = TRUE,
@@ -880,8 +896,8 @@ calculate_zscore <- function(x, mean, sd) {
 #'
 #' @examples
 #' \dontrun{
-#' # Please see the \code{ADNIMERGE2-PACC-SCORE} vignette
-#' vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")
+#' # Please see the \code{ADNIMERGE2-PACC} vignette
+#' vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")
 #' }
 #'
 #' @rdname get_vars_common_date
