@@ -4,8 +4,6 @@ output:
   rmarkdown::html_vignette:
     toc: true
     code_folding: hide
-pkgdown:
-   as_is: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-PACC-SCORE}
