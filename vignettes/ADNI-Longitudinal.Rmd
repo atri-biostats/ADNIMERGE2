@@ -5,6 +5,8 @@ output:
      toc: true
      toc_depth: 3
      code_folding: hide
+pkgdown:
+   as_is: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNI-Longitudinal}
