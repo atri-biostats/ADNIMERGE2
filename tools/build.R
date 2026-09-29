@@ -9,7 +9,7 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2026-07-06" # Data downloaded date YYYY-MM-DD format
+DATA_DOWNLOADED_DATE <- "2026-09-29" # Data downloaded date YYYY-MM-DD format
 UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
@@ -32,7 +32,7 @@ if (DECODE_VALUE) {
 }
 
 ### Create data category for pkgdown -----
-# Recommended to run this line for creating a website using pkgdown
+# Recommended to run this line to categorize data files for pkgdown website
 CREATE_DATA_CATEGORY <- TRUE
 if (CREATE_DATA_CATEGORY) {
   callr::rscript(
@@ -48,8 +48,7 @@ TEST_DIR <- file.path(".", "tests", "testthat")
 
 INCLUDE_PACC_DERIVED_DATA <- TRUE
 if (!INCLUDE_PACC_DERIVED_DATA) {
-  # Transfer PACC scoring article from "./vignettes" to "./tools"
-  # when PACC input raw data are not generated.
+  # Transfer PACC scoring article from "./vignettes" to "./tools" if PACC is not included
   callr::rscript(
     script = "./tools/remove-files.R",
     wd = ".",
@@ -144,43 +143,48 @@ callr::rscript(
 )
 
 ## Additional package related files ----
-# # run once:
-# # Package license
-# usethis::use_mit_license()
-#
-# # Package news
-# # Caution of overwriting any existing `NEWS.md` file
-# usethis::use_news_md()
+# run once:
+# Package license
+usethis::use_mit_license()
 
-## Finalize package building ----
-pkg_root <- "./"
-devtools::load_all(path = pkg_root)
-devtools::document(pkg = pkg_root)
-devtools::check(pkg = pkg_root, error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
-pkg_dir <- devtools::build(pkg = pkg_root, vignettes = INCLUDE_DERIVED_DATASET)
-install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
+# Package news
+# Caution of overwriting any existing `NEWS.md` file
+# # usethis::use_news_md()
 
-# Build README.md ----
-# devtools::build_readme()
+BUILD_PACKAGE <- TRUE
+if (BUILD_PACKAGE) {
+  ## Finalize package building ----
+  pkg_root <- "./"
+  devtools::load_all(path = pkg_root)
+  devtools::document(pkg = pkg_root)
+  devtools::check(pkg = pkg_root, error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
+  pkg_dir <- devtools::build(pkg = pkg_root, vignettes = INCLUDE_DERIVED_DATASET)
+  install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
+  # Build README.md ----
+  # devtools::build_readme()
+}
 
-# # Build website ----
-# # run once:
-#
-# # To clean any existing site on local machine
-# pkgdown::clean_site()
-#
-# # Caution of overwriting any existing `_pkgdown.yml` file
-# # usethis::use_pkgdown()
-#
-# # To check pkgdown configuration: `_pkgdown.yml`
-# pkgdown::check_pkgdown()
-#
-# # To build a site
-# pkgdown::build_site()
-#
-# # Publish website online ----
-# # To publish a site online via GitHub repo: set `PUBLISH_SITE <- TRUE`
-# # PUBLISH_SITE <- FALSE
-# if (PUBLISH_SITE) {
-#   pkgdown::deploy_to_branch()
-# }
+BUILD_SITE <- FALSE
+PUBLISH_SITE <- FALSE
+if (BUILD_SITE) {
+  # Build website ----
+  # run once:
+
+  # To clean any existing site on local machine
+  pkgdown::clean_site()
+
+  # Caution of overwriting any existing `_pkgdown.yml` file
+  # usethis::use_pkgdown()
+
+  # To check pkgdown configuration: `_pkgdown.yml`
+  pkgdown::check_pkgdown()
+
+  # To build a site
+  pkgdown::build_site()
+
+  # Publish website online ----
+  # To publish a site online via GitHub repo: set `PUBLISH_SITE <- TRUE`
+  if (PUBLISH_SITE) {
+    pkgdown::deploy_to_branch()
+  }
+}
