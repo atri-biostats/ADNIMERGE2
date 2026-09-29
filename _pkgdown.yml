@@ -111,6 +111,12 @@ reference:
         Datasets with records that are collected in ADNI4 study phase/protocol
     contents:
     - has_keyword("adni4")
+  
+  - subtitle: TEAM-ADNI Phase
+    desc: >
+        Datasets with records that are collected in TEAM-ADNI study phase/protocol
+    contents:
+    - has_keyword("team")
     
   - subtitle: Required Manual Phase Identification
     desc: >
