@@ -57,7 +57,7 @@
 #'   \item Mini-Mental State Examination Score, see \code{\link{MMSE}}
 #'   \item Logical Memory IIa Delayed Recall Score, see \code{LDELTOTAL} score in \code{\link{NEUROBAT}}
 #'   \item Digit Symbol Substitution Test Score, see \code{DIGITSCOR} score in \code{\link{NEUROBAT}}
-#'   \item Trails B Score, see see \code{TRABSCOR} score in \code{\link{NEUROBAT}}
+#'   \item Trails B Score, see \code{TRABSCOR} score in \code{\link{NEUROBAT}}
 #' }
 #'
 #' \code{componentVars = list(ADASQ4SCORE = "ADASQ4SCORE", MMSE = "MMSE", LDELTOTL = "LDELTOTL", DIGITSCR = "DIGITSCR", TRABSCOR = "TRABSCOR")}
@@ -185,8 +185,6 @@
 #' @importFrom dplyr mutate across select relocate bind_rows
 #' @importFrom tidyr pivot_wider pivot_longer
 #' @importFrom dplyr all_of any_of ends_with contains last_col
-#' @importFrom stats cor
-#' @importFrom lifecycle is_present deprecated deprecate_warn
 
 compute_pacc_score <- function(.data,
                                bl.summary,
@@ -209,7 +207,7 @@ compute_pacc_score <- function(.data,
   # Signal deprecated args to the user
   if ("rescale_trialsB" %in% args_list) {
     if (lifecycle::is_present(rescale_trialsB)) {
-      deprecate_warn(
+      lifecycle::deprecate_warn(
         when = "0.1.2",
         what = "compute_pacc_score(rescale_trialsB = )",
         with = "compute_pacc_score(rescale_trailsB = )"
@@ -538,7 +536,6 @@ compute_pacc_score <- function(.data,
 #' @importFrom dplyr filter if_all group_by across ungroup if_any select mutate
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr all_of
-#' @importFrom stats sd
 
 compute_score_summary <- function(.data,
                                   wideFormat = TRUE,

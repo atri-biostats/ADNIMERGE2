@@ -20,13 +20,12 @@ Imports:
   purrr,
   tidyr, 
   cli,
-  readr,
-  lifecycle
+  readr
 Suggests:
   knitr,
+  lifecycle,
   rmarkdown,
   tidyverse,
-  stats,
   DT,
   metacore,
   metatools,
