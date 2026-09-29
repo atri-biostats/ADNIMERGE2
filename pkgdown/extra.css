@@ -1,0 +1,8 @@
+details.chunk-details > summary.chunk-summary {
+  color: #0d6efd !important;
+}
+
+details.chunk-details > summary.chunk-summary:hover,
+details.chunk-details > summary.chunk-summary:focus {
+  color: #0d6efd !important;
+}
