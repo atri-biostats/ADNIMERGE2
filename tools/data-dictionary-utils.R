@@ -144,7 +144,15 @@ summarize_var.character <- function(.data, var_name, wide_format = FALSE) {
   rlang::arg_match0(arg = var_class_type, values = "character")
   check_object_type(wide_format, "logical")
   var_values <- unique(var_values)[!is.na(unique(var_values))]
-  id_format_pattern <- "[0-9]{3}\\_s\\_d+|[0-9]{3}\\_S\\_d+|[0-9]{3}-s-d+|[0-9]{3}-S-d+"
+  id_format_pattern <- c(
+    "[0-9]{3}\\_s\\_\\d+",
+    "[0-9]{3}\\_S\\_\\d+",
+    "[0-9]{3}-s-\\d+",
+    "[0-9]{3}-S-\\d+",
+    "[0-9]{3}-s-\\d+",
+    "^ADNI-[0-9]{3}-\\d+"
+  )
+  id_format_pattern <- paste0(id_format_pattern, collapse = "|")
   contain_ids <- any(str_detect(string = var_values, pattern = id_format_pattern))
   if (all(length(var_values) <= 10 & length(var_values) > 0 & contain_ids != TRUE)) {
     var_notes <- paste0(
@@ -152,7 +160,8 @@ summarize_var.character <- function(.data, var_name, wide_format = FALSE) {
       paste0(var_values, collapse = ", ")
     )
   }
-  if (any(length(var_values) == 0 | length(var_values) > 10 | contain_ids == TRUE)) {
+  status <- c(length(var_values) == 0, length(var_values) > 10, contain_ids == TRUE)
+  if (any(status == TRUE)) {
     var_values <- NA_character_
     var_notes <- paste0(" ")
   }

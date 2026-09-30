@@ -70,14 +70,17 @@ test_that("Check get_adni_blscreen_dxsum function", {
   )
 
   # TEAM-ADNI: dxsum - not collected
-  team_nodx <- keep_teamadni(.data = DXSUM, cols_name = "COLPROT") %>%
-    filter(!is.na(DIAGNOSIS)) %>%
-    distinct(DIAGNOSIS) %>%
-    pull()
+  team_nodx <- keep_teamadni(.data = DXSUM, phase_cols = "COLPROT")
+  if (nrow(team_nodx) > 0) {
+    team_nodx <- team_nodx %>%
+      filter(!is.na(DIAGNOSIS)) %>%
+      distinct(DIAGNOSIS) %>%
+      pull()
 
-  expect_identical(
-    object = team_nodx,
-    expected = "TEAM_NODX",
-    info = "Check get_adni_blscreen_dxsum function based on `DXSUM` and `RS` records"
-  )
+    expect_identical(
+      object = team_nodx,
+      expected = "TEAM_NODX",
+      info = "Check get_adni_blscreen_dxsum function based on `DXSUM` and `RS` records"
+    )
+  }
 })

@@ -359,7 +359,7 @@ get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Ov
 
   .dxsum <- filter_out_teamadni(
     .data = .dxsum,
-    cols_name = "COLPROT"
+    phase_cols = "COLPROT"
   )
 
   output_data <- .dxsum %>%
