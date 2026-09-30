@@ -40,10 +40,10 @@
 #' @rdname get_required_dataset_list
 #' @keywords adni_utils
 #' @family ADNIMERGE2 required datasets
-#' @export
 #' @importFrom rlang arg_match0
 #' @importFrom dplyr bind_rows select filter if_all all_of
 #' @importFrom tibble as_tibble
+#' @export
 
 get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   rlang::arg_match0(arg = use_type, values = c("prep_script", "article"))
@@ -406,8 +406,8 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 
 #' @title Concatenate Dataset URL Link
 #' @param .data A data.frame
-#' @param var_name Variable names, Default: 'data_code'
-#' @return A data.frame with appended URL link
+#' @param var_name Character vector of variable name. By default, \cide{'data_code'} is used.
+#' @return A data.frame with appended URL link to `ADNIMERGE2` GitHub repos in html format.
 #' @examples
 #' \dontrun{
 #' library(dplyr)
