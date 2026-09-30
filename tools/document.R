@@ -236,6 +236,10 @@ temp_data_dict <- temp_data_dict %>%
   # Adjust field code and text
   mutate(
     field_notes = case_when(
+      field_name %in% "RID" & field_class %in% "numeric" ~ " ",
+      .default = field_notes
+    ),
+    field_notes = case_when(
       is.na(field_value) ~ field_notes,
       !is.na(field_value) ~ field_value
     ),
