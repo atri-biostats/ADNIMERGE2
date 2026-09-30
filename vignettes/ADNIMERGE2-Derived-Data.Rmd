@@ -6,6 +6,8 @@ output:
   code_folding: hide
 params: 
    INCLUDE_PACC: true
+pkgdown:
+   as_is: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Derived-Data}
@@ -1818,7 +1820,7 @@ RS_TESTCD_LIST %>%
 ```{r generate-rs0}
 # Clinical diagnostics status
 RS <- DXSUM %>%
-  ADNIMERGE2:::filter_out_teamadni(.data = ., cols_name = "COLPROT") %>%
+  ADNIMERGE2:::filter_out_teamadni(.data = ., phase_cols = "COLPROT") %>%
   generate_oak_id_vars_adni(raw_src = "DXSUM") %>%
   mutate(
     DIAGNOSIS = case_when(
