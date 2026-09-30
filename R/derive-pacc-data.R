@@ -5,17 +5,17 @@
 #'  [ADNIMERGE2-PACC](https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-PACC.html)
 #'  articles.
 #'
-#' @param DATA_SOURCE A character vector of PACC input data source.
+#' @param data_source A character vector of PACC input data source.
 #'  Either \code{ADNIMERGE2} or \code{EXTERNAL} data source.
 #'
 #'  \code{ADNIMERGE2}: To use raw datasets from currently installed [ADNIMERGE2] R data package
 #'
 #'  \code{EXTERNAL}: To use an external data source.
 #'
-#' @param DATA_LIST A named list object. By default, it is a null list object.
+#' @param data_list A named list object. By default, it is a null list object.
 #'  The default value is only applicable if the data source is \code{"ADNIMERGE2"}.
-#'  If an external data source (i.e., \code{DATA_SOURCE = "EXTERNAL"}) is used,
-#'  then \code{DATA_LIST} must be a named list object that contains the following dataset.
+#'  If an external data source (i.e., \code{data_source = "EXTERNAL"}) is used,
+#'  then \code{data_list} must be a named list object that contains the following dataset.
 #'  \itemize{
 #'    \item [ADAS]: ADAS-Cognitive Behavior Data
 #'    \item [MMSE]: Mini-Mental State Exam Data
@@ -32,9 +32,9 @@
 #'  and [./data-raw/ddata-prep-recode.R](https://github.com/atri-biostats/ADNIMERGE2/blob/main/data-raw/data-prep-recode.R)
 #'  for more information regarding ADNIMERGE2 data preparation workflow.
 #'
-#' @param DATA_SOURCE_DATE Data source date. It must be a character/date object.
+#' @param data_source_date Data source date. It must be a character/date object.
 #'   By default, it is null if the data source is \code{'ADNIMERGE2'}
-#'   (i.e., \code{DATA_SOURCE = "ADNIMERGE2"}) as the data download date from
+#'   (i.e., \code{data_source = "ADNIMERGE2"}) as the data download date from
 #'   [ADNIMERGE2] R data package is used.
 #'
 #' @param VIGNETTE_PATH File path of [PACC] score vignettes.
@@ -46,20 +46,22 @@
 #'   [ADNIMERGE2-PACC.Rmd](https://github.com/atri-biostats/ADNIMERGE2/blob/main/vignettes/ADNIMERGE2-PACC.Rmd)
 #'   vignette script can be also used. Please see examples below.
 #'
-#' @param SHOW_PACC_DATADICT A Boolean value to show a data dictionary for PACC scores data.
+#' @param show_pacc_datadict A Boolean value to show a data dictionary for PACC scores data.
 #'  By default, a data dictionary dataset is returned along with the actual PACC scores data.
 #'
-#' @param ENVIR Render environment in which the code chunks are to be evaluated during knitting.
+#' @param envir Inherited from \code{\link{rmarkdown}{render}}.
+#'
+#'  Render environment in which the code chunks are to be evaluated during knitting.
 #'  However, the code chunks are evaluated in new environment by default.
 #'
-#' @param QUIET Inherited from \code{\link{rmarkdown}{render}}. By defualt, it is \code{TRUE}.
+#' @param quiet Inherited from \code{\link{rmarkdown}{render}}. By default, it is \code{TRUE}.
 #'
 #' @param ... Additional arguments that pass through \code{\link{rmarkdown}{render}}
 #'
 #' @return Either a listed data.frame or single data.frame.
 #' \itemize{
-#'   \item A listed data.frame of the actual PACC scores data ([PACC]) and corresponding data dictionary data (i.e., \code{'PACC_DATADICT'}) if \code{SHOW_PACC_DATADICT} is \code{TRUE}.
-#'   \item A single data.frame that only includes PACC scores data if \code{SHOW_PACC_DATADICT} is \code{FALSE}..
+#'   \item A listed data.frame of the actual PACC scores data ([PACC]) and corresponding data dictionary data (i.e., \code{'PACC_DATADICT'}) if \code{show_pacc_datadict} is \code{TRUE}.
+#'   \item A single data.frame that only includes PACC scores data if \code{show_pacc_datadict} is \code{FALSE}..
 #' }
 #'
 #' @examples
@@ -67,12 +69,12 @@
 #' # Generate PACC scores data based on currently installed ADNIMERGE2 data package
 #'
 #' pacc_data_list <- derive_pacc_data(
-#'   DATA_SOURCE = "ADNIMERGE2",
-#'   DATA_LIST = list(),
-#'   DATA_SOURCE_DATE = NULL,
+#'   data_source = "ADNIMERGE2",
+#'   data_list = list(),
+#'   data_source_date = NULL,
 #'   VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
-#'   SHOW_PACC_DATADICT = TRUE,
-#'   ENVIR = new.env()
+#'   show_pacc_datadict = TRUE,
+#'   envir = new.env()
 #' )
 #' names(pacc_data_list)
 #' pacc_data <- pacc_data_list$PACC
@@ -80,11 +82,11 @@
 #'
 #' # To return only PACC data and evaluated all code chunks in global environment
 #' pacc_data1 <- derive_pacc_data(
-#'   DATA_SOURCE = "ADNIMERGE2",
-#'   DATA_SOURCE_DATE = NULL,
+#'   data_source = "ADNIMERGE2",
+#'   data_source_date = NULL,
 #'   VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
-#'   SHOW_PACC_DATADICT = FALSE,
-#'   ENVIR = globalenv()
+#'   show_pacc_datadict = FALSE,
+#'   envir = globalenv()
 #' )
 #'
 #' # Supposes the following datatsets were generated outside ADNIMERGE2 R package
@@ -98,11 +100,11 @@
 #'   DXSUM = ADNIMERGE2::DXSUM
 #' )
 #' pacc_data2 <- derive_pacc_data(
-#'   DATA_SOURCE = "EXTERNAL",
-#'   DATA_LIST = EXTERNAL_DATA_LIST,
-#'   DATA_SOURCE_DATE = ADNIMERGE2::DATA_DOWNLOADED_DATE,
+#'   data_source = "EXTERNAL",
+#'   data_list = EXTERNAL_DATA_LIST,
+#'   data_source_date = ADNIMERGE2::DATA_DOWNLOADED_DATE,
 #'   VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
-#'   SHOW_PACC_DATADICT = FALSE
+#'   show_pacc_datadict = FALSE
 #' )
 #'
 #' # Using a local or remote GitHub version vignettes script to generate PACC scores data
@@ -110,12 +112,12 @@
 #' remotes::install_github(repo = "atri-biostats/ADNIMERGE2")
 #' PACC_VIGNETTE_PATH <- system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2")
 #' pacc_data3 <- derive_pacc_data(
-#'   DATA_SOURCE = "EXTERNAL",
-#'   DATA_LIST = EXTERNAL_DATA_LIST,
-#'   DATA_SOURCE_DATE = "2026-09-28",
-#'   VIGNETTE_PATH = PACC_VIGNETTE_PATH,
-#'   SHOW_PACC_DATADICT = FALSE,
-#'   ENVIR = globalenv()
+#'   data_source = "EXTERNAL",
+#'   data_list = EXTERNAL_DATA_LIST,
+#'   data_source_date = "2026-09-28",
+#'   vignette_path = PACC_VIGNETTE_PATH,
+#'   show_pacc_datadict = FALSE,
+#'   envir = globalenv()
 #' )
 #' }
 #' @seealso
@@ -126,66 +128,65 @@
 #' @keywords adni_scoring_fun
 #' @export
 #'
-derive_pacc_data <- function(DATA_SOURCE,
-                             DATA_LIST = list(),
-                             DATA_SOURCE_DATE = NULL,
-                             VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
-                             SHOW_PACC_DATADICT = TRUE,
-                             ENVIR = new.env(),
-                             QUIET = TRUE,
+derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
+                             data_list = list(),
+                             data_source_date = NULL,
+                             vignette_path = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
+                             show_pacc_datadict = TRUE,
+                             envir = new.env(),
+                             quiet = TRUE,
                              ...) {
-  check_pacc_data_source(DATA_SOURCE)
-  check_object_type(DATA_LIST, "list")
-  check_object_type(SHOW_PACC_DATADICT, "logical")
-  check_object_type(ENVIR, "environment")
-
-  DATA_NAMES <- c("ADAS", "MMSE", "NEUROBAT", "REGISTRY", "DXSUM")
-  if (DATA_SOURCE == "EXTERNAL") {
-    check_list_names(x = DATA_LIST, list_names = DATA_NAMES)
-    data_status <- lapply(DATA_NAMES, function(x) {
-      check_object_type(DATA_LIST[[x]], "data.frame")
+  check_pacc_data_source(data_source)
+  check_object_type(data_list, "list")
+  check_object_type(show_pacc_datadict, "logical")
+  check_object_type(envir, "environment")
+  date_names <- c("ADAS", "MMSE", "NEUROBAT", "REGISTRY", "DXSUM")
+  if (data_source == "EXTERNAL") {
+    check_list_names(x = data_list, list_names = date_names)
+    data_status <- lapply(date_names, function(x) {
+      check_object_type(data_list[[x]], "data.frame")
     })
-    check_non_missing_value(x = DATA_SOURCE_DATE)
+    check_non_missing_value(x = data_source_date)
   } else {
-    DATA_SOURCE_DATE <- ADNIMERGE2::DATA_DOWNLOADED_DATE
+    data_source_date <- ADNIMERGE2::DATA_DOWNLOADED_DATE
   }
-  HOLD_DATA_SOURCE_DATE <- DATA_SOURCE_DATE
-  DATA_SOURCE_DATE <- as.Date(DATA_SOURCE_DATE, format = "%Y-%m-%d")
-  if (is.na(DATA_SOURCE_DATE) || is.null(DATA_SOURCE_DATE)) {
+  hold_data_source_date <- data_source_date
+  data_source_date <- as.Date(data_source_date, format = "%Y-%m-%d")
+  if (is.na(data_source_date) || is.null(data_source_date)) {
     cli::cli_abort(
       message = c(
-        "{.var DATA_SOURCE_DATE} must be a date/character object in {.val YYYY-MM-DD} format. \n ",
-        "{.var DATA_SOURCE_DATE} is {.val {HOLD_DATA_SOURCE_DATE}}"
+        "{.var data_source_date} must be a date/character object in {.val YYYY-MM-DD} format. \n ",
+        "{.var data_source_date} is {.val {hold_data_source_date}}"
       )
     )
   }
-  PACC_V_PATH <- VIGNETTE_PATH
-  if (!file.exists(PACC_V_PATH)) {
+  pacc_vpath <- vignette_path
+  if (!file.exists(pacc_vpath)) {
     cli::cli_abort(
-      message = "Cann't find {.val ADNIMERGE2-PACC} vignettes {.file {PACC_V_PATH}}"
+      message = "Cann't find {.val ADNIMERGE2-PACC} vignettes {.file {pacc_vpath}}"
     )
   }
   rlang::check_installed(
     pkg = "rmarkdown",
-    reason = paste0("To render ", PACC_V_PATH)
+    reason = paste0("To render ", pacc_vpath)
   )
-  validate_pacc_yaml(PACC_V_PATH)
+  validate_pacc_yaml(pacc_vpath)
   # Render file in a new environment
   rmarkdown::render(
-    input = PACC_V_PATH,
+    input = pacc_vpath,
     params = list(
-      DATA_SOURCE = DATA_SOURCE,
-      DATA_LIST = DATA_LIST
+      DATA_SOURCE = data_source,
+      DATA_LIST = data_list
     ),
-    envir = ENVIR,
-    quiet = QUIET,
+    envir = envir,
+    quiet = quiet,
     ...
   )
 
-  PACC_DATA <- ENVIR$PACC
-  PACC_DATA$DATA_SOURCE_DATE <- rep(DATA_SOURCE_DATE, nrow(PACC_DATA))
+  PACC_DATA <- envir$PACC
+  PACC_DATA$DATA_SOURCE_DATE <- rep(data_source_date, nrow(PACC_DATA))
 
-  PACC_DATADICT <- ENVIR$pacc_data_dic
+  PACC_DATADICT <- envir$pacc_data_dic
   PACC_DATADICT <- bind_rows(
     PACC_DATADICT,
     dplyr::tibble(
@@ -198,16 +199,16 @@ derive_pacc_data <- function(DATA_SOURCE,
       CRFNAME = unique(PACC_DATADICT$CRFNAME)
     )
   )
-  ENVIR$PACC <- PACC_DATA
-  ENVIR$PACC_DATADICT <- PACC_DATADICT
-  OUTPUT <- list(
+  envir$PACC <- PACC_DATA
+  envir$PACC_DATADICT <- PACC_DATADICT
+  output <- list(
     "PACC" = PACC_DATA,
     "PACC_DATADIC" = PACC_DATADICT
   )
-  if (SHOW_PACC_DATADICT == FALSE) {
-    OUTPUT <- PACC_DATA
+  if (show_pacc_datadict == FALSE) {
+    output <- PACC_DATA
   }
-  return(OUTPUT)
+  return(output)
 }
 
 ## Utils -----
