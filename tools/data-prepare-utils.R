@@ -836,7 +836,7 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
 #' @param add_char
 #'  Character that will be concatenated with \code{prefix_char} character based on
 #'  the provided \code{position}.
-#' @param .strict Boolean value to apply concatenation if the provided prefix 
+#' @param .strict Boolean value to apply concatenation if the provided prefix
 #'  character `prefix_char` is not presented.
 #' @return
 #'  A same data.frame as \code{data_dict} with additional records if there coded
@@ -1092,7 +1092,7 @@ get_study_phase_category <- function(.data, phase_vars = NULL) {
   require(dplyr)
   # Checking for study phase variable
   if (is.null(phase_vars)) {
-    phase_vars <- c("COLPROT", "PHASE", "Phase", "ProtocolID")
+    phase_vars <- c("COLPROT", "PHASE", "Phase", "ProtocolID", "RMT_PHASE")
   }
   phaseVar <- get_cols_name(.data = .data, col_name = phase_vars)
   if (length(phaseVar) > 1) {
@@ -1120,6 +1120,55 @@ get_study_phase_category <- function(.data, phase_vars = NULL) {
 }
 
 # Utils functions ----
+#' @title List possible filename prefix pattern across study phase
+#' @param collapse Inherited from \code{\link{base}{paste0}}
+#' @return A character vector
+#' @examples
+#' \dontrun{
+#' list_filename_prefix(collapse = NULL)
+#' list_filename_prefix(collapse = "|")
+#' }
+#' @rdname list_filename_prefix
+#' @importFrom dplyr bind_rows distinct mutate
+#' @importFrom tidyr pivot_longer expand_grid
+#' @importFrom stringr str_replace_all
+list_filename_prefix <- function(collapse = NULL) {
+  require(dplyr)
+  require(tidyr)
+  phase_list <- c("1", "go", "2", "3", "4")
+  filename_prefix_data <- lapply(seq_along(phase_list), function(k) {
+    comb_matrix <- combn(phase_list, k)
+    comb_list <- split(comb_matrix, col(comb_matrix))
+    comb_list <- lapply(comb_list, paste0, collapse = "")
+    return(comb_list)
+  }) %>%
+    bind_rows() %>%
+    pivot_longer(
+      cols = everything(),
+      names_to = "name",
+      values_to = "value"
+    ) %>%
+    distinct(value) %>%
+    na.omit() %>%
+    mutate(value = paste0("adni", value))
+
+  # Expand for possible patterns
+  # patterns: "^[x]\\_"; "\\_[x]\\_", "\\_[x]$"
+  pref_pos <- c("^x_", "_x_", "_x$")
+  filename_prefix <- expand_grid(
+    filename_prefix_data,
+    pattern = pref_pos
+  ) %>%
+    mutate(
+      value = str_replace_all(pattern, "x", value),
+      value = str_replace_all(value, "\\_", "\\\\_")
+    ) %>%
+    distinct(value) %>%
+    pull(value)
+  filename_prefix <- paste0(filename_prefix, collapse = collapse)
+  return(filename_prefix)
+}
+
 ## Create missing data.frame -----
 #' @title Create a tibble/data.frame with no rows/records
 #' @param col_names Character vector of column names
