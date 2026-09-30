@@ -2,7 +2,7 @@
 #'
 #' @description
 #'  This function list datasets that are required and to be downloaded
-#'  from ADNI data-sharing platform in order to replicate 
+#'  from ADNI data-sharing platform in order to replicate
 #'  [ADNIMERGE2] R data package.
 #'
 #' @param use_type Usage of dataset either \code{article} or \code{prep_script}
@@ -38,12 +38,11 @@
 #' }
 #'
 #' @rdname get_required_dataset_list
-#' @keywords adni_utils
+#' @keywords internal
 #' @family ADNIMERGE2 required datasets
 #' @importFrom rlang arg_match0
 #' @importFrom dplyr bind_rows select filter if_all all_of
 #' @importFrom tibble as_tibble
-#' @export
 
 get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   rlang::arg_match0(arg = use_type, values = c("prep_script", "article"))
@@ -404,9 +403,67 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   return(pkg_data_list)
 }
 
+
+# List pacc datasets ----
+#' @description
+#' Function to list all datasets that are required to generate/replicate [PACC] scores data
+#' @return A data.frame with three columns
+#' \itemize{
+#'  \item \code{TBLNAME} Dataset code
+#'  \item \code{CRFNAME} Dataset label
+#'  \item \code{TEXT} Description
+#'  }
+#' @examples
+#' \dontrun{
+#' list_pacc_dataset()
+#' }
+#' @rdname list_pacc_dataset
+#' @importFrom dplyr bind_rows
+#' @keywords internal
+list_pacc_dataset <- function() {
+  pacc_data_list <- dplyr::bind_rows(
+    c(
+      TBLNAME = "ADAS",
+      CRFNAME = "ADAS-Cognitive Behavior",
+      TEXT = "Includes the Delayed Recall (ADAS-Cog Q4) score"
+    ),
+    c(
+      TBLNAME = "MMSE",
+      CRFNAME = "Mini Mental State Exam",
+      text = "Includes the total MMSE score"
+    ),
+    c(
+      TBLNAME = "NEUROBAT",
+      CRFNAME = "Neuropsychological Battery",
+      TEXT = paste0(
+        "Includes Digit Symbol Substitution Test score",
+        "Logical Memory IIa Delayed Recall score and ",
+        "Trails B score"
+      )
+    ),
+    c(
+      TBLNAME = "REGISTRY",
+      CRFNAME = "Registry",
+      TEXT = "Used as the main source to identify enrollemnt date"
+    ),
+    c(
+      TBLNAME = "DXSUM",
+      CRFNAME = "Diagnostic Summary",
+      TEXT = "Used as to identify screen/baseline diagnostics status"
+    ),
+    c(
+      TBLNAME = "DATADICT",
+      CRFNAME = "Data dictionary",
+      TEXT = "Used as to mapping coded variables during data preparation workflow"
+    )
+  )
+  return(pacc_data_list)
+}
+
+# Utils ----
 #' @title Concatenate Dataset URL Link
 #' @param .data A data.frame
-#' @param var_name Character vector of variable name. By default, \cide{'data_code'} is used.
+#' @param var_name Character vector of variable name
 #' @return A data.frame with appended URL link to `ADNIMERGE2` GitHub repos in html format.
 #' @examples
 #' \dontrun{
@@ -426,7 +483,7 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 #' @importFrom dplyr mutate across all_of
 #' @export
 
-concat_dataset_url <- function(.data, var_name = "data_code") {
+concat_dataset_url <- function(.data, var_name) {
   pkg_ref_url <- "https://atri-biostats.github.io/ADNIMERGE2/reference/"
   .data <- .data %>%
     mutate(across(all_of(var_name), ~ paste0("<a href='", pkg_ref_url, "' target='_blank'>", .x, "</a>")))
