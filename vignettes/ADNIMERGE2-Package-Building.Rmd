@@ -69,17 +69,15 @@ library(tidyverse)
 library(ADNIMERGE2)
 library(DT)
 
-source(system.file("dataset-list.R", package = "ADNIMERGE2", mustWork = TRUE))
-
 dataset_list <- bind_rows(
   # Data used in vignettes
-  get_required_dataset_list(
+  ADNIMERGE2:::get_required_dataset_list(
     use_type = "article",
     add_url_link = TRUE
   ) %>%
     mutate(source_list = article_list),
   # Data used in data-preparation
-  get_required_dataset_list(
+  ADNIMERGE2:::get_required_dataset_list(
     use_type = "prep_script",
     add_url_link = TRUE
   ) %>%
@@ -89,7 +87,10 @@ dataset_list <- bind_rows(
   mutate(source_list = toString(unique(source_list))) %>%
   ungroup() %>%
   # Add reference link
-  concat_dataset_url(.data = ., var_name = "data_code") %>%
+  ADNIMERGE2:::concat_dataset_url(
+    .data = .,
+    var_name = "data_code"
+  ) %>%
   select(
     `Dataset Code` = data_code,
     `Dataset Label` = label,

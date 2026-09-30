@@ -284,42 +284,15 @@ All raw PACC component data files are now available at the data-sharing platform
 <summary>Show all required raw data files for [`PACC`] score</summary>
 
 ```{r pacc-raw-data-source, echo = FALSE, include = FALSE}
-pacc_raw_data_source <- bind_rows(
-  c(
-    TBLNAME = "ADAS",
-    CRFNAME = "ADAS-Cognitive Behavior",
-    TEXT = "Includes the Delayed Recall (ADAS-Cog Q4) score"
-  ),
-  c(
-    TBLNAME = "MMSE",
-    CRFNAME = "Mini Mental State Exam",
-    TEXT = "Includes the total MMSE score"
-  ),
-  c(
-    TBLNAME = "NEUROBAT",
-    CRFNAME = "Neuropsychological Battery",
-    TEXT = paste0(
-      "Includes Digit Symbol Substitution Test score",
-      "Logical Memory IIa Delayed Recall score and ",
-      "Trails B score"
-    )
-  ),
-  c(
-    TBLNAME = "REGISTRY",
-    CRFNAME = "Registry",
-    TEXT = "Used as the main source to identify enrollemnt date"
-  ),
-  c(
-    TBLNAME = "DXSUM",
-    CRFNAME = "Diagnostic Summary",
-    TEXT = "Used as to identify screen/baseline diagnostics status"
-  )
-)
-
-pacc_raw_data_source_tbl <- pacc_raw_data_source %>%
-  rename(`Dataset Code` = TBLNAME, ` Dataset Name` = CRFNAME, `Description` = TEXT) %>%
+pacc_raw_data_source_tbl <- ADNIMERGE2:::list_pacc_dataset() %>%
+  ADNIMERGE2::concat_dataset_url(var_name = "TBLNAME") %>%
+  rename(
+    `Dataset Code` = TBLNAME,
+    `Dataset Name` = CRFNAME,
+    `Description` = TEXT
+  ) %>%
   datatable(
-    caption = "List of all required raw data files for PACC score",
+    caption = "List of all required raw data files for PACC scores data",
     searching = FALSE
   )
 ```
