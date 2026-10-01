@@ -2144,7 +2144,7 @@ NV_TESTCD_LIST <- bind_rows(
     NVCAT = "AMYLOID-STATUS",
     NVTESTCD = "AMYSTAT",
     NVTEST = "Amyloid Status - Clinician Judgment",
-    TEXT = "Avaiable for ADNI4 phase.",
+    TEXT = "Available for ADNI4 and TEAM-ADNI waves",
     SOURCE = "AMYREAD"
   ),
   AMYPET_TESTCD,
@@ -2172,7 +2172,8 @@ NV_TESTCD_LIST %>%
   select(
     SOURCE, NVTESTCD, NVTEST, NVCAT, NVSCAT,
     `TRACER TYPE` = TRACER,
-    `IMAGE RESOLUTION` = IMAGE_RESOLUTION, DESCRIPTION = TEXT,
+    `IMAGE RESOLUTION` = IMAGE_RESOLUTION, 
+    `DESCRIPTION` = TEXT,
   ) %>%
   concat_dataset_url(., "SOURCE") %>%
   datatable(paging = TRUE, filter = "top") %>%
@@ -2206,14 +2207,15 @@ FDG_PET_DATA <- UCBERKELEYFDG_8mm %>%
   ) %>%
   generate_oak_id_vars_adni(raw_src = "UCBERKELEYFDG_8mm")
 
-# Mapping phase-specific visit code based opn registry
+# Mapping phase-specific visit code based on registry
 FDG_PET_DATA <- FDG_PET_DATA %>%
   # Trying to map visit code from registry
   use_dtplyr() %>%
   left_join(
     REGISTRY %>%
       mutate(EXAMDATE = as.character(EXAMDATE)) %>%
-      select(RID, ORIGPROT, COLPROT, VISCODE, VISCODE2,
+      select(
+        RID, ORIGPROT, COLPROT, VISCODE, VISCODE2,
         REGISTRY.EXAMDATE = EXAMDATE
       ) %>%
       filter(!is.na(REGISTRY.EXAMDATE)) %>%

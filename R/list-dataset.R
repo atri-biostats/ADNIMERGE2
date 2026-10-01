@@ -5,11 +5,11 @@
 #'  from ADNI data-sharing platform in order to replicate
 #'  [ADNIMERGE2] R data package.
 #'
-#' @param use_type Usage of dataset either `article` or `prep_script
+#' @param use_type Usage of dataset either `article` or `prep_script`
 #'
-#'  + **article** To list raw dataset names that are used in [ADNIMERGE2] vignettes
+#'  + **article**: To list raw data files that are used in [ADNIMERGE2] vignettes
 #'
-#'  + **prep_script** To list raw dataset names that are used during data preparation prior to the [ADNIMERGE2] R package build
+#'  + **prep_script**: To list raw data files that are used during data preparation stage prior to the [ADNIMERGE2] R package build
 #'
 #' @param add_url_link A Boolean value to add an URL link of corresponding source file
 #'
@@ -17,7 +17,7 @@
 #'  \itemize{
 #'   \item `data_code` Dataset code
 #'   \item `label` Dataset label/description
-#'   \item `use_prep_script` Indicator if the raw dataset is used in the data-wrangling prior to the package build
+#'   \item `use_prep_script` Indicator if the raw dataset is used in the data-wrangling stage prior to the actual package build
 #'   \item `script_list` List of data wrangling script names
 #'   \item `use_article` Indicator if the raw dataset is used in article/vignette
 #'   \item `article_list` List of articles/vignettes
