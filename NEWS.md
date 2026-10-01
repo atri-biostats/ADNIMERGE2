@@ -8,7 +8,7 @@
    
    - `derive-pacc-data()` function to generate `PACC` score data using `ADNIMERGE2-PACC` vignettes #35, #36
      
-     + `list_pacc_dataset()` internal function to list all required datasets to generate `PACC` score data using `derive-pacc-data()` wrapper function #
+     + `list_pacc_dataset()` internal function to list all required datasets to generate `PACC` score data using `derive-pacc-data()` wrapper function 
    
    - Include TEAM-ADNI study dataset in package build
      
@@ -16,7 +16,7 @@
    
 * Minor Changes/Bugs Fix
 
-  - `compute_pacc_score()` 
+  - `componentVars` argument in `compute_pacc_score()` is now required a named list object in order to make sure to compute correct total `PACC` score 88fd67e
   
   - Fix bugs minor bugs in `extract_codelist_datadict()`, `derive_blfl_adni()` and `left_fuzzy_join()`
   
