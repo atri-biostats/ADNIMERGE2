@@ -435,7 +435,7 @@ list_pacc_dataset <- function() {
     c(
       TBLNAME = "MMSE",
       CRFNAME = "Mini Mental State Exam",
-      text = "Includes the total MMSE score"
+      TEXT = "Includes the total MMSE score"
     ),
     c(
       TBLNAME = "NEUROBAT",

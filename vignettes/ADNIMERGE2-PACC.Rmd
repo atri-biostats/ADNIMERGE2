@@ -283,7 +283,7 @@ All raw PACC component data files are now available at the data-sharing platform
 
 <summary>Show all required raw data files for [`PACC`] score</summary>
 
-```{r pacc-raw-data-source, echo = FALSE, include = FALSE}
+```{r pacc-raw-data-source, echo = FALSE, include = TRUE}
 pacc_raw_data_source_tbl <- ADNIMERGE2:::list_pacc_dataset() %>%
   ADNIMERGE2:::concat_dataset_url(., "TBLNAME") %>%
   rename(
@@ -293,8 +293,10 @@ pacc_raw_data_source_tbl <- ADNIMERGE2:::list_pacc_dataset() %>%
   ) %>%
   datatable(
     caption = "List of all required raw data files for PACC scores data",
-    searching = FALSE
+    searching = FALSE, 
+    escape = FALSE
   )
+pacc_raw_data_source_tbl
 ```
 
 </details>
