@@ -6,8 +6,6 @@ output:
   code_folding: hide
 params: 
    INCLUDE_PACC: true
-pkgdown:
-   as_is: true
 date: "Last Updated: `r format(Sys.Date(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{ADNIMERGE2-Derived-Data}
@@ -518,8 +516,12 @@ DM <- DM %>%
   # Add enrollment/RFSTDTC date
   create_rfstdtc(.registry = REGISTRY) %>%
   # Compute age based on first screening date
+  # For TEAM-ADNI: relative to enrollment date
   mutate(
-    AGE = round(as.numeric(SESTDTC - my(BRTHDTC)) / 365.25, 1),
+    AGE = case_when(
+      ORIGPROT == adni_phase()[6] ~ round(as.numeric(RFSTDTC - my(BRTHDTC)) / 365.25, 1),
+      .default = round(as.numeric(SESTDTC - my(BRTHDTC)) / 365.25, 1)
+    ),
     AGEU = "Years",
     SUBJID = as.character(RID),
     ARMCD = NA_character_,
