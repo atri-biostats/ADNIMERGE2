@@ -37,7 +37,7 @@
 #'   (i.e., \code{data_source = "ADNIMERGE2"}) as the data download date from
 #'   [ADNIMERGE2] R data package is used.
 #'
-#' @param VIGNETTE_PATH File path of [PACC] score vignettes.
+#' @param vignette_path File path of [PACC] score vignettes.
 #'   By default, \code{ADNIMERGE2-PACC} vignettes from [ADNIMERGE2] R package is used.
 #'
 #'   Please see \code{vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")} for more information.
@@ -72,7 +72,7 @@
 #'   data_source = "ADNIMERGE2",
 #'   data_list = list(),
 #'   data_source_date = NULL,
-#'   VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
+#'   vignette_path = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
 #'   show_pacc_datadict = TRUE,
 #'   envir = new.env()
 #' )
@@ -84,7 +84,7 @@
 #' pacc_data1 <- derive_pacc_data(
 #'   data_source = "ADNIMERGE2",
 #'   data_source_date = NULL,
-#'   VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
+#'   vignette_path = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
 #'   show_pacc_datadict = FALSE,
 #'   envir = globalenv()
 #' )
@@ -103,7 +103,7 @@
 #'   data_source = "EXTERNAL",
 #'   data_list = EXTERNAL_DATA_LIST,
 #'   data_source_date = ADNIMERGE2::DATA_DOWNLOADED_DATE,
-#'   VIGNETTE_PATH = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
+#'   vignette_path = system.file("doc/ADNIMERGE2-PACC.Rmd", package = "ADNIMERGE2"),
 #'   show_pacc_datadict = FALSE
 #' )
 #'
@@ -160,20 +160,19 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
       )
     )
   }
-  pacc_vpath <- vignette_path
-  if (!file.exists(pacc_vpath)) {
+  if (!file.exists(vignette_path)) {
     cli::cli_abort(
-      message = "Cann't find {.val ADNIMERGE2-PACC} vignettes {.file {pacc_vpath}}"
+      message = "Cann't find {.val ADNIMERGE2-PACC} vignettes {.file {vignette_path}}"
     )
   }
   rlang::check_installed(
     pkg = "rmarkdown",
-    reason = paste0("To render ", pacc_vpath)
+    reason = paste0("To render ", vignette_path)
   )
-  validate_pacc_yaml(pacc_vpath)
+  validate_pacc_yaml(vignette_path)
   # Render file in a new environment
   rmarkdown::render(
-    input = pacc_vpath,
+    input = vignette_path,
     params = list(
       DATA_SOURCE = data_source,
       DATA_LIST = data_list
