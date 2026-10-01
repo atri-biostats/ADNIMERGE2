@@ -28,7 +28,7 @@ datatable <- function(data, paging = FALSE, searching = TRUE, bInfo = FALSE, ...
     options = list(paging = paging, searching = searching, bInfo = bInfo, ...)
   )
 }
-concat_dataset_url <- function(...){
+concat_dataset_url <- function(...) {
   ADNIMERGE2:::concat_dataset_url(...)
 }
 ```
@@ -1478,7 +1478,7 @@ QS_TESTCD_LIST %>%
   arrange(SOURCE, QSCAT, QSTESTCD) %>%
   select(SOURCE, QSCAT, QSTESTCD, QSTEST) %>%
   concat_dataset_url(., "SOURCE") %>%
-  datatable(., paging = TRUE)
+  datatable(., paging = TRUE, escape = FALSE)
 ```
 
 ```{r qs-input}
@@ -1821,7 +1821,7 @@ RS_TESTCD_LIST %>%
   arrange(SOURCE, RSCAT, RSTESTCD) %>%
   select(SOURCE, RSCAT, RSTESTCD, RSTEST) %>%
   concat_dataset_url(., "SOURCE") %>%
-  datatable()
+  datatable(escape = FALSE)
 ```
 
 ```{r generate-rs0}
@@ -2172,11 +2172,11 @@ NV_TESTCD_LIST %>%
   select(
     SOURCE, NVTESTCD, NVTEST, NVCAT, NVSCAT,
     `TRACER TYPE` = TRACER,
-    `IMAGE RESOLUTION` = IMAGE_RESOLUTION, 
+    `IMAGE RESOLUTION` = IMAGE_RESOLUTION,
     `DESCRIPTION` = TEXT,
   ) %>%
   concat_dataset_url(., "SOURCE") %>%
-  datatable(paging = TRUE, filter = "top") %>%
+  datatable(paging = TRUE, filter = "top", escape = FALSE) %>%
   formatStyle("DESCRIPTION", fontSize = "10px")
 ```
 
@@ -2765,7 +2765,7 @@ LB_TESTCD_LIST %>%
   arrange(SOURCE, LBNAM, LBMETHOD) %>%
   select(SOURCE, LBNAM, LBMETHOD, LBTESTCD, LBTEST, LBORRESU, LBSTRESU) %>%
   concat_dataset_url(., "SOURCE") %>%
-  datatable(paging = TRUE, filter = "top")
+  datatable(paging = TRUE, filter = "top", escape = FALSE)
 ```
 
 ```{r lb-prepare-labdata-print, echo = TRUE, warning = FALSE, message = FALSE, results = 'asis', ref.label = c("lb-prepare-labdata-1go2", "lb-prepare-labdata-34", "lb-prepare-labdata-34-cont")}
@@ -3320,7 +3320,7 @@ VS_TESTCD_LIST %>%
   arrange(SOURCE, VSTESTCD) %>%
   select(SOURCE, VSTESTCD, VSTEST, VSORRESU, VSSTRESU) %>%
   concat_dataset_url(., "SOURCE") %>%
-  datatable()
+  datatable(escape = FALSE)
 ```
 
 ```{r generate-vs0}

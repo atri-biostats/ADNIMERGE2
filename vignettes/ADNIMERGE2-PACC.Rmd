@@ -293,8 +293,10 @@ pacc_raw_data_source_tbl <- ADNIMERGE2:::list_pacc_dataset() %>%
   ) %>%
   datatable(
     caption = "List of all required raw data files for PACC scores data",
-    searching = FALSE
+    searching = FALSE, 
+    escape = FALSE
   )
+pacc_raw_data_source_tbl
 ```
 
 </details>
