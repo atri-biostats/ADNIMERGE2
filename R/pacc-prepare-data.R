@@ -180,8 +180,7 @@ prepare_common_data_format <- function(.data) {
     assert_non_missing(all_of(id_cols)) %>%
     assert_non_missing(all_of(not_na_cols))
 
-  .data <- .data %>%
-    filter_out_teamadni(.data = ., cols_name = "COLPROT")
+  .data <- filter_out_teamadni(.data = .data, "COLPROT")
 
   return(.data)
 }
