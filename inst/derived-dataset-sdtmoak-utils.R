@@ -24,10 +24,11 @@ generate_oak_id_vars_adni <- function(...) {
 #' @param ref_var Reference study date, Default: 'RFSTDTC', see \code{\link[sdtm.oak]{derive_blfl}}
 #' @param num_ref_days Number of days since enrollment/reference date, Default: 90
 #' @param .strict
-#'  A Boolean value to apply more ADNI study specific strict baseline record identification, see the \code{Deatils} section.
+#'  A Boolean value to apply more ADNI study specific strict baseline record identification.
+#'  Please see the \code{Details} section for more information.
 #'
 #' @details
-#' The following additional algorithm will be applied in this function
+#' The following additional algorithm will be applied in this function.
 #'
 #'  If \code{.strict} is set to \code{TRUE}, then a record that collected at
 #'  baseline visit will be prioritized and selected regardless the actual
@@ -57,6 +58,11 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", n
   require(assertr)
 
   check_object_type(.strict, "logical")
+  cur_epoch <- unique(sdtm_in$EPOCH)
+  cur_epoch <- cur_epoch[!is.na(cur_epoch)]
+  check_epoch_list(x = cur_epoch)
+  check_epoch_list(x = baseline_visits)
+
   sdtm_in <- sdtm_in %>%
     # Since visit name might different across study study
     rename_with(~ str_c("ACTUAL_", .x), all_of("VISIT")) %>%
@@ -77,12 +83,13 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", n
   if (.strict) {
     # Get baseline records based on visit name/code
     domain <- extract_domain(sdtm_in)
-    sdtm_in <- drive_bfl_visit(
+    sdtm_in <- derive_bfl_visit(
       .data = sdtm_in %>%
         left_join(
           dm_domain %>%
-            rename_with(~ paste0("ENRFLG"), all_of(ref_var)) %>%
-            select(all_of(c("USUBJID", "ENRFLG"))),
+            rename_with(~ paste0("REF_DATE"), all_of(ref_var)) %>%
+            mutate(across(all_of("REF_DATE"), ~ as.Date(.x) + num_ref_days)) %>%
+            select(all_of(c("USUBJID", "REF_DATE"))),
           by = "USUBJID"
         ),
       visit_col = "VISIT",
@@ -91,7 +98,7 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", n
       status_col = paste0(domain, "STAT")
     ) %>%
       mutate(across(all_of(tgt_var), ~ case_when(!is.na(get("BLFG")) ~ get("BLFG"), TRUE ~ .x))) %>%
-      select(-all_of(c("ENRFLG", "BLFG"))) %>%
+      select(-all_of(c("BLFG"))) %>%
       verify(nrow(.) == nrow(sdtm_in))
 
     sdtm_in <- adjust_multiple_blfs(
@@ -99,6 +106,7 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", n
       tgt_var = tgt_var,
       baseline_visits = baseline_visits
     )
+
     # Checking for multiple flagged baseline records
     checks_multiple_blfs(
       .data = sdtm_in,
@@ -133,8 +141,8 @@ derive_blfl_adni <- function(sdtm_in, dm_domain, tgt_var, ref_var = "RFSTDTC", n
 #'  \code{\link[adjust_multiple_blfs]{}}
 #' @rdname checks_multiple_blfs
 #' @keywords internal
-#' @importFrom rlang arg_match0
-#' @importFrom cli cli_abort
+#' @importFrom rlang arg_match0 abort
+#' @importFrom cli cli_abort cli_alert_info
 #' @importFrom dplyr filter if_all group_by n ungroup relocate
 #' @importFrom dplyr all_of
 
@@ -161,13 +169,12 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
     relocate(all_of(c(grp_vars, tgt_var)))
 
   if (action_type %in% "error" & nrow(multiple_blf_records) > 0) {
-    cli::cli_abort(
-      message = paste0(
-        "Multiple {.val {tgt_var}} records per {.val {grp_vars}} variable{?s} \n ",
-        "The following records have multiple flagged baseline records: \n",
-        "Only the first top six records are listed. Set {.val action_type = 'return_records'}",
-        " to see the full records \n {print(head(multiple_blf_records))}"
-      )
+    cli_abort(
+      message = c(
+        "x" = "Found multiple {.val {tgt_var}} records per {.val {grp_vars}} variable{?s}. \n",
+        "i" = "May set {.val action_type = 'return_records'} to see the full records. \n"
+      ),
+      body = c("Top six or below:", head(multiple_blf_records) %>% capture.output())
     )
   }
 
@@ -175,7 +182,10 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
     check_object_type(show_alert, "logical")
     if (show_alert) {
       cli_alert_info(
-        text = "No multiple flagged {.val {tgt_var}} records per {.val {grp_vars}} variable{?s}"
+        text = paste0(
+          "Did not find any records with multiple flagged ",
+          "{.val {tgt_var}} per {.val {grp_vars}} variable{?s}"
+        )
       )
     }
     invisible(multiple_blf_records)
@@ -203,7 +213,7 @@ checks_multiple_blfs <- function(.data, tgt_var, action_type = "error", show_ale
 #' @keywords internal
 #' @importFrom sdtm.oak oak_id_vars
 #' @importFrom dplyr group_by across mutate case_when ungroup select left_join
-#' @importFrom dplyr all_of any_of
+#' @importFrom dplyr all_of any_of n_distinct
 #' @importFrom assertr verify
 
 adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", id_col = "USUBJID") {
@@ -211,9 +221,10 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
   domain <- substr(tgt_var, start = 1, stop = 2)
   domain <- check_domain_abbrv(domain)
   col_vars <- paste0(domain, c("TESTCD", "CAT", "SCAT"))
+  dm_date_col <- paste0(domain, "DTC")
   check_colnames(
     .data = .data,
-    col_names = c("VISIT", id_col, col_vars[1]),
+    col_names = c("VISIT", id_col, col_vars[1], dm_date_col),
     strict = TRUE,
     stop_message = TRUE
   )
@@ -227,23 +238,78 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
   )
   if (nrow(multiple_blf_records) > 0) {
     join_vars <- c(sdtm.oak::oak_id_vars(), grp_vars)
-
-    temp_adjust_data <- multiple_blf_records %>%
+    t_tgt_var <- paste0("TMPB_", tgt_var)
+    adjust_data <- multiple_blf_records %>%
       group_by(across(all_of(grp_vars))) %>%
       mutate(across(
         all_of(tgt_var),
         ~ case_when(
           !get("VISIT") %in% baseline_visits ~ NA_character_,
           TRUE ~ .x
-        )
+        ),
+        .names = t_tgt_var
       )) %>%
-      mutate(NUM_BLFS = sum(!is.na(get(tgt_var)))) %>%
+      mutate(
+        NUM_BLFS = sum(!is.na(get(t_tgt_var))),
+        DATE_COL = unclass(get(dm_date_col)),
+        DATE_COL = as.Date(DATE_COL),
+        NUM_DAYS_REF = as.numeric(DATE_COL - as.Date(REF_DATE))
+      ) %>%
+      ungroup()
+
+    num_mblf <- adjust_data %>%
+      filter(NUM_BLFS != 1) %>%
+      nrow()
+
+    if (num_mblf > 0) {
+      temp_adjust_data <- adjust_data %>%
+        filter(NUM_BLFS != 1) %>%
+        arrange(all_of("VISITNUM")) %>%
+        flag_min_record(
+          .data = .,
+          group_var = grp_vars,
+          numeric_var = "NUM_DAYS_REF",
+          use_abs = TRUE,
+          flag_var = "IS_FLAGGED"
+        ) %>%
+        mutate(across(all_of(t_tgt_var), ~ case_when(IS_FLAGGED == "Y" ~ .x))) %>%
+        group_by(across(grp_vars)) %>%
+        mutate(TEMP_NUM_BLFS = sum(!is.na(get(t_tgt_var)))) %>%
+        ungroup()
+
+      # In case other than bl visit was flagged previously
+      num_not_blf <- temp_adjust_data %>%
+        filter(TEMP_NUM_BLFS == 0) %>%
+        nrow()
+      if (num_not_blf > 0) {
+        temp_adjust_data <- bind_rows(
+          temp_adjust_data %>%
+            filter(TEMP_NUM_BLFS == 0) %>%
+            mutate(across(all_of(t_tgt_var), ~ case_when(IS_FLAGGED == "Y" ~ get(tgt_var)))),
+          temp_adjust_data %>%
+            filter(TEMP_NUM_BLFS > 0)
+        )
+      }
+      temp_adjust_data <- bind_rows(
+        adjust_data %>%
+          filter(NUM_BLFS == 1),
+        temp_adjust_data
+      )
+    } else {
+      temp_adjust_data <- adjust_data
+    }
+
+    rm_cols <- c("NUM_BLFS", "TEMP_NUM_BLFS", "DATE_COL", "NUM_DAYS_REF", "IS_FLAGGED")
+
+    temp_adjust_data <- temp_adjust_data %>%
+      group_by(across(all_of(grp_vars))) %>%
+      mutate(NUM_BLFS = n_distinct(get(t_tgt_var), na.rm = TRUE)) %>%
       ungroup() %>%
       verify(all(NUM_BLFS == 1)) %>%
-      select(-NUM_BLFS) %>%
-      mutate(TEMP_BLF = get(tgt_var))
+      mutate(TEMP_BLF = get(t_tgt_var)) %>%
+      select(-any_of(c(rm_cols, tgt_var, t_tgt_var)))
 
-    output_data <- .data %>%
+    output <- .data %>%
       left_join(
         temp_adjust_data %>%
           select(all_of(c(join_vars, "TEMP_BLF"))) %>%
@@ -257,9 +323,9 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
       ))) %>%
       select(-any_of(c("ADJ_BLF", "TEMP_BLF")))
   } else {
-    output_data <- .data
+    output <- .data
   }
-  return(output_data)
+  return(output)
 }
 
 # Derive baseline records based on study visit
@@ -269,24 +335,23 @@ adjust_multiple_blfs <- function(.data, tgt_var, baseline_visits = "Baseline", i
 #' @param baseline_visits Baseline visit name/code, Default: 'Baseline'
 #' @return A data.frame with appended \code{BLFG} column.
 #' @details
-#'  This algorithm require to include an enrollment flag column (\code{ENRFLG})
+#'  This algorithm require to include an enrollment date column (\code{REF_DATE})
 #'  in the input data.
-#' @rdname drive_bfl_visit
+#' @rdname derive_bfl_visit
 #' @importFrom dplyr mutate across case_when
 #' @importFrom dplyr all_of
 
-drive_bfl_visit <- function(.data, visit_col = "VISIT", baseline_visits = "Baseline",
-                            value_col = NULL, status_col = NULL) {
+derive_bfl_visit <- function(.data, visit_col = "VISIT", baseline_visits = "Baseline",
+                             value_col = NULL, status_col = NULL) {
   check_colnames(
     .data = .data,
-    col_names = "ENRFLG",
+    col_names = "REF_DATE",
     strict = TRUE,
     stop_message = TRUE
   )
-
   .data <- .data %>%
     mutate(across(all_of(visit_col), ~ case_when(.x %in% baseline_visits ~ "Y"), .names = "BLFG")) %>%
-    mutate(across(all_of("BLFG"), ~ case_when(!is.na(get("ENRFLG")) ~ .x)))
+    mutate(across(all_of("BLFG"), ~ case_when(!is.na(get("REF_DATE")) ~ .x)))
 
   if (!is.null(value_col)) {
     check_non_missing_value(status_col)
@@ -408,6 +473,32 @@ assign_vars_label <- function(.data, data_dict, .strict = TRUE) {
     )
 
   return(.data)
+}
+
+
+#' @title Validate EPOCH List in ADNI
+#' @param x Character vector
+#' @inheritParams rlang::arg_match
+#' @return Invisible Boolean value
+#' @examples
+#' \dontrun{
+#' # Without an error message
+#' check_epoch_list(x = c("Baseline", "Screening"), multiple = TRUE)
+#'
+#' # With error message
+#' check_epoch_list(x = c("Baseline", "Screening"), multiple = FALSE)
+#' check_epoch_list(x = c("Before Baseline"))
+#' }
+#' @rdname check_epoch
+#' @importFrom rlang arg_match
+#'
+check_epoch_list <- function(x, multiple = TRUE) {
+  rlang::arg_match(
+    arg = x,
+    values = c("Screening", "Baseline", "Follow-up"),
+    multiple = multiple
+  )
+  invisible(TRUE)
 }
 
 #' @title Check Domain Abbreviation Length
