@@ -522,7 +522,7 @@ DM <- DM %>%
   # For TEAM-ADNI: relative to enrollment date
   mutate(
     AGE = case_when(
-      ORIGPROT == adni_phase()[6] ~ round(as.numeric(RFSTDTC - my(BRTHDTC)) / 365.25, 1),
+      ORIGPROT == adni_phase()[6] ~ round(as.numeric(as.Date(RFSTDTC) - my(BRTHDTC)) / 365.25, 1),
       .default = round(as.numeric(SESTDTC - my(BRTHDTC)) / 365.25, 1)
     ),
     AGEU = "Years",
