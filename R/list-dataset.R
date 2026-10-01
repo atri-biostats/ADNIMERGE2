@@ -478,10 +478,9 @@ list_pacc_dataset <- function() {
 #' )
 #' }
 #' @rdname concat_dataset_url
-#' @keywords adni_utils
+#' @keywords internal
 #' @family ADNIMERGE2 required datasets
 #' @importFrom dplyr mutate across all_of
-#' @export
 
 concat_dataset_url <- function(.data, var_name) {
   pkg_ref_url <- "https://atri-biostats.github.io/ADNIMERGE2/reference/"

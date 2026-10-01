@@ -285,7 +285,7 @@ All raw PACC component data files are now available at the data-sharing platform
 
 ```{r pacc-raw-data-source, echo = FALSE, include = FALSE}
 pacc_raw_data_source_tbl <- ADNIMERGE2:::list_pacc_dataset() %>%
-  ADNIMERGE2::concat_dataset_url(var_name = "TBLNAME") %>%
+  ADNIMERGE2:::concat_dataset_url(., "TBLNAME") %>%
   rename(
     `Dataset Code` = TBLNAME,
     `Dataset Name` = CRFNAME,
