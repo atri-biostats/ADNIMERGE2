@@ -2470,6 +2470,10 @@ NV <- NV %>%
     tgt_var = "NVBLFL"
   ) %>%
   separate(NVTESTCD, into = nv_grp_cols, sep = "-/") %>%
+  mutate(across(all_of(nv_grp_cols), ~ case_when(
+    .x == "NA" ~ NA_character_,
+    TRUE ~ as.character(.x)
+  ))) %>%
   assert_non_missing(NVTESTCD)
 
 NV <- NV %>%
@@ -2524,14 +2528,14 @@ lb_data_dic <- bind_rows(
     FLDNAME = "LBTEST",
     LABEL = "Lab Test or Examination Name"
   ),
-  # c(
-  #   FLDNAME = "LBCAT",
-  #   LABEL = "Category for Lab Test"
-  # ),
-  # c(
-  #   FLDNAME = "LBSCAT",
-  #   LABEL = "Subcategory for Lab Test"
-  # ),
+  c(
+    FLDNAME = "LBCAT",
+    LABEL = "Category for Lab Test"
+  ),
+  c(
+    FLDNAME = "LBSCAT",
+    LABEL = "Subcategory for Lab Test"
+  ),
   c(
     FLDNAME = "LBORRES",
     LABEL = "Result or Finding in Original Units"
@@ -2652,15 +2656,24 @@ ADNI1GO2_CLINICAL_LABDATA <- LABDATA %>%
   select(-all_of(common_cols[!common_cols %in% lab_cols])) %>%
   filter(LBORRES != -1) %>%
   mutate(LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d")) %>%
-  adjust_lab_visitcode()
+  adjust_lab_visitcode() %>%
+  mutate(
+    LBCAT = "SAFETY LAB",
+    LBSCAT = "SAFETY LAB"
+  )
 ```
 
 ```{r lb-prepare-labdata-34, eval = TRUE, echo = FALSE, message = FALSE, results = 'hold'}
 # Lab data for ANDI3-4 phases
 ADNI34_CLINICAL_LABDATA <- URMC_LABDATA %>%
+  # Unique results
+  select(-any_of(c("KitID", "update_stamp"))) %>%
+  distinct() %>%
   generate_oak_id_vars_adni(raw_src = "URMC_LABDATA") %>%
   mutate(
     LBNAM = "URMC",
+    LBCAT = "SAFETY LAB",
+    LBSCAT = "SAFETY LAB",
     TestID = ifelse(TestName %in% "Sodium", "NA", TestID)
   ) %>%
   mutate(across(ends_with(c("Date", "Time")), as.character))
@@ -2722,9 +2735,9 @@ The [`LB`](../reference/LB.html) dataset contains the following blood plasma bio
 
 *NOTE: *
 
-* As a future work, to include the sample batch of `UPENNBIOMK_MASTER` and `UPENNBIOMK_ROCHE_ELECSYS`.
+* As this moment, `LBSCAT` field is used as to identify the sample batch in `UPENNBIOMK_MASTER` and `UPENNBIOMK_ROCHE_ELECSYS`  datasets.
 
-* Also to harmonized the safety laboratory data across different study phase.
+* As future work, to harmonize the safety laboratory data across different study phase.
 
 ```{r lb-testcd-list, eval = TRUE, echo = FALSE}
 LB_TESTCD_LIST <- bind_rows(
@@ -2764,7 +2777,7 @@ UPENNBIOMK_ROCHE_DATA <- UPENNBIOMK_ROCHE_ELECSYS %>%
   left_fuzzy_join(
     data1 = .,
     data2 = BIOMARK %>%
-      select(ORIGPROT, COLPROT, RID, EXAMDATE, VISCODE) %>%
+      distinct(ORIGPROT, COLPROT, RID, EXAMDATE, VISCODE) %>%
       filter(!is.na(EXAMDATE)) %>%
       rename_with_list(., name_char = join_var_upenn, by_name = FALSE),
     join_by = join_var_upenn,
@@ -2801,7 +2814,11 @@ UPENNBIOMK_ROCHE_DATA <- UPENNBIOMK_ROCHE_DATA %>%
     get_biomarker_details(assay = "Roche"),
     by = c("BATCH", "LBTESTCD")
   ) %>%
-  assert_non_missing(LBTEST)
+  mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = BATCH
+  ) %>%
+  assert_non_missing(LBTEST, LBCAT, LBSCAT)
 ```
 
 ```{r lb-prepare-upennbiomk2, eval = TRUE, echo = FALSE}
@@ -2827,7 +2844,7 @@ UPENNBIOMK_ALZBIO3_DATA <- UPENNBIOMK_MASTER %>%
   left_fuzzy_join(
     data1 = .,
     data2 = BIOMARK %>%
-      select(ORIGPROT, RID, EXAMDATE, VISCODE, COLPROT) %>%
+      distinct(ORIGPROT, RID, EXAMDATE, VISCODE, COLPROT) %>%
       filter(!is.na(EXAMDATE)) %>%
       rename_with_list(., name_char = join_var_upenn[-2], by_name = FALSE),
     join_by = join_var_upenn[-2],
@@ -2851,7 +2868,11 @@ UPENNBIOMK_ALZBIO3_DATA <- UPENNBIOMK_ALZBIO3_DATA %>%
     get_biomarker_details(assay = "AlzBio3"),
     by = "LBTESTCD"
   ) %>%
-  assert_non_missing(LBTEST)
+  mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = BATCH
+  ) %>%
+  assert_non_missing(LBTEST, LBCAT, LBSCAT)
 ```
 
 ```{r lb-prepare-upennbiomk3, eval = TRUE, echo = FALSE}
@@ -2880,6 +2901,8 @@ UPENN_PLASMA_FQ_DATA <- UPENN_PLASMA_FUJIREBIO_QUANTERIX %>%
   ) %>%
   assert_non_missing(LBTEST) %>%
   mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = LBMETHOD,
     LBORRES = as.character(as.numeric(LBORRES)),
     LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d"),
     LBANTREG = Primary
@@ -2913,21 +2936,25 @@ C2N_PLASMA_DATA <- C2N_PRECIVITYAD2_PLASMA %>%
     names_to = "LBTESTCD",
     values_to = "LBORRES"
   ) %>%
-  mutate(
-    LBSPEC = "PLASMA",
-    LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d")
-  ) %>%
   left_join(
     get_biomarker_details(assay = "C2N"),
     by = "LBTESTCD"
+  ) %>%
+  mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = LBMETHOD,
+    LBSPEC = "PLASMA",
+    LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d")
   ) %>%
   assert_non_missing(LBTEST)
 ```
 
 ```{r generate-lb}
 LB <- bind_rows(
-  C2N_PLASMA_DATA, ADNI1GO2_CLINICAL_LABDATA,
-  UPENNBIOMK_ROCHE_DATA, UPENNBIOMK_ALZBIO3_DATA,
+  C2N_PLASMA_DATA,
+  ADNI1GO2_CLINICAL_LABDATA,
+  UPENNBIOMK_ROCHE_DATA,
+  UPENNBIOMK_ALZBIO3_DATA,
   UPENN_PLASMA_FQ_DATA
 ) %>%
   mutate(
@@ -2946,12 +2973,47 @@ LB <- bind_rows(
   derive_usubjid() %>%
   assign_studyid_domain(domain = "LB") %>%
   assign_visit_attr(check_missing_visnum = FALSE) %>%
-  assign_epoch() %>%
+  assign_epoch()
+
+# Adjusting the baseline flag across LBTESTCD and LBMETHOD
+# Specially, to account for different assay source scale
+bld_plasma_source <- c(
+  "C2N_PRECIVITYAD2_PLASMA", "UPENNBIOMK_ROCHE_ELECSYS",
+  "UPENNBIOMK_MASTER", "UPENN_PLASMA_FUJIREBIO_QUANTERIX"
+)
+LB_BLDPLASMA_DATA_BLF <- LB %>%
+  filter(raw_source %in% bld_plasma_source) %>%
+  unite("LBTESTCD", all_of(c("LBTESTCD", "LBMETHOD")), sep = "-/") %>%
   derive_blfl_adni(
+    sdtm_in = .,
     dm_domain = DM,
-    tgt_var = "LBBLFL",
-    .strict = FALSE
+    tgt_var = "LBBLFL"
   ) %>%
+  separate(LBTESTCD, into = c("LBTESTCD", "LBMETHOD"), sep = "-/") %>%
+  mutate(across(
+    all_of(c("LBTESTCD", "LBMETHOD")),
+    ~ case_when(.x == "NA" ~ NA_character_, TRUE ~ as.character(.x))
+  ))
+
+LB_OTHER_DATA_BLF <- LB %>%
+  filter(!raw_source %in% bld_plasma_source) %>%
+  {
+    if (nrow(.) > 0) {
+      derive_blfl_adni(
+        sdtm_in = .,
+        dm_domain = DM,
+        tgt_var = "LBBLFL"
+      )
+    } else {
+      (.)
+    }
+  }
+
+LB <- bind_rows(
+  LB_BLDPLASMA_DATA_BLF,
+  LB_OTHER_DATA_BLF
+) %>%
+  assert_non_missing(LBTESTCD) %>%
   derive_study_day_adni(
     dm_domain = DM,
     domain = "LB"
