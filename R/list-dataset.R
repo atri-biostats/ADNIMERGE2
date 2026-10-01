@@ -5,20 +5,24 @@
 #'  from ADNI data-sharing platform in order to replicate
 #'  [ADNIMERGE2] R data package.
 #'
-#' @param use_type Usage of dataset either \code{article} or \code{prep_script}
-#'  \item \code{article} To list raw dataset names that are used in \code{ADNIMERGE2} vignettes
-#'  \item \code{prep_script} To list raw dataset names that are used during data preparation prior to the \code{ADNIMERGE2} R package build
+#' @param use_type Usage of dataset either `article` or `prep_script
+#'
+#'  + **article** To list raw dataset names that are used in [ADNIMERGE2] vignettes
+#'
+#'  + **prep_script** To list raw dataset names that are used during data preparation prior to the [ADNIMERGE2] R package build
 #'
 #' @param add_url_link A Boolean value to add an URL link of corresponding source file
 #'
 #' @return A data.frame with the following columns:
-#'  \item \code{data_code} Dataset code
-#'  \item \code{label} Dataset label/description
-#'  \item \code{use_prep_script} Indicator if the raw dataset is used in the data-wrangling prior to the package build
-#'  \item \code{script_list} List of data wrangling script names
-#'  \item \code{use_article} Indicator if the raw dataset is used in article/vignette
-#'  \item \code{article_list} List of articles/vignettes
-#'  \item \code{source_derived_data} Derived dataset name
+#'  \itemize{
+#'   \item `data_code` Dataset code
+#'   \item `label` Dataset label/description
+#'   \item `use_prep_script` Indicator if the raw dataset is used in the data-wrangling prior to the package build
+#'   \item `script_list` List of data wrangling script names
+#'   \item `use_article` Indicator if the raw dataset is used in article/vignette
+#'   \item `article_list` List of articles/vignettes
+#'   \item `source_derived_data` Derived dataset name
+#'  }
 #'
 #' @examples
 #' \dontrun{
@@ -405,13 +409,14 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 
 
 # List pacc datasets ----
+#' @title List required datasets to replicate [PACC] data
 #' @description
 #' Function to list all datasets that are required to generate/replicate [PACC] scores data
 #' @return A data.frame with three columns
 #' \itemize{
-#'  \item \code{TBLNAME} Dataset code
-#'  \item \code{CRFNAME} Dataset label
-#'  \item \code{TEXT} Description
+#'  \item `TBLNAME` Dataset code
+#'  \item `CRFNAME` Dataset label
+#'  \item `TEXT` Description
 #'  }
 #' @examples
 #' \dontrun{

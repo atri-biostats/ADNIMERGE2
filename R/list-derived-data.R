@@ -1,18 +1,19 @@
 # List derived dataset -----
 #' @title [ADNIMERGE2] Derived Dataset(s)
-#' @description List of derived/analysis dataset(s) in `ADNIMERGE2` R package
+#' 
+#' @description List of derived/analysis dataset(s) in [ADNIMERGE2] R package
 #'
 #' @param type Data type
 #'  + `derived`: To list derived data
 #'  + `analysis`: To list analysis ready data
 #'  + `metadata`: To list metadata
-#'  + `NULL`: To list all available derived/analysis data in `ADNIMERGE2`
+#'  + `NULL`: To list all available derived/analysis data in [ADNIMERGE2]
 #'
 #' @return A data.frame with **Dataset Code**, **Dataset Label** and *Data Type* columns.
 #'
 #' @details
 #' Please refer to the following vignettes for more detailed information
-#' about how these derived datasets are generated in `ADNIMERGE2` R package.
+#' about how these derived datasets are generated in [ADNIMERGE2] R package.
 #'
 #'  + `vignette(topic = 'ADNIMERGE2-Derived-Data', package = 'ADNIMERGE2')`
 #'
@@ -124,9 +125,7 @@ list_derived_data <- function(type = NULL) {
 #' @rdname list_metadata
 #' @keywords internal
 #' @importFrom rlang env
-#' @importFrom utils data
 #' @importFrom tibble as_tibble tibble
-#' @importFrom stats na.omit
 #' @importFrom dplyr filter mutate select
 
 list_metadata <- function() {

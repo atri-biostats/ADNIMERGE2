@@ -48,6 +48,6 @@ Suggests:
   consort
 Depends: 
     R (>= 3.5)
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.0
