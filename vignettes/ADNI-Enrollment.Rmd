@@ -80,7 +80,7 @@ adni_theme <- list(
   "tbl_summary-arg:digits" = list(
     all_continuous() ~ 1,
     all_continuous2() ~ 1,
-    all_categorical() ~ 1
+    all_categorical() ~ c(0, 1)
   ),
   "tbl_summary-arg:missing_text" = "(Missing)",
   "tbl_summary-fn:addnl-fn-to-run" = function(x) {
