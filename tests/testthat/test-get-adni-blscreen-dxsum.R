@@ -80,7 +80,7 @@ test_that("Check get_adni_blscreen_dxsum function", {
     expect_identical(
       object = team_nodx,
       expected = "TEAM_NODX",
-      info = "Check get_adni_blscreen_dxsum function based on `DXSUM` and `RS` records"
+      info = "Check TEAM-ADNI records in `DXSUM` are not collected (TEAM_NODX)"
     )
   }
 })

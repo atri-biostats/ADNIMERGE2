@@ -40,7 +40,7 @@ Download ADNI study data from the data-shared platform at [https://adni.loni.usc
 
 ### List of required ADNI study data
 
-A data dictionary file is required to build a package similar to `ADNIMERGE2` R data package. To replicate exactly the `ADNIMERGE2` R package, please refer to [`./inst/dataset-list.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/package_build/inst/dataset-list.R) for the list of minimum required datasets.
+A data dictionary file is required to build a package similar to `ADNIMERGE2` R data package. To replicate exactly the `ADNIMERGE2` R package, please refer to the internal `get_required_dataset_list()` function in [`./R/list-dataset.R`](https://github.com/atri-biostats/ADNIMERGE2/blob/main/R/list-dataset.R) (e.g., `ADNIMERGE2:::get_required_dataset_list(use_type = "article")`) for the list of minimum required datasets.
 
 ## Build package 
 
@@ -52,11 +52,11 @@ Run `source('tools/build.R')` to prepare dataset, generate documentations and bu
          
      + To store all dataset in *`./data`* directory using [`usethis::use_data()`](https://usethis.r-lib.org/reference/use_data.html)
          
-     + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R) for more information. 
+     + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R) for more information. 
          
      + Required to specify two input arguments:  data download date (`DATA_DOWNLOADED_DATE`) in `YYYY-MM-DD` format and a Boolean value to update any existing data dictionary file (`UPDATE_DATADIC`)
      
-  - [`./data-raw/data-prep-recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R): 
+  - [`./data-raw/data-prep-recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep-recode.R): 
          
      + To map numerically coded values of a dataset based on existing data dictionary as necessary
          

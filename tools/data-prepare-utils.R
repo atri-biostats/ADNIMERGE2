@@ -73,7 +73,8 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
         message = "{.path {data_script_path}} script does not include {.var usethis::use_data}."
       )
     }
-    last_row_index <- seq_along(existed_script)[existed_script == last_lines]
+    # The last `usethis::use_data()` line in the script
+    last_row_index <- max(which(str_detect(existed_script, "usethis::use")))
     last_two_row_index <- c(last_row_index - 1, last_row_index)
     prefix_lines <- existed_script[!seq_along(existed_script) %in% last_two_row_index]
     suffix_lines <- existed_script[seq_along(existed_script) %in% last_two_row_index]
@@ -118,7 +119,6 @@ use_data_modified <- function(dataset_name, dataset, edit_type = "create",
 
   if (run_script) {
     new_env <- new.env()
-    new_env[[dataset_name]] <- dataset_name
     new_env$dataset <- dataset
     assign(dataset_name, dataset, envir = new_env)
     sys.source(file = data_script_path, envir = new_env, chdir = TRUE)
@@ -212,7 +212,7 @@ get_unzip_file <- function(input_dir,
 #' @param action Either \code{rename}, \code{copy}, or \code{remove}
 #' @param remove_name_pattern
 #'   Strings that will be removed from the file name, Default = NULL
-#' @return \code{TRUE} if the file action is properly renamed, copied or removed
+#' @return \code{TRUE} if all files are properly renamed, copied or removed. Otherwise, \code{FALSE}.
 #' @rdname file_action
 #' @keywords utils_fun
 #' @seealso [get_file_action_message()]
@@ -245,53 +245,37 @@ file_action <- function(input_dir,
   lapply(c(input_dir, output_dir), check_dir_path)
   tryCatch(
     {
-      if (action %in% "copy") {
-        if (show_message) {
-          get_file_progress_message(
+      if (show_message) {
+        status <- get_file_progress_message(
+          from = file.path(input_dir, old_file_name),
+          to = if (action %in% "remove") NULL else file.path(output_dir, new_file_name),
+          type = action,
+          .envir = rlang::caller_env()
+        )
+      } else {
+        status <- switch(action,
+          copy = file.copy(
             from = file.path(input_dir, old_file_name),
             to = file.path(output_dir, new_file_name),
-            type = "copy",
-            .envir = rlang::caller_env()
-          )
-        } else {
-          file.copy(
+            overwrite = TRUE
+          ),
+          rename = file.rename(
             from = file.path(input_dir, old_file_name),
             to = file.path(output_dir, new_file_name)
-          )
-        }
+          ),
+          remove = file.remove(file.path(input_dir, old_file_name))
+        )
       }
-
-      if (action %in% "rename") {
-        if (show_message) {
-          get_file_progress_message(
-            from = file.path(input_dir, old_file_name),
-            to = file.path(output_dir, new_file_name),
-            type = "rename",
-            .envir = rlang::caller_env()
-          )
-        } else {
-          file.rename(
-            from = file.path(input_dir, old_file_name),
-            to = file.path(output_dir, new_file_name)
-          )
-        }
+      if (!all(status)) {
+        cli::cli_alert_danger(
+          text = "Failed to {action} {.path {old_file_name[!status]}} in {.path {input_dir}}"
+        )
       }
-
-      if (action %in% "remove") {
-        if (show_message) {
-          get_file_progress_message(
-            from = file.path(input_dir, old_file_name),
-            type = "remove",
-            .envir = rlang::caller_env()
-          )
-        } else {
-          file.remove(file.path(input_dir, old_file_name))
-        }
-      }
-      return(TRUE)
+      return(all(status))
     },
     error = function(err) {
-      print(paste("MY_ERROR:  ", err))
+      cli::cli_alert_danger(text = "Failed to {action} files: {conditionMessage(err)}")
+      return(FALSE)
     }
   )
 }
@@ -338,7 +322,7 @@ get_file_progress_message <- function(from, to = NULL, type = "copy", .envir = r
     format = paste0(
       "{cli::pb_spin} [{cli::pb_current}/{cli::pb_total}] {type_label} {.path {from[x]}} ",
       ifelse(type %in% "remove", " ", "to {.path {to[x]}}")
-    ), ,
+    ),
     format_done = paste0(
       "{cli::col_green(symbol$tick)} {.var {type_done}} {cli::pb_total} files."
     ),
@@ -346,21 +330,23 @@ get_file_progress_message <- function(from, to = NULL, type = "copy", .envir = r
     clear = FALSE,
     .envir = .envir
   )
+  status <- logical(length(from))
   for (x in seq_along(from)) {
     .envir$x <- x
     if (type %in% "copy") {
-      file.copy(from = from[x], to = to[x], overwrite = TRUE)
+      status[x] <- file.copy(from = from[x], to = to[x], overwrite = TRUE)
     }
     if (type %in% "rename") {
-      file.rename(from = from[x], to = to[x])
+      status[x] <- file.rename(from = from[x], to = to[x])
     }
     if (type %in% "remove") {
-      file.remove(from[x])
+      status[x] <- file.remove(from[x])
     }
     Sys.sleep(0.75)
     cli_progress_update(.envir = .envir)
   }
   cli_progress_done(.envir = .envir)
+  invisible(status)
 }
 
 #' @title Detect Files Started With Underscore Name
@@ -462,8 +448,9 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
     pattern = file_extension,
     all.files = TRUE
   )
-  if (is.null(file_list)) {
-    return("No file is found!")
+  if (length(file_list) == 0) {
+    cli::cli_alert_warning(text = "No {.val {file_extension}} file is found in {.path {input_dir}}")
+    return(FALSE)
   }
   csv_data_list <- lapply(file_list, function(x) {
     cli::cli_alert_info(text = "Importing {.path {file.path(input_dir, x)}}")
@@ -492,7 +479,7 @@ using_use_data <- function(input_dir, file_extension = ".csv") {
       edit_type = "create",
       include_pipe = FALSE
     )
-    rm(list = as.character(dd_name), envir = .GlobalEnv)
+    rm(list = as.character(dd_name), envir = new_env)
   }
 
   return(TRUE)
@@ -630,7 +617,7 @@ convert_brace_as_rd_code <- function(x) {
 #'  This function is used to add description text for common columns in the DATADIC.
 #' @param tblname Dataset name (TBNAME)
 #' @param .datadic Data dictionary dataset
-#' @param fldname Common column names, usually "ORIGPROT" or "CORPORT"
+#' @param fldname Common column names, usually "ORIGPROT" or "COLPROT"
 #' @param description Description text
 #' @return A data frame the same as \code{./datadic} with appended rows.
 #' @examples
@@ -638,7 +625,7 @@ convert_brace_as_rd_code <- function(x) {
 #' common_cols_description_datadic(
 #'   tblname = "ADAS_ADNIGO123",
 #'   .datadic = ADNIMERGE2::DATADIC,
-#'   fldname = "CORPORT",
+#'   fldname = "COLPROT",
 #'   description = "Study protocol of data collection"
 #' )
 #' }
@@ -660,14 +647,11 @@ common_cols_description_datadic <- function(.datadic, tblname, fldname, descript
     stop_message = TRUE
   )
 
-  .datadic <- .datadic %>%
-    mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ tolower(.x)))
-  tblname <- tolower(tblname)
-  fldname <- tolower(fldname)
-
+  # Case-insensitive matching without changing the case of the original records
+  tblname_upper <- toupper(tblname)
   rlang::arg_match(
-    arg = tblname,
-    values = unique(.datadic$TBLNAME),
+    arg = tblname_upper,
+    values = unique(toupper(.datadic$TBLNAME)),
     multiple = TRUE
   )
 
@@ -692,32 +676,21 @@ common_cols_description_datadic <- function(.datadic, tblname, fldname, descript
       )
     )
   }
-  description <- as.list(description)
-  names(description) <- fldname
-  temp_data_dict <- .datadic %>%
-    filter(TBLNAME %in% tblname) %>%
+  is_tblname <- toupper(.datadic$TBLNAME) %in% toupper(tblname)
+  temp_data_dict <- .datadic[is_tblname, ] %>%
     verify(nrow(.) > 0)
 
-  tblname_data_dict <- lapply(fldname, function(cur_fldname) {
-    fldname_data_dict <- temp_data_dict %>%
-      filter(!FLDNAME %in% cur_fldname) %>%
-      distinct(PHASE, TBLNAME, CRFNAME) %>%
-      mutate(
-        FLDNAME = cur_fldname,
-        TEXT = description[[cur_fldname]]
-      ) %>%
-      bind_rows(
-        temp_data_dict %>%
-          filter(!FLDNAME %in% cur_fldname)
-      )
-    return(fldname_data_dict)
-  }) %>%
-    bind_rows()
+  # One record per common column for each existing phase/table/CRF combination
+  new_data_dict <- temp_data_dict %>%
+    distinct(across(any_of(c("DATADIC_SOURCE", "PHASE", "TBLNAME", "CRFNAME")))) %>%
+    tidyr::crossing(tibble(FLDNAME = fldname, TEXT = as.character(description)))
 
-  result_data_dict <- .datadic %>%
-    filter(!TBLNAME %in% tblname) %>%
-    bind_rows(tblname_data_dict) %>%
-    mutate(across(c(PHASE, TBLNAME, FLDNAME), ~ toupper(.x)))
+  result_data_dict <- bind_rows(
+    .datadic[!is_tblname, ],
+    temp_data_dict %>%
+      filter(!toupper(FLDNAME) %in% toupper(fldname)),
+    new_data_dict
+  )
 
   return(result_data_dict)
 }
@@ -780,11 +753,11 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
     stop_message = TRUE
   )
   if (all(is.na(concat_phase))) {
-    return(data_dict)
+    return(.datadic)
   }
   if (any(!str_detect(string = concat_phase, pattern = concat_char))) {
     cli::cli_abort(
-      message = "{.val {concat_char} not found."
+      message = "{.val {concat_char}} not found."
     )
   }
   concat_phase_list <- str_split(
@@ -799,7 +772,7 @@ expand_data_dict <- function(.datadic, concat_phase, concat_char = ",") {
     if (!any(str_detect(split_phase, "ADNI"))) {
       cli::cli_abort(
         message = c(
-          "At least one `ADNI` prefix is not foound. \n",
+          "At least one `ADNI` prefix is not found. \n",
           "There are only {.val {split_phase}} values."
         )
       )
@@ -1063,8 +1036,9 @@ get_dataset_category <- function(dir.path, file_extension_pattern = "\\.csv$", r
         TRUE ~ dir_cat
       ),
       dir_cat = case_when(
-        str_detect(tolower(file_name), tolower("DATADIC$|^DATADIC|DATADIC")) ~ "data_dict",
         tolower(file_name) %in% tolower("REMOTE_DATADIC") ~ "data_dict, remotely_collected_data",
+        str_detect(tolower(file_name), "datadic|dictionary") & dir_cat %in% "other_raw_dataset" ~ "data_dict",
+        str_detect(tolower(file_name), "datadic|dictionary") ~ paste0("data_dict, ", dir_cat),
         TRUE ~ dir_cat
       ),
       full_file_path = file.path(dir, file_list),
@@ -1202,10 +1176,8 @@ create_tibble0 <- function(col_names) {
 #' @importFrom stringr str_detect str_remove_all
 
 remove_zipname <- function(x, name) {
-  if (any(stringr::str_detect(x, name))) {
-    x <- stringr::str_remove_all(x, name)
-    x <- x[!x %in% ""]
-  }
+  # Exact match of zip file name(s)
+  x <- x[!x %in% name]
   return(x)
 }
 
@@ -1281,7 +1253,7 @@ check_arg_date <- function(x,
                            arg = rlang::caller_arg(x),
                            call = rlang::caller_env()) {
   check_arg(x, 1)
-  if (!stringr::str_detect(x, "[0-9]{4}-[0-9]{2}-[0-9]{2}")) {
+  if (!stringr::str_detect(x, "^[0-9]{4}-[0-9]{2}-[0-9]{2}$")) {
     cli::cli_abort(
       message = c(
         "{.arg {arg}} must be in {.cls YYYY-MM-DD} format. \n",
@@ -1302,9 +1274,9 @@ check_arg_date <- function(x,
 #' @param date_pattern File date stamp pattern, Default: '[0-9]{2}[A-Za-z]{3}[0-9]{4}'
 #' @param show_max_date A Boolean value to show only the most recent dates, Default: FALSE
 #' @return
-#'  A character vector of dates in \code{'YYYY-DD-MM'} format.
-#'  It must be a single character vector if \code{show_max_date} is \code{TRUE}.
-#'  Otherwise, it can be any length of character vector.
+#'  A \code{Date} vector of data download dates.
+#'  It is a single date if \code{show_max_date} is \code{TRUE}.
+#'  Otherwise, it can be a date vector of any length.
 #' @examples
 #' \dontrun{
 #' # Suppose all raw data files are saved in `./data-raw` directory
@@ -1326,8 +1298,9 @@ get_data_download_date <- function(raw_data_path,
   }
   temp_dir <- tempdir()
   temp_new_dir <- file.path(temp_dir, "full_files")
-  if (dir.exists(temp_new_dir)) unlink(temp_new_dir)
+  if (dir.exists(temp_new_dir)) unlink(temp_new_dir, recursive = TRUE)
   dir.create(temp_new_dir)
+  on.exit(unlink(temp_new_dir, recursive = TRUE), add = TRUE)
   zip_list <- list.files(
     path = raw_data_path,
     pattern = "\\.zip$",
@@ -1344,7 +1317,7 @@ get_data_download_date <- function(raw_data_path,
     pattern = "\\.csv$",
     full.names = TRUE
   )
-  if (!is.null(csv_list)) {
+  if (length(csv_list) > 0) {
     file.copy(csv_list, to = temp_new_dir)
   }
   file_lists <- list.files(temp_new_dir)
@@ -1421,7 +1394,7 @@ verify_data_download_date <- function(raw_data_path, input_date) {
     cli::cli_abort(
       message = c(
         paste0(
-          "Mismtach between data download dates based on raw data files ",
+          "Mismatch between data download dates based on raw data files ",
           "and pre-specified date value {.var input_date}.\n"
         ),
         paste0(

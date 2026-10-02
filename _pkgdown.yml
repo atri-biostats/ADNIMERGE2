@@ -29,7 +29,7 @@ reference:
   - subtitle: Medical History
     desc: > 
          Includes adverse events, concurrent medications (drugs), medical history/ 
-         initial health assessments, and phyiscal/neurological exams
+         initial health assessments, and physical/neurological exams
     contents:
     - has_keyword("medical_history")
 
@@ -44,7 +44,7 @@ reference:
   - subtitle: Imaging
     desc: > 
          Includes image acquisition, image analyses results, image quality for 
-         both MIR scan and PET scan
+         both MRI scan and PET scan
     contents:
     - has_keyword("imaging")   
     
@@ -58,7 +58,7 @@ reference:
 
   - subtitle: Remotely Collected Datasets
     desc: > 
-       Remotely collected data only avaliable in ADNI4 study phase
+       Remotely collected data only available in ADNI4 study phase
     contents:
     - has_keyword("remotely_collected_data")
   

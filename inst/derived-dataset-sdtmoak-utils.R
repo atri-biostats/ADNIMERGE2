@@ -523,7 +523,7 @@ check_domain_abbrv <- function(domain, char_result = TRUE) {
     cli_abort(
       message = c(
         "{.var domain} must be a single character object with length of two. \n",
-        "{.var domain} is a {.cls {class(domain)}} object with length of {.clas {nchar(domain)}}."
+        "{.var domain} is a {.cls {class(domain)}} object with {.val {nchar(domain)}} character{?s}."
       )
     )
   }

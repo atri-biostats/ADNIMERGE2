@@ -29,7 +29,7 @@
 #'  decode coded variables, convert missing values as \code{'NA'} and
 #'  add common study protocol identifier variables (i.e., \code{ORIGPROT} and \code{COLPROT}).
 #'  Please see [./data-raw/data-prep.R](https://github.com/atri-biostats/ADNIMERGE2/blob/main/data-raw/data-prep.R)
-#'  and [./data-raw/ddata-prep-recode.R](https://github.com/atri-biostats/ADNIMERGE2/blob/main/data-raw/data-prep-recode.R)
+#'  and [./data-raw/data-prep-recode.R](https://github.com/atri-biostats/ADNIMERGE2/blob/main/data-raw/data-prep-recode.R)
 #'  for more information regarding ADNIMERGE2 data preparation workflow.
 #'
 #' @param data_source_date Data source date. It must be a character/date object.
@@ -49,19 +49,19 @@
 #' @param show_pacc_datadict A Boolean value to show a data dictionary for PACC scores data.
 #'  By default, a data dictionary dataset is returned along with the actual PACC scores data.
 #'
-#' @param envir Inherited from \code{\link{rmarkdown}{render}}.
+#' @param envir Inherited from \code{\link[rmarkdown]{render}}.
 #'
 #'  Render environment in which the code chunks are to be evaluated during knitting.
 #'  However, the code chunks are evaluated in new environment by default.
 #'
-#' @param quiet Inherited from \code{\link{rmarkdown}{render}}. By default, it is \code{TRUE}.
+#' @param quiet Inherited from \code{\link[rmarkdown]{render}}. By default, it is \code{TRUE}.
 #'
-#' @param ... Additional arguments that pass through \code{\link{rmarkdown}{render}}
+#' @param ... Additional arguments that pass through \code{\link[rmarkdown]{render}}
 #'
 #' @return Either a listed data.frame or single data.frame.
 #' \itemize{
 #'   \item A listed data.frame of the actual PACC scores data ([PACC]) and corresponding data dictionary data (i.e., \code{'PACC_DATADICT'}) if \code{show_pacc_datadict} is \code{TRUE}.
-#'   \item A single data.frame that only includes PACC scores data if \code{show_pacc_datadict} is \code{FALSE}..
+#'   \item A single data.frame that only includes PACC scores data if \code{show_pacc_datadict} is \code{FALSE}.
 #' }
 #'
 #' @examples
@@ -89,14 +89,14 @@
 #'   envir = globalenv()
 #' )
 #'
-#' # Supposes the following datatsets were generated outside ADNIMERGE2 R package
+#' # Supposes the following datasets were generated outside ADNIMERGE2 R package
 #' # and the data preparation workflow follows similar procedures as
 #' # ADNIMERGE2 data package build workflow.
 #' EXTERNAL_DATA_LIST <- list(
 #'   ADAS = ADNIMERGE2::ADAS,
 #'   MMSE = ADNIMERGE2::MMSE,
 #'   NEUROBAT = ADNIMERGE2::NEUROBAT,
-#'   REGISTRY = ADNIMRGE2::REGISTRY,
+#'   REGISTRY = ADNIMERGE2::REGISTRY,
 #'   DXSUM = ADNIMERGE2::DXSUM
 #' )
 #' pacc_data2 <- derive_pacc_data(
@@ -125,6 +125,7 @@
 #'  [compute_pacc_score]
 #' @rdname derive_pacc_data
 #' @importFrom cli cli_abort
+#' @importFrom rlang arg_match
 #' @keywords adni_scoring_fun
 #' @export
 #'
@@ -136,6 +137,7 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
                              envir = new.env(),
                              quiet = TRUE,
                              ...) {
+  data_source <- rlang::arg_match(arg = data_source, values = c("ADNIMERGE2", "EXTERNAL"))
   check_pacc_data_source(data_source)
   check_object_type(data_list, "list")
   check_object_type(show_pacc_datadict, "logical")
@@ -162,7 +164,7 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
   }
   if (!file.exists(vignette_path)) {
     cli::cli_abort(
-      message = "Cann't find {.val ADNIMERGE2-PACC} vignettes {.file {vignette_path}}"
+      message = "Can't find {.val ADNIMERGE2-PACC} vignettes {.file {vignette_path}}"
     )
   }
   rlang::check_installed(
@@ -189,7 +191,7 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
   PACC_DATADICT <- bind_rows(
     PACC_DATADICT,
     dplyr::tibble(
-      FLDNAME = "DATA_SOUCE_DATE",
+      FLDNAME = "DATA_SOURCE_DATE",
       LABEL = "Data Source Date",
       TYPE = "date",
       TEXT = " ",
@@ -202,7 +204,7 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
   envir$PACC_DATADICT <- PACC_DATADICT
   output <- list(
     "PACC" = PACC_DATA,
-    "PACC_DATADIC" = PACC_DATADICT
+    "PACC_DATADICT" = PACC_DATADICT
   )
   if (show_pacc_datadict == FALSE) {
     output <- PACC_DATA
@@ -249,14 +251,14 @@ validate_pacc_yaml <- function(rmd_path) {
   }
   params_list <- rmarkdown::yaml_front_matter(rmd_path)[["params"]]
   if (is.null(params_list)) {
-    cli::cli_abort("Cann't find {.arg params} in {.file {rmd_path}}.")
+    cli::cli_abort("Can't find {.arg params} in {.file {rmd_path}}.")
   }
   params_names <- names(params_list)
   match_names <- c("DATA_SOURCE", "DATA_LIST")
-  not_exit_params <- match_names[!match_names %in% params_names]
-  if (length(not_exit_params) > 0 && !is.na(not_exit_params)) {
+  not_exist_params <- match_names[!match_names %in% params_names]
+  if (length(not_exist_params) > 0) {
     cli::cli_abort(
-      message = "Cann't find {.val {not_exit_params}} params in {.file rmd_path}"
+      message = "Can't find {.val {not_exist_params}} params in {.file {rmd_path}}"
     )
   }
   data_list_names <- names(params_list$DATA_LIST$value)
@@ -265,7 +267,7 @@ validate_pacc_yaml <- function(rmd_path) {
   not_exist_data <- data_list_params[data_list_status == FALSE]
   if (any(data_list_status == FALSE)) {
     cli::cli_abort(
-      message = "Cann't find {.val {not_exist_data}} data list params in {.file {rmd_path}}"
+      message = "Can't find {.val {not_exist_data}} data list params in {.file {rmd_path}}"
     )
   }
   invisible(TRUE)

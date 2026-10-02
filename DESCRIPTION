@@ -14,7 +14,7 @@ LazyDataCompression: bzip2
 Imports: 
   stringr, 
   rlang,
-  dplyr,
+  dplyr (>= 1.2.0),
   tibble,
   assertr,
   purrr,

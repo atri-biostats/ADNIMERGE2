@@ -379,7 +379,7 @@ dm_data_dic <- bind_rows(
     FLDNAME = "RFPENDTC",
     LABEL = "Date/Time of End of Participation*",
     TEXT = paste0(
-      "Last known date/time when participant ended thier participation or",
+      "Last known date/time when participant ended their participation or",
       " follow-up in ADNI study. As character format for unknown MM-DD values."
     )
   ),

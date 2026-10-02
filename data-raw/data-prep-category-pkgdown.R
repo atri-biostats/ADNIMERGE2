@@ -1,5 +1,6 @@
 # Generate dataset categories for pkgdown -----
 source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "tools", "prepare-datadict.R"))
 source(file.path(".", "R", "utils.R"))
 
 # Libraries -----
@@ -53,7 +54,9 @@ dataset_category_raw <- dataset_category_raw %>%
   mutate(TBLNAME = case_when(
     !is.na(UPDATED_TBLNAME) ~ UPDATED_TBLNAME,
     TRUE ~ file_list
-  ))
+  )) %>%
+  # Adjust for renamed external data dictionaries, see `./data-raw/data-prep.R`
+  mutate(TBLNAME = rename_external_datadict(TBLNAME))
 
 ## Get dataset category based on study phase ----
 data_path_list <- list.files(

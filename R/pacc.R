@@ -49,8 +49,8 @@
 #'  baseline diagnostics status.
 #'
 #' @param componentVars A named list object of component score variable names.
-#' The component score variable names should be arranged based the following order.
-#' Otherwise, \strong{invalid} composite score will be calculated.
+#' The list names must be \code{ADASQ4SCORE}, \code{MMSE}, \code{LDELTOTL}, \code{DIGITSCR} and \code{TRABSCOR};
+#' components are matched by these names (not by position), so the order of the list does not matter:
 #'
 #' \itemize{
 #'   \item Delayed Recall portion from ADAS Cognitive Behavior assessment (ADAS-Cog), see \code{\link{ADAS}}
@@ -63,8 +63,15 @@
 #' \code{componentVars = list(ADASQ4SCORE = "ADASQ4SCORE", MMSE = "MMSE", LDELTOTL = "LDELTOTL", DIGITSCR = "DIGITSCR", TRABSCOR = "TRABSCOR")}
 #'
 #' @param rescale_trailsB
-#'     A Boolean value to change the \code{Trails B} score in logarithm scale.
-#'     By default, `Trails B` score will be converted into a logarithm scale.
+#'     A Boolean value whether to log-transform the \code{Trails B} score, i.e., \code{log(TRABSCOR + 1)},
+#'     before standardization, Default: \code{FALSE}.
+#'     If \code{TRUE}, the baseline summary \code{bl.summary} must be on the same log scale:
+#'     either supply a row with \code{VAR = "LOG_<TRABSCOR>"} (e.g., \code{"LOG_TRABSCOR"}), which is used when present,
+#'     or a \code{VAR = "<TRABSCOR>"} row whose \code{MEAN} and \code{SD} were computed from \code{log(TRABSCOR + 1)}.
+#'     A summary of raw (untransformed) Trails B scores will give invalid z-scores.
+#'
+#' @param rescale_trialsB
+#'     Deprecated since version 0.1.2. Use \code{rescale_trailsB} instead, Default: \code{NULL}.
 #'
 #' @param keepComponents A Boolean to keep component score, Default: FALSE
 #'
@@ -82,7 +89,8 @@
 #' @return
 #' \itemize{
 #' \item For a {\code{wide}} format input data: A \code{data.frame} with appended columns for \code{mPACCdigit} and \code{mPACCtrailsB}.
-#' \item For a {\code{long}} format input data: A \code{data.frame} with additional rows of \code{mPACCdigit} and \code{mPACCtrailsB}.
+#' \item For a {\code{long}} format input data: A \code{data.frame} with additional rows of \code{mPACCdigit} and \code{mPACCtrailsB}
+#'  (and of the component z-scores if \code{keepComponents = TRUE}).
 #' }
 #' @references
 #' \itemize{
@@ -182,9 +190,10 @@
 #' @family PACC score related
 #' @export
 #' @importFrom cli cli_abort cli_alert_warning
-#' @importFrom dplyr mutate across select relocate bind_rows
+#' @importFrom dplyr mutate across select relocate bind_rows cur_column pull
 #' @importFrom tidyr pivot_wider pivot_longer
 #' @importFrom dplyr all_of any_of ends_with contains last_col
+#' @importFrom tibble as_tibble
 
 compute_pacc_score <- function(.data,
                                bl.summary,
@@ -200,19 +209,19 @@ compute_pacc_score <- function(.data,
                                wideFormat = TRUE,
                                varName = NULL,
                                scoreCol = NULL,
-                               idCols = NULL) {
+                               idCols = NULL,
+                               rescale_trialsB = NULL) {
   mPACCdigit <- mPACCtrailsB <- NULL
   check_object_type(keepComponents, "logical")
-  args_list <- names(match.call())
   # Signal deprecated args to the user
-  if ("rescale_trialsB" %in% args_list) {
-    if (lifecycle::is_present(rescale_trialsB)) {
-      lifecycle::deprecate_warn(
-        when = "0.1.2",
-        what = "compute_pacc_score(rescale_trialsB = )",
-        with = "compute_pacc_score(rescale_trailsB = )"
+  if (!is.null(rescale_trialsB)) {
+    cli::cli_warn(
+      message = c(
+        "{.arg rescale_trialsB} was deprecated in ADNIMERGE2 0.1.2.",
+        "i" = "Please use {.arg rescale_trailsB} instead."
       )
-    }
+    )
+    rescale_trailsB <- rescale_trialsB
   }
   check_object_type(rescale_trailsB, "logical")
   check_object_type(wideFormat, "logical")
@@ -221,7 +230,11 @@ compute_pacc_score <- function(.data,
   check_list_names(x = componentVars, list_names = comp_vars)
   not_na_status <- lapply(comp_vars, function(z) check_non_missing_value(componentVars[[z]]))
   var_names <- componentVars
-  if (!all(as.character(var_names) %in% bl.summary$VAR)) {
+  bl_summary_vars <- as.character(var_names)
+  if (rescale_trailsB && paste0("LOG_", var_names$TRABSCOR) %in% bl.summary$VAR) {
+    bl_summary_vars[names(var_names) %in% "TRABSCOR"] <- paste0("LOG_", var_names$TRABSCOR)
+  }
+  if (!all(bl_summary_vars %in% bl.summary$VAR)) {
     cli::cli_abort(
       message = c(
         "All {.var componentVars} not found in {.var bl.summary$VAR}. \n",
@@ -270,8 +283,8 @@ compute_pacc_score <- function(.data,
   # Get phase var names
   phase_vars <- c("Phase", "PHASE", "COLPROT")
   phaseVar <- get_cols_name(.data = .data_wide, col_name = phase_vars)
-  if (length(phaseVar) == 0) {
-    cli_abort(message = "{.var phaseVar} must be a length of 1 character vector.")
+  if (all(is.na(phaseVar))) {
+    cli_abort(message = "{.var .data} must contain one of the phase columns: {.val {phase_vars}}.")
   }
 
   if (length(phaseVar) != 1) {
@@ -286,26 +299,24 @@ compute_pacc_score <- function(.data,
   )
 
   # Log transformed Trails B score
-  if (!rescale_trailsB) {
+  if (rescale_trailsB) {
     trailB_score <- .data_wide %>%
       select(all_of(var_names$TRABSCOR)) %>%
       pull()
 
-    if (any(trailB_score < 0)) {
+    if (any(trailB_score < 0, na.rm = TRUE)) {
       cli::cli_abort(
         message = c(
-          "{.var trailB_score} represents Trails B score. \n",
+          "{.var {var_names$TRABSCOR}} represents Trails B score. \n",
           paste0(
-            "{.var trailB_score} must not contains any negative value for",
+            "{.var {var_names$TRABSCOR}} must not contain any negative value for",
             " logarithm transformation. \n"
           ),
           "Do you want to set {.var rescale_trailsB} = {.val {FALSE}}?"
         )
       )
     }
-  }
 
-  if (rescale_trailsB) {
     col_list <- names(.data_wide)
     log_trails_var <- paste0("LOG_", var_names$TRABSCOR)
     if (log_trails_var %in% col_list) {
@@ -329,10 +340,9 @@ compute_pacc_score <- function(.data,
   check.zscore_var <- check.zscore_var[check.zscore_var %in% paste0(as.character(var_names), ".zscore")]
   if (length(check.zscore_var) != 0) {
     cli::cli_alert_warning(
-      message = c(
-        "{var .data_wide} must not contains pre-existing {.val {paste0(as.character(var_names), '.zscore')}} variable{?s}. \n",
-        "Caution: these variables will be overwriting! \n",
-        "{var .data_wide} contains pre-existed {.val {check.zscore_var}} variable{?s}."
+      text = paste0(
+        "{.var .data} should not contain pre-existing {.val {paste0(as.character(var_names), '.zscore')}} variable{?s}. ",
+        "Caution: {.val {check.zscore_var}} will be overwritten!"
       )
     )
   }
@@ -341,11 +351,10 @@ compute_pacc_score <- function(.data,
   .data_wide <- .data_wide %>%
     mutate(across(all_of(as.character(var_names)),
       ~ {
-        # Adjust for LOG_trailsB score
-        if (rescale_trailsB) {
-          col_name <- gsub("LOG\\_", "", cur_column())
-        } else {
-          col_name <- cur_column()
+        # Adjust for LOG_trailsB score: use a `LOG_` summary row when available
+        col_name <- cur_column()
+        if (rescale_trailsB && col_name %in% log_trails_var && !col_name %in% bl.summary$VAR) {
+          col_name <- gsub("^LOG\\_", "", col_name)
         }
         normalize_var_by_baseline_score(x = .x, baseline_summary = bl.summary, varName = col_name)
       },
@@ -362,7 +371,7 @@ compute_pacc_score <- function(.data,
     select(all_of(paste0(var_names, ".zscore"))) %>%
     stats::cor(., use = "pairwise.complete.obs")
 
-  if (any(corTest < 0)) {
+  if (any(corTest < 0, na.rm = TRUE)) {
     cli::cli_abort(
       message = "Some PACC z scores are negatively correlated!"
     )
@@ -397,10 +406,16 @@ compute_pacc_score <- function(.data,
     }
 
   if (!wideFormat) {
+    # Only the newly computed scores are appended to the input long format data
+    new_score_vars <- c(
+      if (keepComponents) paste0(as.character(var_names), ".zscore"),
+      "mPACCdigit", "mPACCtrailsB"
+    )
     .data_long <- .data_wide %>%
       assert_uniq(idCols) %>%
+      select(all_of(c(idCols, new_score_vars))) %>%
       pivot_longer(
-        cols = -all_of(idCols),
+        cols = all_of(new_score_vars),
         names_to = varName,
         values_to = scoreCol
       )
