@@ -24,9 +24,8 @@
 #' @examples
 #' \dontrun{
 #' library(dplyr)
-#' library(dplyr)
 #'
-#  # To List all available derived/analysis dataset
+#' # To list all available derived/analysis datasets
 #' list_derived_data(type = NULL)
 #'
 #' # Derived data

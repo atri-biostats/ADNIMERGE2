@@ -119,11 +119,11 @@ The next step is start building the package by sourcing [`./tools/build.R`](http
          
      + To store all dataset in *`./data`* directory using [`usethis::use_data()`](https://usethis.r-lib.org/reference/use_data.html)
          
-     + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R) for more information.
+     + Some additional data preparation, please see  [here](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R) for more information.
          
      + Required to specify two input arguments: data download date (`DATA_DOWNLOADED_DATE`) in `YYYY-MM-DD` format and a Boolean value to update any existing data dictionary file (`UPDATE_DATADIC`)
          
-  - [`./data-raw/data-prep-recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R):
+  - [`./data-raw/data-prep-recode.R`](https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep-recode.R):
          
      + To map numerically coded values of a dataset based on existing data dictionary as necessary
          

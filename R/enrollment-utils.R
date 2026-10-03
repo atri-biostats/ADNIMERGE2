@@ -150,10 +150,10 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
   )
   check_object_type(multiple_screen_visit, "logical")
   check_overall_phase(phase = phase)
-  if (phase %in% "TEAM") {
+  if (any(phase %in% "TEAM")) {
     cli::cli_abort(
       message = paste0(
-        "Cann't find screening data records for ",
+        "Can't find screening data records for ",
         "{.val {phase}} study phase in current {.var REGISTRY} table."
       )
     )
@@ -216,7 +216,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
 
   # Phase-specific screening dataset
   if (any(!phase %in% "Overall")) {
-    rlang::arg_match(arg = phase, values = adni_phase())
+    rlang::arg_match(arg = phase, values = adni_phase(), multiple = TRUE)
     screen_flag_patterns <- paste0(tolower(phase), "_screen_flag")
     output_data <- .registry %>%
       filter(COLPROT %in% phase) %>%
@@ -235,7 +235,7 @@ get_adni_screen_date <- function(.registry, phase = "Overall", multiple_screen_v
         }
       } %>%
       {
-        if (multiple_screen_visit == FALSE) {
+        if (multiple_screen_visit == TRUE) {
           select(., RID, ORIGPROT, COLPROT, VISCODE, EXAMDATE)
         } else {
           select(., RID, ORIGPROT, COLPROT, EXAMDATE)
@@ -414,7 +414,7 @@ get_adni_blscreen_dxsum <- function(.dxsum, visit_type = "baseline", phase = "Ov
 #' @keywords internal
 #' @importFrom cli cli_abort
 check_overall_phase <- function(phase) {
-  if (grepl("Overall|overall", phase) & length(phase) > 1) {
+  if (any(grepl("Overall|overall", phase)) && length(phase) > 1) {
     cli::cli_abort(
       message = c(
         "{.arg phase} must be either {.val {'Overall'}} or {.val {adni_phase()}}. \n",
@@ -457,17 +457,18 @@ check_overall_phase <- function(phase) {
 #' @rdname get_death_flag
 #' @family ADNI flag functions
 #' @keywords adni_enroll_fun
-#' @importFrom dplyr full_join distinct group_by ungroup filter select mutate
+#' @importFrom dplyr full_join distinct group_by ungroup filter select mutate arrange slice_head
+#' @importFrom stringr str_extract
 #' @importFrom assertr assert
 #' @export
 get_death_flag <- function(.studysum, .adverse, .recadv) {
-  SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- AEHDTHDT <- NULL
-  VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- NULL
+  SDPRIMARY <- RID <- ORIGPROT <- COLPROT <- SAEDEATH <- AEHDTHDT <- NULL
+  VISCODE <- AEHDEATH <- DTHFL <- DTHDTC <- VISCODE_MONTH <- NULL
 
   # Based on reported study disposition; for ADNI3, ADNI4 & TEAM-ADNI phases
   check_colnames(
     .data = .studysum,
-    col_names = c("RID", "ORIGPROT", "COLPROT", "SDPRIMARY", "SDPRIMARY"),
+    col_names = c("RID", "ORIGPROT", "COLPROT", "SDPRIMARY"),
     strict = TRUE,
     stop_message = TRUE
   )
@@ -480,7 +481,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
   # Based on reported adverse events: ADNI3 & ADNI4 phases
   check_colnames(
     .data = .adverse,
-    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "SAEDEATH", "AEHDTHDT", "SAEDEATH"),
+    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "SAEDEATH", "AEHDTHDT"),
     strict = TRUE,
     stop_message = TRUE
   )
@@ -501,7 +502,7 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
   # Based on reported adverse events: ADNI1, ADNIGO, and ADNI2 phases
   check_colnames(
     .data = .recadv,
-    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "AEHDEATH", "AEHDEATH"),
+    col_names = c("RID", "ORIGPROT", "COLPROT", "VISCODE", "AEHDEATH", "AEHDTHDT"),
     strict = TRUE,
     stop_message = TRUE
   )
@@ -518,9 +519,16 @@ get_death_flag <- function(.studysum, .adverse, .recadv) {
     select(RID, ORIGPROT, COLPROT, VISCODE, AEHDTHDT, DEATH = AEHDEATH) %>%
     distinct() %>%
     assert_non_missing(VISCODE) %>%
+    # Earliest visit: order by visit month (e.g., "m12" before "m108"), then visit code
+    mutate(
+      VISCODE_MONTH = suppressWarnings(as.numeric(str_extract(VISCODE, "(?<=^m)[0-9]+$"))),
+      VISCODE_MONTH = ifelse(VISCODE %in% c("sc", "bl"), 0, VISCODE_MONTH)
+    ) %>%
     group_by(RID, ORIGPROT, COLPROT) %>%
-    filter(VISCODE == min(VISCODE)) %>%
+    arrange(VISCODE_MONTH, VISCODE, .by_group = TRUE) %>%
+    slice_head(n = 1) %>%
     ungroup() %>%
+    select(-VISCODE_MONTH) %>%
     assert_uniq(RID)
 
   death_event_dataset <- full_join(
@@ -573,7 +581,7 @@ get_disposition_flag <- function(.registry, .studysum) {
 
   # Adjusting for any conducted follow-up visits
   get_rid_followup <- function(check_rid, check_phase, registry = .registry) {
-    RID <- COLPORT <- NULL
+    RID <- COLPROT <- NULL
     rid_list <- registry %>%
       filter(RID %in% check_rid) %>%
       filter(COLPROT %in% check_phase) %>%

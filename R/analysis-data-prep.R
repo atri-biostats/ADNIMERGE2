@@ -6,13 +6,14 @@
 #' @param x Numeric vector
 #' @param unit Unit of measurements: either \code{week}, \code{month} or \code{year}, Default: 'month'
 #' @param bin Bin value, Default: 1
-#' @param digits Rounding decimal digits, Default: 52
+#' @param digits Rounding decimal digits, Default: 2L
 #' @param adjust_negative_value Indicator to adjust for negative value
 #' @return A numeric vector
 #' @details
 #'  A small positive values will be added to zero numeric value, specially to
 #'  adjust time interval for baseline visits.
-#'  Furthermore, all negative value will be ceiling to zero if \code{adjust_negative_value} is set to \code{TRUE}
+#'  Furthermore, all negative values will be replaced with the same small positive value
+#'  (i.e., \code{1/(interval * bin)}) if \code{adjust_negative_value} is set to \code{TRUE}
 #' @examples
 #' \dontrun{
 #' set.seed(123456)
@@ -43,8 +44,8 @@ convert_number_days <- function(x, unit = "month", bin = 1, digits = 2L, adjust_
     if (any(!is.numeric(temp_value))) {
       cli_abort(
         message = c(
-          "{.var {i}} must be a numberic object.",
-          "{.var {i}} is a class of {.cla {class(i)}} object."
+          "{.var {i}} must be a numeric object.",
+          "{.var {i}} is a class of {.cls {class(temp_value)}} object."
         )
       )
     }
@@ -165,12 +166,12 @@ convert_numeric_dx_status <- function(x) {
 detect_baseline_score <- function(cur_record_date, enroll_date, time_interval = 30) {
   time_diff <- as.numeric(as.Date(cur_record_date) - as.Date(enroll_date))
   abs_time_diff <- abs(time_diff)
-  flags <- abs_time_diff < time_interval
+  flags <- !is.na(abs_time_diff) & abs_time_diff < time_interval
   # Adjustment for the nearest timeline
-  if (length(flags[flags == TRUE]) > 1) {
-    list_closet_timeline <- min(abs_time_diff[flags == TRUE])
-    flags <- abs_time_diff == list_closet_timeline
+  if (sum(flags) > 1) {
+    list_closest_timeline <- min(abs_time_diff[flags])
+    flags <- flags & abs_time_diff == list_closest_timeline
   }
-  flags <- ifelse(flags == TRUE, "Yes", NA_character_)
+  flags <- ifelse(flags, "Yes", NA_character_)
   return(flags)
 }

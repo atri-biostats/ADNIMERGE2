@@ -44,7 +44,7 @@ original_study_protocol <- function(RID) {
     RID >= 3000 & RID < 6000 ~ "ADNI2",
     RID >= 6000 & RID < 10000 ~ "ADNI3",
     RID >= 10000 & RID < 12000 ~ "ADNI4",
-    RID >= 12001 ~ "TEAM"
+    RID >= 12000 ~ "TEAM"
   )
   return(origprot)
 }
@@ -838,8 +838,8 @@ replace_multiple_values <- function(input_string, code, decode) {
     cli_abort(
       message = c(
         "The length of {.var code} and {.var decode}  must be the same. \n",
-        "The length of {.var code} is {.clas {length(code)}}. \n",
-        "The length of {.var decode} is {.clas {length(decode)}}."
+        "The length of {.var code} is {.val {length(code)}}. \n",
+        "The length of {.var decode} is {.val {length(decode)}}."
       )
     )
   }

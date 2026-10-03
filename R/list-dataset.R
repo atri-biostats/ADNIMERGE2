@@ -52,13 +52,15 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   rlang::arg_match0(arg = use_type, values = c("prep_script", "article"))
   check_object_type(add_url_link, "logical")
   pkg_url <- paste0("https://atri-biostats.github.io/ADNIMERGE2")
+  # Build scripts are only available in the GitHub repository
+  github_url <- paste0("https://github.com/atri-biostats/ADNIMERGE2")
 
   if (add_url_link) {
     derived_data_artc <- paste0("<a href='", paste0(pkg_url, "/articles/ADNIMERGE2-Derived-Data.html"), "' target='_blank'>ADNIMERGE2 Derived Data</a>")
-    prep_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep.R"), "' target='_blank'>data-prep.R</a>")
-    prep_recode_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep-recode.R"), "' target='_blank'>data-prep-recode.R</a>")
-    document_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/document.R"), "' target='_blank'>document.R</a>")
-    pacc_input_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/generate-pacc-input-data.R"), "' target='_blank'>generate-pacc-input-data.R</a>")
+    prep_url <- paste0("<a href='", paste0(github_url, "/blob/main/data-raw/data-prep.R"), "' target='_blank'>data-prep.R</a>")
+    prep_recode_url <- paste0("<a href='", paste0(github_url, "/blob/main/data-raw/data-prep-recode.R"), "' target='_blank'>data-prep-recode.R</a>")
+    document_url <- paste0("<a href='", paste0(github_url, "/blob/main/tools/document.R"), "' target='_blank'>document.R</a>")
+    pacc_input_url <- paste0("<a href='", paste0(github_url, "/blob/main/tools/generate-pacc-input-data.R"), "' target='_blank'>generate-pacc-input-data.R</a>")
   } else {
     derived_data_artc <- "ADNIMERGE2-Derived-Data"
     prep_url <- "data-prep.R"
@@ -138,7 +140,7 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
     ),
     c(
       data_code = "RURALITY",
-      label = "Rurality – RUCA & RUCC",
+      label = "Rurality \u2013 RUCA & RUCC",
       article_list = derived_data_artc,
       source_derived_data = "SC",
       use_article = TRUE
@@ -318,15 +320,8 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
       use_article = TRUE
     ),
     c(
-      data_code = "UCBERKELEY_TAUPVC_6MM",
-      label = "UC Berkeley - Tau PET PVC 6mm Res analysis",
-      article_list = derived_data_artc,
-      source_derived_data = "NV",
-      use_article = TRUE
-    ),
-    c(
       data_code = "LABDATA",
-      label = "Laboratory Data for ADNI1, ADNI-G0, and ADNI2 Study Phases",
+      label = "Laboratory Data for ADNI1, ADNIGO, and ADNI2 Study Phases",
       article_list = derived_data_artc,
       source_derived_data = "LB",
       use_article = TRUE
@@ -441,7 +436,7 @@ list_pacc_dataset <- function() {
       TBLNAME = "NEUROBAT",
       CRFNAME = "Neuropsychological Battery",
       TEXT = paste0(
-        "Includes Digit Symbol Substitution Test score",
+        "Includes Digit Symbol Substitution Test score, ",
         "Logical Memory IIa Delayed Recall score and ",
         "Trails B score"
       )
@@ -449,17 +444,17 @@ list_pacc_dataset <- function() {
     c(
       TBLNAME = "REGISTRY",
       CRFNAME = "Registry",
-      TEXT = "Used as the main source to identify enrollemnt date"
+      TEXT = "Used as the main source to identify enrollment date"
     ),
     c(
       TBLNAME = "DXSUM",
       CRFNAME = "Diagnostic Summary",
-      TEXT = "Used as to identify screen/baseline diagnostics status"
+      TEXT = "Used to identify screen/baseline diagnostics status"
     ),
     c(
-      TBLNAME = "DATADICT",
+      TBLNAME = "DATADIC",
       CRFNAME = "Data dictionary",
-      TEXT = "Used as to mapping coded variables during data preparation workflow"
+      TEXT = "Used to map coded variables during data preparation workflow"
     )
   )
   return(pacc_data_list)
@@ -469,7 +464,7 @@ list_pacc_dataset <- function() {
 #' @title Concatenate Dataset URL Link
 #' @param .data A data.frame
 #' @param var_name Character vector of variable name
-#' @return A data.frame with appended URL link to `ADNIMERGE2` GitHub repos in html format.
+#' @return A data.frame with appended URL link to the dataset reference page of `ADNIMERGE2` website in html format.
 #' @examples
 #' \dontrun{
 #' library(dplyr)
@@ -490,6 +485,6 @@ list_pacc_dataset <- function() {
 concat_dataset_url <- function(.data, var_name) {
   pkg_ref_url <- "https://atri-biostats.github.io/ADNIMERGE2/reference/"
   .data <- .data %>%
-    mutate(across(all_of(var_name), ~ paste0("<a href='", pkg_ref_url, "' target='_blank'>", .x, "</a>")))
+    mutate(across(all_of(var_name), ~ paste0("<a href='", pkg_ref_url, .x, ".html' target='_blank'>", .x, "</a>")))
   return(.data)
 }

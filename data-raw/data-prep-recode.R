@@ -27,7 +27,7 @@ USE_UPDATED_DATADIC <- as.logical(arg_list)
 check_arg_logical(USE_UPDATED_DATADIC)
 
 if (USE_UPDATED_DATADIC) {
-  # To use manually updated data dictionary, see line 390-434 & 479-489 in `./data-raw/data_prep.R`
+  # To use manually updated data dictionary, see `Update DATADIC` section in `./data-raw/data-prep.R`
   cur_data_dict_path <- updated_data_dic_path
 } else {
   # To use the actual DATADIC that was downloaded directly from the data sharing platform
@@ -35,15 +35,15 @@ if (USE_UPDATED_DATADIC) {
 }
 
 if (file.exists(cur_data_dict_path)) {
-  EXISTED_DATADTIC <- TRUE
-  # Load the existed data dictionary DATDIC into .GlobalEnv
+  EXISTED_DATADIC <- TRUE
+  # Load the existing data dictionary DATADIC into .GlobalEnv
   load(file = cur_data_dict_path, envir = .GlobalEnv)
   if (exists("UPDATED_DATADIC", envir = .GlobalEnv)) {
     DATADIC <- UPDATED_DATADIC
     rm(list = "UPDATED_DATADIC", envir = .GlobalEnv)
   }
 } else {
-  EXISTED_DATADTIC <- FALSE
+  EXISTED_DATADIC <- FALSE
   cli_alert_warning(
     text = "No existing data dictionary with file name {.val {cur_data_dict_path}}"
   )
@@ -52,7 +52,7 @@ if (file.exists(cur_data_dict_path)) {
 
 # Replace coded values ----
 # If the DATADIC file is existed
-if (EXISTED_DATADTIC) {
+if (EXISTED_DATADIC) {
   # Expand DATADIC for combined phases
   DATADIC <- DATADIC %>%
     mutate(PHASE = str_remove_all(string = PHASE, pattern = "\\[|\\]"))
@@ -111,7 +111,9 @@ if (EXISTED_DATADTIC) {
         (TBLNAME %in% "TAUMETA" & FLDNAME %in% "TRACERISS") |
         (TBLNAME %in% "UPENN_PLASMA_FUJIREBIO_QUANTERIX" & FLDNAME %in% c("GFAP_F", "NfL_F")) |
         (TBLNAME %in% "AMYREAD" & FLDNAME %in% "CORTREGION") |
-        (TBLNAME %in% "ECOG12PT" & FLDNAME %in% "STAFFASST")
+        (TBLNAME %in% "ECOG12PT" & FLDNAME %in% "STAFFASST") |
+        # External (dataset-specific) data dictionaries without study phase specific codes
+        str_detect(TBLNAME, regex("^ADSP\\_PHC\\_|^MUSE\\_VOLUME", ignore_case = TRUE))
       ) ~ "Yes"
     ))
 
@@ -192,7 +194,6 @@ if (DECODE_VALUE) {
           TBLNAME %in% cur_tblname ~ "No",
           TRUE ~ as.character(STATUS)
         ))
-      rm(list = c("cur_tblname_short", "cur_tblname_short", "cur_tblname_full", "cur_tblname"))
     }
 
     if (length(unique_tb_fldname) > 0) {
@@ -245,6 +246,44 @@ if (DECODE_VALUE) {
         )
       }
 
+      # Datasets without a phase column: decode values if the data dictionary
+      # contains coded values from a single study phase only
+      codelist_phase <- unique(unlist(lapply(codelist, names)))
+      codelist_phase <- codelist_phase[!is.na(codelist_phase)]
+      if (is.na(phaseVar) && length(codelist_phase) == 1) {
+        cli_alert_info(
+          text = paste0(
+            "{.val {.emph {note_prefix}}} No existing phase column in ",
+            "{.val {cur_tblname_short}} data. Decoding values using ",
+            "{.val {codelist_phase}} phase-specific coded values"
+          )
+        )
+        decoded_dd <- tryCatch(
+          dd %>%
+            mutate(.DECODE_PHASE = codelist_phase) %>%
+            replace_values_dataset(
+              .data = .,
+              phaseVar = ".DECODE_PHASE",
+              input_values = codelist
+            ) %>%
+            select(-.DECODE_PHASE),
+          error = function(e) {
+            cli_alert_warning(
+              text = paste0(
+                "{.val {.emph {note_prefix}}} Values in {.val {cur_tblname_short}} data ",
+                "do not match the coded values: {conditionMessage(e)}"
+              )
+            )
+            NULL
+          }
+        )
+        if (!is.null(decoded_dd)) {
+          dd <- decoded_dd
+          phaseVar <- ".DECODE_PHASE"
+        }
+        rm(list = "decoded_dd")
+      }
+
       if (is.na(phaseVar)) {
         cli_alert_warning(
           text = paste0(
@@ -272,11 +311,14 @@ if (DECODE_VALUE) {
       )
       if (data_update_status != TRUE) cli::cli_abort(message = "{.val {cur_tblname_short}} has not been updated")
       cli_alert_success(
-        text = paste0("{.val {cur_tblname_short}} data has been removed from .GlobalEnv.")
+        text = paste0("{.val {cur_tblname_short}} data has been updated.")
       )
+      rm(list = c("dd", "codelist", "codelist_phase"))
     }
 
-    rm(list = c("dd", "codelist", "cur_tblname_dd", "cur_tblname_short", "cur_tblname_full", "cur_tblname"))
+    # Remove the loaded dataset from .GlobalEnv
+    rm(list = cur_tblname_short, envir = .GlobalEnv)
+    rm(list = c("cur_tblname_dd", "cur_tblname_short", "cur_tblname_full", "cur_tblname"))
   }
 
   # Update the code fldname records
@@ -297,7 +339,7 @@ if (DECODE_VALUE) {
     cli_alert_warning(
       text = paste0("Overwriting {.val {coded_records_dir}}")
     )
-    unlink(x = coded_records_dir, recursive = FALSE)
+    unlink(x = coded_records_dir, recursive = TRUE)
   }
   dir.create(coded_records_dir)
   readr::write_csv(
@@ -305,7 +347,7 @@ if (DECODE_VALUE) {
     file = file.path(coded_records_dir, "coded_records.csv")
   )
 
-  rm(list = c("UPDATED_DATADIC", "DATADIC", "dataset_data_dict", "coded_tblname", "tblname_list_dd"))
+  rm(list = c("DATADIC", "dataset_data_dict", "coded_tblname", "tblname_list_dd"))
   cli_alert_success(text = paste0("Completed mapping coded values"))
 }
 

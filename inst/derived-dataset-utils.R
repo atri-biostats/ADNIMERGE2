@@ -98,7 +98,7 @@ get_id_mapping_list <- function(.registry = get("REGISTRY"),
 #' @return A data.frame appended with \code{RFSTDTC} variable.
 #' @examples
 #' \dontrun{
-#' add_rfstdtc_date(
+#' create_rfstdtc(
 #'   .data = ADNIMERGE2::DM,
 #'   .registry = ADNIMERGE2::REGISTRY
 #' )
@@ -110,7 +110,7 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
   require(dplyr)
   require(assertr)
   RFSTDTC <- NULL
-  join_cols <- get_cols_name(.data, c("RID", "ORIGPORT"))
+  join_cols <- get_cols_name(.data, c("RID", "ORIGPROT"))
   check_colnames(
     .data = .data,
     col_names = "RID",
@@ -640,7 +640,9 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
             method = method,
             distance_col = distance_col
           ) %>%
-          filter(if_all(any_of(non_main_cols.dist), ~ .x == 0)) %>%
+          # Exact match on non-main columns; use a tolerance because string distances
+          # of identical strings can be a floating point value close to zero (e.g., 5.55e-17)
+          filter(if_all(any_of(non_main_cols.dist), ~ abs(.x) < 1e-8)) %>%
           {
             if (!is.null(date_col)) {
               mutate(., TIME_DIFF = get(names(join_by[date_col])) - get(join_by[date_col])) %>%

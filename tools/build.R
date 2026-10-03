@@ -10,7 +10,7 @@ setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
 DATA_DOWNLOADED_DATE <- "2026-10-01" # Data downloaded date YYYY-MM-DD format
-UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
+UPDATE_DATADIC <- TRUE # Please see `Update DATADIC` section in the `./data-raw/data-prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
   wd = ".",

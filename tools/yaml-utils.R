@@ -2,7 +2,7 @@
 #' @title Modify Rmarkdown Param YAML Values
 #' @description
 #' This function is used to modify the existing params YAML in rmarkdown file(s).
-#' The modification can also be preformed across files in a specific directory.
+#' The modification can also be performed across files in a specific directory.
 #'
 #' @param dir_path Directory path, Default: NULL
 #' @param file_path Full file path, Default: NULL
@@ -121,8 +121,6 @@ modify_rmd_param_yaml <- function(dir_path = NULL, file_path = NULL, current_par
 #' @keywords utils_fun
 #' @family modify rmarkdown params
 #' @importFrom rmarkdown yaml_front_matter
-#' @importFrom stringr str_locate
-#' @importFrom tibble rownames_to_column
 #' @importFrom cli cli_abort
 
 set_rmd_param_yaml <- function(file_path, param_name, param_value, new_param_value, value_as_logical = FALSE) {
@@ -157,14 +155,12 @@ set_rmd_param_yaml <- function(file_path, param_name, param_value, new_param_val
   # Modify param values if the current and new param values are different
   if (last_status == TRUE) {
     full_file_content <- readLines(file_path)
-    # Detect yaml position in a file
-    yaml_char <- "---"
-    yaml_last_pos <- stringr::str_locate(string = full_file_content, pattern = yaml_char)
-    yaml_last_pos <- tibble::as_tibble(yaml_last_pos) %>%
-      tibble::rownames_to_column(., var = "pos") %>%
-      dplyr::filter(start == 1 & end == 3) %>%
-      dplyr::pull(pos)
-    yaml_last_pos <- max(yaml_last_pos)
+    # Detect yaml position in a file: the closing `---` of the front matter
+    yaml_delim_pos <- which(grepl("^---\\s*$", full_file_content))
+    if (length(yaml_delim_pos) < 2 || yaml_delim_pos[1] != 1) {
+      cli::cli_abort(message = "Can't find a YAML front matter in {.file {file_path}}")
+    }
+    yaml_last_pos <- yaml_delim_pos[2]
     # Modify values in yaml section only
     read_yaml_text <- readLines(file_path, n = yaml_last_pos)
     replaced_yaml_text <- gsub(
@@ -178,8 +174,11 @@ set_rmd_param_yaml <- function(file_path, param_name, param_value, new_param_val
     test_yaml <- rmarkdown::yaml_front_matter(test_file)
     test_status <- test_yaml$params[[param_name]] == new_param_value
     # To overwrite local file
-    if (test_status == TRUE) {
+    if (isTRUE(test_status)) {
       writeLines(full_file_content, file_path)
+    } else {
+      # The file was not modified
+      last_status <- FALSE
     }
   }
   last_status <- if (last_status == TRUE && param_status == TRUE) {
@@ -200,7 +199,7 @@ set_rmd_param_yaml <- function(file_path, param_name, param_value, new_param_val
 #' @return \code{TRUE} if the params name is found in a rmarkdown file. Otherwise, \code{FALSE}
 #' @examples
 #' \dontrun{
-#' # Suppose to check whetehr `INCLUDE_PACC` params YAML in "./ADNI-Enrollment.Rmd" vignette
+#' # Suppose to check whether `INCLUDE_PACC` params YAML in "./ADNI-Enrollment.Rmd" vignette
 #' detect_file_param(
 #'   file_path = "./vignettes/ADNI-Enrollment.Rmd",
 #'   param_name = "INCLUDE_PACC"
@@ -356,13 +355,13 @@ check_param_format <- function(x,
 #' @keywords utils_fun
 #' @family modify rmarkdown params
 check_logical_param_value <- function(x) {
-  last_status <- lapply(length(x), function(y) {
+  last_status <- lapply(seq_along(x), function(y) {
     status <- as.logical(x[y])
     if (is.na(status)) {
       cli::cli_abort(
         message = c(
           "{.var {x[y]}} is not a Boolean param value. \n",
-          "Did you set {.val {'value_as_logical = TRUE'}} accidentaly?"
+          "Did you set {.val {'value_as_logical = TRUE'}} accidentally?"
         )
       )
     }

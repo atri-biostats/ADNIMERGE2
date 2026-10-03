@@ -10,35 +10,44 @@ check_arg(x = arg_list, size = 3)
 INPUT_DIR <- arg_list[1]
 OUTPUT_DIR <- arg_list[2]
 PATTERN <- arg_list[3]
-soure_file_list <- list.files(
+source_file_list <- list.files(
   path = INPUT_DIR,
   pattern = PATTERN,
   full.names = TRUE,
   recursive = FALSE
 )
-SOURCE_FILE_STATUS <- any(!is.na(soure_file_list))
+SOURCE_FILE_STATUS <- any(!is.na(source_file_list))
 if (SOURCE_FILE_STATUS == TRUE) {
   # Copy files to `output` directory ----
-  file_action(
+  copy_status <- file_action(
     input_dir = INPUT_DIR,
     output_dir = OUTPUT_DIR,
     file_extension = PATTERN,
     action = "copy",
     show_message = TRUE
   )
+  # Only remove the source files if all files were copied
+  if (!isTRUE(copy_status)) {
+    cli::cli_abort(
+      message = "Failed to copy files from {.path {INPUT_DIR}} to {.path {OUTPUT_DIR}}. No file is removed."
+    )
+  }
   # Remove files from previous directory ------
-  file_action(
+  remove_status <- file_action(
     input_dir = INPUT_DIR,
     output_dir = OUTPUT_DIR,
     file_extension = PATTERN,
     action = "remove",
     show_message = TRUE
   )
-  soure_file_list <- soure_file_list[!is.na(soure_file_list)]
+  if (!isTRUE(remove_status)) {
+    cli::cli_abort(message = "Failed to remove files from {.path {INPUT_DIR}}.")
+  }
+  source_file_list <- source_file_list[!is.na(source_file_list)]
   cli::cli_inform(
     c(
       "i" = paste0(
-        "{.val {basename(soure_file_list)}} file{?s} {?is/are} transferred",
+        "{.val {basename(source_file_list)}} file{?s} {?is/are} transferred",
         " from {.path {INPUT_DIR}} to {.path {OUTPUT_DIR}}"
       )
     )
