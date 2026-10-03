@@ -1,5 +1,6 @@
 # Generate dataset categories for pkgdown -----
 source(file.path(".", "tools", "data-prepare-utils.R"))
+source(file.path(".", "tools", "prepare-datadict.R"))
 source(file.path(".", "R", "utils.R"))
 
 # Libraries -----
@@ -53,7 +54,9 @@ dataset_category_raw <- dataset_category_raw %>%
   mutate(TBLNAME = case_when(
     !is.na(UPDATED_TBLNAME) ~ UPDATED_TBLNAME,
     TRUE ~ file_list
-  ))
+  )) %>%
+  # Adjust for renamed external data dictionaries, see `./data-raw/data-prep.R`
+  mutate(TBLNAME = rename_external_datadict(TBLNAME))
 
 ## Get dataset category based on study phase ----
 data_path_list <- list.files(
@@ -83,11 +86,6 @@ dataset_category_phase <- lapply(data_path_list, function(x) {
       full_file_path = x, # Full file path
       file_list = dataset_name,
     ) %>%
-    # Adjust for remotely collected dataset
-    mutate(dir_cat = case_when(
-      str_detect(file_list, "$RMT\\_") ~ tolower(adni_phase()[5]),
-      TRUE ~ dir_cat
-    )) %>%
     relocate(dir_cat, .after = last_col())
 }) %>%
   bind_rows()
@@ -96,11 +94,21 @@ dataset_category_phase <- dataset_category_phase %>%
   filter(!is.na(dir_cat) & !dir_cat %in% "nv")
 
 ### Based on file name prefix/suffix -----
+prefix_pattern <- list_filename_prefix(collapse = "|")
 dataset_category_file_name <- dataset_category_phase %>%
-  filter(str_detect(tolower(file_list), "adni[1-9]|adnigo")) %>%
-  mutate(dir_cat = str_extract(tolower(file_list), "adni[1-9]|adnigo")) %>%
+  mutate(lower_filename = tolower(file_list)) %>%
+  filter(str_detect(lower_filename, "adni[1-9]|adnigo|^bhr\\_|^bhr|^rmt\\_")) %>%
+  mutate(
+    dir_cat = case_when(
+      str_detect(lower_filename, "^bhr\\_|^bhr") ~ "adni3",
+      str_detect(lower_filename, "^rmt\\_") ~ "adni4",
+      !str_detect(lower_filename, "^bhr\\_|^bhr|^rmt") ~ str_extract(lower_filename, prefix_pattern),
+    ),
+    dir_cat = str_remove_all(dir_cat, "\\_")
+  ) %>%
   filter(str_detect(dir_cat, "^adni")) %>%
-  filter(!is.na(dir_cat))
+  filter(!is.na(dir_cat)) %>%
+  select(-any_of("lower_filename"))
 
 dataset_category_phase <- bind_rows(dataset_category_phase, dataset_category_file_name) %>%
   group_by(file_list) %>%
@@ -122,9 +130,10 @@ dataset_category <- bind_rows(dataset_category_raw, dataset_category_phase) %>%
   distinct() %>%
   # Adjust the category for remotely collected data in ADNI4
   mutate(across(
-    dir_cat,
+    all_of("dir_cat"),
     ~ case_when(
       str_detect(file_list, "^RMT\\_") & !str_detect(.x, "adni4") ~ paste0(.x, ", adni4"),
+      str_detect(file_list, "DATA\\_DOWNLOADED\\_DATE") ~ "internal",
       TRUE ~ .x
     )
   ))

@@ -1,4 +1,4 @@
-# Data documtations -----
+# Data documentations -----
 source(file.path(".", "tools", "data-prepare-utils.R"))
 source(file.path(".", "tools", "data-dictionary-utils.R"))
 source(file.path(".", "R", "checks-assert.R"))
@@ -67,6 +67,9 @@ if (USE_UPDATED_DATADIC) {
   }
   if (file.exists(updated_data_dict_path)) load(updated_data_dict_path, .GlobalEnv)
   DATADIC <- UPDATED_DATADIC
+} else {
+  # Use the DATADIC stored in "./data" directory
+  lapply(data_path, load, .GlobalEnv)
 }
 
 if (file.exists(data_dic_path_remote)) load(data_dic_path_remote, .GlobalEnv)
@@ -115,7 +118,7 @@ loni_url_link <- paste0(
 common_description <- str_c("data. More information is available at ", loni_url_link)
 ### Authors
 authors_list <- paste0(
-  "\\href{adni-data@googlegroups.com}",
+  "\\href{mailto:adni-data@googlegroups.com}",
   "{adni-data@googlegroups.com}"
 )
 
@@ -178,13 +181,13 @@ temp_data_dict <- temp_data_dict %>%
     bind_rows(DATADIC, REMOTE_DATADIC) %>%
       distinct(CRFNAME, TBLNAME, STATUS) %>%
       group_by(TBLNAME) %>%
-      filter(
-        (n() == 1 & row_number() == 1) |
-          (n() > 1 & any(STATUS %in% "Archived") & !STATUS %in% "Archived" & row_number() == 1) |
-          (n() > 1 & all(STATUS %in% "Archived") & row_number() == 1) |
-          (n() > 1 & all(!STATUS %in% "Archived") & row_number() == 1) |
-          (n() > 1 & all(!is.na(STATUS)) & row_number() == 1)
+      # Prefer a non-missing CRF name of a non-archived record
+      arrange(
+        is.na(CRFNAME) | CRFNAME %in% "-4",
+        STATUS %in% "Archived",
+        .by_group = TRUE
       ) %>%
+      slice_head(n = 1) %>%
       ungroup() %>%
       assert_uniq(TBLNAME) %>%
       mutate(
@@ -235,6 +238,10 @@ temp_data_dict <- temp_data_dict %>%
   ) %>%
   # Adjust field code and text
   mutate(
+    field_notes = case_when(
+      field_name %in% "RID" & field_class %in% "numeric" ~ " ",
+      .default = field_notes
+    ),
     field_notes = case_when(
       is.na(field_value) ~ field_notes,
       !is.na(field_value) ~ field_value
@@ -342,7 +349,7 @@ generate_roxygen_document(
   .data_dict = temp_data_dict,
   roxygen_source = "data_dict",
   output_path = data_document_path,
-  overwrite = FALSE
+  overwrite = TRUE
 )
 
 # Documentation for DATA_DOWNLOADED_DATE data ----
@@ -481,7 +488,7 @@ if (exists("derived_data_list")) {
     .data_dict = temp_data_dict_derived,
     roxygen_source = "data_dict",
     output_path = data_document_path,
-    overwrite = TRUE
+    overwrite = FALSE
   )
 
   # Documentation for METACORES meta-specs ----

@@ -813,8 +813,8 @@ AGEU_CODEDLIST <- tibble(
 PHASE_CODEDLIST <- tibble(
   code_id = "PHASE", name = "PHASE", type = "code_decode",
   tibble(
-    code = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4"),
-    decode = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4")
+    code = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4", "TEAM"),
+    decode = c("ADNI1", "ADNIGO", "ADNI2", "ADNI3", "ADNI4", "TEAM")
   )
 )
 
@@ -936,10 +936,14 @@ AESEV_CODEDLIST <- tibble(
 QSTESTCD_LIST <- c(
   "ADASTT11", "ADASTT13", "CDGLOBAL", "CDRSB", "DIGITSCR",
   "ECOGPTTT", "ECOGSPTT", "FAQTOTAL", "FCISCORE", "GDTOTAL", "LDELTOTL",
-  "LIMMTOTL", "MMSCORE", "MOCA", "MPACCDIGIT", "MPACCTRAILSB",
-  "NPIQTOTL", "NPITOTAL", "RAVLTFG", "RAVLTFGP", "RAVLTIMM",
-  "RAVLTLRN", "TRABSCOR"
+  "LIMMTOTL", "MMSCORE", "MOCA", "NPIQTOTL", "NPITOTAL", "RAVLTFG", "RAVLTFGP", 
+  "RAVLTIMM","RAVLTLRN", "TRABSCOR"
 )
+if (params$INCLUDE_PACC == TRUE){
+  QSTESTCD_LIST <- c(QSTESTCD_LIST, "MPACCDIGIT", "MPACCTRAILSB")
+}
+QSTESTCD_LIST <- sort(QSTESTCD_LIST)
+
 # To apply with data flow
 # QSTESTCD_LIST <- QS %>%
 #   select(QSTESTCD) %>%

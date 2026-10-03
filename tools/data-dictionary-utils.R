@@ -20,7 +20,7 @@
 #' @examples
 #' \dontrun{
 #' library(tidyverse)
-#' library(ADNIEMRGE2)
+#' library(ADNIMERGE2)
 #'
 #' summarize_variable(
 #'   .data = ADNIMERGE2::DM,
@@ -144,7 +144,14 @@ summarize_var.character <- function(.data, var_name, wide_format = FALSE) {
   rlang::arg_match0(arg = var_class_type, values = "character")
   check_object_type(wide_format, "logical")
   var_values <- unique(var_values)[!is.na(unique(var_values))]
-  id_format_pattern <- "[0-9]{3}\\_s\\_d+|[0-9]{3}\\_S\\_d+|[0-9]{3}-s-d+|[0-9]{3}-S-d+"
+  id_format_pattern <- c(
+    "[0-9]{3}\\_s\\_\\d+",
+    "[0-9]{3}\\_S\\_\\d+",
+    "[0-9]{3}-s-\\d+",
+    "[0-9]{3}-S-\\d+",
+    "^ADNI-[0-9]{3}-\\d+"
+  )
+  id_format_pattern <- paste0(id_format_pattern, collapse = "|")
   contain_ids <- any(str_detect(string = var_values, pattern = id_format_pattern))
   if (all(length(var_values) <= 10 & length(var_values) > 0 & contain_ids != TRUE)) {
     var_notes <- paste0(
@@ -152,7 +159,8 @@ summarize_var.character <- function(.data, var_name, wide_format = FALSE) {
       paste0(var_values, collapse = ", ")
     )
   }
-  if (any(length(var_values) == 0 | length(var_values) > 10 | contain_ids == TRUE)) {
+  status <- c(length(var_values) == 0, length(var_values) > 10, contain_ids == TRUE)
+  if (any(status == TRUE)) {
     var_values <- NA_character_
     var_notes <- paste0(" ")
   }
@@ -295,12 +303,12 @@ summarize_var.Date <- function(.data, var_name, wide_format = FALSE) {
     values = c("Date", "POSIXct", "POSIXt", "hms", "difftime"),
     multiple = TRUE
   )
-  if ("Date" %in% var_class_type) var_notes <- paste0("Date: YYY-MM-DD")
+  if ("Date" %in% var_class_type) var_notes <- paste0("Date: YYYY-MM-DD")
   if (any(c("POSIXct", "POSIXt") %in% var_class_type)) {
-    var_notes <- paste0("POSIXct: YYY-MM-DD")
+    var_notes <- paste0("POSIXct: YYYY-MM-DD HH:MM:SS")
   }
   if (any(c("hms", "difftime") %in% var_class_type)) {
-    var_notes <- paste0("hms: HH-MM-SS")
+    var_notes <- paste0("hms: HH:MM:SS")
   }
 
   summary_result <- tibble(
@@ -402,7 +410,7 @@ set_var_class <- function(.data, var_name) {
 #' @examples
 #' \dontrun{
 #' library(tidyverse)
-#' library(ADNIEMRGE2)
+#' library(ADNIMERGE2)
 #' library(cli)
 #'
 #' summarize_dataset(
@@ -446,7 +454,7 @@ summarize_dataset <- function(.data, dataset_name = NULL, wide_format = FALSE) {
     cli::cli_abort(
       message = c(
         "Discrepancy between number of rows in {.val data_dict_dd} and number of columns in {.val .data}. \n",
-        "{.clas {nrow(data_dict_dd)}} rows; {.clas {length(colnames(.data))}} columns."
+        "{.val {nrow(data_dict_dd)}} rows; {.val {length(colnames(.data))}} columns."
       )
     )
   }
@@ -462,7 +470,6 @@ summarize_dataset <- function(.data, dataset_name = NULL, wide_format = FALSE) {
 #'  the actual dataset value or pre specified data dictionary.
 #'
 #' @param data_name Dataset name
-#' @param data_name Dataset name
 #' @param data_label Dataset label, Default: NULL
 #' @param .data Data.frame and only applicable if \code{.data_dict} is missing, Default: NULL
 #' @param .data_dict A data dictionary and only applicable if \code{.data} or \code{data_list} is missing, Default: NULL
@@ -475,9 +482,8 @@ summarize_dataset <- function(.data, dataset_name = NULL, wide_format = FALSE) {
 #'   A list object that contains roxygen2 tag names with corresponding values, Default: list()
 #'   \code{tag_list} should be a named list object.
 #'   For \code{\link{generate_single_dataset_roxygen}()}, \code{tag_list} will be a list object with a format of \code{list(tag_name = tag_value)}.
-#'   For \code{\link{}(generate_roxygen_document)}, \code{tag_list} will be a list object with a format of \code{list("data_name" = list(tag_name = tag_value))}.
-#' @param output_path Output file path. It must be non-missing (i.e., `NULL`) if the interest is to save the script in local directory.
-#' @param output_path Output file path. It must not be missing (i.e., `NULL`) if the interest is to write the roxygen2 script in local directory.
+#'   For \code{\link{generate_roxygen_document}()}, \code{tag_list} will be a list object with a format of \code{list("data_name" = list(tag_name = tag_value))}.
+#' @param output_path Output file path. It must not be missing (i.e., not `NULL`) if the interest is to write the roxygen2 script in local directory.
 #' @param create_local_path A Boolean value to create the \code{output_path} if it is not existing, and only applicable for non missing \code{output_path}, Default: FALSE
 #' @return
 #'  Both \code{\link{generate_single_dataset_roxygen}()} and \code{\link{generate_roxygen_document}()} functions return the following values:
@@ -576,7 +582,7 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
   if (is.null(.data) && !is.null(.data_dict)) {
     if (any(!c("num_rows", "num_cols") %in% colnames(.data_dict))) {
       cli_abort(
-        message = "{.val num_rows} and {.val num_cols} are not included in the {.cla .data_dict}"
+        message = "{.val num_rows} and {.val num_cols} are not included in the {.var .data_dict}"
       )
     }
     temp_summarized_dd <- .data_dict
@@ -606,21 +612,13 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
   check_list_names(tag_list)
   exclude_tags <- c("title", "usage", "docType")
   tag_list <- tag_list[!names(tag_list) %in% exclude_tags]
+  # Only roxygen2 tags are kept
   tag_list <- tag_list[names(tag_list) %in% roxygen2::tags_list(built_in = FALSE)]
 
   if (!"keywords" %in% names(tag_list)) {
     tag_list$keywords <- str_c(tolower(source_type), "_dataset")
   }
 
-  # checks tags list
-  tag_status <- all(names(tag_list) %in% roxygen2::tags_list(built_in = FALSE))
-  if (tag_status == FALSE) {
-    non_roxy <- names(tag_list)[!names(tag_list) %in% roxygen2::tags_list(built_in = FALSE)]
-    cli_abort(message = c(
-      "{.var tag_list} contains {.val {length(non_roxy)}} tag names that are not roxygen2 tags.\n ",
-      "{.val {non_roxy}} {?is/are} not roxygen2 tags."
-    ))
-  }
   format_description <- str_c(
     "#' @format A data frame with ", unique(temp_summarized_dd$num_rows),
     " observations and ", unique(temp_summarized_dd$num_cols), " variables. \n"
@@ -692,7 +690,7 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
       } else {
         cli_abort(message = c(
           "{.path {output_path}} is not found \n",
-          "Either set {.val create_local_path == TRUE} or create {.path {output_path}} mannualy"
+          "Either set {.val create_local_path == TRUE} or create {.path {output_path}} manually"
         ))
       }
     }
@@ -725,7 +723,8 @@ generate_roxygen_single_dataset <- function(data_name, data_label = NULL,
 #'   A list object with data source type, Default: list()
 #'   For \code{roxygen_source = 'data_list'}, \code{source_type_list} must not be missing.
 #'   For \code{roxygen_source = 'data_dict'}, data source type can be provided either in \code{source_type_list} or included in the data dictionary data.frame with \code{source_type} column.
-#' @param overwrite A Boolean value to overwrite for existing output file \code{output_path}, Default: FALSE
+#' @param overwrite A Boolean value whether to overwrite an existing output file \code{output_path}.
+#'  If \code{FALSE}, the generated documentation is appended to the existing file, Default: FALSE
 #'
 #' @examples
 #' \dontrun{
@@ -873,11 +872,11 @@ generate_roxygen_document <- function(data_names,
       } else {
         cli_abort(message = c(
           "{.path {output_path}} is not found \n",
-          "Either set {.val create_local_path == TRUE} or create {.path {output_path}} mannualy"
+          "Either set {.val create_local_path == TRUE} or create {.path {output_path}} manually"
         ))
       }
     }
-    if (overwrite == FALSE) readr::write_lines(x = "", output_path)
+    if (overwrite == TRUE) readr::write_lines(x = "", output_path)
     output_scripts <- paste0(output_result$data_doc, collapse = "\n")
     if (is.na(output_scripts)) cli_abort(message = "{.file output_path} has not been updated/created.")
     cat(output_scripts, file = output_path, append = TRUE)
@@ -1001,7 +1000,7 @@ create_vars <- function(.data, var_name) {
 #' @examples
 #' \dontrun{
 #' x <- paste0("#' @title Demographic Dataset \n")
-#' concat_tag(x, tag_name = "keyword", tag_text = "derived")
+#' concat_tag(x, tag_name = "keyword", tag_value = "derived")
 #' }
 #' @seealso
 #'  \code{\link[cli]{cli_abort}}
@@ -1019,14 +1018,12 @@ concat_tag <- function(x, tag_name, tag_value = NULL, error_call = TRUE) {
       )
     )
   }
-  status <- ifelse(!is.null(tag_value), TRUE, FALSE)
-  status <- ifelse(!is.na(tag_value), TRUE, FALSE)
+  status <- !is.null(tag_value) && length(tag_value) > 0 && !all(is.na(tag_value))
 
   if (status) {
     x <- str_c(x, str_c("#' @", tag_name, " ", tag_value, "\n"), collapse = "")
-  }
-  if (status) {
-    if (error_call) cli::cli_abort(message = "{.var tag_value} must not be missing.")
+  } else if (error_call) {
+    cli::cli_abort(message = "{.var tag_value} must not be missing.")
   }
   if (is.na(x)) cli::cli_abort(message = "{.var x} must not be missing.")
   return(x)
@@ -1174,6 +1171,8 @@ convert_null_into_na <- function(x) {
 #' @family convert missing value type
 
 convert_na_into_null <- function(x) {
-  x <- ifelse(is.na(x), NULL, x)
+  if (is.null(x) || length(x) == 0 || all(is.na(x))) {
+    return(NULL)
+  }
   return(x)
 }

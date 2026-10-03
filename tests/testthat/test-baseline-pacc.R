@@ -11,7 +11,7 @@ set_as_dataframe <- function(.data) {
 }
 
 lapply(c("mPACCtrailsB", "mPACCdigit"), function(score_var) {
-  test_that("Check baseline modified-PACC score", {
+  test_that(paste0("Check baseline ", score_var, " score"), {
     # Enrollment data
     enrolled_data <- get_adni_enrollment(.registry = REGISTRY) %>%
       filter(ENRLFG %in% "Yes") %>%
@@ -70,7 +70,7 @@ lapply(c("mPACCtrailsB", "mPACCdigit"), function(score_var) {
     expect_identical(
       object = bl_paccscore_pacc,
       expected = bl_paccscore_adqs,
-      info = paste0("Check baseline ", score_var, "score based on `PACC` and `ADQS` records")
+      info = paste0("Check baseline ", score_var, " score based on `PACC` and `ADQS` records")
     )
   })
 })

@@ -28,6 +28,9 @@ datatable <- function(data, paging = FALSE, searching = TRUE, bInfo = FALSE, ...
     options = list(paging = paging, searching = searching, bInfo = bInfo, ...)
   )
 }
+concat_dataset_url <- function(...) {
+  ADNIMERGE2:::concat_dataset_url(...)
+}
 ```
 
 # Introduction {#sec-intro}
@@ -126,8 +129,19 @@ load_utils_funs <- lapply(utils_file_path, source)
 
 ```{r phase-visit-epoch, class.source = NULL, echo = FALSE}
 # Create study epoch stage- overall and phase-specific
-EPOCH_LIST <- VISITS %>%
-  filter(!VISCODE %in% c("reg", "AUT", "4_disp")) %>%
+TEAM_ADNI_VISIT <- tibble(
+  PHASE = "TEAM",
+  VISCODE = c("t_bl", "t_m3", "t_m6", "t_m9", "t_m12", "t_disp"),
+  VISNAME = c("Baseline", paste0("Month ", seq(3, 12, by = 3)), "Final Disposition")
+) %>%
+  mutate(
+    VISORDER = row_number(),
+    ID = row_number()
+  ) %>%
+  select(PHASE, ID, VISCODE, VISNAME, VISORDER)
+
+EPOCH_LIST <- bind_rows(VISITS, TEAM_ADNI_VISIT) %>%
+  filter(!VISCODE %in% c("reg", "4_reg", "AUT", "4_disp", "t_disp")) %>%
   mutate(EPOCH = case_when(
     VISCODE %in% c("sc", "4_sc", "scmri", "f", "v01", "v02") ~ "Screening",
     VISCODE %in% c("bl", "4_bl", "init", "4_init", "v03", "v06") ~ "Baseline",
@@ -138,12 +152,17 @@ EPOCH_LIST <- VISITS %>%
   select(PHASE, VISCODE, PHASE_EPOCH, EPOCH, VISORDER, VISNAME) %>%
   group_by(PHASE) %>%
   arrange(VISORDER) %>%
-  mutate(PHASE_VISITNUM = row_number() - 2) %>%
+  mutate(
+    PHASE_VISITNUM = case_when(
+      !PHASE %in% "TEAM" ~ row_number() - 2,
+      PHASE %in% "TEAM" ~ VISORDER
+    )
+  ) %>%
   ungroup() %>%
   # Create phase-specific visit number/order
   # 999 - represents unscheduled visit
   mutate(PHASE_VISITNUM = case_when(
-    VISCODE %in% c("nv", "uns1", "tau") ~ 999,
+    !is.na(PHASE) & VISCODE %in% c("nv", "uns1", "tau") ~ 999,
     PHASE %in% "ADNI1" & VISCODE %in% c("f", "sc") ~ -1,
     PHASE %in% "ADNI1" & VISCODE %in% "bl" ~ 1,
     PHASE %in% "ADNI1" & str_detect(VISCODE, "m") ~ PHASE_VISITNUM + 1,
@@ -161,6 +180,7 @@ EPOCH_LIST <- VISITS %>%
     PHASE %in% c("ADNI1", "ADNIGO") ~ "Both",
     str_detect(VISNAME, "Continuing ") == TRUE ~ "Rollover",
     str_detect(VISNAME, "New Pt|Screening") == TRUE ~ "New",
+    PHASE %in% "TEAM" ~ "New",
     TRUE ~ "Both"
   )) %>%
   arrange(PHASE, PHASE_VISITNUM) %>%
@@ -359,7 +379,7 @@ dm_data_dic <- bind_rows(
     FLDNAME = "RFPENDTC",
     LABEL = "Date/Time of End of Participation*",
     TEXT = paste0(
-      "Last known date/time when participant ended thier participation or",
+      "Last known date/time when participant ended their participation or",
       " follow-up in ADNI study. As character format for unknown MM-DD values."
     )
   ),
@@ -499,8 +519,12 @@ DM <- DM %>%
   # Add enrollment/RFSTDTC date
   create_rfstdtc(.registry = REGISTRY) %>%
   # Compute age based on first screening date
+  # For TEAM-ADNI: relative to enrollment date
   mutate(
-    AGE = round(as.numeric(SESTDTC - my(BRTHDTC)) / 365.25, 1),
+    AGE = case_when(
+      ORIGPROT == adni_phase()[6] ~ round(as.numeric(as.Date(RFSTDTC) - my(BRTHDTC)) / 365.25, 1),
+      .default = round(as.numeric(SESTDTC - my(BRTHDTC)) / 365.25, 1)
+    ),
     AGEU = "Years",
     SUBJID = as.character(RID),
     ARMCD = NA_character_,
@@ -728,7 +752,7 @@ SC_DEMOG <- tibble(RID = unique_rid) %>%
 
 # Area Deprivation Index (ADI) for ADNI4 phase only ----
 SC_ADI <- ADI %>%
-  verify(all(COLPROT == adni_phase()[5])) %>%
+  verify(all(COLPROT %in% adni_phase()[5:6])) %>%
   select(
     RID, ORIGPROT, COLPROT, VISCODE, ADISTATE, ADINATIONAL, ADIREV,
     SCDTC = ADIDATE
@@ -745,7 +769,7 @@ SC_ADI <- ADI %>%
 # RUCA and RUCC from ADNI4 phase only ----
 rurality_cols <- c("RUCA", "RUCC", "RUCA_2010", "RUCC_2023")
 SC_RURALITY <- RURALITY %>%
-  verify(all(COLPROT == adni_phase()[5])) %>%
+  verify(all(COLPROT %in% adni_phase()[5:6])) %>%
   select(
     RID, ORIGPROT, COLPROT, VISCODE, all_of(rurality_cols),
     SCDTC = RURDATE
@@ -1453,7 +1477,8 @@ QS_TESTCD_LIST <- bind_rows(
 QS_TESTCD_LIST %>%
   arrange(SOURCE, QSCAT, QSTESTCD) %>%
   select(SOURCE, QSCAT, QSTESTCD, QSTEST) %>%
-  datatable(., paging = TRUE)
+  concat_dataset_url(., "SOURCE") %>%
+  datatable(., paging = TRUE, escape = FALSE)
 ```
 
 ```{r qs-input}
@@ -1795,12 +1820,14 @@ RS_TESTCD_LIST <- bind_rows(
 RS_TESTCD_LIST %>%
   arrange(SOURCE, RSCAT, RSTESTCD) %>%
   select(SOURCE, RSCAT, RSTESTCD, RSTEST) %>%
-  datatable()
+  concat_dataset_url(., "SOURCE") %>%
+  datatable(escape = FALSE)
 ```
 
 ```{r generate-rs0}
 # Clinical diagnostics status
 RS <- DXSUM %>%
+  ADNIMERGE2:::filter_out_teamadni(.data = ., phase_cols = "COLPROT") %>%
   generate_oak_id_vars_adni(raw_src = "DXSUM") %>%
   mutate(
     DIAGNOSIS = case_when(
@@ -2117,7 +2144,7 @@ NV_TESTCD_LIST <- bind_rows(
     NVCAT = "AMYLOID-STATUS",
     NVTESTCD = "AMYSTAT",
     NVTEST = "Amyloid Status - Clinician Judgment",
-    TEXT = "Avaiable for ADNI4 phase.",
+    TEXT = "Available for ADNI4 and TEAM-ADNI waves",
     SOURCE = "AMYREAD"
   ),
   AMYPET_TESTCD,
@@ -2145,9 +2172,11 @@ NV_TESTCD_LIST %>%
   select(
     SOURCE, NVTESTCD, NVTEST, NVCAT, NVSCAT,
     `TRACER TYPE` = TRACER,
-    `IMAGE RESOLUTION` = IMAGE_RESOLUTION, DESCRIPTION = TEXT,
+    `IMAGE RESOLUTION` = IMAGE_RESOLUTION,
+    `DESCRIPTION` = TEXT,
   ) %>%
-  datatable(paging = TRUE, filter = "top") %>%
+  concat_dataset_url(., "SOURCE") %>%
+  datatable(paging = TRUE, filter = "top", escape = FALSE) %>%
   formatStyle("DESCRIPTION", fontSize = "10px")
 ```
 
@@ -2178,14 +2207,15 @@ FDG_PET_DATA <- UCBERKELEYFDG_8mm %>%
   ) %>%
   generate_oak_id_vars_adni(raw_src = "UCBERKELEYFDG_8mm")
 
-# Mapping phase-specific visit code based opn registry
+# Mapping phase-specific visit code based on registry
 FDG_PET_DATA <- FDG_PET_DATA %>%
   # Trying to map visit code from registry
   use_dtplyr() %>%
   left_join(
     REGISTRY %>%
       mutate(EXAMDATE = as.character(EXAMDATE)) %>%
-      select(RID, ORIGPROT, COLPROT, VISCODE, VISCODE2,
+      select(
+        RID, ORIGPROT, COLPROT, VISCODE, VISCODE2,
         REGISTRY.EXAMDATE = EXAMDATE
       ) %>%
       filter(!is.na(REGISTRY.EXAMDATE)) %>%
@@ -2237,7 +2267,7 @@ PIB_PET_DATA <- PIBPETSUVR %>%
 amystatus_lvls <- c("Non Elevated", "Elevated")
 
 AMYREAD_DATA <- AMYREAD %>%
-  verify(all(COLPROT == adni_phase()[5])) %>%
+  verify(all(COLPROT %in% adni_phase()[5:6])) %>%
   # Based on clinicians' decision
   mutate(AMYSTAT = case_when(
     str_detect(CONSENS, "No, visual read and quantification") ~ as.character(CONGRU),
@@ -2450,6 +2480,10 @@ NV <- NV %>%
     tgt_var = "NVBLFL"
   ) %>%
   separate(NVTESTCD, into = nv_grp_cols, sep = "-/") %>%
+  mutate(across(all_of(nv_grp_cols), ~ case_when(
+    .x == "NA" ~ NA_character_,
+    TRUE ~ as.character(.x)
+  ))) %>%
   assert_non_missing(NVTESTCD)
 
 NV <- NV %>%
@@ -2504,14 +2538,14 @@ lb_data_dic <- bind_rows(
     FLDNAME = "LBTEST",
     LABEL = "Lab Test or Examination Name"
   ),
-  # c(
-  #   FLDNAME = "LBCAT",
-  #   LABEL = "Category for Lab Test"
-  # ),
-  # c(
-  #   FLDNAME = "LBSCAT",
-  #   LABEL = "Subcategory for Lab Test"
-  # ),
+  c(
+    FLDNAME = "LBCAT",
+    LABEL = "Category for Lab Test"
+  ),
+  c(
+    FLDNAME = "LBSCAT",
+    LABEL = "Subcategory for Lab Test"
+  ),
   c(
     FLDNAME = "LBORRES",
     LABEL = "Result or Finding in Original Units"
@@ -2632,15 +2666,24 @@ ADNI1GO2_CLINICAL_LABDATA <- LABDATA %>%
   select(-all_of(common_cols[!common_cols %in% lab_cols])) %>%
   filter(LBORRES != -1) %>%
   mutate(LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d")) %>%
-  adjust_lab_visitcode()
+  adjust_lab_visitcode() %>%
+  mutate(
+    LBCAT = "SAFETY LAB",
+    LBSCAT = "SAFETY LAB"
+  )
 ```
 
 ```{r lb-prepare-labdata-34, eval = TRUE, echo = FALSE, message = FALSE, results = 'hold'}
 # Lab data for ANDI3-4 phases
 ADNI34_CLINICAL_LABDATA <- URMC_LABDATA %>%
+  # Unique results
+  select(-any_of(c("KitID", "update_stamp"))) %>%
+  distinct() %>%
   generate_oak_id_vars_adni(raw_src = "URMC_LABDATA") %>%
   mutate(
     LBNAM = "URMC",
+    LBCAT = "SAFETY LAB",
+    LBSCAT = "SAFETY LAB",
     TestID = ifelse(TestName %in% "Sodium", "NA", TestID)
   ) %>%
   mutate(across(ends_with(c("Date", "Time")), as.character))
@@ -2702,9 +2745,9 @@ The [`LB`](../reference/LB.html) dataset contains the following blood plasma bio
 
 *NOTE: *
 
-* As a future work, to include the sample batch of `UPENNBIOMK_MASTER` and `UPENNBIOMK_ROCHE_ELECSYS`.
+* As this moment, `LBSCAT` field is used as to identify the sample batch in `UPENNBIOMK_MASTER` and `UPENNBIOMK_ROCHE_ELECSYS`  datasets.
 
-* Also to harmonized the safety laboratory data across different study phase.
+* As future work, to harmonize the safety laboratory data across different study phase.
 
 ```{r lb-testcd-list, eval = TRUE, echo = FALSE}
 LB_TESTCD_LIST <- bind_rows(
@@ -2721,7 +2764,8 @@ LB_TESTCD_LIST %>%
   filter(!is.na(LBNAM)) %>%
   arrange(SOURCE, LBNAM, LBMETHOD) %>%
   select(SOURCE, LBNAM, LBMETHOD, LBTESTCD, LBTEST, LBORRESU, LBSTRESU) %>%
-  datatable(paging = TRUE, filter = "top")
+  concat_dataset_url(., "SOURCE") %>%
+  datatable(paging = TRUE, filter = "top", escape = FALSE)
 ```
 
 ```{r lb-prepare-labdata-print, echo = TRUE, warning = FALSE, message = FALSE, results = 'asis', ref.label = c("lb-prepare-labdata-1go2", "lb-prepare-labdata-34", "lb-prepare-labdata-34-cont")}
@@ -2744,7 +2788,7 @@ UPENNBIOMK_ROCHE_DATA <- UPENNBIOMK_ROCHE_ELECSYS %>%
   left_fuzzy_join(
     data1 = .,
     data2 = BIOMARK %>%
-      select(ORIGPROT, COLPROT, RID, EXAMDATE, VISCODE) %>%
+      distinct(ORIGPROT, COLPROT, RID, EXAMDATE, VISCODE) %>%
       filter(!is.na(EXAMDATE)) %>%
       rename_with_list(., name_char = join_var_upenn, by_name = FALSE),
     join_by = join_var_upenn,
@@ -2781,7 +2825,11 @@ UPENNBIOMK_ROCHE_DATA <- UPENNBIOMK_ROCHE_DATA %>%
     get_biomarker_details(assay = "Roche"),
     by = c("BATCH", "LBTESTCD")
   ) %>%
-  assert_non_missing(LBTEST)
+  mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = BATCH
+  ) %>%
+  assert_non_missing(LBTEST, LBCAT, LBSCAT)
 ```
 
 ```{r lb-prepare-upennbiomk2, eval = TRUE, echo = FALSE}
@@ -2807,7 +2855,7 @@ UPENNBIOMK_ALZBIO3_DATA <- UPENNBIOMK_MASTER %>%
   left_fuzzy_join(
     data1 = .,
     data2 = BIOMARK %>%
-      select(ORIGPROT, RID, EXAMDATE, VISCODE, COLPROT) %>%
+      distinct(ORIGPROT, RID, EXAMDATE, VISCODE, COLPROT) %>%
       filter(!is.na(EXAMDATE)) %>%
       rename_with_list(., name_char = join_var_upenn[-2], by_name = FALSE),
     join_by = join_var_upenn[-2],
@@ -2831,7 +2879,11 @@ UPENNBIOMK_ALZBIO3_DATA <- UPENNBIOMK_ALZBIO3_DATA %>%
     get_biomarker_details(assay = "AlzBio3"),
     by = "LBTESTCD"
   ) %>%
-  assert_non_missing(LBTEST)
+  mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = BATCH
+  ) %>%
+  assert_non_missing(LBTEST, LBCAT, LBSCAT)
 ```
 
 ```{r lb-prepare-upennbiomk3, eval = TRUE, echo = FALSE}
@@ -2860,6 +2912,8 @@ UPENN_PLASMA_FQ_DATA <- UPENN_PLASMA_FUJIREBIO_QUANTERIX %>%
   ) %>%
   assert_non_missing(LBTEST) %>%
   mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = LBMETHOD,
     LBORRES = as.character(as.numeric(LBORRES)),
     LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d"),
     LBANTREG = Primary
@@ -2893,21 +2947,25 @@ C2N_PLASMA_DATA <- C2N_PRECIVITYAD2_PLASMA %>%
     names_to = "LBTESTCD",
     values_to = "LBORRES"
   ) %>%
-  mutate(
-    LBSPEC = "PLASMA",
-    LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d")
-  ) %>%
   left_join(
     get_biomarker_details(assay = "C2N"),
     by = "LBTESTCD"
+  ) %>%
+  mutate(
+    LBCAT = LBMETHOD,
+    LBSCAT = LBMETHOD,
+    LBSPEC = "PLASMA",
+    LBDTC = create_iso8601(as.character(EXAMDATE), .format = "y-m-d")
   ) %>%
   assert_non_missing(LBTEST)
 ```
 
 ```{r generate-lb}
 LB <- bind_rows(
-  C2N_PLASMA_DATA, ADNI1GO2_CLINICAL_LABDATA,
-  UPENNBIOMK_ROCHE_DATA, UPENNBIOMK_ALZBIO3_DATA,
+  C2N_PLASMA_DATA,
+  ADNI1GO2_CLINICAL_LABDATA,
+  UPENNBIOMK_ROCHE_DATA,
+  UPENNBIOMK_ALZBIO3_DATA,
   UPENN_PLASMA_FQ_DATA
 ) %>%
   mutate(
@@ -2926,12 +2984,47 @@ LB <- bind_rows(
   derive_usubjid() %>%
   assign_studyid_domain(domain = "LB") %>%
   assign_visit_attr(check_missing_visnum = FALSE) %>%
-  assign_epoch() %>%
+  assign_epoch()
+
+# Adjusting the baseline flag across LBTESTCD and LBMETHOD
+# Specially, to account for different assay source scale
+bld_plasma_source <- c(
+  "C2N_PRECIVITYAD2_PLASMA", "UPENNBIOMK_ROCHE_ELECSYS",
+  "UPENNBIOMK_MASTER", "UPENN_PLASMA_FUJIREBIO_QUANTERIX"
+)
+LB_BLDPLASMA_DATA_BLF <- LB %>%
+  filter(raw_source %in% bld_plasma_source) %>%
+  unite("LBTESTCD", all_of(c("LBTESTCD", "LBMETHOD")), sep = "-/") %>%
   derive_blfl_adni(
+    sdtm_in = .,
     dm_domain = DM,
-    tgt_var = "LBBLFL",
-    .strict = FALSE
+    tgt_var = "LBBLFL"
   ) %>%
+  separate(LBTESTCD, into = c("LBTESTCD", "LBMETHOD"), sep = "-/") %>%
+  mutate(across(
+    all_of(c("LBTESTCD", "LBMETHOD")),
+    ~ case_when(.x == "NA" ~ NA_character_, TRUE ~ as.character(.x))
+  ))
+
+LB_OTHER_DATA_BLF <- LB %>%
+  filter(!raw_source %in% bld_plasma_source) %>%
+  {
+    if (nrow(.) > 0) {
+      derive_blfl_adni(
+        sdtm_in = .,
+        dm_domain = DM,
+        tgt_var = "LBBLFL"
+      )
+    } else {
+      (.)
+    }
+  }
+
+LB <- bind_rows(
+  LB_BLDPLASMA_DATA_BLF,
+  LB_OTHER_DATA_BLF
+) %>%
+  assert_non_missing(LBTESTCD) %>%
   derive_study_day_adni(
     dm_domain = DM,
     domain = "LB"
@@ -3226,7 +3319,8 @@ VS_TESTCD_LIST <- bind_rows(
 VS_TESTCD_LIST %>%
   arrange(SOURCE, VSTESTCD) %>%
   select(SOURCE, VSTESTCD, VSTEST, VSORRESU, VSSTRESU) %>%
-  datatable()
+  concat_dataset_url(., "SOURCE") %>%
+  datatable(escape = FALSE)
 ```
 
 ```{r generate-vs0}
@@ -3282,13 +3376,23 @@ VS <- VS %>%
     merge_by = "VSTESTCD"
   ) %>%
   separate(VALUE, into = c("VSORRES", "VSORRESU", "VSLOC"), sep = "-") %>%
-  mutate(VSLOC = str_to_upper(VSLOC)) %>%
-  mutate(VSSTRESU = case_when(
-    VSORRESU %in% c("F", "C") ~ "C",
-    VSORRESU %in% c("cm", "inch") ~ "cm",
-    VSORRESU %in% c("kg", "LB") ~ "kg",
-    VSORRESU %in% c("mmHg", "beats/min", "breaths/min") ~ VSORRESU
+  mutate(across(
+    all_of(c("VSORRES", "VSORRESU", "VSLOC")),
+    ~ case_when(
+      .x == "NA" ~ NA_character_,
+      TRUE ~ as.character(.x)
+    )
   )) %>%
+  mutate(VSLOC = str_to_upper(VSLOC)) %>%
+  # Set standard unit of measurements
+  mutate(
+    VSSTRESU = case_when(
+      VSORRESU %in% c("F", "C") ~ "C",
+      VSORRESU %in% c("cm", "inch") ~ "cm",
+      VSORRESU %in% c("kg", "LB") ~ "kg",
+      VSORRESU %in% c("mmHg", "beats/min", "breaths/min") ~ VSORRESU
+    )
+  ) %>%
   # Unit conversion: conv_unit
   mutate(
     FROM_UNIT = case_when(

@@ -2,23 +2,27 @@
 #'
 #' @description
 #'  This function list datasets that are required and to be downloaded
-#'  from ADNI data-sharing platform in order to replicate 
+#'  from ADNI data-sharing platform in order to replicate
 #'  [ADNIMERGE2] R data package.
 #'
-#' @param use_type Usage of dataset either \code{article} or \code{prep_script}
-#'  \item \code{article} To list raw dataset names that are used in \code{ADNIMERGE2} vignettes
-#'  \item \code{prep_script} To list raw dataset names that are used during data preparation prior to the \code{ADNIMERGE2} R package build
+#' @param use_type Usage of dataset either `article` or `prep_script`
+#'
+#'  + **article**: To list raw data files that are used in [ADNIMERGE2] vignettes
+#'
+#'  + **prep_script**: To list raw data files that are used during data preparation stage prior to the [ADNIMERGE2] R package build
 #'
 #' @param add_url_link A Boolean value to add an URL link of corresponding source file
 #'
 #' @return A data.frame with the following columns:
-#'  \item \code{data_code} Dataset code
-#'  \item \code{label} Dataset label/description
-#'  \item \code{use_prep_script} Indicator if the raw dataset is used in the data-wrangling prior to the package build
-#'  \item \code{script_list} List of data wrangling script names
-#'  \item \code{use_article} Indicator if the raw dataset is used in article/vignette
-#'  \item \code{article_list} List of articles/vignettes
-#'  \item \code{source_derived_data} Derived dataset name
+#'  \itemize{
+#'   \item `data_code` Dataset code
+#'   \item `label` Dataset label/description
+#'   \item `use_prep_script` Indicator if the raw dataset is used in the data-wrangling stage prior to the actual package build
+#'   \item `script_list` List of data wrangling script names
+#'   \item `use_article` Indicator if the raw dataset is used in article/vignette
+#'   \item `article_list` List of articles/vignettes
+#'   \item `source_derived_data` Derived dataset name
+#'  }
 #'
 #' @examples
 #' \dontrun{
@@ -38,9 +42,8 @@
 #' }
 #'
 #' @rdname get_required_dataset_list
-#' @keywords adni_utils
+#' @keywords internal
 #' @family ADNIMERGE2 required datasets
-#' @export
 #' @importFrom rlang arg_match0
 #' @importFrom dplyr bind_rows select filter if_all all_of
 #' @importFrom tibble as_tibble
@@ -49,13 +52,15 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   rlang::arg_match0(arg = use_type, values = c("prep_script", "article"))
   check_object_type(add_url_link, "logical")
   pkg_url <- paste0("https://atri-biostats.github.io/ADNIMERGE2")
+  # Build scripts are only available in the GitHub repository
+  github_url <- paste0("https://github.com/atri-biostats/ADNIMERGE2")
 
   if (add_url_link) {
     derived_data_artc <- paste0("<a href='", paste0(pkg_url, "/articles/ADNIMERGE2-Derived-Data.html"), "' target='_blank'>ADNIMERGE2 Derived Data</a>")
-    prep_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep.R"), "' target='_blank'>data-prep.R</a>")
-    prep_recode_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/data-raw/data-prep-recode.R"), "' target='_blank'>data-prep-recode.R</a>")
-    document_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/document.R"), "' target='_blank'>document.R</a>")
-    pacc_input_url <- paste0("<a href='", paste0(pkg_url, "/tree/main/tools/generate-pacc-input-data.R"), "' target='_blank'>generate-pacc-input-data.R</a>")
+    prep_url <- paste0("<a href='", paste0(github_url, "/blob/main/data-raw/data-prep.R"), "' target='_blank'>data-prep.R</a>")
+    prep_recode_url <- paste0("<a href='", paste0(github_url, "/blob/main/data-raw/data-prep-recode.R"), "' target='_blank'>data-prep-recode.R</a>")
+    document_url <- paste0("<a href='", paste0(github_url, "/blob/main/tools/document.R"), "' target='_blank'>document.R</a>")
+    pacc_input_url <- paste0("<a href='", paste0(github_url, "/blob/main/tools/generate-pacc-input-data.R"), "' target='_blank'>generate-pacc-input-data.R</a>")
   } else {
     derived_data_artc <- "ADNIMERGE2-Derived-Data"
     prep_url <- "data-prep.R"
@@ -135,7 +140,7 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
     ),
     c(
       data_code = "RURALITY",
-      label = "Rurality – RUCA & RUCC",
+      label = "Rurality \u2013 RUCA & RUCC",
       article_list = derived_data_artc,
       source_derived_data = "SC",
       use_article = TRUE
@@ -315,15 +320,8 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
       use_article = TRUE
     ),
     c(
-      data_code = "UCBERKELEY_TAUPVC_6MM",
-      label = "UC Berkeley - Tau PET PVC 6mm Res analysis",
-      article_list = derived_data_artc,
-      source_derived_data = "NV",
-      use_article = TRUE
-    ),
-    c(
       data_code = "LABDATA",
-      label = "Laboratory Data for ADNI1, ADNI-G0, and ADNI2 Study Phases",
+      label = "Laboratory Data for ADNI1, ADNIGO, and ADNI2 Study Phases",
       article_list = derived_data_artc,
       source_derived_data = "LB",
       use_article = TRUE
@@ -404,10 +402,69 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
   return(pkg_data_list)
 }
 
+
+# List pacc datasets ----
+#' @title List required datasets to replicate [PACC] data
+#' @description
+#' Function to list all datasets that are required to generate/replicate [PACC] scores data
+#' @return A data.frame with three columns
+#' \itemize{
+#'  \item `TBLNAME` Dataset code
+#'  \item `CRFNAME` Dataset label
+#'  \item `TEXT` Description
+#'  }
+#' @examples
+#' \dontrun{
+#' list_pacc_dataset()
+#' }
+#' @rdname list_pacc_dataset
+#' @importFrom dplyr bind_rows
+#' @keywords internal
+list_pacc_dataset <- function() {
+  pacc_data_list <- dplyr::bind_rows(
+    c(
+      TBLNAME = "ADAS",
+      CRFNAME = "ADAS-Cognitive Behavior",
+      TEXT = "Includes the Delayed Recall (ADAS-Cog Q4) score"
+    ),
+    c(
+      TBLNAME = "MMSE",
+      CRFNAME = "Mini Mental State Exam",
+      TEXT = "Includes the total MMSE score"
+    ),
+    c(
+      TBLNAME = "NEUROBAT",
+      CRFNAME = "Neuropsychological Battery",
+      TEXT = paste0(
+        "Includes Digit Symbol Substitution Test score, ",
+        "Logical Memory IIa Delayed Recall score and ",
+        "Trails B score"
+      )
+    ),
+    c(
+      TBLNAME = "REGISTRY",
+      CRFNAME = "Registry",
+      TEXT = "Used as the main source to identify enrollment date"
+    ),
+    c(
+      TBLNAME = "DXSUM",
+      CRFNAME = "Diagnostic Summary",
+      TEXT = "Used to identify screen/baseline diagnostics status"
+    ),
+    c(
+      TBLNAME = "DATADIC",
+      CRFNAME = "Data dictionary",
+      TEXT = "Used to map coded variables during data preparation workflow"
+    )
+  )
+  return(pacc_data_list)
+}
+
+# Utils ----
 #' @title Concatenate Dataset URL Link
 #' @param .data A data.frame
-#' @param var_name Variable names, Default: 'data_code'
-#' @return A data.frame with appended URL link
+#' @param var_name Character vector of variable name
+#' @return A data.frame with appended URL link to the dataset reference page of `ADNIMERGE2` website in html format.
 #' @examples
 #' \dontrun{
 #' library(dplyr)
@@ -421,14 +478,13 @@ get_required_dataset_list <- function(use_type, add_url_link = FALSE) {
 #' )
 #' }
 #' @rdname concat_dataset_url
-#' @keywords adni_utils
+#' @keywords internal
 #' @family ADNIMERGE2 required datasets
 #' @importFrom dplyr mutate across all_of
-#' @export
 
-concat_dataset_url <- function(.data, var_name = "data_code") {
+concat_dataset_url <- function(.data, var_name) {
   pkg_ref_url <- "https://atri-biostats.github.io/ADNIMERGE2/reference/"
   .data <- .data %>%
-    mutate(across(all_of(var_name), ~ paste0("<a href='", pkg_ref_url, "' target='_blank'>", .x, "</a>")))
+    mutate(across(all_of(var_name), ~ paste0("<a href='", pkg_ref_url, .x, ".html' target='_blank'>", .x, "</a>")))
   return(.data)
 }

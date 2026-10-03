@@ -7,7 +7,7 @@
 #' @return A data frame the same as \code{.neurobat} with the following appended columns
 #'   \item{LIMMTOTL }{Logical Memory - Immediate Recall Score: Between 0 and 25}
 #'   \item{LDELTOTL }{Logical Memory - Delayed Recall Score: Between 0 and 25}
-#'   \item{DIGITSCR }{?? Digit Symbol Substitution}
+#'   \item{DIGITSCR }{Digit Symbol Substitution Test Score}
 #'   \item{TRABSCOR }{Time to Complete Trail B Making Test Score}
 #'   \item{RAVLTIMM }{Rey Auditory Verbal Learning Test - Immediate Score: Sum of all five trials result}
 #'   \item{RAVLTLRN }{Rey Auditory Verbal Learning Test - Learning Score: Difference between the fifth and the first trial result}
