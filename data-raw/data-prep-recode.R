@@ -220,10 +220,9 @@ if (DECODE_VALUE) {
         filter(!TBLNAME %in% cur_tblname) %>%
         bind_rows(convert_codelist)
 
-      pre_phase_vars <- c("COLPROT", "PHASE", "Phase", "ProtocolID")
       phaseVar <- get_cols_name(
         .data = dd,
-        col_name = pre_phase_vars
+        col_name = list_phase_cols(include_colprot = TRUE)
       )
 
       if (!is.na(phaseVar)) {

@@ -277,7 +277,7 @@ if (UPDATE_MISSING_VALUE) {
       dd <- dd %>%
         create_col_protocol(
           .data = .,
-          phaseVar = c("Phase", "PHASE", "ProtocolID"),
+          phaseVar = list_phase_cols(include_colprot = FALSE),
           .strict_check = FALSE
         ) %>%
         {

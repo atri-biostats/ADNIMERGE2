@@ -249,7 +249,7 @@ create_orig_protocol <- function(.data) {
 create_col_protocol <- function(.data, phaseVar = NULL, .strict_check = TRUE) {
   COLPROT <- NULL
   check_object_type(.strict_check, "logical")
-  if (is.null(phaseVar)) phaseVar <- c("Phase", "PHASE", "ProtocolID", "COLPROT")
+  if (is.null(phaseVar)) phaseVar <- list_phase_cols(include_colprot = TRUE)
   exst_cols <- get_cols_name(.data = .data, col_name = phaseVar)
   if (length(exst_cols) > 1) {
     cli_abort(
@@ -279,6 +279,28 @@ create_col_protocol <- function(.data, phaseVar = NULL, .strict_check = TRUE) {
       }
     }
   return(.data)
+}
+
+## List phase columns ----
+#' @title List phase columns
+#' @param include_colprot A Boolean value whether to include \code{COLPROT} in
+#'        the list or not. If \code{include_colprot = FALSE} (default),
+#'        \code{COLPROT} column name will be excluded from the result.
+#' @return A character object
+#' @examples
+#' \dontrun{
+#' list_phase_cols()
+#' list_phase_cols(include_colprot = TRUE)
+#' }
+#' @rdname list_phase_cols
+#' @keywords internal
+list_phase_cols <- function(include_colprot = FALSE) {
+  check_object_type(include_colprot, "logical")
+  phase_cols <- c("Phase", "PHASE", "ProtocolID", "RMT_Phase", "RMT_PHASE")
+  if (include_colprot) {
+    phase_cols <- c(phase_cols, "COLPROT")
+  }
+  return(phase_cols)
 }
 
 # Get Coded Values from DATADIC dataset ----
@@ -1295,7 +1317,10 @@ convert_to_missing_value <- function(.data, col_name = NULL, value = "-4",
     overall_replacement <- FALSE
   }
   rlang::arg_match(arg = phase, values = adni_phase(), multiple = TRUE)
-  phase_var <- get_cols_name(.data = .data, col_name = c("COLPROT", "PHASE", "Phase", "ProtocolID"))
+  phase_var <- get_cols_name(
+    .data = .data,
+    col_name = list_phase_cols(include_colprot = TRUE)
+  )
   if (length(phase_var) > 1) {
     cli_abort(
       message = c(
