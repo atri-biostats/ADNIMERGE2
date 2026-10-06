@@ -6,17 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ADNI-Longitudinal • ADNIMERGE2</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ADNI-Longitudinal">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../extra.js"></script><meta property="og:title" content="ADNI-Longitudinal">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ADNIMERGE2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,14 +77,12 @@
 </nav><div class="container template-article">
 
 
-
-
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNI-Longitudinal</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: November 12,
-2025</h4>
+            <h4 data-toc-skip class="date">Last Updated: October 06,
+2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNI-Longitudinal.Rmd" class="external-link"><code>vignettes/ADNI-Longitudinal.Rmd</code></a></small>
       <div class="d-none name"><code>ADNI-Longitudinal.Rmd</code></div>
@@ -103,7 +101,7 @@ merely for illustration purpose.</p>
 <div class="section level2">
 <h2 id="load-required-r-packages">Load Required R Packages<a class="anchor" aria-label="anchor" href="#load-required-r-packages"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larmarange.github.io/labelled/" class="external-link">labelled</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -111,13 +109,11 @@ merely for illustration purpose.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lme4/lme4/" class="external-link">lme4</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/" class="external-link">marginaleffects</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://atri-biostats.github.io/ADNIMERGE2">ADNIMERGE2</a></span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Color for DX group</span></span>
-<span><span class="va">dx_color_pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#73C186"</span>, <span class="st">"#F2B974"</span>, <span class="st">"#DF957C"</span>, <span class="st">"#999999"</span><span class="op">)</span></span>
-<span><span class="va">month_bin</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="co"># Anticipated ADAS-cog assessment collection timeline for DEM - 2 years</span></span>
-<span><span class="va">year2</span> <span class="op">&lt;-</span> <span class="fl">12</span> <span class="op">*</span> <span class="fl">2</span> <span class="op">/</span> <span class="va">month_bin</span></span></code></pre></div>
+<span><span class="va">dx_color_pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#73C186"</span>, <span class="st">"#F2B974"</span>, <span class="st">"#DF957C"</span>, <span class="st">"#999999"</span><span class="op">)</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level2">
 <h2 id="adni-longitudinal-summaries---clinical-cognitive-outcomes">ADNI Longitudinal Summaries - Clinical Cognitive Outcomes<a class="anchor" aria-label="anchor" href="#adni-longitudinal-summaries---clinical-cognitive-outcomes"></a>
@@ -137,40 +133,41 @@ diagnosis status are presented in this section.</p>
 known baseline diagnostics summary and that have at least one assessment
 score. The analysis population is summarized in the following
 diagram.</p>
-<p><img src="ADNI-Longitudinal_files/figure-html/consort-diagram-1.png" alt="Analysis Population Diagram" width="850"></p>
+<p><img src="ADNI-Longitudinal_files/figure-html/consort-diagram-1.png" alt="Analysis Population Diagram"></p>
 <p><em>NOTE: </em> Records with missing time variable
 (<code>TIME</code>) are also excluded from the analysis population as
 shown in the following r chunk.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Prepare analysis dataset of ADAS-cog item-13 score</span></span>
 <span><span class="va">ADADAS</span> <span class="op">&lt;-</span> <span class="va">ADQS</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Enrolled participant</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFL</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Y"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># ADAS-cog item-13 total score</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">PARAMCD</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"ADASTT13"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="co"># Compute time variable in month</span></span>
+<span>  <span class="co"># Compute time variable in years</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    TIME <span class="op">=</span> <span class="fu"><a href="../reference/convert_number_days.html">convert_number_days</a></span><span class="op">(</span><span class="va">AVISITN</span>, bin <span class="op">=</span> <span class="va">month_bin</span><span class="op">)</span>,</span>
+<span>    TIME <span class="op">=</span> <span class="fu"><a href="../reference/convert_number_days.html">convert_number_days</a></span><span class="op">(</span><span class="va">AVISITN</span>, unit <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span>,</span>
 <span>    DX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">DX</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">DX</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># For spline term in the model</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">if_any</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TIME"</span>, <span class="st">"DX"</span>, <span class="st">"AVAL"</span><span class="op">)</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level4">
 <h4 id="individual-profile-plot">Individual Profile Plot<a class="anchor" aria-label="anchor" href="#individual-profile-plot"></a>
 </h4>
 <p>The individual profile of ADAS-Cog item-13 total score over time by
 baseline diagnostics group is presented below.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Individual profile (spaghetti) plot</span></span>
 <span><span class="va">individual_profile_plot</span> <span class="op">&lt;-</span> <span class="va">ADADAS</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">TIME</span>, y <span class="op">=</span> <span class="va">AVAL</span>, group <span class="op">=</span> <span class="va">USUBJID</span>, color <span class="op">=</span> <span class="va">DX</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">ADADAS</span><span class="op">$</span><span class="va">TIME</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">year2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">ADADAS</span><span class="op">$</span><span class="va">TIME</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">dx_color_pal</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
 <span>    y <span class="op">=</span> <span class="st">"ADAS-cog Item-13 Total Score"</span>,</span>
-<span>    x <span class="op">=</span> <span class="st">"Months since baseline visit"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Timeline since baseline visit (in years)"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Baseline Diagnostics Status"</span>,</span>
 <span>    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>      <span class="st">"Based on known baseline diagnostics status "</span>,</span>
@@ -179,8 +176,10 @@ baseline diagnostics group is presented below.</p>
 <span>    plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span>
-<span><span class="va">individual_profile_plot</span></span></code></pre></div>
-<p><img src="ADNI-Longitudinal_files/figure-html/indiv-profile-plot-1.png" alt="Individual profile plot" width="700"></p>
+<span><span class="va">individual_profile_plot</span></span>
+<span><span class="co">#&gt; Ignoring unknown labels:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">plot.caption</span> : &lt;object&gt;</span></span></code></pre></div>
+</details><p><img src="ADNI-Longitudinal_files/figure-html/indiv-profile-plot-1.png" alt="Individual profile plot"></p>
 </div>
 <div class="section level4">
 <h4 id="model-fit">Model Fit<a class="anchor" aria-label="anchor" href="#model-fit"></a>
@@ -212,7 +211,7 @@ trajectory overtime (<code>TIME|</code>).</p></li>
 progression trajectory in the model (i.e., non-linear effect of time in
 the model).</p></li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Spline term defined in the global environment</span></span>
 <span><span class="va">ns21</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="fu">splines</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/splines/ns.html" class="external-link">ns</a></span><span class="op">(</span><span class="va">ADADAS</span><span class="op">$</span><span class="va">TIME</span>,</span>
@@ -228,47 +227,42 @@ the model).</p></li>
 <span><span class="op">}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"ns21"</span>, <span class="va">ns21</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"ns22"</span>, <span class="va">ns22</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Fit linear mixed effect model using spline terms to account</span></span>
 <span><span class="co">#  non-linear trend of time effect</span></span>
 <span></span>
 <span><span class="co"># With a random slope term ----</span></span>
 <span><span class="va">lmer_mod_fit</span> <span class="op">&lt;-</span> <span class="fu">lme4</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmer.html" class="external-link">lmer</a></span><span class="op">(</span></span>
-<span>  formula <span class="op">=</span> <span class="va">AVAL</span> <span class="op">~</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns21</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns22</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="va">DX</span> <span class="op">+</span> <span class="op">(</span><span class="va">TIME</span> <span class="op">|</span> <span class="va">USUBJID</span><span class="op">)</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">AVAL</span> <span class="op">~</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns21</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="fu">ns22</span><span class="op">(</span><span class="va">TIME</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">DX</span> <span class="op">+</span> <span class="op">(</span><span class="va">TIME</span> <span class="op">|</span> <span class="va">USUBJID</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">ADADAS</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lme4/man/lmerControl.html" class="external-link">lmerControl</a></span><span class="op">(</span>optimizer <span class="op">=</span> <span class="st">"Nelder_Mead"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, :</span></span>
-<span><span class="co">#&gt; Model failed to converge with max|grad| = 0.00301848 (tol = 0.002, component 1)</span></span>
-<span><span class="co">#&gt; Warning in checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: very large eigenvalue</span></span>
-<span><span class="co">#&gt;  - Rescale variables?</span></span>
 <span></span>
 <span><span class="va">lmer_mod_fit</span></span>
 <span><span class="co">#&gt; Linear mixed model fit by REML ['lmerMod']</span></span>
 <span><span class="co">#&gt; Formula: AVAL ~ (I(ns21(TIME)) + I(ns22(TIME))) * DX + (TIME | USUBJID)</span></span>
 <span><span class="co">#&gt;    Data: ADADAS</span></span>
-<span><span class="co">#&gt; REML criterion at convergence: 76867.12</span></span>
+<span><span class="co">#&gt; REML criterion at convergence: 79049.76</span></span>
 <span><span class="co">#&gt; Random effects:</span></span>
-<span><span class="co">#&gt;  Groups   Name        Std.Dev. Corr</span></span>
-<span><span class="co">#&gt;  USUBJID  (Intercept) 5.5981       </span></span>
-<span><span class="co">#&gt;           TIME        0.1776   0.53</span></span>
-<span><span class="co">#&gt;  Residual             3.3729       </span></span>
-<span><span class="co">#&gt; Number of obs: 12561, groups:  USUBJID, 3009</span></span>
+<span><span class="co">#&gt;  Groups   Name        Std.Dev. Corr </span></span>
+<span><span class="co">#&gt;  USUBJID  (Intercept) 5.643         </span></span>
+<span><span class="co">#&gt;           TIME        2.126    0.53 </span></span>
+<span><span class="co">#&gt;  Residual             3.370         </span></span>
+<span><span class="co">#&gt; Number of obs: 12927, groups:  USUBJID, 2958</span></span>
 <span><span class="co">#&gt; Fixed Effects:</span></span>
 <span><span class="co">#&gt;         (Intercept)        I(ns21(TIME))        I(ns22(TIME))  </span></span>
-<span><span class="co">#&gt;               8.802               12.095               22.805  </span></span>
+<span><span class="co">#&gt;                8.78                12.99                24.27  </span></span>
 <span><span class="co">#&gt;               DXMCI                DXDEM  I(ns21(TIME)):DXMCI  </span></span>
-<span><span class="co">#&gt;               7.315               20.881               28.333  </span></span>
+<span><span class="co">#&gt;                7.20                21.00                29.33  </span></span>
 <span><span class="co">#&gt; I(ns21(TIME)):DXDEM  I(ns22(TIME)):DXMCI  I(ns22(TIME)):DXDEM  </span></span>
-<span><span class="co">#&gt;              63.424               31.545               35.985  </span></span>
-<span><span class="co">#&gt; optimizer (Nelder_Mead) convergence code: 0 (OK) ; 0 optimizer warnings; 2 lme4 warnings</span></span></code></pre></div>
-<ul>
+<span><span class="co">#&gt;               58.26                31.36                21.04</span></span></code></pre></div>
+</details><ul>
 <li>
 <strong>Model Assumption Check: </strong> <a href="https://easystats.github.io/performance/reference/check_model.html" class="external-link"><code>performance::check_model</code></a>
 function could be used to generate model assumption check (i.e., model
 diagnostic) plots.</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://easystats.github.io/performance/" class="external-link">performance</a></span><span class="op">)</span></span>
 <span><span class="co"># To relabel x-axis and getting ggplot2 object, set panel = FALSE</span></span>
 <span><span class="va">model_check</span> <span class="op">&lt;-</span> <span class="fu">performance</span><span class="fu">::</span><span class="fu"><a href="https://easystats.github.io/performance/reference/check_model.html" class="external-link">check_model</a></span><span class="op">(</span></span>
@@ -276,10 +270,13 @@ diagnostic) plots.</li>
 <span>  check <span class="op">=</span> <span class="st">"pp_check"</span>,</span>
 <span>  panel <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Argument `x` is deprecated; please use `model` instead.</span></span>
 <span><span class="va">model_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">model_check</span><span class="op">)</span></span>
 <span><span class="va">model_check</span><span class="op">$</span><span class="va">PP_CHECK</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"ADAS-cog Item-13 Total Score"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ADNI-Longitudinal_files/figure-html/model-check-1.png" alt="Posterior predictive plot - model assumptions check" width="700"></p>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"ADAS-cog Item-13 Total Score"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ignoring unknown labels:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">•</span> <span style="color: #00BB00;">size</span> : <span style="color: #0000BB;">""</span></span></span></code></pre></div>
+</details><p><img src="ADNI-Longitudinal_files/figure-html/model-check-1.png" alt="Posterior predictive plot - model assumptions check"></p>
 </div>
 <div class="section level4">
 <h4 id="population-level-model-prediction">Population-Level Model Prediction<a class="anchor" aria-label="anchor" href="#population-level-model-prediction"></a>
@@ -287,15 +284,15 @@ diagnostic) plots.</li>
 <p><em>NOTE: </em></p>
 <ul>
 <li>The prediction timeline for Dementia (DEM) diagnostics status was
-limited to 24 monthsdue to the anticipated follow-up collection of ADAS
-cognitive behavior assessmentwhich is up-to 2 years due to the study
-design. However, ADAS-cog assessment might have been collected for
-rollover subjects with DEM baseline diagnostics status during their
-initial visit.</li>
+limited to two years due to the anticipated follow-up collection of ADAS
+cognitive behavior assessment which is up-to 2 years in the study.
+However, ADAS-cog assessment might have been collected for rollover
+subjects with DEM baseline diagnostics status during their initial visit
+in the next study phase.</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Population level prediction</span></span>
-<span><span class="va">pred_value</span> <span class="op">&lt;-</span> <span class="fu">marginaleffects</span><span class="fu">::</span><span class="fu"><a href="https://marginaleffects.com/man/r/predictions.html" class="external-link">predictions</a></span><span class="op">(</span></span>
+<span><span class="va">pred_value</span> <span class="op">&lt;-</span> <span class="fu">marginaleffects</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html" class="external-link">predictions</a></span><span class="op">(</span></span>
 <span>  model <span class="op">=</span> <span class="va">lmer_mod_fit</span>,</span>
 <span>  conf_level <span class="op">=</span> <span class="fl">0.95</span>,</span>
 <span>  re.form <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -304,7 +301,7 @@ initial visit.</li>
 <span>    DX <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">ADSL</span><span class="op">$</span><span class="va">DX</span><span class="op">)</span>,</span>
 <span>    USUBJID <span class="op">=</span> <span class="cn">NA</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">DX</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"DEM"</span> <span class="op">&amp;</span> <span class="va">TIME</span> <span class="op">&gt;</span> <span class="va">year2</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">DX</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"DEM"</span> <span class="op">&amp;</span> <span class="va">TIME</span> <span class="op">&gt;</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">predicted_plot</span> <span class="op">&lt;-</span> <span class="va">pred_value</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -314,17 +311,17 @@ initial visit.</li>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">conf.low</span>, ymax <span class="op">=</span> <span class="va">conf.high</span>, fill <span class="op">=</span> <span class="va">DX</span><span class="op">)</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="fl">0.15</span>, linetype <span class="op">=</span> <span class="fl">0</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pred_value</span><span class="op">$</span><span class="va">TIME</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">year2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">pred_value</span><span class="op">$</span><span class="va">TIME</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">dx_color_pal</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">dx_color_pal</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Months since baseline visit"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Timeline since baseline visit (in years)"</span>,</span>
 <span>    y <span class="op">=</span> <span class="st">"Predicted ADAS-cog Item-13 \n Total Score with 95% CI"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Baseline Diagnostics Status"</span>,</span>
 <span>    fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>      <span class="st">"The prediction timeline for Dementia (DEM) diagnostics status was limited"</span>,</span>
-<span>      <span class="st">" to 24 months due to the\n anticipated follow-up assessment collection "</span>,</span>
+<span>      <span class="st">" to 2 years due to the\n anticipated follow-up assessment collection "</span>,</span>
 <span>      <span class="st">"in the study."</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
@@ -333,7 +330,7 @@ initial visit.</li>
 <span>    plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="va">predicted_plot</span></span></code></pre></div>
-<p><img src="ADNI-Longitudinal_files/figure-html/model-predict-1.png" alt="Predicted score by baseline diagnostics status" width="700"></p>
+</details><p><img src="ADNI-Longitudinal_files/figure-html/model-predict-1.png" alt="Predicted score by baseline diagnostics status"></p>
 </div>
 </div>
 </div>
@@ -348,7 +345,7 @@ initial visit.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

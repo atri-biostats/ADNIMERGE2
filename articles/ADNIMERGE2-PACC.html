@@ -6,17 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ADNIMERGE2-PACC-SCORE • ADNIMERGE2</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ADNIMERGE2-PACC-SCORE">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../extra.js"></script><meta property="og:title" content="ADNIMERGE2-PACC-SCORE">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ADNIMERGE2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
 
 
 
-<link href="ADNIMERGE2-PACC_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<link href="ADNIMERGE2-PACC_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
 <script src="ADNIMERGE2-PACC_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="ADNIMERGE2-PACC_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
 <script src="ADNIMERGE2-PACC_files/datatables-binding-0.34.0/datatables.js"></script><link href="ADNIMERGE2-PACC_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="ADNIMERGE2-PACC_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
@@ -87,8 +87,8 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNIMERGE2-PACC-SCORE</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: November 12,
-2025</h4>
+            <h4 data-toc-skip class="date">Last Updated: October 06,
+2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNIMERGE2-PACC.Rmd" class="external-link"><code>vignettes/ADNIMERGE2-PACC.Rmd</code></a></small>
       <div class="d-none name"><code>ADNIMERGE2-PACC.Rmd</code></div>
@@ -101,8 +101,11 @@
 </h2>
 <p>This article describes the procedure to calculate a modified version
 of the Preclinical Alzheimer Cognitive Composite <a href="https://doi.org/10.1001/jamaneurol.2014.803" class="external-link">PACC</a> score in
-ADNI study based on <span class="citation">Donohue et al. (<a href="#ref-donohue2014preclinical">2014</a>)</span> approach.</p>
-<p>According to <span class="citation">Donohue et al. (<a href="#ref-donohue2014preclinical">2014</a>)</span>, the
+ADNI study based on <span class="citation"><span class="nocase">Donohue
+et al.</span> (<a href="#ref-donohue2014preclinical">2014</a>)</span>
+approach.</p>
+<p>According to <span class="citation"><span class="nocase">Donohue et
+al.</span> (<a href="#ref-donohue2014preclinical">2014</a>)</span>, the
 <code>PACC</code> score is a baseline standardize composite of:</p>
 <ul>
 <li><p>Free and Cued Selective Reminding Test (FCSRT) score</p></li>
@@ -110,9 +113,11 @@ ADNI study based on <span class="citation">Donohue et al. (<a href="#ref-donohue
 <li><p>Digit Symbol Substitution Test (DSST) score, and</p></li>
 <li><p>Mini-Mental State Examination (MMSE) total score</p></li>
 </ul>
-<p>Each of component score is required to be standardized by a
-corresponding baseline score prior to computing the composite score.
-Higher values of the composite score indicate better performance.</p>
+<p>Each of component scores are required to be standardized by a
+corresponding baseline score before computing the composite score. Also,
+it is required to reorient the directional effect of each component
+scores in order to indicate that higher values of the composite score
+align with better performance in cognition.</p>
 <p>In ADNI study, some of these components are either collected
 partially during certain study phase or not available at all. Since
 FSCRT is not available at all, the Delayed Recall portion of the
@@ -121,15 +126,15 @@ Alzheimer’s Disease Assessment Scale (ADAS), which is called
 score ranges from <code>0 to 10</code> points where higher value
 indicates worse condition. Similarly, a logarithm scale of
 <code>Trails B</code> score will be used as a proxy for DSST. Therefore,
-there will have two modified version of <code>PACC</code> composite
-score:</p>
+the following two modified version of <code>PACC</code> composite scores
+are calculated:</p>
 <ol style="list-style-type: lower-alpha">
-<li><p><strong>mPACCdigit: </strong> It will only be computed in
-<code>ADNI1</code> study phase since DSST was collected in the early
-phase of ADNI study.</p></li>
-<li><p><strong>mPACCtrailsB: </strong> It will be computed across all
-ADNI study phases using <code>Trails B</code> score as a proxy for
-DSST.</p></li>
+<li><p><strong>mPACCdigit:</strong> Using the actual DSST score and only
+calculated for the early phase of ADNI study since DSST was collected in
+<code>ADNI1</code> phase.</p></li>
+<li><p><strong>mPACCtrailsB:</strong> Using a logarithm scale of
+<code>Trails B</code> score as a proxy for DSST, and the score may
+available across all ADNI study phases.</p></li>
 </ol>
 </div>
 <div class="section level2">
@@ -148,47 +153,56 @@ DSST.</p></li>
 <h2 id="compute-pacc-composite-score">Compute PACC Composite Score<a class="anchor" aria-label="anchor" href="#compute-pacc-composite-score"></a>
 </h2>
 <div class="section level3">
-<h3 id="import-raw-datasets">Import Raw Datasets<a class="anchor" aria-label="anchor" href="#import-raw-datasets"></a>
+<h3 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h3>
-<p>First, we import pre-processed raw datasets that contain PACC
-component from the <code>ADNIMERGE2</code> package. These raw datasets
-were stored in <code>csv</code> format as external data in the package.
-The main rational of sourcing those as external data is 1) not all PACC
-component score are yet available at the data-sharing platform,
-particularly the ADAS-Cog Q4 score, and 2) to reduce any potential
-additional package dependency during the <code>ADNIMERGE2</code> package
-building.</p>
-<p>In the next r chunk, all raw datasets will be loaded to the current
-working environment using <code><a href="../reference/load_csv_files.html">load_csv_files()</a></code> function.</p>
+<p>All raw PACC component data files are now available at the
+data-sharing platform. Those data files were downloaded from the
+data-sharing platform on the same date. Please click below to see the
+list of all required data files for generating PACC scores in ADNI
+study.</p>
+<details><summary>
+Show all required raw data files for [<code>PACC</code>] score
+</summary><div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"caption":"<caption>List of all required raw data files for PACC scores data<\/caption>","data":[["1","2","3","4","5","6"],["<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ADAS.html' target='_blank'>ADAS<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/MMSE.html' target='_blank'>MMSE<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/NEUROBAT.html' target='_blank'>NEUROBAT<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/REGISTRY.html' target='_blank'>REGISTRY<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/DXSUM.html' target='_blank'>DXSUM<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/DATADIC.html' target='_blank'>DATADIC<\/a>"],["ADAS-Cognitive Behavior","Mini Mental State Exam","Neuropsychological Battery","Registry","Diagnostic Summary","Data dictionary"],["Includes the Delayed Recall (ADAS-Cog Q4) score","Includes the total MMSE score","Includes Digit Symbol Substitution Test score, Logical Memory IIa Delayed Recall score and Trails B score","Used as the main source to identify enrollment date","Used to identify screen/baseline diagnostics status","Used to map coded variables during data preparation workflow"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Dataset Code<\/th>\n      <th>Dataset Name<\/th>\n      <th>Description<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searching":false,"bInfo":false,"caption":"List of all required raw data files for PACC scores data","escape":false,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Dataset Code","targets":1},{"name":"Dataset Name","targets":2},{"name":"Description","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script></details><p>The following r chunks illustrate the data preparation steps before
+computing the final PACC score.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Import PACC input raw datasets</span></span>
-<span><span class="va">pacc_raw_data_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>  <span class="st">"extradata/pacc-raw-input"</span>,</span>
-<span>  package <span class="op">=</span> <span class="st">"ADNIMERGE2"</span>,</span>
-<span>  mustWork <span class="op">=</span> <span class="cn">TRUE</span></span>
+<code class="sourceCode R"><span><span class="fu">ADNIMERGE2</span><span class="fu">:::</span><span class="fu"><a href="../reference/check_pacc_data_source.html">check_pacc_data_source</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">DATA_SOURCE</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">DATA_SOURCE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"EXTERNAL"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">data_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ADAS"</span>, <span class="st">"MMSE"</span>, <span class="st">"NEUROBAT"</span>, <span class="st">"REGISTRY"</span>, <span class="st">"DXSUM"</span><span class="op">)</span></span>
+<span>  <span class="fu">ADNIMERGE2</span><span class="fu">:::</span><span class="fu"><a href="../reference/check_list_names.html">check_list_names</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">DATA_LIST</span>, list_names <span class="op">=</span> <span class="va">data_names</span><span class="op">)</span></span>
+<span>  <span class="va">data_status</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">data_names</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/check_object_type.html">check_object_type</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">DATA_LIST</span><span class="op">[[</span><span class="va">x</span><span class="op">]</span><span class="op">]</span>, <span class="st">"data.frame"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span>  <span class="va">DATA_LIST</span> <span class="op">&lt;-</span> <span class="va">params</span><span class="op">$</span><span class="va">DATA_LIST</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ADAS"</span>, <span class="st">"MMSE"</span>, <span class="st">"NEUROBAT"</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="va">REGISTRY</span> <span class="op">&lt;-</span> <span class="va">params</span><span class="op">$</span><span class="va">DATA_LIST</span><span class="op">$</span><span class="va">REGISTRY</span></span>
+<span>  <span class="va">DXSUM</span> <span class="op">&lt;-</span> <span class="va">params</span><span class="op">$</span><span class="va">DATA_LIST</span><span class="op">$</span><span class="va">DXSUM</span></span>
+<span><span class="op">}</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">DATA_SOURCE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"ADNIMERGE2"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">DATA_LIST</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">REGISTRY</span> <span class="op">&lt;-</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/REGISTRY.html">REGISTRY</a></span></span>
+<span>  <span class="va">DXSUM</span> <span class="op">&lt;-</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DXSUM.html">DXSUM</a></span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">PACC_RAW_DATA_LIST</span> <span class="op">&lt;-</span> <span class="fu">ADNIMERGE2</span><span class="fu">:::</span><span class="fu"><a href="../reference/prepare_pacc_input_data.html">prepare_pacc_input_data</a></span><span class="op">(</span></span>
+<span>  data_source <span class="op">=</span> <span class="va">params</span><span class="op">$</span><span class="va">DATA_SOURCE</span>,</span>
+<span>  external_data_list <span class="op">=</span> <span class="va">DATA_LIST</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/load_csv_files.html">load_csv_files</a></span><span class="op">(</span>input_dir <span class="op">=</span> <span class="va">pacc_raw_data_dir</span><span class="op">)</span></span></code></pre></div>
-<p>These raw datasets are in a long format and presented as follow:</p>
+<span><span class="co"># names(PACC_RAW_DATA_LIST)</span></span>
+<span><span class="va">pacc_adas_q4score_long</span> <span class="op">&lt;-</span> <span class="va">PACC_RAW_DATA_LIST</span><span class="op">$</span><span class="va">PACC_ADAS_LONG</span></span>
+<span><span class="va">pacc_mmse_long</span> <span class="op">&lt;-</span> <span class="va">PACC_RAW_DATA_LIST</span><span class="op">$</span><span class="va">PACC_MMSE_LONG</span></span>
+<span><span class="va">pacc_neurobat_long</span> <span class="op">&lt;-</span> <span class="va">PACC_RAW_DATA_LIST</span><span class="op">$</span><span class="va">PACC_NEUROBAT_LONG</span></span></code></pre></div>
+<p>The main raw datasets are converted in a long format and presented as
+follow:</p>
 <ul>
+<li><p><code>pacc_adas_q4score_long</code>: A dataset contains the raw
+<code>ADAS-Cog Q4</code> score.</p></li>
 <li><p><code>pacc_mmse_long</code>: A dataset contains the
-<code>MMSE</code> score downloaded from the data-sharing
-platform.</p></li>
-<li><p><code>pacc_neurobat</code>: A dataset contains Logical Memory -
-Delayed Recall (<code>LDELTOTL</code>), Digit Symbol Substitution
-(<code>DIGITSCR</code>), and Trials B (<code>TRABSCOR</code>) raw scores
-from Neuropsychological Battery (<code>NEUROBAT</code>) data. The
-<code><a href="../reference/NEUROBAT.html">NEUROBAT()</a></code> data is also downloaded from the data-sharing
-platform.</p></li>
-<li>
-<p><code>pacc_adas_q4score_long</code>: A dataset contains the raw
-<code>ADAS-Cog Q4</code> score that obtained from two sources:</p>
-<ul>
-<li><p>Current study phase EDC portal</p></li>
-<li><p>Old version of ADNI study R data package <code>ADNIMERGE</code>
-from the data-sharing platform that contain records from ADNI1 to ADNI3
-study phases.</p></li>
-</ul>
-</li>
+<code>MMSE</code> score from <code>MMSE</code> table.</p></li>
+<li><p><code>pacc_neurobat_long</code>: A dataset contains Logical
+Memory - Delayed Recall (<code>LDELTOTL</code>), Digit Symbol
+Substitution (<code>DIGITSCR</code>), and Trails B
+(<code>TRABSCOR</code>) raw scores from Neuropsychological Battery
+(<code>NEUROBAT</code>) table.</p></li>
 </ul>
 </div>
 <div class="section level3">
@@ -198,35 +212,37 @@ study phases.</p></li>
 <li><p>During the raw dataset preparation, the screening fail visit code
 in <code>ADNI1</code> study phase was mapped to the actual screening
 visit code.</p></li>
-<li><p>Since some of the PACC component assessments were either not
-collected at baseline visit during the whole study or partially
-collected at baseline visit in certain study phase. It is reasonable to
-carrying forward the screening visit record of an assessment as a
-corresponding baseline record if the baseline assessment result is
-missing/unknown. For instance, <code>MMSE</code> was not collected at
-any baseline visit, and the other neuropsychological assessments (i.e.,
-<code>LDELTOTL</code>, <code>DIGITSCR</code>, and <code>TRABSCOR</code>)
-are partially collected at baseline visit in certain study
-phase.</p></li>
+<li><p>Given that some of the PACC component assessments are either not
+collected at baseline visit at all or partially collected at baseline
+visit in specific ADNI study phase, it is reasonable to carried forward
+the screening visit record of an assessment as corresponding baseline
+record if the baseline assessment result is missing/unknown. For
+examples, <code>MMSE</code> assessment was not collected at baseline
+visit at all since it is be used as one of inclusion/exclusion criteria
+at screening visit in ADNI study. Similarly, other component scores from
+Neuropsychological Battery assessments (i.e., <code>LDELTOTL</code>,
+<code>DIGITSCR</code>, and <code>TRABSCOR</code>) are partially
+collected at baseline visit in certain ADNI study phase</p></li>
 </ul>
 <p>The following r chuck demonstrate how the screening-baseline visit
 adjustment is preformed by carrying forward any screening visit record
-as a baseline record using <code><a href="../reference/adjust_scbl_record.html">adjust_scbl_record()</a></code>
-function.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+as a baseline record using <code><a href="../reference/adjust_scbl_record.html">adjust_scbl_record()</a></code> function.
+This adjustment is only preformed if a baseline record was collected or
+missing.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Adjustment of screening-baseline record</span></span>
-<span><span class="va">id_vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COLPROT"</span>, <span class="st">"RID"</span>, <span class="st">"VISCODE"</span>, <span class="st">"SCORE_SOURCE"</span><span class="op">)</span></span>
+<span><span class="va">id_vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COLPROT"</span>, <span class="st">"PTID"</span>, <span class="st">"RID"</span>, <span class="st">"VISCODE"</span>, <span class="st">"SCORE_SOURCE"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## MMSE ----</span></span>
-<span><span class="va">pacc_mmse_long</span> <span class="op">&lt;-</span> <span class="va">pacc_mmse_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="../reference/adjust_scbl_record.html">adjust_scbl_record</a></span><span class="op">(</span></span>
-<span>      .data <span class="op">=</span> <span class="va">pacc_mmse_long</span>,</span>
-<span>      adjust_date_col <span class="op">=</span> <span class="st">"VISDATE"</span>,</span>
-<span>      check_col <span class="op">=</span> <span class="st">"SCORE"</span></span>
-<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">VISCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="../reference/get_baseline_vistcode.html">get_baseline_vistcode</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">pacc_mmse_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
+<span>  <span class="va">pacc_mmse_long</span>,</span>
+<span>  <span class="fu"><a href="../reference/adjust_scbl_record.html">adjust_scbl_record</a></span><span class="op">(</span></span>
+<span>    .data <span class="op">=</span> <span class="va">pacc_mmse_long</span>,</span>
+<span>    adjust_date_col <span class="op">=</span> <span class="st">"VISDATE"</span>,</span>
+<span>    check_col <span class="op">=</span> <span class="st">"SCORE"</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">VISCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="../reference/get_baseline_vistcode.html">get_baseline_vistcode</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">id_vars</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/set_as_tibble.html">set_as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -251,49 +267,63 @@ function.</p>
 <span>  <span class="fu"><a href="../reference/set_as_tibble.html">set_as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># ADAS-cog Q4 Score ----</span></span>
-<span><span class="va">pacc_adas_q4score_long</span> <span class="op">&lt;-</span> <span class="va">pacc_adas_q4score_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/set_as_tibble.html">set_as_tibble</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The next step is to combine all the raw datasets and converting the
-combined data into a wide format using the study data collection
-phase/protocol and study visit code per subject.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<span><span class="co"># Only collected at baseline visit</span></span>
+<span><span class="co"># pacc_adas_q4score_long &lt;- pacc_adas_q4score_long %&gt;%</span></span>
+<span><span class="co"># set_as_tibble()</span></span></code></pre></div>
+<p>The next step is to combine those input raw datasets and convert into
+a wide format using the study data collection phase/protocol and study
+visit code per subject.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Bind PACC input raw-data</span></span>
 <span><span class="va">pacc_input_data_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
 <span>  <span class="va">pacc_mmse_long</span>,</span>
 <span>  <span class="va">pacc_neurobat_long</span>,</span>
 <span>  <span class="va">pacc_adas_q4score_long</span></span>
-<span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="st">"ORIGPROT"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Convert into wide format</span></span>
+<span><span class="co"># PACC component vars</span></span>
 <span><span class="va">pacc_component</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ADASQ4SCORE"</span>, <span class="st">"MMSE"</span>, <span class="va">neurobat_vars</span><span class="op">)</span></span>
-<span></span>
+<span><span class="va">pacc_component_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">pacc_component_list</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">pacc_component</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get common VISCODE2: adjusting previously computed VISCODE2 across components</span></span>
+<span><span class="va">pacc_input_data_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_common_viscode2.html">get_common_viscode2</a></span><span class="op">(</span></span>
+<span>  .data <span class="op">=</span> <span class="va">pacc_input_data_long</span>,</span>
+<span>  id_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COLPROT"</span>, <span class="st">"PTID"</span>, <span class="st">"RID"</span>, <span class="st">"VISCODE"</span><span class="op">)</span>,</span>
+<span>  col_order <span class="op">=</span> <span class="va">pacc_component</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>VISCODE2 <span class="op">=</span> <span class="va">COM_VISCODE2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">COM_VISCODE2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Convert into wide format</span></span>
 <span><span class="va">pacc_input_data_wide</span> <span class="op">&lt;-</span> <span class="va">pacc_input_data_long</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unite.html" class="external-link">unite</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"SCORE_VISDATE"</span>, <span class="va">SCORE</span>, <span class="va">VISDATE</span>, sep <span class="op">=</span> <span class="st">"-/"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span></span>
 <span>    names_from <span class="op">=</span> <span class="va">SCORE_SOURCE</span>,</span>
 <span>    values_from <span class="op">=</span> <span class="va">SCORE_VISDATE</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COLPROT"</span>, <span class="st">"RID"</span>, <span class="st">"VISCODE"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COLPROT"</span>, <span class="st">"PTID"</span>, <span class="st">"RID"</span>, <span class="st">"VISCODE"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html" class="external-link">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, <span class="st">"-/"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest_wider.html" class="external-link">unnest_wider</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span>, names_sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_remove.html" class="external-link">str_remove_all</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"\\_1$"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"2$"</span>, <span class="st">"VISDATE"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">.x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"NA"</span>, <span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">.x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">pacc_component</span><span class="op">)</span>, <span class="va">as.numeric</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Some of the PACC component might not be collected on the same date
+<p>Some of the PACC component may not be collected on the same date
 although those assessments could be collected at the same study visit.
-Additionally, some of component specific screening records were carried
-forward as a baseline record including screening visit/assessment
-collection date. In order to have a representative common date
-associated with the PACC score per study visit, we compare the specific
-study visit date with corresponding component collection date.</p>
+Additionally, some of the component specific screening records are
+carried forward as a baseline record including screening
+visit/assessment collection date, as described previously. To get a
+representative common date associated with a PACC score per study visit,
+component collection dates at each study visit are compared, and the
+latest (maximum) date will be selected as a PACC assessment completion
+date.</p>
 <p>We use <code><a href="../reference/get_vars_common_date.html">get_vars_common_date()</a></code> function to get a common
-date per specific study visit per subject as shown in the following two
-r chunks. A maximum date will be selected if any of the component
-specific dates are different. A maximum date selection is used due to
-the fact that some of the screening records were carried forward as a
-baseline record.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+PACC date per specific study visit per subject as shown in the following
+two r chunks.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Add visit date</span></span>
 <span><span class="va">pacc_input_data_wide</span> <span class="op">&lt;-</span> <span class="va">pacc_input_data_wide</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
@@ -303,7 +333,7 @@ baseline record.</p>
 <span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COLPROT"</span>, <span class="st">"RID"</span>, <span class="st">"VISCODE"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://docs.ropensci.org/assertr/reference/verify.html" class="external-link">verify</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pacc_input_data_wide</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get common date per record</span></span>
 <span><span class="va">pacc_input_data_wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_vars_common_date.html">get_vars_common_date</a></span><span class="op">(</span></span>
 <span>  .data <span class="op">=</span> <span class="va">pacc_input_data_wide</span>,</span>
@@ -314,7 +344,7 @@ baseline record.</p>
 <span>  preferred_date_col <span class="op">=</span> <span class="st">"COMMON_DATE"</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="st">"PACC_VISDATE"</span> <span class="op">=</span> <span class="va">FINAL_DATE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pacc_input_data_wide</span> <span class="op">&lt;-</span> <span class="va">pacc_input_data_wide</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Add enrollment date</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
@@ -340,9 +370,9 @@ baseline record.</p>
 <h3 id="component-baseline-score-summaries">Component Baseline Score Summaries<a class="anchor" aria-label="anchor" href="#component-baseline-score-summaries"></a>
 </h3>
 <p>The next step is to calculate component specific baseline summaries
-that will be used to standardize component score. This baseline summary
-is based on user-defined standardization population. Here, we define the
-standardization population as follows:</p>
+that will be used to normalize component score. This baseline statistic
+can be calculated based on user-defined standardization population.
+Here, we define the standardization population as follows:</p>
 <ul>
 <li><p>New enrolled subject in ADNI study</p></li>
 <li><p>Subjects with baseline Cognitive Normal (<code>CN</code>)
@@ -352,10 +382,10 @@ diagnostics status</p></li>
 summarized across the baseline diagnostics status based on the above
 defined standardization population. The summary result is generated
 using <code>get_score_summary_stats()</code> function.</p>
-<p><strong>NOTE: </strong> It is recommended to apply a logarithm
-transformation of <code>Trials B</code> score if the score is not
+<p><strong>NOTE:</strong> It is recommended to apply a logarithm
+transformation of <code>Trails B</code> score if the score is not
 already in a logarithm scale.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pacc_component_bl</span> <span class="op">&lt;-</span> <span class="va">pacc_input_data_wide</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>TRABSCOR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">TRABSCOR</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Baseline visit for new enrollee</span></span>
@@ -364,7 +394,8 @@ already in a logarithm scale.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ORIGPROT</span> <span class="op">==</span> <span class="va">COLPROT</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">VISCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="../reference/get_baseline_vistcode.html">get_baseline_vistcode</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="va">RID</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="va">RID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="va">PTID</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pacc_component_bl.summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_score_summary.html">compute_score_summary</a></span><span class="op">(</span></span>
 <span>  .data <span class="op">=</span> <span class="va">pacc_component_bl</span>,</span>
@@ -375,56 +406,66 @@ already in a logarithm scale.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">pacc_component_bl.summary</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>VAR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">VAR</span> <span class="op">==</span> <span class="st">"TRABSCOR"</span>, <span class="st">"LOG.TRABSCOR"</span>, <span class="va">VAR</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="co"># rename("Baseline DX" = DX, "Component" = VAR) %&gt;%</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>VAR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">VAR</span> <span class="op">==</span> <span class="st">"TRABSCOR"</span>, <span class="st">"LOG_TRABSCOR"</span>, <span class="va">VAR</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>`Baseline DX` <span class="op">=</span> <span class="va">DX</span>, `Component` <span class="op">=</span> <span class="va">VAR</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span></span>
-<span>    colnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Baseline DX"</span> <span class="op">=</span> <span class="fl">2</span>, <span class="st">"Component"</span> <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,</span>
-<span>    caption <span class="op">=</span> <span class="st">"PACC Compoonent Standardization Baseline Summary"</span></span>
+<span>    caption <span class="op">=</span> <span class="st">"PACC Component Standardization Baseline Summary"</span>,</span>
+<span>    searching <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"caption":"<caption>PACC Compoonent Standardization Baseline Summary<\/caption>","data":[["1","2","3","4","5"],["CN","CN","CN","CN","CN"],["ADASQ4SCORE","DIGITSCR","LDELTOTL","MMSE","LOG.TRABSCOR"],[1209,229,1214,1215,1205],[2.8404,45.7467,12.7446,29.0181,4.3142],[1.924096,10.201331,3.49453,1.175534,0.407729]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Baseline DX<\/th>\n      <th>Component<\/th>\n      <th>N<\/th>\n      <th>MEAN<\/th>\n      <th>SD<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searchable":true,"bInfo":false,"colnames":{"Baseline DX":2,"Component":3},"caption":"PACC Compoonent Standardization Baseline Summary","columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"DX","targets":1},{"name":"VAR","targets":2},{"name":"N","targets":3},{"name":"MEAN","targets":4},{"name":"SD","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"caption":"<caption>PACC Component Standardization Baseline Summary<\/caption>","data":[["1","2","3","4","5"],["CN","CN","CN","CN","CN"],["ADASQ4SCORE","DIGITSCR","LDELTOTL","MMSE","LOG_TRABSCOR"],[1201,229,1205,1206,1198],[2.8293,45.7467,12.7776,29.0216,4.3142],[1.917465,10.201331,3.483754,1.173511,0.407729]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Baseline DX<\/th>\n      <th>Component<\/th>\n      <th>N<\/th>\n      <th>MEAN<\/th>\n      <th>SD<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"searching":false,"bInfo":false,"caption":"PACC Component Standardization Baseline Summary","columnDefs":[{"className":"dt-right","targets":[3,4,5]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Baseline DX","targets":1},{"name":"Component","targets":2},{"name":"N","targets":3},{"name":"MEAN","targets":4},{"name":"SD","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="section level3">
 <h3 id="compute-pacc-score">Compute PACC Score<a class="anchor" aria-label="anchor" href="#compute-pacc-score"></a>
 </h3>
-<p>The composite PACC score is the sum of the standardized component
-score adjusted by the number of components. The following two conditions
-should be checked before computing the PACC score.</p>
+<p>The composite PACC score is the sum of standardized component scores
+adjusted by the number of components. The following conditions are
+required to be checked before computing the PACC score.</p>
 <ul>
-<li><p><code>Trials B</code> Measurement Scale: To identify whether the
-score is in a logarithm scale. For example, here, the
-<code>Trials B</code> score is not in a logarithm scale. We need either
-to map the raw score values to logarithm scale prior to using a scoring
-function or to specify an argument that allows us to perform a logarithm
-transformation inside a scoring function.</p></li>
+<li><p><code>Trails B</code> Measurement Scale: To identify whether the
+score is in a logarithm scale. For example, the <code>Trails B</code>
+score is not in a logarithm scale. We need either to map the raw score
+values to logarithm scale prior to using a scoring function or to
+specify an argument that allows us to perform a logarithm transformation
+inside a scoring function.</p></li>
+<li><p>Standardized Components Score: Each component scores are
+normalized.</p></li>
 <li><p>Standardized Component Directional Effect: To verify the same
 directional effect across standardized component score, and reoriented
-standardized component score since the composite score will be the sum
-of the standardized scores. In ADNI study, <code>ADAS-cog Q4</code> and
-<code>Trials B</code> scores have opposite directional effect compared
-to the remaining PACC component scores. Higher values of those two
-components indicates worse condition. It is required to convert the
-direction effect of those two standardized components. Therefore, higher
-values of the composite score indicates better performance.</p></li>
+standardized component scores as needed since the composite score is the
+sum of these standardized scores. In ADNI study,
+<code>ADAS-cog Q4</code> and <code>Trails B</code> scores have opposite
+directional effect compared to the remaining PACC component scores.
+Higher values of those two components indicates worse condition. Thus,
+the directional effect of those two standardized components are required
+to be re-oriented as the remaining components. As a result, higher
+values of the composite score would indicate better condition/higher
+performance in cognition.</p></li>
+<li><p>Number of Missing Components: The composite score is only
+calculated when there are at least <em>two</em> none missing components
+at a given study visit per subject.</p></li>
 </ul>
-<p>Moreover, the composite score will only be calculated if there are at
-least <em>two non-missing</em> component scores at a given study visit
-per subject.</p>
-<p>Then, we use <code><a href="../reference/compute_pacc_score.html">compute_pacc_score()</a></code> function to compute
-the two modified composite PACC scores in ADNI study.</p>
+<p>The <code><a href="../reference/compute_pacc_score.html">ADNIMERGE2::compute_pacc_score</a></code> function can be used
+to compute the two modified composite PACC scores in ADNI study. Each
+each component scores are mean centered and divided by the baseline
+sample standard deviation of that component to create standardized z
+scores (<span class="citation"><span class="nocase">Donohue et
+al.</span> (<a href="#ref-donohue2014preclinical">2014</a>)</span>).</p>
 <p>The next r chunk shows how to calculate the PACC composite score
 based on a wide format input component score, a standardization baseline
-summary, and with a logarithm transformation of <code>Trials B</code>
-score inside in the function.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+summary, and with a logarithm transformation of <code>Trails B</code>
+score inside in the scoring function.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PACC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pacc_score.html">compute_pacc_score</a></span><span class="op">(</span></span>
 <span>  .data <span class="op">=</span> <span class="va">pacc_input_data_wide</span>,</span>
 <span>  bl.summary <span class="op">=</span> <span class="va">pacc_component_bl.summary</span>,</span>
-<span>  componentVars <span class="op">=</span> <span class="va">pacc_component</span>,</span>
-<span>  rescale_trialsB <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  componentVars <span class="op">=</span> <span class="va">pacc_component_list</span>,</span>
+<span>  rescale_trailsB <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  keepComponents <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  wideFormat <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">PACC</span> <span class="op">&lt;-</span> <span class="va">PACC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>RID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">RID</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_replace.html" class="external-link">str_replace_all</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"\\.zscore"</span>, <span class="st">"Z"</span><span class="op">)</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">".zscore"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/create_orig_protocol.html">create_orig_protocol</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -439,19 +480,21 @@ score inside in the function.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <details><summary>
 Show <a href="../reference/PACC.html"><code>PACC</code></a> Variables
-</summary><div class="datatables html-widget html-fill-item" id="htmlwidget-e5c8c404fe174e4c81bd" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-e5c8c404fe174e4c81bd">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"],["ORIGPROT","COLPROT","RID","VISCODE","ADASQ4SCORE","ADASQ4SCORE_VISDATE","MMSE","MMSE_VISDATE","LDELTOTL","LDELTOTL_VISDATE","DIGITSCR","DIGITSCR_VISDATE","TRABSCOR","LOG.TRABSCOR","TRABSCOR_VISDATE","PACC_VISDATE","ADASQ4SCOREZ","MMSEZ","LDELTOTLZ","DIGITSCRZ","LOG.TRABSCORZ","mPACCdigit","mPACCtrailsB","ENRLDT","ENRLFG","DX"],["Original Study Protocol","Study Data Collection Protocol","Subject Identifier","Study visit code","Delayed Word Recall Score - portion of ADAS-Cog","ADAS-Cog Collection/Visit Date","Mini-Mental Examination Total Score","MMSE Collection/Visit Date","Logical Memory - Delayed RecallScore","LDELTOTL Collection/Visit Date","Digit Symbol Substitution Score","DIGITSCR Collection/Visit Date","Trial B score","Trial B score - Log Scale","TRABSCOR Collection/Visit Date","PACC Collection/Visit Date","ADAS Q4 Standardized Score","Mini-Mental State Examiniation Standardized Score","Logical Memory - Delayed Recall Standardized Score","Digit Symbol Substitution Standardized Score","Logical Memory - Delayed Recall Log Standardized Score","Modified PACC Digit Score","Modified PACC Trials B Score","Enrollment Date","Enrollment Flag","Baseline Diagnostics Status"],["CHARACTER","CHARACTER","NUMERIC","CHARACTER","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","NUMERIC","DATE","DATE","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","DATE","DATE","CHARACTER"],["First time participation in ADNI study phase"," "," "," "," "," "," "," "," "," "," "," "," "," "," ","Either common date across non-missing PACC component collection date, the maximum relative date or the corresponding study visit date when all component collection date is not available.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI1 study phase.","Standardized by corresponding log transformed baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)"," "," "," "," ","Based on DXSUM eCRF and require to use enrollment flag. Please see `get_adni_blscreen_dxsum` function for more information."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>FLDNAME<\/th>\n      <th>LABEL<\/th>\n      <th>TYPE<\/th>\n      <th>TEXT<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":true,"searchable":true,"bInfo":false,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"FLDNAME","targets":1},{"name":"LABEL","targets":2},{"name":"TYPE","targets":3},{"name":"TEXT","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script></details>
+</summary><div class="datatables html-widget html-fill-item" id="htmlwidget-36aa3d2a04d42bbc2145" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-36aa3d2a04d42bbc2145">{"x":{"filter":"none","vertical":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28"],["ORIGPROT","COLPROT","PTID","RID","VISCODE","VISCODE2","ADASQ4SCORE","ADASQ4SCORE_VISDATE","MMSE","MMSE_VISDATE","LDELTOTL","LDELTOTL_VISDATE","DIGITSCR","DIGITSCR_VISDATE","TRABSCOR","LOG_TRABSCOR","TRABSCOR_VISDATE","ADASQ4SCOREZ","MMSEZ","LDELTOTLZ","DIGITSCRZ","LOG_TRABSCORZ","PACC_VISDATE","mPACCdigit","mPACCtrailsB","ENRLDT","ENRLFG","DX"],["Original Study Protocol","Study Data Collection Protocol","Participant ID","Participant Roster ID","Visit Code","Translated Visit Code","Delayed Word Recall Score - portion of ADAS-Cog","ADAS-Cog Collection/Visit Date","Mini-Mental Examination Total Score","MMSE Collection/Visit Date","Logical Memory - Delayed RecallScore","LDELTOTL Collection/Visit Date","Digit Symbol Substitution Score","DIGITSCR Collection/Visit Date","Trails B score","Trails B Score - Logarithm Scale","TRABSCOR Collection/Visit Date","ADAS Q4 Standardized Score","Mini-Mental State Examiniation Standardized Score","Logical Memory - Delayed Recall Standardized Score","Digit Symbol Substitution Standardized Score","Logarithm Trails B Standardized Score","PACC Collection/Visit Date","Modified PACC Digit Score","Modified PACC Trails B Score","Enrollment Date","Enrollment Flag","Baseline Diagnostics Status"],["CHARACTER","CHARACTER","CHARACTER","NUMERIC","CHARACTER","CHARACTER","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","DATE","NUMERIC","NUMERIC","DATE","NUMERIC","NUMERIC","NUMERIC","NUMERIC","NUMERIC","DATE","NUMERIC","NUMERIC","DATE","DATE","CHARACTER"],["First time participation in ADNI study phase"," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," ","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI study.","Standardized by corresponding baseline score among cognitive normal (CN) new enrollee in ADNI1 study phase.","Standardized by corresponding log transformed baseline score among cognitive normal (CN) new enrollee in ADNI study. Also adjusted for directional effect (i.e. multiplied by -1)","Either common date across non-missing PACC component collection date, the maximum relative date or the corresponding study visit date when all component collection date is not available."," "," "," "," ","Based on DXSUM eCRF and require to use enrollment flag. Please see `get_adni_blscreen_dxsum` function for more information."]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>FLDNAME<\/th>\n      <th>LABEL<\/th>\n      <th>TYPE<\/th>\n      <th>TEXT<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":true,"searching":true,"bInfo":false,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"FLDNAME","targets":1},{"name":"LABEL","targets":2},{"name":"TYPE","targets":3},{"name":"TEXT","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script></details>
 </div>
 </div>
 <div class="section level2">
 <h2 id="baseline-modified-pacc-score">Baseline Modified-PACC Score<a class="anchor" aria-label="anchor" href="#baseline-modified-pacc-score"></a>
 </h2>
-<p>The following r chunks show how to get baseline PACC composite score
-based on the <code>PACC</code> dataset. Similar result can be obtained
-using <a href="../reference/ADSL.html"><code>ADSL</code></a> or <a href="../reference/ADQS.html"><code>ADQS</code></a> datasets. Please
-refer to <a href="">ADNI-Enrollment</a> and <a href="">ADNIMERGE2-Analysis-Data</a> articles for more information about
-how get the baseline PACC score from these dataset.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p>The following r chunks show how to get a baseline PACC composite
+scores based on the <code>PACC</code> data. Similar results can be
+obtained using <a href="../reference/ADSL.html"><code>ADSL</code></a> or
+<a href="../reference/ADQS.html"><code>ADQS</code></a> derived datasets.
+For more information regarding how to get baseline PACC scores from
+those derived datasets, please see <a href="../articles/ADNI-Enrollment.html">ADNI-Enrollment</a> and <a href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2-Analysis-Data</a>
+articles.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Modified PACC using DSS score</span></span>
 <span><span class="va">baseline_mPACCdigit</span> <span class="op">&lt;-</span> <span class="va">PACC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Only in ADNI1 study phase</span></span>
@@ -463,7 +506,7 @@ how get the baseline PACC score from these dataset.</p>
 <span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="va">RID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">RID</span>, <span class="va">ORIGPROT</span>, <span class="va">mPACCdigit</span>, <span class="va">DX</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Modified PACC using Trials B score as a proxy for DSS</span></span>
+<span><span class="co"># Modified PACC using Trails B score as a proxy for DSS</span></span>
 <span><span class="va">baseline_mPACCtrailsB</span> <span class="op">&lt;-</span> <span class="va">PACC</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ORIGPROT</span> <span class="op">==</span> <span class="va">COLPROT</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">VISCODE</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="../reference/get_baseline_vistcode.html">get_baseline_vistcode</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -471,19 +514,20 @@ how get the baseline PACC score from these dataset.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ENRLFG</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"Yes"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/assert_uniq.html">assert_uniq</a></span><span class="op">(</span><span class="va">RID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">RID</span>, <span class="va">ORIGPROT</span>, <span class="va">mPACCtrailsB</span>, <span class="va">DX</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">baseline_PACC</span> <span class="op">&lt;-</span> <span class="va">baseline_mPACCtrailsB</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    SCORE <span class="op">=</span> <span class="va">mPACCtrailsB</span>,</span>
-<span>    SCORE_NAME <span class="op">=</span> <span class="st">"mPACCtrailsB"</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
-<span>    <span class="va">baseline_mPACCdigit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>        SCORE <span class="op">=</span> <span class="va">mPACCdigit</span>,</span>
-<span>        SCORE_NAME <span class="op">=</span> <span class="st">"mPACCdigit"</span></span>
-<span>      <span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Bind both modified PACC scores in long format</span></span>
+<span><span class="va">baseline_PACC</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
+<span>  <span class="va">baseline_mPACCtrailsB</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>      SCORE <span class="op">=</span> <span class="va">mPACCtrailsB</span>,</span>
+<span>      SCORE_NAME <span class="op">=</span> <span class="st">"mPACCtrailsB"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>  <span class="va">baseline_mPACCdigit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>      SCORE <span class="op">=</span> <span class="va">mPACCdigit</span>,</span>
+<span>      SCORE_NAME <span class="op">=</span> <span class="st">"mPACCdigit"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SCORE_NAME</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>SCORE_NAME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">SCORE_NAME</span>, <span class="st">" (n = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">SCORE</span><span class="op">)</span><span class="op">)</span>, <span class="st">")"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -494,24 +538,25 @@ how get the baseline PACC score from these dataset.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">SCORE_NAME</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Baseline Modified PACC Score"</span>, y <span class="op">=</span> <span class="st">"Count"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ADNIMERGE2-PACC_files/figure-html/plot-bl-pacc-1.png" alt="Baseline Modiffied PACC score" width="672"></p>
+<p><img src="ADNIMERGE2-PACC_files/figure-html/plot-bl-pacc-1.png" class="r-plt" alt="Baseline Modiffied PACC score" width="672"></p>
+<p><strong>NOTE:</strong> We recommend to use continuous time point for
+PACC score in longitudinal data analysis.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-donohue2017association" class="csl-entry">
-Donohue, Michael C, Reisa A Sperling, Ronald Petersen, Chung-Kai Sun,
-Michael W Weiner, Paul S Aisen, Alzheimer’s Disease Neuroimaging
-Initiative, et al. 2017. <span>“Association Between Elevated Brain
+<span class="nocase">Donohue, Michael C, Reisa A Sperling, Ronald
+Petersen, et al.</span> 2017. <span>“Association Between Elevated Brain
 Amyloid and Subsequent Cognitive Decline Among Cognitively Normal
-Persons.”</span> <em>Jama</em> 317 (22): 2305–16.
+Persons.”</span> <em>Jama</em> 317 (22): 2305–16. <a href="https://doi.org/10.1001/jama.2017.6669" class="external-link">https://doi.org/10.1001/jama.2017.6669</a>.
 </div>
 <div id="ref-donohue2014preclinical" class="csl-entry">
-Donohue, Michael C, Reisa A Sperling, David P Salmon, Dorene M Rentz,
-Rema Raman, Ronald G Thomas, Michael Weiner, Paul S Aisen, et al. 2014.
-<span>“The Preclinical Alzheimer Cognitive Composite: Measuring
-Amyloid-Related Decline.”</span> <em>JAMA Neurology</em> 71 (8): 961–70.
+<span class="nocase">Donohue, Michael C, Reisa A Sperling, David P
+Salmon, et al.</span> 2014. <span>“The Preclinical Alzheimer Cognitive
+Composite: Measuring Amyloid-Related Decline.”</span> <em>JAMA
+Neurology</em> 71 (8): 961–70. <a href="https://doi.org/10.1001/jamaneurol.2014.803" class="external-link">https://doi.org/10.1001/jamaneurol.2014.803</a>.
 </div>
 </div>
 </div>
@@ -526,7 +571,7 @@ Amyloid-Related Decline.”</span> <em>JAMA Neurology</em> 71 (8): 961–70.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

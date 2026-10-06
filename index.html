@@ -6,17 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ADNI Study Data Package • ADNIMERGE2</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="ADNI Study Data Package">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
+<script src="extra.js"></script><meta property="og:title" content="ADNI Study Data Package">
 <meta name="description" content="This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study.">
 <meta property="og:description" content="This is an R data package for the Alzheimer's Disease Neuroimaging Initiative (ADNI) study.">
 <meta property="og:image" content="https://atri-biostats.github.io/ADNIMERGE2/logo.png">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ADNIMERGE2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,17 +89,22 @@
 <div class="section level2">
 <h2 id="package-access">Package Access<a class="anchor" aria-label="anchor" href="#package-access"></a>
 </h2>
-<p>The ADNI study R data package, ADNIMERGE2, will be available on the data sharing platform at <a href="https://adni.loni.usc.edu/" class="external-link">LONI website</a>. To request access of the R package, it is required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement <a href="https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf" class="external-link">here</a>.</p>
+<p>The ADNI study R data package, <code>ADNIMERGE2</code>, is available on the data sharing platform at <a href="https://adni.loni.usc.edu/" class="external-link">LONI website</a>. <code>ADNIMERGE2</code> R package is located in <a href="https://adni.loni.usc.edu/" class="external-link">Study Files &gt; Study Info &gt; Data &amp; Database</a> folder at data-sharing platform. To request access of the R package, it is required to submit an online application via LONI website and acceptance of the ADNI Data Use Agreement <a href="https://adni.loni.usc.edu/wp-content/uploads/how_to_apply/ADNI_Data_Use_Agreement.pdf" class="external-link">here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>To install the package locally, run <code>install.packages("path/to/ADNIMERGE2_0.1.1.tar.gz", repos = NULL, type = "source")</code>.</p>
+<p>To install the package locally, run <code>install.packages("path/to/ADNIMERGE2.tar.gz", repos = NULL, type = "source")</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="package-version">Package Version<a class="anchor" aria-label="anchor" href="#package-version"></a>
+</h2>
+<p>To get the actual package version, run <code>packageVersion("ADNIMERGE2")</code> after installing the R package locally.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Learn more about <code>ADNIMERGE2</code> at <a href="./articles/ADNIMERGE2.html"><code>Get Started</code></a> page</p>
+<p>Learn more about <code>ADNIMERGE2</code> at <a href="https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2.html"><code>Get Started</code></a> page</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -113,9 +118,8 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
@@ -130,7 +134,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>ATRI Biostatistics <br><small class="roles"> Author, maintainer </small>  </li>
+<li>ATRI Biostatistics <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -145,7 +149,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -6,17 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ADNIMERGE2-Package-Building • ADNIMERGE2</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ADNIMERGE2-Package-Building">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../extra.js"></script><meta property="og:title" content="ADNIMERGE2-Package-Building">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ADNIMERGE2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,13 +78,17 @@
 
 
 
-
-<div class="row">
+<link href="ADNIMERGE2-Package-Building_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="ADNIMERGE2-Package-Building_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="ADNIMERGE2-Package-Building_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="ADNIMERGE2-Package-Building_files/datatables-binding-0.34.0/datatables.js"></script><link href="ADNIMERGE2-Package-Building_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="ADNIMERGE2-Package-Building_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="ADNIMERGE2-Package-Building_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script><link href="ADNIMERGE2-Package-Building_files/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="ADNIMERGE2-Package-Building_files/crosstalk-1.2.2/js/crosstalk.min.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNIMERGE2-Package-Building</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: November 12,
-2025</h4>
+            <h4 data-toc-skip class="date">Last Updated: October 06,
+2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNIMERGE2-Package-Building.Rmd" class="external-link"><code>vignettes/ADNIMERGE2-Package-Building.Rmd</code></a></small>
       <div class="d-none name"><code>ADNIMERGE2-Package-Building.Rmd</code></div>
@@ -100,10 +104,10 @@ source <code>.csv</code> files with similar workflow of
 <code>ADNIMERGE2</code> R package.</p>
 </div>
 <div class="section level2">
-<h2 id="building-an-r-package-from-csv-files">Building an R Package from csv files<a class="anchor" aria-label="anchor" href="#building-an-r-package-from-csv-files"></a>
+<h2 id="building-an-r-package-from-csv-files">Building an R package from CSV files<a class="anchor" aria-label="anchor" href="#building-an-r-package-from-csv-files"></a>
 </h2>
 <div class="section level3">
-<h3 id="create-r-package-project">Create R Package Project<a class="anchor" aria-label="anchor" href="#create-r-package-project"></a>
+<h3 id="create-r-package-project">Create R package project<a class="anchor" aria-label="anchor" href="#create-r-package-project"></a>
 </h3>
 <p>Clone the <a href="https://github.com/atri-biostats/ADNIMERGE2" class="external-link">https://github.com/atri-biostats/ADNIMERGE2</a>
 repository. This will create the following directories:</p>
@@ -143,9 +147,9 @@ repository</a> with the same file path to your local package project
 directory.</p>
 </div>
 <div class="section level3">
-<h3 id="download-the-adni-study-data">Download the ADNI Study Data<a class="anchor" aria-label="anchor" href="#download-the-adni-study-data"></a>
+<h3 id="download-adni-study-data">Download ADNI study data<a class="anchor" aria-label="anchor" href="#download-adni-study-data"></a>
 </h3>
-<p>Download the ADNI study data from the data-shared platform at <a href="https://adni.loni.usc.edu/data-samples/adni-data/" class="external-link">https://adni.loni.usc.edu/data-samples/adni-data/</a>
+<p>Download ADNI study data from the data-shared platform at <a href="https://adni.loni.usc.edu/data-samples/adni-data/" class="external-link">https://adni.loni.usc.edu/data-samples/adni-data/</a>
 either in <code>*.zip</code> or <code>*.csv</code> file format, and
 store the files in <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw" class="external-link"><code>./data-raw</code></a>
 directory</p>
@@ -159,9 +163,19 @@ to download the file without adding any prefix to the file name as
 highlighted in the following figure.</p></li>
 </ul>
 <p><img src="../reference/figures/arc_table_template.png" align="center" height="70" alt=" "></p>
+<div class="section level4">
+<h4 id="list-of-required-adni-study-data">List of required ADNI study data<a class="anchor" aria-label="anchor" href="#list-of-required-adni-study-data"></a>
+</h4>
+<p>Here are some of the datasets that would be required to replicate
+<code>ADNIMERGE2</code> R package.</p>
+<details><summary>
+Show ADNIMERGE2 Required Datasets
+</summary><div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"caption":"<caption>List of datasets required to replicate ADNIMERGE2 R data package<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43"],["<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/REGISTRY.html' target='_blank'>REGISTRY<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/STUDYSUM.html' target='_blank'>STUDYSUM<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/DATADIC.html' target='_blank'>DATADIC<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/VISITS.html' target='_blank'>VISITS<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ROSTER.html' target='_blank'>ROSTER<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/PTDEMOG.html' target='_blank'>PTDEMOG<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/RECADV.html' target='_blank'>RECADV<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ADVERSE.html' target='_blank'>ADVERSE<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ADI.html' target='_blank'>ADI<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/RURALITY.html' target='_blank'>RURALITY<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ADAS.html' target='_blank'>ADAS<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/CDR.html' target='_blank'>CDR<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ECOGPT.html' target='_blank'>ECOGPT<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/ECOGSP.html' target='_blank'>ECOGSP<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/FCI.html' target='_blank'>FCI<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/FAQ.html' target='_blank'>FAQ<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/GDSCALE.html' target='_blank'>GDSCALE<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/MMSE.html' target='_blank'>MMSE<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/MOCA.html' target='_blank'>MOCA<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/NPI.html' target='_blank'>NPI<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/NPIQ.html' target='_blank'>NPIQ<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/NEUROBAT.html' target='_blank'>NEUROBAT<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/DXSUM.html' target='_blank'>DXSUM<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UCBERKELEYFDG_8mm.html' target='_blank'>UCBERKELEYFDG_8mm<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/PIBPETSUVR.html' target='_blank'>PIBPETSUVR<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/AMYREAD.html' target='_blank'>AMYREAD<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/AMYQC.html' target='_blank'>AMYQC<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/AV45QC.html' target='_blank'>AV45QC<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/PETQC.html' target='_blank'>PETQC<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/TAUQC.html' target='_blank'>TAUQC<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/PIBQC.html' target='_blank'>PIBQC<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UCBERKELEY_AMY_6MM.html' target='_blank'>UCBERKELEY_AMY_6MM<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UCBERKELEY_TAU_6MM.html' target='_blank'>UCBERKELEY_TAU_6MM<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UCBERKELEY_TAUPVC_6MM.html' target='_blank'>UCBERKELEY_TAUPVC_6MM<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/LABDATA.html' target='_blank'>LABDATA<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/URMC_LABDATA.html' target='_blank'>URMC_LABDATA<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/BIOMARK.html' target='_blank'>BIOMARK<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UPENNBIOMK_ROCHE_ELECSYS.html' target='_blank'>UPENNBIOMK_ROCHE_ELECSYS<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UPENNBIOMK_MASTER.html' target='_blank'>UPENNBIOMK_MASTER<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/UPENN_PLASMA_FUJIREBIO_QUANTERIX.html' target='_blank'>UPENN_PLASMA_FUJIREBIO_QUANTERIX<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/C2N_PRECIVITYAD2_PLASMA.html' target='_blank'>C2N_PRECIVITYAD2_PLASMA<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/APOERES.html' target='_blank'>APOERES<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/reference/VITALS.html' target='_blank'>VITALS<\/a>"],["Registry","Study Visits Summary in ADNI3 & ADNI4 Study Phases","Data dictionary","Study Level Visit Data Dictionary","Roster","Participant Demographic Information","Adverse Events Log Information in ADNI1, ADNI-GO and ADNI2 Study Phases","Adverse Events Log Information in ADNI3 & ADNI4 Study Phases","Area Deprivation Index Score","Rurality – RUCA & RUCC","ADAS-Cognitive Behavior","Clinical Dementia Rating","Everyday Cognition - Participant Self-Report","Everyday Cognition - Study Partner Report","Financial Capacity Instrument Short Form (FCI-SF)","Functional Assessment Questionnaire","Geriatric Depression Scale","Mini-Mental State Exam","Montreal Cognitive Assessment","Neuropsychiatric Inventory","Neuropsychiatric Inventory Q","Neuropsychological Battery","Diagnostic Summary","UC Berkeley - FDG analysis","U Pitt PIB PET Analysis","Amyloid PET Read","Amyloid PET QC","AV-45 PET QC Tracking","PET QC Tracking","Tau AV-1451 PET QC","PIB QC Tracking","UC Berkeley - Amyloid PET 6mm Res analysis","UC Berkeley - Tau PET 6mm Res analysis","UC Berkeley - Tau PET PVC 6mm Res analysis","Laboratory Data for ADNI1, ADNIGO, and ADNI2 Study Phases","Laboratory Data for ADNI3, and ADNI4 Study Phases","Biomarker Samples","UPENN CSF Biomarkers Elecsys [ADNI1,GO,2,3]","UPENN CSF Biomarker Master Alzbio3 (BATCH1-8)","UPENN - Plasma Biomarkers measured by Fujirebio & Quanterix","C2N Diagnostics - PrecivityAD2 Blood Test Results","ApoE Genotyping - Results","AV-45 Pre and Post Injection Vitals"],["<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>, <a href='https://github.com/atri-biostats/ADNIMERGE2/blob/main/data-raw/data-prep.R' target='_blank'>data-prep.R<\/a>, <a href='https://github.com/atri-biostats/ADNIMERGE2/blob/main/data-raw/data-prep-recode.R' target='_blank'>data-prep-recode.R<\/a>, <a href='https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/document.R' target='_blank'>document.R<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>, <a href='https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/generate-pacc-input-data.R' target='_blank'>generate-pacc-input-data.R<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>, <a href='https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/generate-pacc-input-data.R' target='_blank'>generate-pacc-input-data.R<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>, <a href='https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/generate-pacc-input-data.R' target='_blank'>generate-pacc-input-data.R<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>","<a href='https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-Derived-Data.html' target='_blank'>ADNIMERGE2 Derived Data<\/a>"],["DM, NV","DM","SC",null,"DM","DM, SC","DM, AE","DM, AE","SC","SC","QS","QS","QS","QS","QS","QS","QS","QS, PACC","QS","QS","QS","QS, PACC","RS","NV","NV","NV","NV","NV","NV","NV","NV","NV","NV","NV","LB","LB","LB","LB","LB","LB","LB","GF","VS"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Dataset Code<\/th>\n      <th>Dataset Label<\/th>\n      <th>Use Articles/Scripts<\/th>\n      <th>Derived Dataset<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":true,"searching":true,"bInfo":false,"columnDefs":[{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Dataset Code","targets":1},{"name":"Dataset Label","targets":2},{"name":"Use Articles/Scripts","targets":3},{"name":"Derived Dataset","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script></details>
+</div>
 </div>
 <div class="section level3">
-<h3 id="build-package">Build Package<a class="anchor" aria-label="anchor" href="#build-package"></a>
+<h3 id="build-package">Build package<a class="anchor" aria-label="anchor" href="#build-package"></a>
 </h3>
 <p>The next step is start building the package by sourcing <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R" class="external-link"><code>./tools/build.R</code></a>
 script file. The <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main//tools/build.R" class="external-link">./tools/build.R</a>
@@ -177,31 +191,56 @@ presented as follows:</p>
 <ul>
 <li><p>To store all dataset in <em><code>./data</code></em> directory
 using <a href="https://usethis.r-lib.org/reference/use_data.html" class="external-link"><code>usethis::use_data()</code></a></p></li>
-<li><p>Some additional data preparation, please see <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep.R" class="external-link">here</a>
+<li><p>Some additional data preparation, please see <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R" class="external-link">here</a>
 for more information.</p></li>
-<li><p>Required to specify two input arguments: the data downloaded date
+<li><p>Required to specify two input arguments: data download date
 (<code>DATA_DOWNLOADED_DATE</code>) in <code>YYYY-MM-DD</code> format
 and a Boolean value to update any existing data dictionary file
 (<code>UPDATE_DATADIC</code>)</p></li>
 </ul>
 </li>
 <li>
-<p><a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data_prep_recode.R" class="external-link"><code>./data-raw/data-prep-recode.R</code></a>:</p>
+<p><a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep-recode.R" class="external-link"><code>./data-raw/data-prep-recode.R</code></a>:</p>
 <ul>
 <li><p>To map numerically coded values of a dataset based on existing
 data dictionary as necessary</p></li>
 <li><p>Required to specify indicator argument regarding whether to use
-the updated data dictionary (<code>USE_UPDATED_DATADIC</code>) if the
-data dictionary is updated in previous step</p></li>
+an updated data dictionary (<code>USE_UPDATED_DATADIC</code>) if the
+data dictionary was updated in previous step</p></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep-category-pkgdown.R" class="external-link"><code>./data-raw/data-prep-category-pkgdown.R</code></a>:</p>
+<ul>
+<li><p>To create dataset category based on file path, file name or file
+content</p></li>
+<li><p>Useful for data documentation and organizing dataset list in the
+<a href="https://atri-biostats.github.io/ADNIMERGE2/reference/index.html">Reference</a>
+section of a package website that will be created using <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> R package.</p></li>
 </ul>
 </li>
 <li>
 <p><a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/tools/generate-derived-data.R" class="external-link"><code>./tools/generate-derived-data.R</code></a>:</p>
 <ul>
-<li><p>To generate some derived dataset based on the files in the <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/vignettes" class="external-link"><code>vignettes</code></a>
+<li><p>To create some derived dataset based on files in the <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/vignettes" class="external-link"><code>vignettes</code></a>
 directory</p></li>
 <li><p>Required to specify the name of derived dataset
 (<code>DERIVED_DATASET_LIST</code>) as an input argument</p></li>
+<li>
+<p><strong>NOTE:</strong> A derived Preclinical Alzheimer Cognitive
+Composite (PACC) scores can also be generated as part of the data
+package build since all required raw data files are now available on the
+data-sharing platform. Please refer to <a href="https://atri-biostats.github.io/ADNIMERGE2/articles/ADNIMERGE2-PACC.html#import-raw-datasets">ADNIMERGE2-PACC</a>
+for more information.</p>
+<ul>
+<li><p>We suggest setting <code>INCLUDE_PACC_DERIVED_DATA</code> to
+<code>FALSE</code> in order to exclude the PACC scores dataset from the
+data package build as needed.</p></li>
+<li><p>Moreover, <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/main/tools/vignettes-yaml.R" class="external-link"><code>vignettes-yaml.R</code></a>
+script allows to change the default parameter yaml value related to PACC
+in package vignettes.</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -232,15 +271,15 @@ name of derived dataset list
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-uscAlzheimersDisease" class="csl-entry">
-<span>“<span>A</span>lzheimer’s <span>D</span>isease
+<em><span>A</span>lzheimer’s <span>D</span>isease
 <span>N</span>euroimaging <span>I</span>nitiative —
-Adni.loni.usc.edu.”</span> <a href="https://adni.loni.usc.edu/" class="external-link uri">https://adni.loni.usc.edu/</a>.
+Adni.loni.usc.edu</em>. <a href="https://adni.loni.usc.edu/" class="external-link uri">Https://adni.loni.usc.edu/</a>.
 </div>
 <div id="ref-rpkgsPackages2e" class="csl-entry">
-Wickham, Hadley, and Jennifer Bryan. <span>“<span>R</span>
-<span>P</span>ackages (2e) — r-Pkgs.org.”</span> <a href="https://r-pkgs.org/" class="external-link uri">https://r-pkgs.org/</a>.
+Wickham, Hadley, and Jennifer Bryan. <em><span>R</span>
+<span>P</span>ackages (2e) — r-Pkgs.org</em>. <a href="https://r-pkgs.org/" class="external-link uri">Https://r-pkgs.org/</a>.
 </div>
 </div>
 </div>
@@ -255,7 +294,7 @@ Wickham, Hadley, and Jennifer Bryan. <span>“<span>R</span>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

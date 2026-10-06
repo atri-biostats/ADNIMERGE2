@@ -6,17 +6,17 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ADNIMERGE2 • ADNIMERGE2</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ADNIMERGE2">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../extra.js"></script><meta property="og:title" content="ADNIMERGE2">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ADNIMERGE2</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,14 +77,12 @@
 </nav><div class="container template-article">
 
 
-
-
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>ADNIMERGE2</h1>
             
-            <h4 data-toc-skip class="date">Last Updated: November 12,
-2025</h4>
+            <h4 data-toc-skip class="date">Last Updated: October 06,
+2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atri-biostats/ADNIMERGE2/blob/HEAD/vignettes/ADNIMERGE2.Rmd" class="external-link"><code>vignettes/ADNIMERGE2.Rmd</code></a></small>
       <div class="d-none name"><code>ADNIMERGE2.Rmd</code></div>
@@ -105,10 +103,16 @@ conduct data analysis using the <a href="https://www.r-project.org/" class="exte
 <div class="section level2">
 <h2 id="package-source">Package Source<a class="anchor" aria-label="anchor" href="#package-source"></a>
 </h2>
-<p>The <em><code>ADNIMERGE2</code></em> R package will be available on
-the data-sharing platform at <a href="https://adni.loni.usc.edu/" class="external-link">LONI
-website</a>. To get access the package, it is required to submit an
-online application via LONI website and acceptance of the ADNI Data Use
+<p>The <em><code>ADNIMERGE2</code></em> R package is available on the
+data-sharing platform at <a href="https://adni.loni.usc.edu/" class="external-link">LONI
+website</a>. The R package file is located in <a href="https://adni.loni.usc.edu/" class="external-link">Study Files &gt; Study Info &gt; Data
+&amp; Database</a> folder at the data-sharing platform.</p>
+</div>
+<div class="section level2">
+<h2 id="package-access">Package Access<a class="anchor" aria-label="anchor" href="#package-access"></a>
+</h2>
+<p>To get access the package, it is required to submit an online
+application via LONI website and acceptance of the ADNI Data Use
 Agreement. Please visit at <a href="https://adni.loni.usc.edu/data-samples/adni-data/#AccessData" class="external-link uri">https://adni.loni.usc.edu/data-samples/adni-data/#AccessData</a>
 to learn more about the application submission process and ADNI Data Use
 Agreement.</p>
@@ -117,24 +121,32 @@ Agreement.</p>
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>To install the package locally, run
-<code>install.packages("path/to/ADNIMERGE2_0.1.1.tar.gz", repos = NULL, type = "source")</code>.</p>
+<code>install.packages("path/to/ADNIMERGE2.tar.gz", repos = NULL, type = "source")</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="package-usage">Package Usage<a class="anchor" aria-label="anchor" href="#package-usage"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://atri-biostats.github.io/ADNIMERGE2">ADNIMERGE2</a></span><span class="op">)</span></span></code></pre></div>
+</details><div class="section level3">
+<h3 id="package-version">Package Version<a class="anchor" aria-label="anchor" href="#package-version"></a>
+</h3>
+<p>To get the package version, run
+<code>packageVersion("ADNIMERGE2")</code>. Please refer to <a href="../news/index.html">versions page</a> for more detailed about
+changelog.</p>
+</div>
 <div class="section level3">
 <h3 id="package-source-data-date">Package Source Data Date<a class="anchor" aria-label="anchor" href="#package-source-data-date"></a>
 </h3>
 <p>The ADNIMERGE2 package contains a data stamped date of which the raw
 data is downloaded from the data-sharing platform. For instance, the
 current package contains data that downloaded from the data-sharing
-platform as of 2025-11-12. To get the data stamped date:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+platform as of 2026-10-05. To get the data stamped date:</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Data source downloaded date</span></span>
 <span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DATA_DOWNLOADED_DATE.html">DATA_DOWNLOADED_DATE</a></span></span>
-<span><span class="co">#&gt; [1] "2025-11-12"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "2026-10-05"</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level3">
 <h3 id="data-dictionary">Data Dictionary<a class="anchor" aria-label="anchor" href="#data-dictionary"></a>
@@ -148,20 +160,21 @@ available on the data-sharing platform.</p></li>
 during this package building. Please refer to the package vignettes to
 learn more how these data are generated.</p></li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Data dictionary for raw data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DATADIC.html">DATADIC</a></span>, <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 13</span></span></span>
-<span><span class="co">#&gt;   PHASE CRFNAME    TBLNAME FLDNAME TEXT  TYPE  LENGTH DD_CRF_VERSION CODE  UNITS</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ADNI1 ADAS-Cogn… ADAS    PTID    Part… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ADNI1 ADAS-Cogn… ADAS    RID     Part… N     38 di… <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ADNI1 ADAS-Cogn… ADAS    VISCODE Visi… T     20 ch… <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ADNI1 ADAS-Cogn… ADAS    EXAMDA… Exam… D     10     <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ADNI1 ADAS-Cogn… ADAS    VISDATE Asse… D     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ADNI1 ADAS-Cogn… ADAS    COT1LI… Tria… T     20     <span style="color: #BB0000;">NA</span>             1=BU… <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: STATUS &lt;chr&gt;, CODE_CHANGES &lt;chr&gt;, MAPPING_NOTES &lt;chr&gt;</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 16</span></span></span>
+<span><span class="co">#&gt;   DATADIC_SOURCE   PHASE CRFNAME  TBLNAME FLDNAME TEXT  TYPE  LENGTH CODE  UNITS</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> ADSP_PHC_DATADIC <span style="color: #BB0000;">NA</span>    ADSP Ph… ADSP_P… RID     Part… NUME… 5      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> ADSP_PHC_DATADIC <span style="color: #BB0000;">NA</span>    ADSP Ph… ADSP_P… PTID    Part… TEXT  11     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ADSP_PHC_DATADIC <span style="color: #BB0000;">NA</span>    ADSP Ph… ADSP_P… SUBJID  Subj… TEXT  15     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ADSP_PHC_DATADIC <span style="color: #BB0000;">NA</span>    ADSP Ph… ADSP_P… PHASE   ADNI… TEXT  6      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ADSP_PHC_DATADIC <span style="color: #BB0000;">NA</span>    ADSP Ph… ADSP_P… VISCODE Visi… TEXT  6      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ADSP_PHC_DATADIC <span style="color: #BB0000;">NA</span>    ADSP Ph… ADSP_P… VISCOD… Tran… TEXT  5      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: NOTES &lt;chr&gt;, update_stamp &lt;chr&gt;, DD_CRF_VERSION &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   STATUS &lt;chr&gt;, CODE_CHANGES &lt;chr&gt;, MAPPING_NOTES &lt;chr&gt;</span></span></span></code></pre></div>
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Data dictionary for derived data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DERIVED_DATADIC.html">DERIVED_DATADIC</a></span>, <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
@@ -173,7 +186,7 @@ learn more how these data are generated.</p></li>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> ADAE    Analysis Dataset of Adverse Events SITEID  Study Site Identifier <span style="color: #949494;">"</span> <span style="color: #949494;">"</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ADAE    Analysis Dataset of Adverse Events TRTA    Actual Arm            <span style="color: #949494;">"</span> <span style="color: #949494;">"</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> ADAE    Analysis Dataset of Adverse Events TRTP    Planned Arm           <span style="color: #949494;">"</span> <span style="color: #949494;">"</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Data dictionary for derived data based on R6-class object</span></span>
 <span><span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/METACORES.html">METACORES</a></span></span>
 <span><span class="co">#&gt; ── Metacore object contains metadata for 4 datasets ────────────────────────────</span></span>
@@ -184,6 +197,7 @@ learn more how these data are generated.</p></li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; To use the Metacore object with <span style="color: #0000BB;">metatools</span> package, first subset a dataset using</span></span>
 <span><span class="co">#&gt; `metacore::select_dataset()`</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level3">
 <h3 id="coded-values">Coded Values<a class="anchor" aria-label="anchor" href="#coded-values"></a>
@@ -203,9 +217,9 @@ are not yet mapped/decoded using the data dictionary file either in this
 package <a href="%22../reference/DATADIC.html%22"><code>ADNIMERGE2::DATADIC</code></a>
 or from the data-sharing platform.</p>
 <p>To get all variables with code values:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get variable code values for all available data based on the DATADIC</span></span>
 <span><span class="va">data_dict_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_factor_levels_datadict.html">get_factor_levels_datadict</a></span><span class="op">(</span></span>
 <span>  .datadic <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DATADIC.html">DATADIC</a></span>,</span>
@@ -220,17 +234,19 @@ or from the data-sharing platform.</p>
 <span>  <span class="fu"><a href="../reference/datadict_as_tibble.html">datadict_as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate</a></span><span class="op">(</span><span class="va">prefix</span>, <span class="va">suffix</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 15</span></span></span>
-<span><span class="co">#&gt;   prefix suffix PHASE CRFNAME  TBLNAME FLDNAME TEXT  TYPE  LENGTH DD_CRF_VERSION</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 1      BUTTER ADNI1 ADAS-Co… ADAS    COT1LI… Tria… t     20     <span style="color: #BB0000;">NA</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2      ARM    ADNI1 ADAS-Co… ADAS    COT1LI… Tria… t     20     <span style="color: #BB0000;">NA</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 3      SHORE  ADNI1 ADAS-Co… ADAS    COT1LI… Tria… t     20     <span style="color: #BB0000;">NA</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 4      LETTER ADNI1 ADAS-Co… ADAS    COT1LI… Tria… t     20     <span style="color: #BB0000;">NA</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 5      QUEEN  ADNI1 ADAS-Co… ADAS    COT1LI… Tria… t     20     <span style="color: #BB0000;">NA</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 6      CABIN  ADNI1 ADAS-Co… ADAS    COT1LI… Tria… t     20     <span style="color: #BB0000;">NA</span>            </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: UNITS &lt;chr&gt;, STATUS &lt;chr&gt;, CODE_CHANGES &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 18</span></span></span>
+<span><span class="co">#&gt;   prefix suffix  DATADIC_SOURCE PHASE CRFNAME TBLNAME FLDNAME TEXT  TYPE  LENGTH</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 0      No his… ADSP_PHC_DATA… <span style="color: #BB0000;">NA</span>    ADSP P… ADSP_P… PHC_Hy… Hist… nume… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 1      Histor… ADSP_PHC_DATA… <span style="color: #BB0000;">NA</span>    ADSP P… ADSP_P… PHC_Hy… Hist… nume… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 0      No his… ADSP_PHC_DATA… <span style="color: #BB0000;">NA</span>    ADSP P… ADSP_P… PHC_Di… Hist… nume… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 1      Histor… ADSP_PHC_DATA… <span style="color: #BB0000;">NA</span>    ADSP P… ADSP_P… PHC_Di… Hist… nume… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 0      No his… ADSP_PHC_DATA… <span style="color: #BB0000;">NA</span>    ADSP P… ADSP_P… PHC_He… Hist… nume… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 1      Histor… ADSP_PHC_DATA… <span style="color: #BB0000;">NA</span>    ADSP P… ADSP_P… PHC_He… Hist… nume… 1     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 8 more variables: UNITS &lt;chr&gt;, NOTES &lt;chr&gt;, update_stamp &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   DD_CRF_VERSION &lt;chr&gt;, STATUS &lt;chr&gt;, CODE_CHANGES &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   MAPPING_NOTES &lt;chr&gt;, class_type &lt;chr&gt;</span></span></span></code></pre></div>
+</details>
 </div>
 <div class="section level3">
 <h3 id="missing-values">Missing Values<a class="anchor" aria-label="anchor" href="#missing-values"></a>
@@ -245,7 +261,7 @@ message in the following two r chunks implies that there are no
 variables with the specified values in the <a href="%22../reference/DXSUM.html%22"><code>ADNIMERGE2::DXSUM</code></a>
 dataset since these values are already converted into missing value
 prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/tree/main/data-raw/data-prep.R" class="external-link">here</a>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert "-4" into missing value</span></span>
 <span><span class="fu"><a href="../reference/convert_to_missing_value.html">convert_to_missing_value</a></span><span class="op">(</span></span>
 <span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DXSUM.html">DXSUM</a></span>,</span>
@@ -255,7 +271,7 @@ prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/
 <span>  phase <span class="op">=</span> <span class="fu"><a href="../reference/adni_phase.html">adni_phase</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">PTID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">.</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No variable contains <span style="color: #0000BB;">"-4"</span> value</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 41</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 variables: ORIGPROT &lt;chr&gt;, COLPROT &lt;fct&gt;, RID &lt;dbl&gt;, VISCODE &lt;chr&gt;,</span></span></span>
@@ -265,7 +281,7 @@ prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXMOTHET &lt;chr&gt;, DXDSEV &lt;chr&gt;, DXDDUE &lt;chr&gt;, DXAD &lt;chr&gt;, DXAPP &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXAPROB &lt;chr&gt;, DXAPOSS &lt;chr&gt;, DXPARK &lt;chr&gt;, DXPDES &lt;chr&gt;, DXPCOG &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXPATYP &lt;chr&gt;, DXDEP &lt;chr&gt;, DXOTHDEM &lt;chr&gt;, DXODES &lt;chr&gt;, DXCONFID &lt;chr&gt;, …</span></span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Convert "-1" into missing value in ADNI1 phase only</span></span>
 <span><span class="fu"><a href="../reference/convert_to_missing_value.html">convert_to_missing_value</a></span><span class="op">(</span></span>
 <span>  .data <span class="op">=</span> <span class="fu">ADNIMERGE2</span><span class="fu">::</span><span class="va"><a href="../reference/DXSUM.html">DXSUM</a></span>,</span>
@@ -275,7 +291,7 @@ prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/
 <span>  phase <span class="op">=</span> <span class="st">"ADNI1"</span></span>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">PTID</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">.</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No variable contains <span style="color: #0000BB;">"-1"</span> value</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 41</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 41 variables: ORIGPROT &lt;chr&gt;, COLPROT &lt;fct&gt;, RID &lt;dbl&gt;, VISCODE &lt;chr&gt;,</span></span></span>
@@ -285,6 +301,7 @@ prior to the package build <a href="https://github.com/atri-biostats/ADNIMERGE2/
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXMOTHET &lt;chr&gt;, DXDSEV &lt;chr&gt;, DXDDUE &lt;chr&gt;, DXAD &lt;chr&gt;, DXAPP &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXAPROB &lt;chr&gt;, DXAPOSS &lt;chr&gt;, DXPARK &lt;chr&gt;, DXPDES &lt;chr&gt;, DXPCOG &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   DXPATYP &lt;chr&gt;, DXDEP &lt;chr&gt;, DXOTHDEM &lt;chr&gt;, DXODES &lt;chr&gt;, DXCONFID &lt;chr&gt;, …</span></span></span></code></pre></div>
+</details>
 </div>
 <div class="section level3">
 <h3 id="derived-datasets">Derived Datasets<a class="anchor" aria-label="anchor" href="#derived-datasets"></a>
@@ -294,12 +311,12 @@ datasets are created using the <a href="https://pharmaverse.org/" class="externa
 illustration purpose. Detailed procedures of how these datasets are
 generated can be found in the following package vignettes:</p>
 <ul>
-<li><p><a href="vignette(topic%20=%20%22ADNIMERGE2-Derived-Data%22,%20package%20=%20%22ADNIMERGE2%22)">ADNIMERGE2-Derived-Data</a>:
+<li><p><a href="../articles/ADNIMERGE2-Derived-Data.html">ADNIMERGE2-Derived-Data</a>:
 Includes standardized derived datasets</p></li>
-<li><p><a href="vignette(topic%20=%20%22ADNIMERGE2-Analysis-Meta-Specs%22,%20package%20=%20%22ADNIMERGE2%22)l">ADNIMERGE2-Analysis-Meta-Specs</a>:
+<li><p><a href="../articles/ADNIMERGE2-Analysis-Meta-Specs.html">ADNIMERGE2-Analysis-Meta-Specs</a>:
 Includes a metadata specification that is used for generating the
 derived analysis ready datasets.</p></li>
-<li><p><a href="vignette(topic%20=%20%22ADNIMERGE2-Analysis-Data%22,%20package%20=%20%22ADNIMERGE2%22)l">ADNIMERGE2-Analysis-Data</a>:
+<li><p><a href="../articles/ADNIMERGE2-Analysis-Data.html">ADNIMERGE2-Analysis-Data</a>:
 Includes derived analysis ready datasets based on the metadata
 specifications and derived datasets.</p></li>
 </ul>
@@ -314,8 +331,8 @@ standardization, and those data are generated for illustration
 purpose.</em></p></li>
 </ul>
 <p>Furthermore, a derived data for modified version of the Preclinical
-Alzheimer Cognitive Composite (PACC) score is also included. <a href="vignette(topic%20=%20%22ADNIMERGE2-PACC%22,%20package%20=%20%22ADNIMERGE2%22)">ADNIMERGE2-PACC</a>
-shows creating PACC score from raw datasets.</p>
+Alzheimer Cognitive Composite (PACC) score is also included. <a href="../articles/ADNIMERGE2-PACC.html">ADNIMERGE2-PACC</a> shows
+creating PACC score from raw datasets.</p>
 </div>
 <div class="section level3">
 <h3 id="articles">Articles<a class="anchor" aria-label="anchor" href="#articles"></a>
@@ -324,18 +341,18 @@ shows creating PACC score from raw datasets.</p>
 demonstrate how to use the study data R package for creating simple
 summaries or analysis results.</p>
 <ul>
-<li><p><a href="'./ADNI-Enrollment.html'">Enrollment
-Summaries</a>: Includes enrollment summary by calender month, enrolled
+<li><p><a href="../articles/ADNI-Enrollment.html">Enrollment
+Summaries</a>: Includes enrollment summary by calendar month, enrolled
 subject demographic/characteristics summary by study phases and baseline
 diagnostics status (Cognitive Normal (CN), Mild Cognitive Impairment
 (MCI) and Dementia (DEM)).</p></li>
-<li><p><a href="'./ADNI-Longitudinal.html'">Longitudinal
+<li><p><a href="../articles/ADNI-Longitudinal.html">Longitudinal
 Clinical Cognitive Outcome Summaries</a>: Currently, includes summary of
 the ADAS Cognitive Behavior assessment item-13 total score (ADAS-cog)
 overtime across the baseline diagnostics status.</p></li>
 </ul>
-<p><strong>NOTE: </strong> <em>The analysis results that presented in
-the package vignettes are not pre-planned and only included for
+<p><strong>NOTE: </strong> <em>The analysis results that are presented
+in this package vignettes are not pre-planned and only included for
 illustration purpose.</em></p>
 </div>
 </div>
@@ -350,7 +367,7 @@ illustration purpose.</em></p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>
