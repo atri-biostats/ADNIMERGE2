@@ -14,8 +14,10 @@ library(cli)
 # Pre-specified directories name ----
 source(file.path(".", "data-raw", "dir-list.R"))
 check_dir_list <- lapply(dir_list, function(dir) {
-  if (dir.exists(dir) == TRUE) unlink(dir, recursive = TRUE, force = TRUE)
-  cli::cli_alert_warning(text = "{.path {dir}} removed")
+  if (dir.exists(dir) == TRUE) {
+    unlink(dir, recursive = TRUE, force = TRUE)
+    cli::cli_alert_warning(text = "{.path {dir}} removed")
+  }
 })
 
 # Data downloaded date arg parameter ----
@@ -65,14 +67,22 @@ if (EXISTED_ZIPFILE) {
     pattern = "Tables\\.zip$|\\.zip$|^\\./data-raw/"
   )
   zip_files_prefix <- remove_zipname(zip_files_prefix, "ADSP_PHC")
+  # Anchored patterns: zip name prefix, `ADNI_` prefix, `v_` prefix, and
+  # date stamped suffix before the file extension
   zip_name_pattern <- str_c(c(
-    zip_files_prefix,
-    date_stamped_suffix,
+    str_c("^", zip_files_prefix, "\\_?"),
+    str_c(date_stamped_suffix, "(?=\\.csv$)"),
     str_to_upper(prefix_pattern),
-    "v_"
+    "^v\\_"
   ), collapse = "|")
 
   lapply(zip_file_list, function(zip_file) {
+    ### Remove any previously extracted files to avoid importing stale files ----
+    extracted_dir <- str_remove(string = zip_file, pattern = "\\.zip$")
+    if (dir.exists(extracted_dir)) {
+      unlink(extracted_dir, recursive = TRUE, force = TRUE)
+      cli::cli_alert_warning(text = "{.path {extracted_dir}} removed")
+    }
     ### Unzipped file ----
     unzipped_file_status <- get_unzip_file(
       input_dir = raw_data_dir,
@@ -135,7 +145,7 @@ if (EXISTED_CSVFILE) {
   cli::cli_alert_info(text = "Reading csv files")
   # Removing the common date stamped file extension;
   # And any files started with ADNI prefix
-  csv_name_pattern <- str_c(c(str_to_upper(prefix_pattern), date_stamped_suffix), collapse = "|")
+  csv_name_pattern <- str_c(c(str_to_upper(prefix_pattern), str_c(date_stamped_suffix, "(?=\\.csv$)")), collapse = "|")
 
   rename_file_status <- file_action(
     input_dir = raw_data_dir,
@@ -159,13 +169,45 @@ if (EXISTED_CSVFILE) {
 }
 rm(list = c("date_stamped_suffix", "csv_file_list", "csv_name_pattern"))
 
+# Convert external data dictionaries into DATADIC layout ----
+## Some data dictionaries are shared with a different layout and file name,
+## e.g., `ADSP_PHC_MERGED_DATADIC_<YYYYMMDD>` and `MUSE_volume_ADNI123_Dictionary`.
+## They are converted into the main DATADIC layout and renamed with a `_DATADIC` suffix.
+external_datadict_path <- get_full_file_path(
+  dir_path = data_dir,
+  pattern = "(DATADIC|Dictionary|DICTIONARY)(\\_[0-9]{8})?\\.rda$"
+)
+external_datadict_path <- external_datadict_path[!basename(external_datadict_path) %in% c("DATADIC.rda", "REMOTE_DATADIC.rda")]
+for (cur_path in external_datadict_path) {
+  cur_name <- str_remove_all(string = cur_path, pattern = file_path_pattern)
+  temp_env <- new.env()
+  load(file = cur_path, envir = temp_env)
+  cur_datadict <- get(cur_name, envir = temp_env)
+  if (!is_external_datadict(cur_datadict)) next
+  new_name <- rename_external_datadict(cur_name)
+  if (new_name != cur_name && file.exists(file.path(data_dir, paste0(new_name, ".rda")))) {
+    cli::cli_abort(message = "{.val {new_name}} already exists in {.path {data_dir}}")
+  }
+  data_update_status <- use_data_modified(
+    dataset_name = new_name,
+    dataset = convert_external_datadict(cur_datadict),
+    edit_type = "create",
+    run_script = TRUE
+  )
+  if (data_update_status != TRUE) cli::cli_abort(message = "{.val {new_name}} has not been created")
+  if (new_name != cur_name) {
+    file.remove(cur_path)
+    cur_script_path <- file.path(raw_data_dir, paste0(cur_name, ".R"))
+    if (file.exists(cur_script_path)) file.remove(cur_script_path)
+  }
+  cli::cli_alert_success(text = "Converted {.val {cur_name}} into {.val {new_name}} data dictionary")
+  rm(list = c("temp_env", "cur_datadict", "new_name", "data_update_status"))
+}
+rm(list = c("external_datadict_path"))
+
 # Converting `-4` & `-1` value as missing values ----
 data_dic_path <- file.path(data_dir, "DATADIC.rda")
 if (!file.exists(data_dic_path)) cli::cli_abort(message = "{.path {data_dic_path}} is not found!")
-data_path_list <- get_full_file_path(
-  dir_path = "./data",
-  pattern = "DATADIC\\.rda$"
-)
 data_downloaded_date_path <- file.path(data_dir, "DATA_DOWNLOADED_DATE.rda")
 data_path_list <- get_full_file_path(
   dir_path = data_dir,
@@ -182,7 +224,7 @@ if (length(data_path_list) > 0) {
 } else {
   UPDATE_MISSING_VALUE <- FALSE
   cli::cli_alert_warning(
-    text = "No existed data in the {.path './data'}"
+    text = "No existing data in the {.path './data'}"
   )
 }
 
@@ -247,7 +289,7 @@ if (UPDATE_MISSING_VALUE) {
         }
     } else {
       cli::cli_alert_danger(
-        text = "{.val ORIGPROT} and {.val COLPROT} have not been addedd in {.val {tb}} data."
+        text = "{.val ORIGPROT} and {.val COLPROT} have not been added in {.val {tb}} data."
       )
     }
     # Replacing `-4` and `-1` as missing value -----
@@ -306,7 +348,8 @@ data_path_list <- data_path_list[!data_path_list %in% c(
   data_downloaded_date_path
 )]
 
-date_stamped_pattern <- "\\_[0-9]{2}\\_[0-9]{2}\\_[0-9]{2}"
+# Date stamp in `_MM_DD_YY` or `_MM_DD_YYYY` format, e.g., `UCSFFSX_11_02_15` or `TBM_03_17_2022`
+date_stamped_pattern <- "\\_[0-9]{2}\\_[0-9]{2}\\_([0-9]{4}|[0-9]{2})(?=\\_|\\.rda$)"
 dataset_list_dd <- tibble(file_path = data_path_list) %>%
   mutate(short_tblname = str_remove_all(string = file_path, pattern = file_path_pattern)) %>%
   filter(str_detect(string = file_path, pattern = date_stamped_pattern) == TRUE)
@@ -319,7 +362,10 @@ if (nrow(dataset_list_dd) > 0) {
     ) %>%
     mutate(stamped_date = str_sub(string = stamped_date, start = 2)) %>%
     mutate(stamped_date = str_replace_all(string = stamped_date, pattern = "\\_", "-")) %>%
-    mutate(stamped_date = as.Date(stamped_date, "%m-%d-%y")) %>%
+    mutate(stamped_date = as.Date(
+      stamped_date,
+      format = ifelse(nchar(stamped_date) == 10, "%m-%d-%Y", "%m-%d-%y")
+    )) %>%
     # To add version extension for the dataset with multiple truncation
     group_by(updated_file_path) %>%
     arrange(stamped_date) %>%
@@ -423,7 +469,7 @@ if (nrow(dataset_list_dd) > 0) {
     )
     ## Remove objects from the .GlobalEnv
     rm(list = c(
-      "tb", "dd", "cur_file_path", "new_file_path", "cur_short_tblname",
+      "dd", "cur_file_path", "new_file_path", "cur_short_tblname",
       "cur_updated_short_tblname", "data_update_status",
       cur_short_tblname
     ))
@@ -492,10 +538,10 @@ if (CHECK_COMMON_COL) {
     separate(col = tblname, into = c("tblname", "colname_list"), sep = " = ") %>%
     filter(!colname_list %in% "NA" & !is.na(colname_list)) %>%
     mutate(
-      contains_colport_status = case_when(
+      contains_colprot_status = case_when(
         str_detect(string = colname_list, pattern = "COLPROT") == TRUE ~ "No"
       ),
-      contains_origport_status = case_when(
+      contains_origprot_status = case_when(
         str_detect(string = colname_list, pattern = "ORIGPROT") == TRUE ~ "No"
       )
     )
@@ -508,19 +554,19 @@ if (CHECK_COMMON_COL) {
     assert_uniq(short_tblname) %>%
     left_join(
       result_table %>%
-        select(tblname, contains_colport_status, contains_origport_status),
+        select(tblname, contains_colprot_status, contains_origprot_status),
       by = c("short_tblname" = "tblname")
     ) %>%
     assert_uniq(short_tblname) %>%
     mutate(across(
-      all_of(c("contains_colport_status", "contains_origport_status")),
+      all_of(c("contains_colprot_status", "contains_origprot_status")),
       ~ case_when(is.na(.x) ~ "Yes", TRUE ~ "No")
     )) %>%
     mutate(contain_common_cols = case_when(
-      contains_colport_status == "Yes" & contains_origport_status == "Yes" ~ "Both COLPROT and ORIGPROT",
-      contains_colport_status == "Yes" & contains_origport_status == "No" ~ "Only COLPROT",
-      contains_colport_status == "No" & contains_origport_status == "Yes" ~ "Only ORIGPROT",
-      contains_colport_status == "No" & contains_origport_status == "No" ~ "None"
+      contains_colprot_status == "Yes" & contains_origprot_status == "Yes" ~ "Both COLPROT and ORIGPROT",
+      contains_colprot_status == "Yes" & contains_origprot_status == "No" ~ "Only COLPROT",
+      contains_colprot_status == "No" & contains_origprot_status == "Yes" ~ "Only ORIGPROT",
+      contains_colprot_status == "No" & contains_origprot_status == "No" ~ "None"
     ))
 
   # Save the dataset name with corresponding common columns status
@@ -550,13 +596,10 @@ datadict_code_list <- names(multiple_datadict)
 multiple_datadict <- lapply(datadict_code_list, function(x) {
   multiple_datadict %>%
     pluck(., x) %>%
-    {
-      if (x %in% "DATADIC") update_main_datadict(.) else (.)
-    } %>%
     bind_datadict_description(
       .datadict = .,
       code = x,
-      label = x
+      label = edit_datadict_labels(x)
     )
 })
 
@@ -573,6 +616,17 @@ if ("DATADIC" %in% datadict_code_list) {
   } else {
     cli::cli_alert_warning(text = "Main DATADIC is not updated!")
   }
+  ## Dataset-specific (external) data dictionaries take precedence over
+  ## any outdated records of the same dataset in the main DATADIC
+  external_datadict_names <- datadict_code_list[!datadict_code_list %in% c("DATADIC", "REMOTE_DATADIC")]
+  external_tblname <- multiple_datadict[external_datadict_names] %>%
+    lapply(function(x) unique(x$TBLNAME)) %>%
+    unlist() %>%
+    unique()
+  external_tblname <- external_tblname[!external_tblname %in% external_datadict_names]
+  multiple_datadict$DATADIC <- multiple_datadict$DATADIC %>%
+    filter(!TBLNAME %in% external_tblname)
+  rm(list = c("external_datadict_names", "external_tblname"))
 } else {
   cli::cli_alert_warning(
     text = c(
@@ -587,6 +641,51 @@ if ("DATADIC" %in% datadict_code_list) {
 use_data_modified_wrapper(multiple_datadict)
 
 DATADIC <- bind_rows(multiple_datadict, .id = "DATADIC_SOURCE")
+
+# Add a description for common columns: "ORIGPROT" or "COLPROT" ----
+if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
+  dataset_list_dd <- dataset_list_dd %>%
+    # Long format
+    pivot_longer(
+      cols = c(contains_colprot_status, contains_origprot_status),
+      names_to = "common_cols",
+      values_to = "status"
+    ) %>%
+    filter(status == "Yes") %>%
+    mutate(common_cols = case_when(
+      str_detect(common_cols, "contains_colprot_status") == TRUE ~ "COLPROT",
+      str_detect(common_cols, "contains_origprot_status") == TRUE ~ "ORIGPROT"
+    )) %>%
+    # Only TBLNAME that are existing in the DATADIC
+    filter(short_tblname %in% unique(DATADIC$TBLNAME))
+
+  # Description of common cols
+  common_description_text <- list(
+    ORIGPROT = "Original study protocol",
+    COLPROT = "Study protocol of data collection"
+  )
+
+  for (tblname in unique(dataset_list_dd$short_tblname)) {
+    tblname_common_col <- dataset_list_dd %>%
+      filter(short_tblname %in% tblname) %>%
+      assert_uniq(common_cols) %>%
+      assert_non_missing(common_cols) %>%
+      pull(common_cols)
+
+    description_text <- lapply(tblname_common_col, function(fldname) {
+      common_description_text[[fldname]]
+    }) %>%
+      unlist()
+
+    DATADIC <- common_cols_description_datadic(
+      tblname = tblname,
+      .datadic = DATADIC,
+      fldname = tblname_common_col,
+      description = description_text
+    )
+  }
+}
+
 use_data_modified(
   dataset_name = "DATADIC",
   dataset = DATADIC,
@@ -607,49 +706,4 @@ if (UPDATE_DATADIC) {
     list = "UPDATED_DATADIC",
     file = file.path(updated_datadic_dir, "UPDATED_DATADIC.rda")
   )
-}
-
-# Add a description for common columns: "ORIGPROT" or "COLPROT" ----
-if (CHECK_COMMON_COL == TRUE & UPDATE_DATADIC == TRUE) {
-  dataset_list_dd <- dataset_list_dd %>%
-    # Long format
-    pivot_longer(
-      cols = c(contains_colport_status, contains_origport_status),
-      names_to = "common_cols",
-      values_to = "status"
-    ) %>%
-    filter(status == "Yes") %>%
-    mutate(common_cols = case_when(
-      str_detect(common_cols, "contains_colport_status") == TRUE ~ "COLPROT",
-      str_detect(common_cols, "contains_origport_status") == TRUE ~ "ORIGPROT"
-    )) %>%
-    # Only TBLNAME that are existing in the UPDATED_DATADIC
-    filter(short_tblname %in% unique(UPDATED_DATADIC$TBLNAME))
-
-  # Description of common cols
-  common_description_text <- list(
-    ORIGPROT = "Original study protocol",
-    COLPROT = "Study protocol of data collection"
-  )
-
-  for (tblname in unique(dataset_list_dd$short_tblname)) {
-    # Add notes info cli_alter
-    tblname_common_col <- dataset_list_dd %>%
-      filter(short_tblname %in% tblname) %>%
-      assert_uniq(common_cols) %>%
-      assert_non_missing(common_cols) %>%
-      pull(common_cols)
-
-    description_text <- lapply(tblname_common_col, function(fldname) {
-      common_description_text[[fldname]]
-    }) %>%
-      unlist()
-
-    UPDATED_DATADIC <- common_cols_description_datadic(
-      tblname = tblname,
-      .datadic = UPDATED_DATADIC,
-      fldname = tblname_common_col,
-      description = description_text
-    )
-  }
 }

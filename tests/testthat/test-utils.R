@@ -29,21 +29,23 @@ test_that("Check replace_multiple_values function", {
   )
 
   # Test 2 ----
-  data_dict <- get_factor_levels_datadict(
+  all_data_dict <- get_factor_levels_datadict(
     .datadic = DATADIC,
     tbl_name = "ADAS"
   ) %>%
-    datadict_as_tibble() %>%
+    datadict_as_tibble()
+
+  data_dict <- all_data_dict %>%
     filter(FLDNAME %in% "COT1LIST") %>%
     verify(nrow(.) == 10)
 
-  input_string2 <- c("1:2:3:6:8:10")
+  input_string2 <- c("1:2:3:6:8:9") # see test-6 & test-7
   replaced_values2 <- replace_multiple_values(
     input_string = input_string2,
     code = data_dict$prefix,
     decode = data_dict$suffix
   )
-  pre_values2 <- paste0(data_dict$suffix[c(1, 2, 3, 6, 8, 10)], collapse = ":")
+  pre_values2 <- paste0(data_dict$suffix[c(1, 2, 3, 6, 8, 9) + 1], collapse = ":")
   expect_identical(
     object = replaced_values2,
     expected = pre_values2,
@@ -57,7 +59,7 @@ test_that("Check replace_multiple_values function", {
     code = data_dict$prefix,
     decode = data_dict$suffix
   )
-  pre_values3 <- paste0(c("0", data_dict$suffix[c(2, 3, 8, 10)]), collapse = ":")
+  pre_values3 <- paste0(c(data_dict$suffix[c(0, 2, 3) + 1], "08", "10"), collapse = ":")
   pre_values3 <- str_replace_all(string = pre_values3, pattern = "TICKET", replacement = "08")
   expect_identical(
     object = replaced_values3,
@@ -90,11 +92,7 @@ test_that("Check replace_multiple_values function", {
   )
 
   # Test 5 ----
-  data_dict2 <- get_factor_levels_datadict(
-    .datadic = DATADIC,
-    tbl_name = "ADAS"
-  ) %>%
-    datadict_as_tibble() %>%
+  data_dict2 <- all_data_dict %>%
     filter(FLDNAME %in% "Q9TASK") %>%
     filter(PHASE %in% "ADNIGO") %>%
     verify(nrow(.) == 6) %>%
@@ -118,5 +116,51 @@ test_that("Check replace_multiple_values function", {
     object = replaced_values5,
     expected = pre_values5,
     info = "Check replace_multiple_values function: test-5"
+  )
+
+  # Test 6 ----
+  data_dict3 <- all_data_dict %>%
+    filter(FLDNAME %in% "Q1TR1" & PHASE %in% "ADNI1")
+  data_dict3_list <- data_dict3 %>%
+    select(prefix, suffix) %>%
+    deframe_as_list()
+
+  input_string6 <- c("1:2:3:6:8:10")
+  replaced_values6 <- replace_multiple_values(
+    input_string = input_string6,
+    code = data_dict3$prefix,
+    decode = data_dict3$suffix
+  )
+  pre_values6 <- paste0(data_dict3_list[c("1", "2", "3", "6", "8", "10")], collapse = ":")
+  expect_identical(
+    object = replaced_values6,
+    expected = pre_values6,
+    info = "Check replace_multiple_values function: test-6"
+  )
+
+  # Test 7 ----
+  data_dict4_list <- bind_rows(
+    data_dict3,
+    data_dict3 %>%
+      filter(prefix %in% c("0", "1")) %>%
+      mutate(prefix = paste0("0", prefix))
+  ) %>%
+    select(prefix, suffix) %>%
+    deframe_as_list()
+
+  input_string7 <- c("0:1:3:6:10:00:01")
+  replaced_values7 <- replace_multiple_values(
+    input_string = input_string7,
+    code = names(data_dict4_list),
+    decode = as.character(data_dict4_list)
+  )
+  pre_values7 <- c(
+    "Butter", "Arm", "Letter", "Pole", "None recalled correctly", "Butter", "Arm"
+  )
+  pre_values7 <- paste0(pre_values7, collapse = ":")
+  expect_identical(
+    object = replaced_values7,
+    expected = pre_values7,
+    info = "Check replace_multiple_values function: test-7"
   )
 })

@@ -19,9 +19,10 @@
 #'   }
 #'
 #' @examples
-#'
+#' \dontrun{
 #' # Please see an example in
-#' vignette(topic = "ADNIMERGE2-PACC-SCORE", package = "ADNIMERGE2")
+#' vignette(topic = "ADNIMERGE2-PACC", package = "ADNIMERGE2")
+#' }
 #'
 #' @seealso \code{\link{get_common_value}()}
 #'
@@ -269,7 +270,7 @@ create_list_object <- function(x,
     values = pre_cols,
     multiple = TRUE
   )
-  list_value <- deframe_as_list(x = x, col_names = pre_cols)
+  list_value <- deframe_as_list(x = x, col_names = col_names)
   list_value
 }
 
@@ -335,8 +336,8 @@ get_common_value <- function(list_value, col_order) {
     cli_abort(
       message = c(
         "x" = "Found more values in {.var list_value} than {.var col_order} argument.\n",
-        "i" = "Length of {.var col_order}: {.val length(col_order)}\n",
-        "i" = "Length of {.var list_value}: {.val length(list_value)}"
+        "i" = "Length of {.var col_order}: {.val {length(col_order)}}\n",
+        "i" = "Length of {.var list_value}: {.val {length(list_value)}}"
       )
     )
   }

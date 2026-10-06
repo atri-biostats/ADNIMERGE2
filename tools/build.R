@@ -9,8 +9,8 @@ library(callr)
 setwd(rstudioapi::getActiveProject())
 
 ## Data preparation ----
-DATA_DOWNLOADED_DATE <- "2026-04-02" # Data downloaded date YYYY-MM-DD format
-UPDATE_DATADIC <- TRUE # Please see line 611 in the `./data-raw/data_prep.R`
+DATA_DOWNLOADED_DATE <- "2026-10-01" # Data downloaded date YYYY-MM-DD format
+UPDATE_DATADIC <- TRUE # Please see `Update DATADIC` section in the `./data-raw/data-prep.R`
 callr::rscript(
   script = "./data-raw/data-prep.R",
   wd = ".",
@@ -32,7 +32,7 @@ if (DECODE_VALUE) {
 }
 
 ### Create data category for pkgdown -----
-# Recommended to run this line for creating a website using pkgdown
+# Recommended to run this line to categorize data files for pkgdown website
 CREATE_DATA_CATEGORY <- TRUE
 if (CREATE_DATA_CATEGORY) {
   callr::rscript(
@@ -47,18 +47,8 @@ TOOLS_DIR <- file.path(".", "tools")
 TEST_DIR <- file.path(".", "tests", "testthat")
 
 INCLUDE_PACC_DERIVED_DATA <- TRUE
-# NOTE:
-#  Required to install the latest version of `ADNIMERGE` and `ADNI4 ` R packages
-#  `ADNI4` R package is only available internally
-if (INCLUDE_PACC_DERIVED_DATA) {
-  callr::rscript(
-    script = "./tools/generate-pacc-input-data.R",
-    wd = ".",
-    cmdargs = list(DATA_DOWNLOADED_DATE = DATA_DOWNLOADED_DATE)
-  )
-} else {
-  # Transfer PACC scoring article from "./vignettes" to "./tools"
-  # when PACC input raw data are not generated.
+if (!INCLUDE_PACC_DERIVED_DATA) {
+  # Transfer PACC scoring article from "./vignettes" to "./tools" if PACC is not included
   callr::rscript(
     script = "./tools/remove-files.R",
     wd = ".",
@@ -153,42 +143,48 @@ callr::rscript(
 )
 
 ## Additional package related files ----
-# # run once:
-# # Package license
+# run once:
+# Package license
 # usethis::use_mit_license()
-#
-# # Package news
-# # Caution of overwriting any existing `NEWS.md` file
-# usethis::use_news_md()
 
-## Finalize package building ----
-devtools::load_all("./")
-devtools::document()
-devtools::check(error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
-pkg_dir <- devtools::build(vignettes = INCLUDE_DERIVED_DATASET)
-install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
+# Package news
+# Caution of overwriting any existing `NEWS.md` file
+# # usethis::use_news_md()
 
-# Build README.md ----
-# devtools::build_readme()
+BUILD_PACKAGE <- TRUE
+if (BUILD_PACKAGE) {
+  ## Finalize package building ----
+  pkg_root <- "./"
+  devtools::load_all(path = pkg_root)
+  devtools::document(pkg = pkg_root)
+  devtools::check(pkg = pkg_root, error_on = "error", vignettes = INCLUDE_DERIVED_DATASET)
+  pkg_dir <- devtools::build(pkg = pkg_root, vignettes = INCLUDE_DERIVED_DATASET)
+  install.packages(pkgs = pkg_dir, repos = NULL, type = "source")
+  # Build README.md ----
+  # devtools::build_readme()
+}
 
-# # Build website ----
-# # run once:
-#
-# # To clean any existing site on local machine
-# pkgdown::clean_site()
-#
-# # Caution of overwriting any existing `_pkgdown.yml` file
-# # usethis::use_pkgdown()
-#
-# # To check pkgdown configuration: `_pkgdown.yml`
-# pkgdown::check_pkgdown()
-#
-# # To build a site
-# pkgdown::build_site()
-#
-# # Publish website online ----
-# # To publish a site online via GitHub repo: set `PUBLISH_SITE <- TRUE`
-# # PUBLISH_SITE <- FALSE
-# if (PUBLISH_SITE) {
-#   pkgdown::deploy_to_branch()
-# }
+BUILD_SITE <- FALSE
+PUBLISH_SITE <- FALSE
+if (BUILD_SITE) {
+  # Build website ----
+  # run once:
+
+  # To clean any existing site on local machine
+  pkgdown::clean_site()
+
+  # Caution of overwriting any existing `_pkgdown.yml` file
+  # usethis::use_pkgdown()
+
+  # To check pkgdown configuration: `_pkgdown.yml`
+  pkgdown::check_pkgdown()
+
+  # To build a site
+  pkgdown::build_site()
+
+  # Publish website online ----
+  # To publish a site online via GitHub repo: set `PUBLISH_SITE <- TRUE`
+  if (PUBLISH_SITE) {
+    pkgdown::deploy_to_branch()
+  }
+}

@@ -78,11 +78,14 @@ run_check_derived_dataset <- function(pkg = "ADNIMERGE2",
   )
 
   if (is.null(dataset_name)) dataset_name <- c("DM", "AE", "QS", "RS", "LB", "VS")
-  # Required to load dataset in the environment with lower case name format
-  convert_lower_case <- lapply(dataset_name, function(i) {
-    assign(tolower(i), get(i))
-  })
-  names(convert_lower_case) <- tolower(dataset_name)
+  # Required to load dataset in the global environment with lower case name format,
+  # because `sdtmchecks` looks up domain datasets (e.g., `dm`, `ae`) by name
+  lower_names <- tolower(dataset_name)
+  new_lower_names <- lower_names[!vapply(lower_names, exists, logical(1), envir = .GlobalEnv, inherits = FALSE)]
+  on.exit(rm(list = new_lower_names, envir = .GlobalEnv), add = TRUE)
+  for (i in dataset_name) {
+    assign(tolower(i), get(i), envir = .GlobalEnv)
+  }
 
   temp_report <- sdtmchecks::run_all_checks(
     metads = sdtmchecks::sdtmchecksmeta %>%
@@ -94,10 +97,10 @@ run_check_derived_dataset <- function(pkg = "ADNIMERGE2",
 
   if (export_report) {
     if (is.null(output_dir)) {
-      cli_abort(message = "{.path output_dir} must not be missing.")
+      cli_abort(message = "{.arg output_dir} must not be missing.")
     }
     if (!grepl(pattern = "\\.xlsx$", x = output_file)) {
-      cli_abort(message = "{.file output_file} must be an excel file with {val. .xlsx} name extension.")
+      cli_abort(message = "{.file output_file} must be an excel file with {.val .xlsx} name extension.")
     }
     # To store any identified issues/flag into local directory "./inst"
     sdtmchecks::report_to_xlsx(

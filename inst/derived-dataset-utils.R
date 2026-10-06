@@ -98,7 +98,7 @@ get_id_mapping_list <- function(.registry = get("REGISTRY"),
 #' @return A data.frame appended with \code{RFSTDTC} variable.
 #' @examples
 #' \dontrun{
-#' add_rfstdtc_date(
+#' create_rfstdtc(
 #'   .data = ADNIMERGE2::DM,
 #'   .registry = ADNIMERGE2::REGISTRY
 #' )
@@ -110,7 +110,7 @@ create_rfstdtc <- function(.data, .registry = get("REGISTRY")) {
   require(dplyr)
   require(assertr)
   RFSTDTC <- NULL
-  join_cols <- get_cols_name(.data, c("RID", "ORIGPORT"))
+  join_cols <- get_cols_name(.data, c("RID", "ORIGPROT"))
   check_colnames(
     .data = .data,
     col_names = "RID",
@@ -640,19 +640,23 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
             method = method,
             distance_col = distance_col
           ) %>%
-          filter(if_all(any_of(non_main_cols.dist), ~ .x == 0)) %>%
+          # Exact match on non-main columns; use a tolerance because string distances
+          # of identical strings can be a floating point value close to zero (e.g., 5.55e-17)
+          filter(if_all(any_of(non_main_cols.dist), ~ abs(.x) < 1e-8)) %>%
           {
             if (!is.null(date_col)) {
               mutate(., TIME_DIFF = get(names(join_by[date_col])) - get(join_by[date_col])) %>%
                 filter(., abs(TIME_DIFF) == min(abs(TIME_DIFF), na.rm = TRUE)) %>%
-                {
-                  if (nrow(.) > 1 & relation %in% relation_lvls[1]) {
-                    filter(., TIME_DIFF == min(TIME_DIFF)) %>%
-                      filter(., row_number() == 1)
-                  } else {
-                    (.)
-                  }
-                }
+                # Get the first/initial record
+                flag_min_record(
+                  .data = .,
+                  group_var = NULL,
+                  numeric_var = "TIME_DIFF",
+                  use_abs = FALSE,
+                  flag_var = "is_flagged"
+                ) %>%
+                filter(., is_flagged %in% "Y") %>%
+                select(., -any_of("is_flagged"))
             } else {
               filter(., if_all(
                 all_of(paste0(main_cols, ".", distance_col)),
@@ -675,14 +679,71 @@ left_fuzzy_join <- function(data1, data2, join_by, check_cols, main_cols,
     data1_mapped <- bind_rows(data1_mapped, data1_not_mapped)
     data1 <- data1_mapped
   }
-  if (relation %in% relation_lvls[1]) {
-    if (nrow(data1) != nrow_data1) {
-      cli::cli_abort(message = "Set {.cls {'one-to-many'}} relationship")
-    }
-  } else {
+  if (nrow(data1) != nrow_data1 && relation %in% relation_lvls[1]) {
+    cli::cli_abort(message = "Set {.cls {'one-to-many'}} relationship")
+  }
+  if (nrow(data1) != nrow_data1 && relation %in% relation_lvls[2]) {
     cli::cli_alert_warning(text = "Duplicated records in merged data")
   }
-  return(data1)
+  output <- data1
+
+  return(output)
+}
+
+# Flag records ------
+#' @title Flag first/initial record relative reference variable
+#'
+#' @description
+#' Function to flag the first minimum records within each group.
+#' If there are tied records, the first row will be selected.
+#'
+#' @param data A data.frame
+#' @param group_var Grouping variable names(s)
+#' @param numeric_var Variable names for numeric values
+#' @param use_abs A Boolean value whether to use relative or absolute numeric difference.
+#'        By default, relative difference is used.
+#' @param flag_var Name of flag variable, Default: \code{'is_flagged'}
+#' @return A data.frame with appended \code{flag_var} variable.
+#' @rdname flag_min_record_row
+#' @importFrom dplyr mutate group_by case_when row_number ungroup select any_of
+#'
+flag_min_record <- function(.data,
+                            group_var,
+                            numeric_var,
+                            use_abs = FALSE,
+                            flag_var = "is_flagged") {
+  check_object_type(use_abs, "logical")
+  tmp_num_var <- tmp_groupvar <- NULL
+  .data <- .data %>%
+    mutate(
+      tmp_num_var = get(numeric_var),
+      tmp_num_var = ifelse(use_abs, abs(tmp_num_var), tmp_num_var)
+    ) %>%
+    {
+      if (is.null(group_var)) {
+        mutate(., tmp_groupvar = "overall")
+      } else {
+        (.)
+      }
+    }
+
+  group_var <- if (is.null(group_var)) {
+    "tmp_groupvar"
+  } else {
+    group_var
+  }
+
+  .data <- .data %>%
+    group_by(across(all_of(group_var))) %>%
+    mutate(
+      "{flag_var}" := case_when(
+        any(!is.na(tmp_num_var)) & row_number() == which.min(tmp_num_var) ~ "Y",
+        .default = NA_character_
+      )
+    ) %>%
+    ungroup() %>%
+    select(-any_of(c("tmp_num_var", "tmp_groupvar")))
+  return(.data)
 }
 
 # Rename Variables ----

@@ -169,7 +169,7 @@ check_list_names <- function(x,
                              call = rlang::caller_env()) {
   check_object_type(x, "list")
   # Checking for any unnamed list
-  unnamed_status <- c(is.null(names(x)), is.na(names(x)))
+  unnamed_status <- c(is.null(names(x)), is.na(names(x)), names(x) %in% "")
   if (any(unnamed_status == TRUE)) {
     cli_abort(
       message = c(
@@ -189,8 +189,8 @@ check_list_names <- function(x,
   if (length(missing_names) > 0) {
     cli_abort(
       message = c(
-        "{.arg {arg}} contains unnamed list value. \n",
-        "Can't find {.val {missing_names}} names{?s} {?is/are} in {.arg {arg}}."
+        "{.arg {arg}} does not contain all the required list names. \n",
+        "Can't find {.val {missing_names}} name{?s} in {.arg {arg}}."
       ),
       call = call
     )
