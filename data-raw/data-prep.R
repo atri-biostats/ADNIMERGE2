@@ -33,7 +33,7 @@ check_arg_logical(UPDATE_DATADIC)
 ## Data download stamped date
 # Verify file downloaded date
 verify_data_download_date(
-  raw_data_path = raw_data_dir, 
+  raw_data_path = raw_data_dir,
   input_date = DATA_DOWNLOADED_DATE
 )
 DATA_DOWNLOADED_DATE <- as.Date(DATA_DOWNLOADED_DATE)
@@ -260,26 +260,40 @@ if (UPDATE_MISSING_VALUE) {
         select(-any_of(c("STATE")))
     }
 
-    if ("RID" %in% names(dd)) check_RID_col <- TRUE else check_RID_col <- FALSE
-    ## Adding common columns -----
-    if (check_RID_col) {
+    ## Add common columns -----
+    ### COLPROT -----
+    phase_cols <- get_cols_name(dd, list_phase_cols(include_colprot = FALSE))
+    is_phase_col_exist <- length(phase_cols[!is.na(phase_cols)]) > 0
+    if (is_phase_col_exist) {
       cli::cli_alert_info(
-        text = "Adding {.val ORIGPROT} and {.val COLPROT} variables in {.val {tb}} data"
+        text = "Adding {.val COLPROT} variable in {.val {tb}} data"
+      )
+      dd <- create_col_protocol(
+        .data = dd,
+        phaseVar = list_phase_cols(include_colprot = FALSE),
+        .strict_check = FALSE
+      )
+    } else {
+      cli::cli_alert_danger(
+        text = "{.val COLPROT} has not been added in {.val {tb}} data."
+      )
+    }
+    ### ORIGPROT -----
+    is_rid_col_exist <- "RID" %in% names(dd)
+    if (is_rid_col_exist) {
+      cli::cli_alert_info(
+        text = "Adding {.val ORIGPROT} variable in {.val {tb}} data"
       )
       num_missing_rid <- dd %>%
         filter(is.na(RID)) %>%
         nrow()
       if (num_missing_rid > 0) {
         cli::cli_alert_warning(
-          text = "{.val {tb}} data contains {.val {num_missing_rid}} missing RID."
+          text = "{.val {tb}} data contains {.val {num_missing_rid}} missing RID{?s}."
         )
       }
+
       dd <- dd %>%
-        create_col_protocol(
-          .data = .,
-          phaseVar = list_phase_cols(include_colprot = FALSE),
-          .strict_check = FALSE
-        ) %>%
         {
           if (num_missing_rid == 0) {
             create_orig_protocol(.data = .)
@@ -289,12 +303,13 @@ if (UPDATE_MISSING_VALUE) {
         }
     } else {
       cli::cli_alert_danger(
-        text = "{.val ORIGPROT} and {.val COLPROT} have not been added in {.val {tb}} data."
+        text = "{.val ORIGPROT} has not been added in {.val {tb}} data."
       )
     }
-    # Replacing `-4` and `-1` as missing value -----
+
+    # Convert `-4` and `-1` into missing value -----
     cli::cli_alert_info(
-      text = "Convert {.val -4} values into missing values in {.val {tb}} data"
+      text = "Converting {.val -4} into missing values in {.val {tb}} data"
     )
     dd <- convert_to_missing_value(
       .data = dd,
@@ -305,7 +320,7 @@ if (UPDATE_MISSING_VALUE) {
     )
 
     cli::cli_alert_info(
-      text = "Convert {.val -1} values into missing values ADNI1 phase in {.val {tb}} data"
+      text = "Converting {.val -1} into missing values for ADNI1 phase in {.val {tb}} data"
     )
     dd <- convert_to_missing_value(
       .data = dd,
@@ -322,7 +337,7 @@ if (UPDATE_MISSING_VALUE) {
       run_script = TRUE
     )
     if (data_update_status != TRUE) cli::cli_abort(message = "{.val {tb}} has not been updated")
-    rm(list = c("tb", "dd", "check_RID_col", "data_update_status"))
+    rm(list = c("tb", "dd", "is_rid_col_exist", "is_phase_col_exist", "phase_cols", "data_update_status"))
   })
 
   rm(list = c("tblname_list_dd", "DATA_DOWNLOADED_DATE", tblname_list_dd$short_tblname))
