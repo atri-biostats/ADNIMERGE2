@@ -264,6 +264,9 @@ if (UPDATE_MISSING_VALUE) {
     ### COLPROT -----
     phase_cols <- get_cols_name(dd, list_phase_cols(include_colprot = FALSE))
     is_phase_col_exist <- length(phase_cols[!is.na(phase_cols)]) > 0
+    # To skip any datadic or VISITS data file
+    is_skip <- any(c(str_detect(tb, "DATADIC"), tb %in% "VISITS"))
+    if (is_skip) is_phase_col_exist <- FALSE
     if (is_phase_col_exist) {
       cli::cli_alert_info(
         text = "Adding {.val COLPROT} variable in {.val {tb}} data"
