@@ -2,6 +2,7 @@
 source(file.path(".", "tools", "data-prepare-utils.R"))
 source(file.path(".", "tools", "prepare-datadict.R"))
 source(file.path(".", "R", "utils.R"))
+source(file.path(".", "R", "checks-assert.R"))
 
 # Libraries -----
 library(tidyverse)

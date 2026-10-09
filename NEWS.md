@@ -2,6 +2,12 @@
 
 * Because `ADNIMERGE2` is an R data package with frequent content updates, the change log focuses exclusively on major changes to R functions and package infrastructure rather than routine data refreshes.
 
+# ADNIMERGE2 (development version)
+
+* Breaking Changes: 
+ 
+  - Updated the implementation of `COLPROT`. Previously, `COLPROT` variable was created whenever a subject identifier `RID` variable is presented in the data. Moving forward, `COLPROT` column will be created when any of pre-specified phase columns (i,.e., `ADNIMERGE2:::list_phase_cols(include_colprot = FALSE)`) are exist in the data, and these columns will be renamed as `COLPROT`. For examples, this change now applies to remotely collected `ADNI4` datasets with names starting with `RMT_<name>*`. However, this change is not implemented for data dictionary file `DATADIC` and `VISITS`.
+
 # ADNIMERGE2 0.1.4
 
 * Breaking Changes:

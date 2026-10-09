@@ -1066,7 +1066,7 @@ get_study_phase_category <- function(.data, phase_vars = NULL) {
   require(dplyr)
   # Checking for study phase variable
   if (is.null(phase_vars)) {
-    phase_vars <- c("COLPROT", "PHASE", "Phase", "ProtocolID", "RMT_PHASE")
+    phase_vars <- list_phase_cols(include_colprot = TRUE)
   }
   phaseVar <- get_cols_name(.data = .data, col_name = phase_vars)
   if (length(phaseVar) > 1) {
