@@ -12,7 +12,7 @@
 #'
 #'  \code{EXTERNAL}: To use an external data source.
 #'
-#' @param data_list A named list object. By default, it is a null list object.
+#' @param data_list A named list object. By default, it is null list object.
 #'  The default value is only applicable if the data source is \code{"ADNIMERGE2"}.
 #'  If an external data source (i.e., \code{data_source = "EXTERNAL"}) is used,
 #'  then \code{data_list} must be a named list object that contains the following dataset.
@@ -23,7 +23,9 @@
 #'    \item [REGISTRY]: Registry Data
 #'    \item [DXSUM]: Diagnostic Summary Data
 #'  }
-#'
+#'  
+#'  `data_list <- list("ADAS" = ADAS, "MMSE" = MMSE, "NEUROBAT" = NEUROBAT, "REGISTRY" = REGISTRY, "DXSUM" = DXSUM)`
+#'  
 #' **NOTE:** We suggest to make sure all the above datasets were prepared with
 #'  similar data preparation workflow as in [ADNIMERGE2] that includes
 #'  decode coded variables, convert missing values as \code{'NA'} and
@@ -137,7 +139,6 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
                              envir = new.env(),
                              quiet = TRUE,
                              ...) {
-  data_source <- rlang::arg_match(arg = data_source, values = c("ADNIMERGE2", "EXTERNAL"))
   check_pacc_data_source(data_source)
   check_object_type(data_list, "list")
   check_object_type(show_pacc_datadict, "logical")
@@ -162,6 +163,8 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
       )
     )
   }
+  check_vector_length(vignette_path, 1)
+  check_object_type(vignette_path, "character")
   if (!file.exists(vignette_path)) {
     cli::cli_abort(
       message = "Can't find {.val ADNIMERGE2-PACC} vignettes {.file {vignette_path}}"
@@ -227,7 +230,9 @@ derive_pacc_data <- function(data_source = c("ADNIMERGE2", "EXTERNAL"),
 #' @importFrom rlang arg_match0
 #' @keywords internal
 check_pacc_data_source <- function(x) {
-  rlang::arg_match0(arg = x, values = c("ADNIMERGE2", "EXTERNAL"))
+  check_object_type(x, "character")
+  check_vector_length(x, 1)
+  x <- rlang::arg_match0(arg = x, values = c("ADNIMERGE2", "EXTERNAL"))
   invisible(x)
 }
 

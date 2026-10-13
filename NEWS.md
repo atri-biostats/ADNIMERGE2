@@ -2,6 +2,12 @@
 
 * Because `ADNIMERGE2` is an R data package with frequent content updates, the change log focuses exclusively on major changes to R functions and package infrastructure rather than routine data refreshes.
 
+# ADNIMERGE2 (development version)
+
+* Minor Changes/Bugs Fix
+  
+   - Update internal validation in `derive_pacc_data()` to make sure single data source type is provided to `data_source` argument.
+
 # ADNIMERGE2 0.1.4
 
 * Breaking Changes:
